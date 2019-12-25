@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Design Patterns</title>
+    <title>Design Patterns(设计模式)</title>
     <url>/2019/12/25/Design-Patterns/</url>
     <content><![CDATA[]]></content>
+      <tags>
+        <tag>编程基础</tag>
+      </tags>
   </entry>
   <entry>
     <title>Hello World</title>
