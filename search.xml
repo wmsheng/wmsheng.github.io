@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>LeetCode Practice by Categories</title>
+    <title>LeetCode Practice by Categories(Array,LinkedList,SkipList)</title>
     <url>/2019/12/28/LeetCode-Practice-by-Categories/</url>
     <content><![CDATA[<blockquote>
 <p>Genius is the result of long-term labor —— Isaac Newton</p>
@@ -54,14 +54,33 @@
 <figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">Given nums = [<span class="number">2</span>, <span class="number">7</span>, <span class="number">11</span>, <span class="number">15</span>], target = <span class="number">9</span>,</span><br><span class="line"></span><br><span class="line">Because nums[<span class="number">0</span>] + nums[<span class="number">1</span>] = <span class="number">2</span> + <span class="number">7</span> = <span class="number">9</span>,</span><br><span class="line"><span class="keyword">return</span> [<span class="number">0</span>, <span class="number">1</span>].</span><br></pre></td></tr></table></figure>
 
 <hr>
-<p>解：<font color=#FF0000>这里给出两个解法。</font></p>
+<p>解：<font color=#FF0000>这里给出两个解法，第一个无脑双指针遍历，第二个基于哈希表，是正解。</font></p>
+<p><strong>方法一</strong>，两重循环，枚举下标，如果下标对应的内容相加可以达成target，那么完成。但是这种方法时间复杂度较大，O(n^2)</p>
+<p>直接可以利用之前讲过的双指针遍历的方法。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span>[] twoSum(<span class="built_in">int</span>[] nums, <span class="built_in">int</span> target) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">int</span>[] result = new <span class="built_in">int</span>[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; nums.length<span class="number">-1</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">int</span> j = i+<span class="number">1</span>; j &lt; nums.length; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[i] + nums[j] == target) &#123;</span><br><span class="line">                    result[<span class="number">0</span>] = i;</span><br><span class="line">                    result[<span class="number">1</span>] = j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码可以通过，但是性能怎么样？——某次LeetCode的统计结果是，击败8%用户。<font color=#FF0000>所以如果你面试只想到了这个方法，刷刷写完了，没后续了，还很得意，那对不起，你的面试肯定过不了。除非其他候选者连这个方法都没想到。</font></p>
+<p><strong>方法二</strong>,保持数组中的每个元素与其索引相互对应的最好方式是什么？当然是基于数组的哈希表。利用哈希表先把内容存储起来，这样一来查找的过程只需要O(1)了。</p>
+<p>这个map中，key是nums元素的值，value是该元素的下标。因为要找到a+b = target,所以 a = target - b，所以查找 target-a 在不在数组里面即可。</p>
+<p>注意</p>
+<ol>
+<li>这里是把元素当做key，该元素的位置当做value。</li>
+<li>虽然看起来 <code>map.put(nums[i], i)</code> 这句放在循环体里的前面和后面都可以，但是其实是不能放在前面的，否则如果某个元素的值是target的二分之一，先把它添加进map之后再比较，会直接比较到它自己。换句话说，必须先比较，再put进map。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] twoSum(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span>[] result = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">        Map&lt;Integer, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(map.containsKey(target - nums[i])) &#123;</span><br><span class="line">                result[<span class="number">0</span>] = i;</span><br><span class="line">                result[<span class="number">1</span>] = map.get(target - nums[i]);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 注意这里put不能放在判断前面，必须先比较再放入。否则如果某个元素是target的一半，先添加再比较的话，会比较到它自己。</span></span><br><span class="line">            map.put(nums[i],i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 <h2 id="15-3Sum-三数之和-Mid"><a href="#15-3Sum-三数之和-Mid" class="headerlink" title="15 3Sum.(三数之和)(Mid)"></a><a href="https://leetcode-cn.com/problems/3sum/" target="_blank" rel="noopener">15 3Sum.(三数之和)(Mid)</a></h2><p>Given an array <code>nums</code> of <em>n</em> integers, are there elements <em>a, b, c</em> in <code>nums</code> such that <em>a + b + c</em> = 0? Find all unique triplets in the array which gives the sum of zero.</p>
 <p><strong>Note:</strong><br>The solution set must not contain duplicate triplets.(答案不能包含重复三元组)</p>
 <p><strong>Example:</strong></p>
 <figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">Given <span class="built_in">array</span> nums = [<span class="number">-1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">-1</span>, <span class="number">-4</span>],</span><br><span class="line"></span><br><span class="line">A solution <span class="keyword">set</span> <span class="keyword">is</span>:</span><br><span class="line">[</span><br><span class="line">  [<span class="number">-1</span>, <span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">  [<span class="number">-1</span>, <span class="number">-1</span>, <span class="number">2</span>]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 
 <p>解：这道三数之和其实是第一题两数之和的升级版本。</p>
-<h1 id="栈、队列、优先队列、双端队列"><a href="#栈、队列、优先队列、双端队列" class="headerlink" title="栈、队列、优先队列、双端队列"></a>栈、队列、优先队列、双端队列</h1>]]></content>
+<p>方法一：暴力求解，和第一题非常相似，但是时间复杂度为O(n^3)，非常高。</p>
+<p>方法二，用类似第一题的哈希表，但是时间复杂度只能降到O(n^2)</p>
+<p>方法三，用左右下标夹逼的方法。其实很难直接想到，比较tricky。</p>
+<p>详细介绍方法三的解法。</p>
+]]></content>
       <categories>
         <category>Algorithms Note</category>
       </categories>
