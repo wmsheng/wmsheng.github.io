@@ -20,9 +20,20 @@
 <li>Minimize the total number of operations.</li>
 </ol>
 <p>解：这道题可以使用双指针思想很简洁代码解决。用i作为指针，只要之前元素不为0，就把它移动到j的位置上去，把i位置的元素赋值为0. 但是需要注意corner case, 如果传入的数据全都是非0，那么i和j始终相等，不能给任何元素赋值为0.</p>
-<p>需要注意指针j什么时候递增，<strong>只要i指的位置不为零，j就要往后移动</strong>，j在理论上只用来记录当前最后一个为0的元素.</p>
+<p>需要注意指针j什么时候递增，<strong>只要i指的位置不为零，j就要往后移动</strong>，j用来记录从左到右，下一个非0元素的位置.</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">moveZeroes</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] != <span class="number">0</span>) &#123;</span><br><span class="line">                nums[j] = nums[i];</span><br><span class="line">                <span class="keyword">if</span>(i != j) &#123;</span><br><span class="line">                    nums[i] = <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>时间复杂度：O(n)，一重循环</p>
+<p>空间复杂度：O(1)，按照题目要求，不能使用额外数组空间</p>
+<h2 id="11-Container-With-Most-Water-盛水最多的容器-Mid"><a href="#11-Container-With-Most-Water-盛水最多的容器-Mid" class="headerlink" title="11.Container With Most Water(盛水最多的容器)(Mid)"></a><a href="https://leetcode-cn.com/problems/container-with-most-water/" target="_blank" rel="noopener">11.Container With Most Water(盛水最多的容器)(Mid)</a></h2><p>Given n non-negative integers <em>a1, a2, …, an</em> , where each represents a point at coordinate <em>(i, ai)</em>. <em>n</em> vertical lines are drawn such that the two endpoints of line <em>i</em> is at <em>(i, ai)</em> and <em>(i, 0)</em>. Find two lines, which together with x-axis forms a container, such that the container contains the most water.</p>
+<p><strong>Note</strong>: You may not slant the container and n is at least 2.</p>
+<p><img src="/LeetCode-Practice-by-Categories/11ti.png" alt="LeetCode11"><br>The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.</p>
+<p><strong>Example</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">Input: [<span class="number">1</span>,<span class="number">8</span>,<span class="number">6</span>,<span class="number">2</span>,<span class="number">5</span>,<span class="number">4</span>,<span class="number">8</span>,<span class="number">3</span>,<span class="number">7</span>]</span><br><span class="line">Output: <span class="number">49</span></span><br></pre></td></tr></table></figure>
 
+<p>解：</p>
+<p><strong>方法一</strong>，枚举。记录左边bar x, 右边 bar y，遍历每一个x和y的组合，计算(x-y)*height_diff，但是时间复杂度太高了，O(n^2)，显然不是最优解法。</p>
+<p>但是这里可以回顾一下遍历数组的固定写法，形成机械记忆，一定要熟悉。</p>
+<p>正常遍历一维数组：</p>
 <h1 id="栈、队列、优先队列、双端队列"><a href="#栈、队列、优先队列、双端队列" class="headerlink" title="栈、队列、优先队列、双端队列"></a>栈、队列、优先队列、双端队列</h1>]]></content>
       <categories>
         <category>Algorithms Note</category>
