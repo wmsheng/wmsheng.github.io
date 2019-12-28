@@ -58,7 +58,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://s3-lc-upload.s3.amazonaws.com/uploads/2018/07/17/question_11.jpg">
 <meta property="article:published_time" content="2019-12-28T01:38:41.000Z">
-<meta property="article:modified_time" content="2019-12-28T12:35:15.898Z">
+<meta property="article:modified_time" content="2019-12-28T12:40:48.711Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -216,7 +216,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2019-12-28 09:38:41 / Modified: 20:35:15" itemprop="dateCreated datePublished" datetime="2019-12-28T09:38:41+08:00">2019-12-28</time>
+              <time title="Created: 2019-12-28 09:38:41 / Modified: 20:40:48" itemprop="dateCreated datePublished" datetime="2019-12-28T09:38:41+08:00">2019-12-28</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -272,6 +272,7 @@
 <li>You must do this in-place without making a copy of the array.</li>
 <li>Minimize the total number of operations.</li>
 </ol>
+<hr>
 <p>解：这道题可以使用双指针思想很简洁代码解决。用i作为指针，只要之前元素不为0，就把它移动到j的位置上去，把i位置的元素赋值为0. 但是需要注意corner case, 如果传入的数据全都是非0，那么i和j始终相等，不能给任何元素赋值为0.</p>
 <p>需要注意指针j什么时候递增，<strong>只要i指的位置不为零，j就要往后移动</strong>，j用来记录从左到右，下一个非0元素的位置.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">moveZeroes</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] != <span class="number">0</span>) &#123;</span><br><span class="line">                nums[j] = nums[i];</span><br><span class="line">                <span class="keyword">if</span>(i != j) &#123;</span><br><span class="line">                    nums[i] = <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -284,6 +285,7 @@
 <p><strong>Example</strong></p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: [<span class="number">1</span>,<span class="number">8</span>,<span class="number">6</span>,<span class="number">2</span>,<span class="number">5</span>,<span class="number">4</span>,<span class="number">8</span>,<span class="number">3</span>,<span class="number">7</span>]</span><br><span class="line">Output: <span class="number">49</span></span><br></pre></td></tr></table></figure>
 
+<hr>
 <p>解：<strong>方法一</strong>，枚举。记录左边bar x, 右边 bar y，遍历每一个x和y的组合，计算(x-y)*height_diff，但是时间复杂度太高了，O(n^2)，显然不是最优解法。</p>
 <p>但是这里可以回顾一下遍历数组的固定写法，形成机械记忆，一定要熟悉。</p>
 <p>正常遍历一维数组：</p>
@@ -304,6 +306,7 @@
 <p><strong>Example:</strong></p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Given nums = [<span class="number">2</span>, <span class="number">7</span>, <span class="number">11</span>, <span class="number">15</span>], target = <span class="number">9</span>,</span><br><span class="line"></span><br><span class="line">Because nums[<span class="number">0</span>] + nums[<span class="number">1</span>] = <span class="number">2</span> + <span class="number">7</span> = <span class="number">9</span>,</span><br><span class="line"><span class="keyword">return</span> [<span class="number">0</span>, <span class="number">1</span>].</span><br></pre></td></tr></table></figure>
 
+<hr>
 <p>解：<font color=#FF0000>这里给出两个解法。</font></p>
 <h2 id="15-3Sum-三数之和-Mid"><a href="#15-3Sum-三数之和-Mid" class="headerlink" title="15 3Sum.(三数之和)(Mid)"></a><a href="https://leetcode-cn.com/problems/3sum/" target="_blank" rel="noopener">15 3Sum.(三数之和)(Mid)</a></h2><p>Given an array <code>nums</code> of <em>n</em> integers, are there elements <em>a, b, c</em> in <code>nums</code> such that <em>a + b + c</em> = 0? Find all unique triplets in the array which gives the sum of zero.</p>
 <p><strong>Note:</strong><br>The solution set must not contain duplicate triplets.(答案不能包含重复三元组)</p>
