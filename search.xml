@@ -3,10 +3,14 @@
   <entry>
     <title>LeetCode Practice by Categories</title>
     <url>/2019/12/28/LeetCode-Practice-by-Categories/</url>
-    <content><![CDATA[<p>Record questions answer by classification</p>
+    <content><![CDATA[<blockquote>
+<p>Genius is the result of long-term labor —— Isaac Newton</p>
+</blockquote>
 <a id="more"></a>
+<p>Analyse and record questions answer by classification</p>
+<!--more-->
 
-<h1 id="数组、链表、跳表"><a href="#数组、链表、跳表" class="headerlink" title="数组、链表、跳表"></a>数组、链表、跳表</h1><h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><h2 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h2>]]></content>
+<h1 id="数组、链表、跳表"><a href="#数组、链表、跳表" class="headerlink" title="数组、链表、跳表"></a>数组、链表、跳表</h1><h1 id="栈、队列、优先队列、双端队列"><a href="#栈、队列、优先队列、双端队列" class="headerlink" title="栈、队列、优先队列、双端队列"></a>栈、队列、优先队列、双端队列</h1><h1 id="哈希表、映射、集合"><a href="#哈希表、映射、集合" class="headerlink" title="哈希表、映射、集合"></a>哈希表、映射、集合</h1><h1 id="树、图、二叉树、二叉搜索树"><a href="#树、图、二叉树、二叉搜索树" class="headerlink" title="树、图、二叉树、二叉搜索树"></a>树、图、二叉树、二叉搜索树</h1><h1 id="泛型递归、树递归"><a href="#泛型递归、树递归" class="headerlink" title="泛型递归、树递归"></a>泛型递归、树递归</h1><h1 id="分治、回溯"><a href="#分治、回溯" class="headerlink" title="分治、回溯"></a>分治、回溯</h1><h1 id="DFS-amp-BFS"><a href="#DFS-amp-BFS" class="headerlink" title="DFS &amp; BFS"></a>DFS &amp; BFS</h1>]]></content>
       <categories>
         <category>Algorithms Note</category>
       </categories>
