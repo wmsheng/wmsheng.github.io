@@ -6,11 +6,21 @@
     <content><![CDATA[<blockquote>
 <p>Genius is the result of long-term labor —— Isaac Newton</p>
 </blockquote>
-<a id="more"></a>
 <p>Analyse and record questions answer by classification</p>
-<!--more-->
+<a id="more"></a>
 
-<h1 id="数组、链表、跳表"><a href="#数组、链表、跳表" class="headerlink" title="数组、链表、跳表"></a>数组、链表、跳表</h1><h1 id="栈、队列、优先队列、双端队列"><a href="#栈、队列、优先队列、双端队列" class="headerlink" title="栈、队列、优先队列、双端队列"></a>栈、队列、优先队列、双端队列</h1><h1 id="哈希表、映射、集合"><a href="#哈希表、映射、集合" class="headerlink" title="哈希表、映射、集合"></a>哈希表、映射、集合</h1><h1 id="树、图、二叉树、二叉搜索树"><a href="#树、图、二叉树、二叉搜索树" class="headerlink" title="树、图、二叉树、二叉搜索树"></a>树、图、二叉树、二叉搜索树</h1><h1 id="泛型递归、树递归"><a href="#泛型递归、树递归" class="headerlink" title="泛型递归、树递归"></a>泛型递归、树递归</h1><h1 id="分治、回溯"><a href="#分治、回溯" class="headerlink" title="分治、回溯"></a>分治、回溯</h1><h1 id="DFS-amp-BFS"><a href="#DFS-amp-BFS" class="headerlink" title="DFS &amp; BFS"></a>DFS &amp; BFS</h1>]]></content>
+<p>点击题目链接为中国站题目，页面附上英文题目。</p>
+<h1 id="数组、链表、跳表"><a href="#数组、链表、跳表" class="headerlink" title="数组、链表、跳表"></a>数组、链表、跳表</h1><h2 id="283-Move-zeros-移动零"><a href="#283-Move-zeros-移动零" class="headerlink" title="283.Move zeros(移动零)"></a><a href="https://leetcode-cn.com/problems/move-zeroes/?utm_source=LCUS&utm_medium=ip_redirect_q_uns&utm_campaign=transfer2china" target="_blank" rel="noopener">283.Move zeros(移动零)</a></h2><p>Given an array <code>nums</code> , write a function to move all 0’s to the end of it while maintaining the relative order of the non-zero elements.</p>
+<p><strong>Examples:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">Input: [<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">3</span>,<span class="number">12</span>]</span><br><span class="line">Output: [<span class="number">1</span>,<span class="number">3</span>,<span class="number">12</span>,<span class="number">0</span>,<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong></p>
+<ol>
+<li>You must do this in-place without making a copy of the array.</li>
+<li>Minimize the total number of operations.</li>
+</ol>
+<p>解：这道题可以使用双指针思想很简洁代码解决。用i作为指针，只要之前元素不为0，就把它移动到前面去，把i位置的元素赋值为0。但是需要注意</p>
+<h1 id="栈、队列、优先队列、双端队列"><a href="#栈、队列、优先队列、双端队列" class="headerlink" title="栈、队列、优先队列、双端队列"></a>栈、队列、优先队列、双端队列</h1>]]></content>
       <categories>
         <category>Algorithms Note</category>
       </categories>
