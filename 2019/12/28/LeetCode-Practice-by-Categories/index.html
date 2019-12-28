@@ -57,7 +57,7 @@
 <meta property="og:description" content="Genius is the result of long-term labor —— Isaac Newton  Analyse and record questions answer by classification">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2019-12-28T01:38:41.000Z">
-<meta property="article:modified_time" content="2019-12-28T07:05:22.087Z">
+<meta property="article:modified_time" content="2019-12-28T07:47:28.462Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -214,7 +214,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2019-12-28 09:38:41 / Modified: 15:05:22" itemprop="dateCreated datePublished" datetime="2019-12-28T09:38:41+08:00">2019-12-28</time>
+              <time title="Created: 2019-12-28 09:38:41 / Modified: 15:47:28" itemprop="dateCreated datePublished" datetime="2019-12-28T09:38:41+08:00">2019-12-28</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -242,7 +242,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>469</span>
+              <span>793</span>
             </span>
 
         </div>
@@ -261,7 +261,7 @@
 <a id="more"></a>
 
 <p>点击题目链接为中国站题目，页面附上英文题目。</p>
-<h1 id="数组、链表、跳表"><a href="#数组、链表、跳表" class="headerlink" title="数组、链表、跳表"></a>数组、链表、跳表</h1><h2 id="283-Move-zeros-移动零"><a href="#283-Move-zeros-移动零" class="headerlink" title="283.Move zeros(移动零)"></a><a href="https://leetcode-cn.com/problems/move-zeroes/?utm_source=LCUS&utm_medium=ip_redirect_q_uns&utm_campaign=transfer2china" target="_blank" rel="noopener">283.Move zeros(移动零)</a></h2><p>Given an array <code>nums</code> , write a function to move all 0’s to the end of it while maintaining the relative order of the non-zero elements.</p>
+<h1 id="数组、链表、跳表"><a href="#数组、链表、跳表" class="headerlink" title="数组、链表、跳表"></a>数组、链表、跳表</h1><h2 id="283-Move-zeros-移动零-Easy"><a href="#283-Move-zeros-移动零-Easy" class="headerlink" title="283.Move zeros(移动零)(Easy)"></a><a href="https://leetcode-cn.com/problems/move-zeroes/?utm_source=LCUS&utm_medium=ip_redirect_q_uns&utm_campaign=transfer2china" target="_blank" rel="noopener">283.Move zeros(移动零)(Easy)</a></h2><p>Given an array <code>nums</code> , write a function to move all 0’s to the end of it while maintaining the relative order of the non-zero elements.</p>
 <p><strong>Examples:</strong></p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: [<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">3</span>,<span class="number">12</span>]</span><br><span class="line">Output: [<span class="number">1</span>,<span class="number">3</span>,<span class="number">12</span>,<span class="number">0</span>,<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
 
@@ -270,7 +270,10 @@
 <li>You must do this in-place without making a copy of the array.</li>
 <li>Minimize the total number of operations.</li>
 </ol>
-<p>解：这道题可以使用双指针思想很简洁代码解决。用i作为指针，只要之前元素不为0，就把它移动到前面去，把i位置的元素赋值为0。但是需要注意</p>
+<p>解：这道题可以使用双指针思想很简洁代码解决。用i作为指针，只要之前元素不为0，就把它移动到j的位置上去，把i位置的元素赋值为0. 但是需要注意corner case, 如果传入的数据全都是非0，那么i和j始终相等，不能给任何元素赋值为0.</p>
+<p>需要注意指针j什么时候递增，<strong>只要i指的位置不为零，j就要往后移动</strong>，j在理论上只用来记录当前最后一个为0的元素.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">moveZeroes</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] != <span class="number">0</span>) &#123;</span><br><span class="line">                nums[j] = nums[i];</span><br><span class="line">                <span class="keyword">if</span>(i != j) &#123;</span><br><span class="line">                    nums[i] = <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h1 id="栈、队列、优先队列、双端队列"><a href="#栈、队列、优先队列、双端队列" class="headerlink" title="栈、队列、优先队列、双端队列"></a>栈、队列、优先队列、双端队列</h1>
     </div>
 
@@ -359,7 +362,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数组、链表、跳表"><span class="nav-text">数组、链表、跳表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#283-Move-zeros-移动零"><span class="nav-text">283.Move zeros(移动零)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#栈、队列、优先队列、双端队列"><span class="nav-text">栈、队列、优先队列、双端队列</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数组、链表、跳表"><span class="nav-text">数组、链表、跳表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#283-Move-zeros-移动零-Easy"><span class="nav-text">283.Move zeros(移动零)(Easy)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#栈、队列、优先队列、双端队列"><span class="nav-text">栈、队列、优先队列、双端队列</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -458,7 +461,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共253字</span>
+  <span class="post-count">博客全站共384字</span>
 </div>
 
         

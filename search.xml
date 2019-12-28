@@ -10,7 +10,7 @@
 <a id="more"></a>
 
 <p>点击题目链接为中国站题目，页面附上英文题目。</p>
-<h1 id="数组、链表、跳表"><a href="#数组、链表、跳表" class="headerlink" title="数组、链表、跳表"></a>数组、链表、跳表</h1><h2 id="283-Move-zeros-移动零"><a href="#283-Move-zeros-移动零" class="headerlink" title="283.Move zeros(移动零)"></a><a href="https://leetcode-cn.com/problems/move-zeroes/?utm_source=LCUS&utm_medium=ip_redirect_q_uns&utm_campaign=transfer2china" target="_blank" rel="noopener">283.Move zeros(移动零)</a></h2><p>Given an array <code>nums</code> , write a function to move all 0’s to the end of it while maintaining the relative order of the non-zero elements.</p>
+<h1 id="数组、链表、跳表"><a href="#数组、链表、跳表" class="headerlink" title="数组、链表、跳表"></a>数组、链表、跳表</h1><h2 id="283-Move-zeros-移动零-Easy"><a href="#283-Move-zeros-移动零-Easy" class="headerlink" title="283.Move zeros(移动零)(Easy)"></a><a href="https://leetcode-cn.com/problems/move-zeroes/?utm_source=LCUS&utm_medium=ip_redirect_q_uns&utm_campaign=transfer2china" target="_blank" rel="noopener">283.Move zeros(移动零)(Easy)</a></h2><p>Given an array <code>nums</code> , write a function to move all 0’s to the end of it while maintaining the relative order of the non-zero elements.</p>
 <p><strong>Examples:</strong></p>
 <figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">Input: [<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">3</span>,<span class="number">12</span>]</span><br><span class="line">Output: [<span class="number">1</span>,<span class="number">3</span>,<span class="number">12</span>,<span class="number">0</span>,<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
 
@@ -19,7 +19,10 @@
 <li>You must do this in-place without making a copy of the array.</li>
 <li>Minimize the total number of operations.</li>
 </ol>
-<p>解：这道题可以使用双指针思想很简洁代码解决。用i作为指针，只要之前元素不为0，就把它移动到前面去，把i位置的元素赋值为0。但是需要注意</p>
+<p>解：这道题可以使用双指针思想很简洁代码解决。用i作为指针，只要之前元素不为0，就把它移动到j的位置上去，把i位置的元素赋值为0. 但是需要注意corner case, 如果传入的数据全都是非0，那么i和j始终相等，不能给任何元素赋值为0.</p>
+<p>需要注意指针j什么时候递增，<strong>只要i指的位置不为零，j就要往后移动</strong>，j在理论上只用来记录当前最后一个为0的元素.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">moveZeroes</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] != <span class="number">0</span>) &#123;</span><br><span class="line">                nums[j] = nums[i];</span><br><span class="line">                <span class="keyword">if</span>(i != j) &#123;</span><br><span class="line">                    nums[i] = <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h1 id="栈、队列、优先队列、双端队列"><a href="#栈、队列、优先队列、双端队列" class="headerlink" title="栈、队列、优先队列、双端队列"></a>栈、队列、优先队列、双端队列</h1>]]></content>
       <categories>
         <category>Algorithms Note</category>
