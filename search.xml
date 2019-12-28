@@ -40,7 +40,7 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; height.length-<span class="number">1</span>; i++) &#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j = i+<span class="number">1</span>; j &lt; height.length; j++) &#123;</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这一段二维数组的遍历应当形成肌肉式记忆。 整个遍历过程中，j 总是比 i 大，最后j到了最后一个元素，i还在前面。当然，这种暴力的方式很慢，开销很大。</p>
-<p><strong>方法二</strong>，从左边和右边开始往中间收敛（或者理解是左右往中间夹逼）。因为肯定是外面的棒子组成的面积更大。如果内部的棒子高度也不如外面，那么组成的面积肯定比外面小，这里可以看做是一个tricky的点。</p>
+<p><strong>方法二</strong>，从左边和右边开始往中间收敛（或者理解是左右往中间夹逼）。<strong>因为肯定是外面的棒子组成的面积更大。如果内部的棒子高度也不如外面，那么组成的面积肯定比外面小</strong>，这里可以看做是一个tricky的点。</p>
 <h1 id="栈、队列、优先队列、双端队列"><a href="#栈、队列、优先队列、双端队列" class="headerlink" title="栈、队列、优先队列、双端队列"></a>栈、队列、优先队列、双端队列</h1>]]></content>
       <categories>
         <category>Algorithms Note</category>
