@@ -114,7 +114,6 @@
 
 <hr>
 <p>解：和数组不同，这里的反转下标从1开始。需要初始化一个dummy节点代表0号节点，然后开始遍历。</p>
-<p><img src="https://s2.ax1x.com/2019/12/30/lKcb1H.jpg" alt=""></p>
 ]]></content>
       <categories>
         <category>Algorithms Note</category>
@@ -127,7 +126,8 @@
   <entry>
     <title>Object-oriented(OOP)</title>
     <url>/2019/12/25/Object-oriented-OOP/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<p><img src="https://s2.ax1x.com/2019/12/30/lKcqcd.md.jpg" alt=""></p>
+<a id="more"></a>]]></content>
   </entry>
   <entry>
     <title>Design Pattern</title>
