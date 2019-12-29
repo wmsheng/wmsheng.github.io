@@ -57,8 +57,9 @@
 <meta property="og:description" content="Genius is the result of long-term labor —— Isaac Newton  Analyse and record questions’ answers by classification">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://s3-lc-upload.s3.amazonaws.com/uploads/2018/07/17/question_11.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/12/30/lKcb1H.jpg">
 <meta property="article:published_time" content="2019-12-28T01:38:41.000Z">
-<meta property="article:modified_time" content="2019-12-29T09:26:55.841Z">
+<meta property="article:modified_time" content="2019-12-29T16:13:18.363Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -222,7 +223,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-12-29 17:26:55" itemprop="dateModified" datetime="2019-12-29T17:26:55+08:00">2019-12-29</time>
+                <time title="Modified: 2019-12-30 00:13:18" itemprop="dateModified" datetime="2019-12-30T00:13:18+08:00">2019-12-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -250,7 +251,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>6.3k</span>
+              <span>6.6k</span>
             </span>
 
         </div>
@@ -366,6 +367,14 @@
 <figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Definition <span class="keyword">for</span> singly-linked list.</span><br><span class="line"> * public class ListNode &#123;</span><br><span class="line"> *     int val;</span><br><span class="line"> *     ListNode <span class="keyword">next</span>;</span><br><span class="line"> *     ListNode(int x) &#123; val = x; &#125;</span><br><span class="line"> * &#125;</span><br><span class="line"> */</span><br><span class="line">class Solution &#123;</span><br><span class="line">    public ListNode reverseList(ListNode<span class="built_in"> head</span>) &#123;</span><br><span class="line">        </span><br><span class="line">		<span class="keyword">if</span><span class="built_in">(head</span> == null ||<span class="built_in"> head</span>.<span class="keyword">next</span> == null) <span class="keyword">return</span><span class="built_in"> head</span>;</span><br><span class="line">        </span><br><span class="line">        ListNode newHeader = reverseList<span class="built_in">(head</span>.<span class="keyword">next</span>);</span><br><span class="line">       <span class="built_in"> head</span>.<span class="keyword">next</span>.<span class="keyword">next</span> =<span class="built_in"> head</span>;</span><br><span class="line">       <span class="built_in"> head</span>.<span class="keyword">next</span> = null;</span><br><span class="line">        <span class="keyword">return</span> newHeader;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>针对递归方法值得注意的是，因为newHeader没有被动过，所以在一开始递归结束的时候，就返回的是反转之后的链表的新的head，也就是这个newHeader，所以最后的结果就是每一层的递归返回的都是一开始递归返回的newHeader，问题就迎刃而解了。</p>
+<h2 id="92-Reverse-LinkedList-II-反转链表II-Mid"><a href="#92-Reverse-LinkedList-II-反转链表II-Mid" class="headerlink" title="92. Reverse LinkedList II(反转链表II)(Mid)"></a><a href="https://leetcode-cn.com/problems/reverse-linked-list-ii/" target="_blank" rel="noopener">92. Reverse LinkedList II(反转链表II)(Mid)</a></h2><p>Reverse a linked list from position <em>m</em> to <em>n</em>. Do it in one-pass.</p>
+<p>Note: 1 ≤ <em>m ≤ n</em> ≤ length of list.</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: <span class="number">1</span>-&gt;<span class="number">2</span>-&gt;<span class="number">3</span>-&gt;<span class="number">4</span>-&gt;<span class="number">5</span>-&gt;NULL, m = <span class="number">2</span>, n = <span class="number">4</span></span><br><span class="line">Output: <span class="number">1</span>-&gt;<span class="number">4</span>-&gt;<span class="number">3</span>-&gt;<span class="number">2</span>-&gt;<span class="number">5</span>-&gt;NULL</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>解：和数组不同，这里的反转下标从1开始。需要初始化一个dummy节点代表0号节点，然后开始遍历。</p>
+<p><img src="https://s2.ax1x.com/2019/12/30/lKcb1H.jpg" alt=""></p>
 
     </div>
 
@@ -454,7 +463,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数组、链表、跳表"><span class="nav-text">数组、链表、跳表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#283-Move-zeros-移动零-Easy"><span class="nav-text">283.Move zeros(移动零)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-Container-With-Most-Water-盛水最多的容器-Mid"><span class="nav-text">11.Container With Most Water(盛水最多的容器)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Two-Sum-两数之和-Easy"><span class="nav-text">1. Two Sum(两数之和)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-3Sum-三数之和-Mid"><span class="nav-text">15. 3Sum(三数之和)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#206-Reverse-LinkedList-反转链表-Easy"><span class="nav-text">206. Reverse LinkedList(反转链表)(Easy)</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数组、链表、跳表"><span class="nav-text">数组、链表、跳表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#283-Move-zeros-移动零-Easy"><span class="nav-text">283.Move zeros(移动零)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-Container-With-Most-Water-盛水最多的容器-Mid"><span class="nav-text">11.Container With Most Water(盛水最多的容器)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Two-Sum-两数之和-Easy"><span class="nav-text">1. Two Sum(两数之和)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-3Sum-三数之和-Mid"><span class="nav-text">15. 3Sum(三数之和)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#206-Reverse-LinkedList-反转链表-Easy"><span class="nav-text">206. Reverse LinkedList(反转链表)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#92-Reverse-LinkedList-II-反转链表II-Mid"><span class="nav-text">92. Reverse LinkedList II(反转链表II)(Mid)</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -556,7 +565,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共2.5k字</span>
+  <span class="post-count">博客全站共2.6k字</span>
 </div>
 
         
