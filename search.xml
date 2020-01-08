@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>LeetCode Practice by Categories(Stack, Queue)</title>
+    <url>/2020/01/08/LeetCode-Practice-by-Categories-Stack-Queue/</url>
+    <content><![CDATA[<blockquote>
+<p>The measure of a person’s true character is to see what he does when he knows that no one is aware —— Montesquieu</p>
+</blockquote>
+<p>Analyse and record questions’ answers by classification —— Stack, Queue, Priority queue, Deque,   </p>
+<a id="more"></a>
+
+
+]]></content>
+      <categories>
+        <category>Algorithms Note</category>
+      </categories>
+      <tags>
+        <tag>LeetCode</tag>
+        <tag>Algorithms</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LeetCode Practice by Categories(Array,LinkedList,SkipList)</title>
     <url>/2019/12/28/LeetCode-Practice-by-Categories/</url>
     <content><![CDATA[<blockquote>
 <p>Genius is the result of long-term labor —— Isaac Newton</p>
 </blockquote>
-<p>Analyse and record questions’ answers by classification</p>
+<p>Analyse and record questions’ answers by classification —— Array and LinkedList</p>
 <a id="more"></a>
 
 <p>点击题目链接为中国站题目，页面附上英文题目。</p>
