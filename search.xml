@@ -398,7 +398,11 @@
   <entry>
     <title>Design Pattern</title>
     <url>/2019/12/25/Design-Pattern/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<p>设计模式相关内容介绍，尤其着重Java的单例模拟，看完必有收获。</p>
+<a id="more"></a>
+
+<h1 id="如何用java写一个单例模式？"><a href="#如何用java写一个单例模式？" class="headerlink" title="如何用java写一个单例模式？"></a>如何用java写一个单例模式？</h1><p>单例模式虽然看起来简单，但是如果往深了挖，又可以考察出候选者对于并发、类加载、序列化等知识点的掌握。</p>
+]]></content>
       <categories>
         <category>Study Note</category>
       </categories>
