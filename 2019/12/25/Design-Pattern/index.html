@@ -49,15 +49,15 @@
   };
 </script>
 
-  <meta name="description" content="设计模式相关内容介绍，尤其着重Java的单例模拟，看完必有收获。">
+  <meta name="description" content="看待事物都可以按照这个顺序：发现问题、分析问题、理顺逻辑、寻求证据、解决问题  设计模式相关内容介绍，尤其着重Java的单例模拟，看完必有收获。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Design Pattern">
 <meta property="og:url" content="http://yoursite.com/2019/12/25/Design-Pattern/index.html">
 <meta property="og:site_name" content="Hi, This is Bennett">
-<meta property="og:description" content="设计模式相关内容介绍，尤其着重Java的单例模拟，看完必有收获。">
+<meta property="og:description" content="看待事物都可以按照这个顺序：发现问题、分析问题、理顺逻辑、寻求证据、解决问题  设计模式相关内容介绍，尤其着重Java的单例模拟，看完必有收获。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2019-12-25T15:57:54.000Z">
-<meta property="article:modified_time" content="2020-01-09T06:14:57.899Z">
+<meta property="article:modified_time" content="2020-01-09T09:13:51.059Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="Design Pattern">
 <meta property="article:tag" content="Foundation">
@@ -220,7 +220,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-01-09 14:14:57" itemprop="dateModified" datetime="2020-01-09T14:14:57+08:00">2020-01-09</time>
+                <time title="Modified: 2020-01-09 17:13:51" itemprop="dateModified" datetime="2020-01-09T17:13:51+08:00">2020-01-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,7 +248,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>97</span>
+              <span>1.7k</span>
             </span>
 
         </div>
@@ -260,10 +260,41 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>设计模式相关内容介绍，尤其着重Java的单例模拟，看完必有收获。</p>
+        <blockquote>
+<p>看待事物都可以按照这个顺序：发现问题、分析问题、理顺逻辑、寻求证据、解决问题</p>
+</blockquote>
+<p>设计模式相关内容介绍，尤其着重Java的单例模拟，看完必有收获。</p>
 <a id="more"></a>
 
 <h1 id="如何用java写一个单例模式？"><a href="#如何用java写一个单例模式？" class="headerlink" title="如何用java写一个单例模式？"></a>如何用java写一个单例模式？</h1><p>单例模式虽然看起来简单，但是如果往深了挖，又可以考察出候选者对于并发、类加载、序列化等知识点的掌握。</p>
+<h2 id="什么是单例模式？"><a href="#什么是单例模式？" class="headerlink" title="什么是单例模式？"></a>什么是单例模式？</h2><p>一个类只有一个实例，并且提供一个全局可以访问的入口(比如getInstance()方法)。比如《火影忍者》中漩涡鸣人特别喜欢用的影分身之术，实际上，每一个影分身都只对应着一个真身。</p>
+<p>为什么要有只有一个实例的这种类？我们为什么需要它？</p>
+<p><strong>理由一：</strong>为了节省内存、节省计算。很多情况下，我们只需要一个实例，如果出现了更多实例，反而是浪费。</p>
+<p>举例：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="symbol">ExpensiveResource</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> ExpensiveResource() &#123;</span><br><span class="line">        field1 = <span class="comment">// 查询数据库</span></span><br><span class="line">        field2 = <span class="comment">// 对查到的数据做大量计算</span></span><br><span class="line">        field3 = <span class="comment">// 加密、压缩等耗时操作</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个类在构造的时候，需要查询数据库，对查到的数据做大量的计算，然后还要进行加密、压缩等非常耗时的操作。所以在第一次构造这个类的时候，我们就要花费很多时间来初始化这个对象。</p>
+<p>假设数据库在一段时间不变，那么我们其实只需要使用这一个实例完成任务即可。如果每次都重新生成新的实例，浪费资源，十分没有必要。</p>
+<p><strong>理由二：</strong>为了保证结果的正确。比如我们需要一个全局计数器用来统计人数。如果有多个实例，反而会造成混乱。</p>
+<p><strong>理由三：</strong>方便管理。很多工具类，我们只需要一个实例，通过一个统一的入口，获取这个单例。太多实例不但没有帮助，只会让人眼花缭乱。</p>
+<p><strong>单例模式使用场景：</strong></p>
+<ol>
+<li><p><strong>无状态的工具类：日志工具、字符串工具等</strong>。——日志工具，不论在哪里使用，我们只需要它帮我们记录日志信息，除此功能之外并不需要在它的实例对象上存储任何状态，所以我们只需要一个实例对象就可以了。</p>
+</li>
+<li><p><strong>全局信息类：全局计数、环境变量</strong>。——比如我们要记录某个网站的访问次数，而且不希望有的访问记录被记录在对象A上，而有的被记录在对象B上。此时我们就可以让这个类为单例，在需要计数的时候拿出来用就可以了。</p>
+</li>
+</ol>
+<p><font color=#FF0000>单例模式常见写法，这里列举五种：饿汉式、懒汉式、双重检查式、静态内部类式、枚举式</font></p>
+<p>下面按照写法的难易程度逐层递进：<br>相对简单的<strong>饿汉式：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 饿汉式写法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton = <span class="keyword">new</span> Singleton();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类的第一行，用static修饰实例，并且把构造函数用private修饰。</p>
+<p><strong>饿汉式优点：</strong>这种写法比较简单，在类装载的时候就完成了实例化，避免了线程同步的问题。</p>
+<p><strong>饿汉式缺点：</strong>类装载的时候就完成了实例化，没有达到懒加载的效果，这点是最大缺陷。所以如果自始至终都没使用过这个实例，就可能会造成内存的浪费。</p>
+<p>饿汉式写法的变种：<strong>静态代码块</strong>形式。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> &#123;</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        singleton = <span class="keyword">new</span> Singleton();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种写法和最开始的饿汉式的方式类似，只是把类实例化的过程放在了静态代码块中。同样，在类装载的过程中会执行静态代码块中的代码，完成实例的初始化，所以静态代码块的优缺点和饿汉式是一样的。<em>静态代码块写法就是饿汉式的写法。</em></p>
+<p>接下来看第二种<strong>懒汉式</strong>。</p>
 
     </div>
 
@@ -352,7 +383,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#如何用java写一个单例模式？"><span class="nav-text">如何用java写一个单例模式？</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#如何用java写一个单例模式？"><span class="nav-text">如何用java写一个单例模式？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是单例模式？"><span class="nav-text">什么是单例模式？</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -437,7 +468,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">29k</span>
+    <span title="Symbols count total">30k</span>
 </div>
 
 
@@ -454,7 +485,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共8.5k字</span>
+  <span class="post-count">博客全站共9.5k字</span>
 </div>
 
         
