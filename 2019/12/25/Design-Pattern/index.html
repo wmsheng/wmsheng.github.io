@@ -59,7 +59,7 @@
 <meta property="og:image" content="https://s2.ax1x.com/2020/01/10/lfTzJs.png">
 <meta property="og:image" content="https://s2.ax1x.com/2020/01/10/lhCFII.png">
 <meta property="article:published_time" content="2019-12-25T15:57:54.000Z">
-<meta property="article:modified_time" content="2020-01-10T04:12:35.486Z">
+<meta property="article:modified_time" content="2020-01-11T23:24:36.229Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="Design Pattern">
 <meta property="article:tag" content="Foundation">
@@ -163,7 +163,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">4</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">11</span></a>
 
   </li>
   </ul>
@@ -223,7 +223,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-01-10 12:12:35" itemprop="dateModified" datetime="2020-01-10T12:12:35+08:00">2020-01-10</time>
+                <time title="Modified: 2020-01-12 07:24:36" itemprop="dateModified" datetime="2020-01-12T07:24:36+08:00">2020-01-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -280,15 +280,14 @@
 <p>假设数据库在一段时间不变，那么我们其实只需要使用这一个实例完成任务即可。如果每次都重新生成新的实例，浪费资源，十分没有必要。</p>
 <p><strong>理由二：</strong>为了保证结果的正确。比如我们需要一个全局计数器用来统计人数。如果有多个实例，反而会造成混乱。</p>
 <p><strong>理由三：</strong>方便管理。很多工具类，我们只需要一个实例，通过一个统一的入口，获取这个单例。太多实例不但没有帮助，只会让人眼花缭乱。</p>
-<p><strong>单例模式使用场景：</strong></p>
-<ol>
+<h2 id="单例模式使用场景？"><a href="#单例模式使用场景？" class="headerlink" title="单例模式使用场景？"></a>单例模式使用场景？</h2><ol>
 <li><p><strong>无状态的工具类：日志工具、字符串工具等</strong>。——日志工具，不论在哪里使用，我们只需要它帮我们记录日志信息，除此功能之外并不需要在它的实例对象上存储任何状态，所以我们只需要一个实例对象就可以了。</p>
 </li>
 <li><p><strong>全局信息类：全局计数、环境变量</strong>。——比如我们要记录某个网站的访问次数，而且不希望有的访问记录被记录在对象A上，而有的被记录在对象B上。此时我们就可以让这个类为单例，在需要计数的时候拿出来用就可以了。</p>
 </li>
 </ol>
 <p><font color=#FF0000>单例模式常见写法，这里列举五种：饿汉式、懒汉式、双重检查式、静态内部类式、枚举式</font></p>
-<p>下面按照写法的难易程度逐层递进：<br>相对简单的<strong>饿汉式：</strong></p>
+<h2 id="单例模式的实现"><a href="#单例模式的实现" class="headerlink" title="单例模式的实现"></a>单例模式的实现</h2><p>下面按照写法的难易程度逐层递进：<br>相对简单的<strong>饿汉式：</strong></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 饿汉式写法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton = <span class="keyword">new</span> Singleton();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>类的第一行，用static修饰实例，并且把构造函数用private修饰。</p>
@@ -448,7 +447,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#如何用java写一个单例模式？"><span class="nav-text">如何用java写一个单例模式？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是单例模式？"><span class="nav-text">什么是单例模式？</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#如何用java写一个单例模式？"><span class="nav-text">如何用java写一个单例模式？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是单例模式？"><span class="nav-text">什么是单例模式？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单例模式使用场景？"><span class="nav-text">单例模式使用场景？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单例模式的实现"><span class="nav-text">单例模式的实现</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -464,7 +463,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>LeetCode-Practice-by-Categories-String-Algorithm</title>
+    <url>/2020/01/13/LeetCode-Practice-by-Categories-String-Algorithm/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>LeetCode-Practice-by-Categories-Sort</title>
+    <url>/2020/01/13/LeetCode-Practice-by-Categories-Sort/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>LeetCode-Practice-by-Categories-Bitwise-Operation</title>
+    <url>/2020/01/13/LeetCode-Practice-by-Categories-Bitwise-Operation/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>LeetCode-Practice-by-Categories-Dynamic-Programming</title>
+    <url>/2020/01/13/LeetCode-Practice-by-Categories-Dynamic-Programming/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>LeetCode-Practice-by-Categories-Search</title>
+    <url>/2020/01/13/LeetCode-Practice-by-Categories-Search/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>LeetCode-Practice-by-Categories-Tree</title>
+    <url>/2020/01/13/LeetCode-Practice-by-Categories-Tree/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>LeetCode-Practice-by-Categories-Hash-Table</title>
+    <url>/2020/01/13/LeetCode-Practice-by-Categories-Hash-Table/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>LeetCode Practice by Categories(Stack, Queue)</title>
     <url>/2020/01/08/LeetCode-Practice-by-Categories-Stack-Queue/</url>
     <content><![CDATA[<blockquote>
@@ -554,15 +589,14 @@
 <p>假设数据库在一段时间不变，那么我们其实只需要使用这一个实例完成任务即可。如果每次都重新生成新的实例，浪费资源，十分没有必要。</p>
 <p><strong>理由二：</strong>为了保证结果的正确。比如我们需要一个全局计数器用来统计人数。如果有多个实例，反而会造成混乱。</p>
 <p><strong>理由三：</strong>方便管理。很多工具类，我们只需要一个实例，通过一个统一的入口，获取这个单例。太多实例不但没有帮助，只会让人眼花缭乱。</p>
-<p><strong>单例模式使用场景：</strong></p>
-<ol>
+<h2 id="单例模式使用场景？"><a href="#单例模式使用场景？" class="headerlink" title="单例模式使用场景？"></a>单例模式使用场景？</h2><ol>
 <li><p><strong>无状态的工具类：日志工具、字符串工具等</strong>。——日志工具，不论在哪里使用，我们只需要它帮我们记录日志信息，除此功能之外并不需要在它的实例对象上存储任何状态，所以我们只需要一个实例对象就可以了。</p>
 </li>
 <li><p><strong>全局信息类：全局计数、环境变量</strong>。——比如我们要记录某个网站的访问次数，而且不希望有的访问记录被记录在对象A上，而有的被记录在对象B上。此时我们就可以让这个类为单例，在需要计数的时候拿出来用就可以了。</p>
 </li>
 </ol>
 <p><font color=#FF0000>单例模式常见写法，这里列举五种：饿汉式、懒汉式、双重检查式、静态内部类式、枚举式</font></p>
-<p>下面按照写法的难易程度逐层递进：<br>相对简单的<strong>饿汉式：</strong></p>
+<h2 id="单例模式的实现"><a href="#单例模式的实现" class="headerlink" title="单例模式的实现"></a>单例模式的实现</h2><p>下面按照写法的难易程度逐层递进：<br>相对简单的<strong>饿汉式：</strong></p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 饿汉式写法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton = <span class="keyword">new</span> Singleton();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>类的第一行，用static修饰实例，并且把构造函数用private修饰。</p>
