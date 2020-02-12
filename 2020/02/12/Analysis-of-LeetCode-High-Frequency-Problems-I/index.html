@@ -57,7 +57,7 @@
 <meta property="og:description" content="详细讲解LeetCode考察较多的3道题目：03、04、23。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-02-12T08:38:33.000Z">
-<meta property="article:modified_time" content="2020-02-12T08:40:39.348Z">
+<meta property="article:modified_time" content="2020-02-12T13:38:44.328Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -214,7 +214,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-02-12 16:38:33 / Modified: 16:40:39" itemprop="dateCreated datePublished" datetime="2020-02-12T16:38:33+08:00">2020-02-12</time>
+              <time title="Created: 2020-02-12 16:38:33 / Modified: 21:38:44" itemprop="dateCreated datePublished" datetime="2020-02-12T16:38:33+08:00">2020-02-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -242,7 +242,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>560</span>
+              <span>3.2k</span>
             </span>
 
         </div>
@@ -268,8 +268,80 @@
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Input: <span class="string">"pwwkew"</span></span><br><span class="line">Output: 3</span><br><span class="line">Explanation: The answer is <span class="string">"wke"</span>, with the length of 3. </span><br><span class="line">            <span class="built_in"> Note </span>that the answer must be a substring, <span class="string">"pwke"</span> is a subsequence <span class="keyword">and</span> <span class="keyword">not</span> a substring.</span><br></pre></td></tr></table></figure>
 
 <hr>
+<p>解：<strong>解法一：暴力法</strong></p>
+<p>找到所有子串，然后每一个子串都一个一个地去判断是否有重复的字符。</p>
+<p>要分析这个方法的时间复杂度，首先我们需要弄清楚一些问题，假设字符串长度为n，那么它有多少个非空子串？</p>
+<p>答案是 n*(n+1)/2 个。</p>
+<p>怎么计算出来的？</p>
+<ul>
+<li>长度为1的子串，有n个</li>
+<li>长度为2的子串，有n-1个</li>
+<li>长度为3的子串，有n-2个</li>
+</ul>
+<p>…</p>
+<ul>
+<li>长度为k的子串，有n-k+1个</li>
+<li>当k=n时，n-k+1=1，即长度为n的子串就是1个</li>
+</ul>
+<p>所有情况相加，可以得到：<br>n+(n-1)+(n-2)+(n-3)+…+2+1 = n(n+1)/2<br>算上空字符串，一共有：(n(n+1)/2) + 1</p>
+<p>在这里可以进行对比，子串和子序列的区别。比如，对于长度为n的字符串，一共有多少子序列？</p>
+<p>答案是2^n</p>
+<p>怎么计算得到的？</p>
+<ul>
+<li><p>子序列不同于子串</p>
+</li>
+<li><p>子序列中的元素不需要相互挨着</p>
+</li>
+<li><p>长度为1的子序列有n个，即：C(1,n)</p>
+</li>
+<li><p>长度为2的子序列有C(2,n)个</p>
+</li>
+<li><p>长度为3的子序列有C(3,n)个</p>
+</li>
+</ul>
+<p>…</p>
+<ul>
+<li>长度为k的子序列有C(k,n)个</li>
+<li>所有子序列的个数(包括空序列)为：C(0,n) + C(1,n) + C(2,n) + C(3,n) + … + C(n,n) = 2^n</li>
+</ul>
+<p>这里有关统计字符串的子串和子序列的过程和方法，和结果，务必熟悉和记下来，对于分析各种问题能有帮助。</p>
+<p>如果对所有的子串进行判断，从每个子串里寻找最长且没有重复字符的，复杂度为：O(n* (n+1)/2 * n) = O(n^3)</p>
+<p>当然，这不是最好的办法。</p>
+<p><strong>解法二：线性法</strong></p>
+<ul>
+<li>把每次遍历到的字符放入到一个哈希集合中，这样每次判断当前遍历过的内容中是否包含下一个要遍历的字符的时候，用哈希表的contains方法，时间复杂度为O(1),比不放到哈希表中的O(n)的速度能够得到提高。</li>
+</ul>
+<p>具体解法：</p>
+<ul>
+<li>定义一个哈希集合set</li>
+<li>从给定字符串的头开始，每次检查当前字符是否在集合内。如果不在，说明该字符不会造成冲突和重复，将其加入到集合中，并统计当前集合长度，或许为最长子串</li>
+</ul>
+<p>如果出现了重复的子串，处理方法是定义两个指针，i为慢指针，j为快指针。</p>
+<p>当 j 遇到一个重复出现的字符时，我们从慢指针开始一个一个地将 i 指针指向的字符从集合中删除，然后判断是否可以把新字符加入到集合而不会重复。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(<span class="keyword">String</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 定义一个哈希集合set,初始化结果max为0</span></span><br><span class="line">        Set&lt;Character&gt; <span class="built_in">set</span> = <span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> <span class="built_in">max</span> = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 利用快慢指针i(慢)和j(快)扫描一遍字符串</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; j &lt; s.length(); j++) &#123;</span><br><span class="line">            <span class="comment">// 如果快指针指向的字符已经出现在哈希集合中,不断尝试将慢指针指向的字符从哈希集合中删除</span></span><br><span class="line">            <span class="keyword">while</span>(<span class="built_in">set</span>.contains(s.charAt(j))) &#123;</span><br><span class="line">                <span class="built_in">set</span>.<span class="built_in">remove</span>(s.charAt(i));</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 当快指针的字符终于能加入到哈希集合的时候，更新结果max</span></span><br><span class="line">            <span class="built_in">set</span>.add(s.charAt(j));</span><br><span class="line">            <span class="built_in">max</span> = Math.<span class="built_in">max</span>(<span class="built_in">max</span>, <span class="built_in">set</span>.<span class="built_in">size</span>());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 遍历完毕后，返回结果max</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度分析：O(n)。使用了快慢指针策略，字符串最多被遍历两次。快指针会被添加到哈希表集合，慢指针遇到的字符会从哈希集合中删除。哈希集合操作时间为O(1)，因此整个算法复杂度为：n * O(1) + n*O(1) = O(n)</li>
+<li>空间复杂度分析：O(n)。由于使用到哈希集合，最坏的情况下，即给定的字符串没有任何重复的字符，我们需要把每个字符都加入集合。</li>
+</ul>
+<p>方法三：优化的线性法</p>
+<p>基于方法二的线性法。也就是，如果我们在遍历过程中遇到了set已经有的字符的时候，如何不让慢指针一步一步移动，而是直接移动到重复元素的后面呢？这样可以大大减少比较次数。</p>
+<p>这样一来我们需要能够记录每个字符出现的下标位置，可以用哈希表记录，因为查找过程时间复杂度也是O(1)</p>
+<p>而且此时，我们不能像之前一样去数哈希集合的元素作为max的结果。比如可能出现一种情况，就是当前快指针j遍历到的元素在之前已经出现过了，那么此时不能让i又跳回到前面去呀！所以i的值需要有max计算得到：i = Math.max(i, map.get(s.charAt(j) + 1));</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(<span class="keyword">String</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 定义一个哈希表map用来记录上次某字符出现的位置,初始化结果max为0</span></span><br><span class="line">        Map&lt;Character, Integer&gt; <span class="built_in">map</span> = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> <span class="built_in">max</span> = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 利用快慢指针i(慢)和j(快)扫描一遍字符串</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; j &lt; s.length(); j++) &#123;</span><br><span class="line">            <span class="comment">// 如果发现快指针所对应的字符已经出现过，慢指针就进行跳跃</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">map</span>.containsKey(s.charAt(j))) &#123;</span><br><span class="line">                i = Math.<span class="built_in">max</span>(i, <span class="built_in">map</span>.<span class="built_in">get</span>(s.charAt(j)) + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 把快指针所对应的字符添加到哈希表中，更新结果max</span></span><br><span class="line">            <span class="built_in">map</span>.<span class="built_in">put</span>(s.charAt(j), j);</span><br><span class="line">            <span class="built_in">max</span> = Math.<span class="built_in">max</span>(<span class="built_in">max</span>, j - i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 遍历完毕后，返回结果max</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Median-of-Two-Sorted-Arrays-寻找两个有序数组的中位数-Hard"><a href="#4-Median-of-Two-Sorted-Arrays-寻找两个有序数组的中位数-Hard" class="headerlink" title="4.Median of Two Sorted Arrays(寻找两个有序数组的中位数)(Hard)"></a><a href="https://leetcode-cn.com/problems/median-of-two-sorted-arrays" target="_blank" rel="noopener">4.Median of Two Sorted Arrays(寻找两个有序数组的中位数)(Hard)</a></h2><p>There are two sorted arrays <strong>nums1</strong> and <strong>nums2</strong> of size m and n respectively.</p>
+<p>Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).</p>
+<p>You may assume <strong>nums1</strong> and <strong>nums2</strong> cannot be both empty.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nums1 = [<span class="number">1</span>, <span class="number">3</span>]</span><br><span class="line">nums2 = [<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line">The median <span class="keyword">is</span> <span class="number">2.0</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nums1 = [<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line">nums2 = [<span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line"></span><br><span class="line">The median <span class="keyword">is</span> (<span class="number">2</span> + <span class="number">3</span>)/<span class="number">2</span> = <span class="number">2.5</span></span><br></pre></td></tr></table></figure>
+
+<hr>
 <p>解：</p>
-<h2 id="4-Median-of-Two-Sorted-Arrays-寻找两个有序数组的中位数-Hard"><a href="#4-Median-of-Two-Sorted-Arrays-寻找两个有序数组的中位数-Hard" class="headerlink" title="4.Median of Two Sorted Arrays(寻找两个有序数组的中位数)(Hard)"></a><a href="https://leetcode-cn.com/problems/median-of-two-sorted-arrays" target="_blank" rel="noopener">4.Median of Two Sorted Arrays(寻找两个有序数组的中位数)(Hard)</a></h2><h2 id="23-Merge-k-sorted-lists-合并K个排序链表-Hard"><a href="#23-Merge-k-sorted-lists-合并K个排序链表-Hard" class="headerlink" title="23.Merge k sorted lists(合并K个排序链表)(Hard)"></a><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/" target="_blank" rel="noopener">23.Merge k sorted lists(合并K个排序链表)(Hard)</a></h2>
+<h2 id="23-Merge-k-sorted-lists-合并K个排序链表-Hard"><a href="#23-Merge-k-sorted-lists-合并K个排序链表-Hard" class="headerlink" title="23.Merge k sorted lists(合并K个排序链表)(Hard)"></a><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/" target="_blank" rel="noopener">23.Merge k sorted lists(合并K个排序链表)(Hard)</a></h2>
     </div>
 
 
@@ -445,7 +517,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">102k</span>
+    <span title="Symbols count total">104k</span>
 </div>
 
 
@@ -462,7 +534,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共32.5k字</span>
+  <span class="post-count">博客全站共34k字</span>
 </div>
 
         
