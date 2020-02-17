@@ -57,7 +57,7 @@
 <meta property="og:description" content="详细讲解LeetCode考察较多的3道题目：03、04、23。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-02-12T08:38:33.000Z">
-<meta property="article:modified_time" content="2020-02-12T13:38:44.328Z">
+<meta property="article:modified_time" content="2020-02-13T09:25:26.239Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -212,10 +212,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-02-12 16:38:33 / Modified: 21:38:44" itemprop="dateCreated datePublished" datetime="2020-02-12T16:38:33+08:00">2020-02-12</time>
+              <time title="Created: 2020-02-12 16:38:33" itemprop="dateCreated datePublished" datetime="2020-02-12T16:38:33+08:00">2020-02-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-13 17:25:26" itemprop="dateModified" datetime="2020-02-13T17:25:26+08:00">2020-02-13</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -242,7 +248,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>3.2k</span>
+              <span>4.6k</span>
             </span>
 
         </div>
@@ -324,7 +330,7 @@
 <li>时间复杂度分析：O(n)。使用了快慢指针策略，字符串最多被遍历两次。快指针会被添加到哈希表集合，慢指针遇到的字符会从哈希集合中删除。哈希集合操作时间为O(1)，因此整个算法复杂度为：n * O(1) + n*O(1) = O(n)</li>
 <li>空间复杂度分析：O(n)。由于使用到哈希集合，最坏的情况下，即给定的字符串没有任何重复的字符，我们需要把每个字符都加入集合。</li>
 </ul>
-<p>方法三：优化的线性法</p>
+<p><strong>解法三：优化的线性法</strong></p>
 <p>基于方法二的线性法。也就是，如果我们在遍历过程中遇到了set已经有的字符的时候，如何不让慢指针一步一步移动，而是直接移动到重复元素的后面呢？这样可以大大减少比较次数。</p>
 <p>这样一来我们需要能够记录每个字符出现的下标位置，可以用哈希表记录，因为查找过程时间复杂度也是O(1)</p>
 <p>而且此时，我们不能像之前一样去数哈希集合的元素作为max的结果。比如可能出现一种情况，就是当前快指针j遍历到的元素在之前已经出现过了，那么此时不能让i又跳回到前面去呀！所以i的值需要有max计算得到：i = Math.max(i, map.get(s.charAt(j) + 1));</p>
@@ -341,7 +347,31 @@
 
 <hr>
 <p>解：</p>
-<h2 id="23-Merge-k-sorted-lists-合并K个排序链表-Hard"><a href="#23-Merge-k-sorted-lists-合并K个排序链表-Hard" class="headerlink" title="23.Merge k sorted lists(合并K个排序链表)(Hard)"></a><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/" target="_blank" rel="noopener">23.Merge k sorted lists(合并K个排序链表)(Hard)</a></h2>
+<h2 id="23-Merge-k-Sorted-Lists-合并K个排序链表-Hard"><a href="#23-Merge-k-Sorted-Lists-合并K个排序链表-Hard" class="headerlink" title="23.Merge k Sorted Lists(合并K个排序链表)(Hard)"></a><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/" target="_blank" rel="noopener">23.Merge k Sorted Lists(合并K个排序链表)(Hard)</a></h2><p>Merge <em>k</em> sorted linked lists and return it as one sorted list. Analyze and describe its complexity.</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Input:</span><br><span class="line">[</span><br><span class="line">  <span class="number">1</span>-&gt;<span class="number">4</span>-&gt;<span class="number">5</span>,</span><br><span class="line">  <span class="number">1</span>-&gt;<span class="number">3</span>-&gt;<span class="number">4</span>,</span><br><span class="line">  <span class="number">2</span>-&gt;<span class="number">6</span></span><br><span class="line">]</span><br><span class="line">Output: <span class="number">1</span>-&gt;<span class="number">1</span>-&gt;<span class="number">2</span>-&gt;<span class="number">3</span>-&gt;<span class="number">4</span>-&gt;<span class="number">4</span>-&gt;<span class="number">5</span>-&gt;<span class="number">6</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>解：<strong>解法一：暴力法</strong></p>
+<ul>
+<li>用一个数组保存所有链表中的数，之后进行排序，再从头到尾将数组遍历，生成一个排好序的链表</li>
+<li>假设每个链表平均长度为n,整体时间复杂度为O(nk * log(nk))，偏大</li>
+</ul>
+<p><strong>解法二：最小堆</strong></p>
+<ul>
+<li>每次比较k个链表头，时间复杂度为O(k)</li>
+<li>对k个链表头创建一个大小为k的最小堆<ul>
+<li>创建一个大小为k的最小堆所需时间为O(k)</li>
+<li>从堆中取最小的数，所需时间都是O(logk)</li>
+<li>如果每个链表平均长度为n，则共有nk个元素，即用大小为k的最小堆过滤nk个元素</li>
+<li>整体时间复杂度为O(nk*log(k))</li>
+</ul>
+</li>
+</ul>
+<p>我们一直维护这个大小为k的最小堆，直到遍历完所有链表的节点</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Solution &#123;</span><br><span class="line">    <span class="keyword">public</span> ListNode mergeKLists(ListNode[] lists) &#123;</span><br><span class="line">        <span class="comment">// 如果输入为[]，边界条件</span></span><br><span class="line">        <span class="keyword">if</span>(lists.length == <span class="number">0</span> || lists == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 利用一个空的链表头方便我们插入节点</span></span><br><span class="line">        ListNode fakeHead = <span class="keyword">new</span> ListNode(<span class="number">0</span>), p = fakeHead;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 定义一个最小堆来保存k个链表节点</span></span><br><span class="line">        <span class="keyword">int</span> k = lists.length;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 将k个链表的头放到最小堆中,因为要维护最小堆，所以重新定义比较器，降序排列。</span></span><br><span class="line">        <span class="comment">// 不手动定义比较器的话默认升序排列</span></span><br><span class="line">        PriorityQueue&lt;ListNode&gt; heap = <span class="keyword">new</span> PriorityQueue&lt;&gt;(k, <span class="keyword">new</span> Comparator&lt;ListNode&gt;() &#123;</span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">int</span> compare(ListNode a, ListNode b) &#123;</span><br><span class="line">                <span class="keyword">return</span> a.val - b.val;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 从最小堆中将当前最小节点取出，插入到结果链表中</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(lists[i] != <span class="keyword">null</span>) &#123;</span><br><span class="line">                heap.offer(lists[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果发现该节点后还有后序节点，将其加入到最小堆中</span></span><br><span class="line">        <span class="keyword">while</span>(!heap.isEmpty()) &#123;</span><br><span class="line">            ListNode node = heap.poll();</span><br><span class="line">            </span><br><span class="line">            p.<span class="keyword">next</span> = node;</span><br><span class="line">            p = p.<span class="keyword">next</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(node.<span class="keyword">next</span> != <span class="keyword">null</span>) &#123;</span><br><span class="line">                heap.offer(node.<span class="keyword">next</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 最后返回结果链表</span></span><br><span class="line">        <span class="keyword">return</span> fakeHead.<span class="keyword">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>解法三：分治法</strong></p>
+
     </div>
 
 
@@ -432,7 +462,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Longest-Substring-Without-Repeating-Characters-无重复字符的最长子串-Mid"><span class="nav-text">3.Longest Substring Without Repeating Characters(无重复字符的最长子串)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Median-of-Two-Sorted-Arrays-寻找两个有序数组的中位数-Hard"><span class="nav-text">4.Median of Two Sorted Arrays(寻找两个有序数组的中位数)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#23-Merge-k-sorted-lists-合并K个排序链表-Hard"><span class="nav-text">23.Merge k sorted lists(合并K个排序链表)(Hard)</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Longest-Substring-Without-Repeating-Characters-无重复字符的最长子串-Mid"><span class="nav-text">3.Longest Substring Without Repeating Characters(无重复字符的最长子串)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Median-of-Two-Sorted-Arrays-寻找两个有序数组的中位数-Hard"><span class="nav-text">4.Median of Two Sorted Arrays(寻找两个有序数组的中位数)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#23-Merge-k-Sorted-Lists-合并K个排序链表-Hard"><span class="nav-text">23.Merge k Sorted Lists(合并K个排序链表)(Hard)</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -517,7 +547,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">104k</span>
+    <span title="Symbols count total">112k</span>
 </div>
 
 
@@ -534,7 +564,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共34k字</span>
+  <span class="post-count">博客全站共38.6k字</span>
 </div>
 
         

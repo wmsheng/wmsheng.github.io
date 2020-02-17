@@ -119,7 +119,7 @@
 <li>时间复杂度分析：O(n)。使用了快慢指针策略，字符串最多被遍历两次。快指针会被添加到哈希表集合，慢指针遇到的字符会从哈希集合中删除。哈希集合操作时间为O(1)，因此整个算法复杂度为：n * O(1) + n*O(1) = O(n)</li>
 <li>空间复杂度分析：O(n)。由于使用到哈希集合，最坏的情况下，即给定的字符串没有任何重复的字符，我们需要把每个字符都加入集合。</li>
 </ul>
-<p>方法三：优化的线性法</p>
+<p><strong>解法三：优化的线性法</strong></p>
 <p>基于方法二的线性法。也就是，如果我们在遍历过程中遇到了set已经有的字符的时候，如何不让慢指针一步一步移动，而是直接移动到重复元素的后面呢？这样可以大大减少比较次数。</p>
 <p>这样一来我们需要能够记录每个字符出现的下标位置，可以用哈希表记录，因为查找过程时间复杂度也是O(1)</p>
 <p>而且此时，我们不能像之前一样去数哈希集合的元素作为max的结果。比如可能出现一种情况，就是当前快指针j遍历到的元素在之前已经出现过了，那么此时不能让i又跳回到前面去呀！所以i的值需要有max计算得到：i = Math.max(i, map.get(s.charAt(j) + 1));</p>
@@ -136,7 +136,31 @@
 
 <hr>
 <p>解：</p>
-<h2 id="23-Merge-k-sorted-lists-合并K个排序链表-Hard"><a href="#23-Merge-k-sorted-lists-合并K个排序链表-Hard" class="headerlink" title="23.Merge k sorted lists(合并K个排序链表)(Hard)"></a><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/" target="_blank" rel="noopener">23.Merge k sorted lists(合并K个排序链表)(Hard)</a></h2>]]></content>
+<h2 id="23-Merge-k-Sorted-Lists-合并K个排序链表-Hard"><a href="#23-Merge-k-Sorted-Lists-合并K个排序链表-Hard" class="headerlink" title="23.Merge k Sorted Lists(合并K个排序链表)(Hard)"></a><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/" target="_blank" rel="noopener">23.Merge k Sorted Lists(合并K个排序链表)(Hard)</a></h2><p>Merge <em>k</em> sorted linked lists and return it as one sorted list. Analyze and describe its complexity.</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">Input:</span><br><span class="line">[</span><br><span class="line">  <span class="number">1</span>-&gt;<span class="number">4</span>-&gt;<span class="number">5</span>,</span><br><span class="line">  <span class="number">1</span>-&gt;<span class="number">3</span>-&gt;<span class="number">4</span>,</span><br><span class="line">  <span class="number">2</span>-&gt;<span class="number">6</span></span><br><span class="line">]</span><br><span class="line">Output: <span class="number">1</span>-&gt;<span class="number">1</span>-&gt;<span class="number">2</span>-&gt;<span class="number">3</span>-&gt;<span class="number">4</span>-&gt;<span class="number">4</span>-&gt;<span class="number">5</span>-&gt;<span class="number">6</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>解：<strong>解法一：暴力法</strong></p>
+<ul>
+<li>用一个数组保存所有链表中的数，之后进行排序，再从头到尾将数组遍历，生成一个排好序的链表</li>
+<li>假设每个链表平均长度为n,整体时间复杂度为O(nk * log(nk))，偏大</li>
+</ul>
+<p><strong>解法二：最小堆</strong></p>
+<ul>
+<li>每次比较k个链表头，时间复杂度为O(k)</li>
+<li>对k个链表头创建一个大小为k的最小堆<ul>
+<li>创建一个大小为k的最小堆所需时间为O(k)</li>
+<li>从堆中取最小的数，所需时间都是O(logk)</li>
+<li>如果每个链表平均长度为n，则共有nk个元素，即用大小为k的最小堆过滤nk个元素</li>
+<li>整体时间复杂度为O(nk*log(k))</li>
+</ul>
+</li>
+</ul>
+<p>我们一直维护这个大小为k的最小堆，直到遍历完所有链表的节点</p>
+<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Solution &#123;</span><br><span class="line">    <span class="keyword">public</span> ListNode mergeKLists(ListNode[] lists) &#123;</span><br><span class="line">        <span class="comment">// 如果输入为[]，边界条件</span></span><br><span class="line">        <span class="keyword">if</span>(lists.length == <span class="number">0</span> || lists == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 利用一个空的链表头方便我们插入节点</span></span><br><span class="line">        ListNode fakeHead = <span class="keyword">new</span> ListNode(<span class="number">0</span>), p = fakeHead;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 定义一个最小堆来保存k个链表节点</span></span><br><span class="line">        <span class="keyword">int</span> k = lists.length;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 将k个链表的头放到最小堆中,因为要维护最小堆，所以重新定义比较器，降序排列。</span></span><br><span class="line">        <span class="comment">// 不手动定义比较器的话默认升序排列</span></span><br><span class="line">        PriorityQueue&lt;ListNode&gt; heap = <span class="keyword">new</span> PriorityQueue&lt;&gt;(k, <span class="keyword">new</span> Comparator&lt;ListNode&gt;() &#123;</span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">int</span> compare(ListNode a, ListNode b) &#123;</span><br><span class="line">                <span class="keyword">return</span> a.val - b.val;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 从最小堆中将当前最小节点取出，插入到结果链表中</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(lists[i] != <span class="keyword">null</span>) &#123;</span><br><span class="line">                heap.offer(lists[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果发现该节点后还有后序节点，将其加入到最小堆中</span></span><br><span class="line">        <span class="keyword">while</span>(!heap.isEmpty()) &#123;</span><br><span class="line">            ListNode node = heap.poll();</span><br><span class="line">            </span><br><span class="line">            p.<span class="keyword">next</span> = node;</span><br><span class="line">            p = p.<span class="keyword">next</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(node.<span class="keyword">next</span> != <span class="keyword">null</span>) &#123;</span><br><span class="line">                heap.offer(node.<span class="keyword">next</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 最后返回结果链表</span></span><br><span class="line">        <span class="keyword">return</span> fakeHead.<span class="keyword">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>解法三：分治法</strong></p>
+]]></content>
       <categories>
         <category>Algorithms Note</category>
       </categories>
@@ -191,7 +215,158 @@
   <entry>
     <title>LeetCode-Practice-by-Categories-Sort</title>
     <url>/2020/01/13/LeetCode-Practice-by-Categories-Sort/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<p>由浅入深介绍和分析各种排序算法，重点给出快排和归并排序的实现思路。</p>
+<a id="more"></a>
+
+<p>国内面试中经常会问到排序方面问题。如果开放性强的话，可能直接问你有关排序，可以畅所欲言。但是考察得更多的应该还是排序的的思路和代码，尤其是快排、归并。</p>
+<p>首先，排序分为比较类排序和非比较类排序，如下图所示：</p>
+<p><img src="https://s2.ax1x.com/2020/02/13/1O9RkF.png" alt="1O9RkF.png"></p>
+<p><strong>如何理解比较类排序和非比较类排序？</strong></p>
+<ol>
+<li>比较类排序： 通过比较来决定元素间的相对次序，由于其时间复杂度不能突破O(nlogn), 因此也称为非线性时间比较类排序。</li>
+</ol>
+<ul>
+<li>在高级语言里，大家直接调用系统的排序函数的时候，你可以传入一个参数：comparator(java语言，其他语言可能叫做cmp之类的函数)。也就是说，它比较的对象不一定必须是实数或者int之类的类型，可以是任何结构体或者类的对象。你只需要给它传入一个可以比较两个object之间的前后关系的类型，都可以通过排序算法得到。</li>
+</ul>
+<p>像这种通过比较来决定元素间的相对次序，数学上已经证明，时间复杂度不会超过O(logn)，而我们经常用到的，都是这种比较类排序。</p>
+<ol start="2">
+<li>非比较类排序：不通过比较来决定元素间的相对次序，它可以突破基于比较排序的时间下界，以线性时间运行，因此也成为线性时间非比较类排序。</li>
+</ol>
+<ul>
+<li>一般对于整型元素来做的，也就是说可以用线性时间来完成。它可以突破基于比较排序的时间下界，以线性时间完成。</li>
+</ul>
+<p><strong>但是非比较类排序的缺点是</strong>：一般只能用于整型相关的数据类型。也就是说对于一些比如字符串的排序，或者对象之间的排序，非比较类排序是无能为力的。而且非比较类排序一般需要辅助的内存空间。</p>
+<p>非比较类排序基本都是把结果放入到数组中，统计不同元素出现的次数来排序。</p>
+<p>常用的排序算法的复杂度分析和稳定性，如下表：</p>
+<p><img src="https://s2.ax1x.com/2020/02/14/1jSh4g.png" alt="1jSh4g.png"></p>
+<p>从重要程度来说，更重要的是比较类排序，因为它是泛型的，也是工业编程中用得最多的。</p>
+<p><strong>初级排序</strong>：O(n^2)</p>
+<ol>
+<li>选择排序(Selection Sort)</li>
+</ol>
+<p>每次选择最小值，然后放到待排序数组的起始位置。</p>
+<ol start="2">
+<li>插入排序(Insertion Sort)</li>
+</ol>
+<p>从前到后逐步构建有序序列;对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。</p>
+<ol start="3">
+<li>冒泡排序(Bubble Sort)</li>
+</ol>
+<p>嵌套循环，每次查看相邻的元素，如果逆序，则交换。</p>
+<p>这三种初级排序没有太大差别，其实是异曲同工的原理。</p>
+<p><font color=#FF0000>而面试中，考察技术能力的时候，他考察的一般也都是O(nlogn)的排序，所以准备过程中也应该尽量多花时间去看时间复杂度为O(nlogn)的排序算法。</font>主要是三个：堆排序、快速排序、归并排序。</p>
+<p><strong>高级排序</strong> —— O(N*logN) </p>
+<ul>
+<li><strong>快速排序(Quick Sort)</strong></li>
+</ul>
+<p>数组取标杆pivot，将小元素放到pivot左边，大元素放右边，然后依次对左边和右边的子数组继续快排；以达到整个序列有序。</p>
+<p>快排用到了<strong>分治</strong>的思想，首先，如果想要把排序的时间复杂度从O(n^2)降到O(N logN)，那么分治毫无疑问是要考虑的问题。</p>
+<p><font color=#FF0000>快排的方法：拿到一个pivot的位置，将所有小于pivot的元素移动到左边去，大于pivot的移动到右边去，且分别对左右侧再进行递归，调用快排。</font>可以通过主定理，证明整个递归下来的时间复杂度为O(N logN)。</p>
+<p>快排的样例代码：</p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span>[] <span class="built_in">array</span>, <span class="keyword">int</span> <span class="built_in">begin</span>, <span class="keyword">int</span> <span class="built_in">end</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">end</span> &lt;= <span class="built_in">begin</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">int</span> pivot = partition(<span class="built_in">array</span>, <span class="built_in">begin</span>, <span class="built_in">end</span>);</span><br><span class="line">    quickSort(<span class="built_in">array</span>, <span class="built_in">begin</span>, pivot - <span class="number">1</span>);</span><br><span class="line">    quickSort(<span class="built_in">array</span>, pivot + <span class="number">1</span>, <span class="built_in">end</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> <span class="built_in">begin</span>, <span class="keyword">int</span> <span class="built_in">end</span>)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// pivot: 标杆位置，counter: 小于a[pivot]的元素的个数</span></span><br><span class="line">    <span class="keyword">int</span> pivot = <span class="built_in">end</span>, counter = <span class="built_in">begin</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="built_in">begin</span>; i &lt; <span class="built_in">end</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[i] &lt; a[pivot]) &#123;</span><br><span class="line">            <span class="keyword">int</span> temp = a[counter]; a[counter] = a[i]; a[i] = temp;</span><br><span class="line">            counter++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> temp = a[pivot]; a[pivot] = a[counter]; a[counter] = temp;</span><br><span class="line">    <span class="keyword">return</span> counter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>稍微复杂的过程是partition，它做的是，返回一个下标pivot，且能够保证pivot之前的元素都小于pivot，pivot之后的元素都大于pivot。(但是需要注意，每次partition只能保证pivot前面的是小于它的，后面是大于它的，前面和后面不能保证是有序的)</p>
+<p>这段代码其实是非常考验基本功的。</p>
+<p>实现过程中，我们可以申请一个新的数组，通过比较，把小的元素放到数组的左边，大的元素放到数组的右边。但是如果不能申请一个新的数组，那么这段代码是非常巧妙的。</p>
+<figure class="highlight delphi"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (int i = <span class="keyword">begin</span>; i &lt; <span class="keyword">end</span>; i++) <span class="comment">&#123;</span></span><br><span class="line"><span class="comment">    if (a[i] &lt; a[pivot]) &#123;</span></span><br><span class="line"><span class="comment">        int temp = a[counter]; a[counter] = a[i]; a[i] = temp;</span></span><br><span class="line"><span class="comment">        counter++;</span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一开始把pivot定义在传入的数组的最后的位置，然后根据情况改变pivot的位置。counter用于统计小于a[pivot]的元素的个数。这里的关键是，只要a[i] &lt; a[pivot]，说明a[counter]要和a[i]交换位置。</p>
+<p>这里一开始我也没能理解，但是用纸笔模拟了一下之后，发现真的很巧妙。一开始counter和i都是begin，是从相同的地方开始的，然后counter用于指在最后一个小于a[pivot]的元素上，i的值来进行循环，如果碰到比末尾的pivot值大的值，就跳过（因为这个是要留给counter进行交换的,counter此时的作用是把大的元素和后面的i位置的，而且比a[pivot]小元素进行交换），i只要碰到了小于a[pivot]的，就让前面的counter和这个小于a[pivot]的元素交换，从而让大的元素移到后面去，然后把counter往后移，如果此时a[counter]的元素是大于a[pivot]的，那么此时counter所指的元素是为了进行下次交换的。保证counter前面的所有值都是小于a[pivot]的。</p>
+<p>一直这样下去，直到begin和end都遍历完了，然后交换a[pivot]和a[counter]，由此一来，绝对可以保证a[piovot]成为一个分水岭，pivot成为一个标杆，a[pivot]左边所有的元素都会是小于a[pivot]的，右边都是大于a[pivot]的。</p>
+<p>快排就是这样，大家写的时候，就是把这一段记好，多写几次，多写几次，记住关键的pivot和counter以及它们的作用。</p>
+<ul>
+<li><strong>归并排序(Merge Sort)</strong></li>
+</ul>
+<p>归并排序也用到了<strong>分治</strong>的思想。</p>
+<p>归并具体流程：</p>
+<ol>
+<li>把待排序的数组从中间一分为二，注意这个分只是从中间直接”劈开”，不用做任何交换元素的操作。</li>
+<li>对这两个子序列先分别调用归并排序，这样可以保证左边的子序列和右边的子序列在自己的片段区间中是有序的。</li>
+<li>将两个排好序的子序列合并。</li>
+</ol>
+<p>归并和快排刚好相反，可以把归并排序看做是快排的逆向操作。为什么？</p>
+<p>具体做法不同。归并：先把数组一分为二，在左边和右边都分别调用了排序方法排好序之后，再把左右排好序的两个子数组合并成一个。</p>
+<p>快排：先用partition排好序从而找到pivot的位置，然后再用pivot进行大小的”分隔”，和归并排序是完全相反的操作。</p>
+<p>然后看代码，首先是mergeSort的主函数部分：</p>
+<figure class="highlight excel"><table><tr><td class="code"><pre><span class="line">public static void mergeSort(<span class="built_in">int</span>[] array, <span class="built_in">int</span> <span class="built_in">left</span>, <span class="built_in">int</span> <span class="built_in">right</span>) &#123;</span><br><span class="line">    <span class="built_in">if</span> (<span class="built_in">right</span> &lt;= <span class="built_in">left</span>) return;</span><br><span class="line">    <span class="built_in">int</span> <span class="built_in">mid</span> = (<span class="built_in">left</span> + <span class="built_in">right</span>) &gt;&gt; <span class="number">1</span>; // (<span class="built_in">left</span> + <span class="built_in">right</span>) / <span class="number">2</span></span><br><span class="line"></span><br><span class="line">    mergeSort(array, <span class="built_in">left</span>, <span class="built_in">mid</span>);</span><br><span class="line">    mergeSort(array, <span class="built_in">mid</span> + <span class="number">1</span>, <span class="built_in">right</span>);</span><br><span class="line">    merge(array, <span class="built_in">left</span>, <span class="built_in">mid</span>, <span class="built_in">right</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先直接从中间一分为二地”劈开”, 得到mid，然后递归，每次都切分一次。最后在每次递归的终止的地方将切分并且排好序的两部分合并。</p>
+<p>然后对于merge的逻辑怎么写，之前写过的，把两个有序的链表怎么合并，那里已经知道用O(n)就可以解决。</p>
+<p>在这里的情况是，给你一个数组，它的两半部分全部都是排好序的，你怎么把它合并起来？你也可以想象，给你两个数组，这两个数组都是排好序的，怎么把它合并起来。</p>
+<p>这种程序题目，逻辑相对来说比较简单，但是对于基础编码功底要求很高。</p>
+<p>经过挑选出来的合并的代码，应该是最精简，最漂亮的代码。</p>
+<p>如果之前没写过这段代码，多多少少是要花一些功夫的。</p>
+<p>应当把这种，<strong>把两个有序的数组合并在一起（或者在这里称之为归并）</strong>，的方法，当成一个代码的模板，记在脑子里。最好能够灵活运用。这是提高你最基础的内容的很重要的一个部分。</p>
+<p>merge方法部分：</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line"><span class="built_in">public</span> static <span class="type">void</span> merge(<span class="type">int</span>[] arr, <span class="type">int</span> left, <span class="type">int</span> mid, <span class="type">int</span> right) &#123;</span><br><span class="line">        <span class="type">int</span>[] <span class="keyword">temp</span> = <span class="built_in">new</span> <span class="type">int</span>[right - left + <span class="number">1</span>]; // 中间数组</span><br><span class="line">        <span class="type">int</span> i = left, j = mid + <span class="number">1</span>, k = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (i &lt;= mid &amp;&amp; j &lt;= right) &#123;</span><br><span class="line">            <span class="keyword">temp</span>[k++] = arr[i] &lt;= arr[j] ? arr[i++] : arr[j++];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (i &lt;= mid)   <span class="keyword">temp</span>[k++] = arr[i++];</span><br><span class="line">        <span class="keyword">while</span> (j &lt;= right) <span class="keyword">temp</span>[k++] = arr[j++];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> p = <span class="number">0</span>; p &lt; <span class="keyword">temp</span>.length; p++) &#123;</span><br><span class="line">            arr[left + p] = <span class="keyword">temp</span>[p];</span><br><span class="line">        &#125;</span><br><span class="line">        // 也可以用 <span class="keyword">System</span>.arraycopy(a, start1, b, start2, length)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码具体在做什么呢？</p>
+<p>首先，从left到mid和从mid到right都已经有序了。把这两个子序列合并在一起。</p>
+<p>你可以想象为，有两个数组，第一个数组从left到mid，第二个数组是从mid到right。这两个数组分别是有序的，怎样合并起来。</p>
+<p>首先，要申请一段额外的内存空间（归并排序必须要申请一块额外的内存空间出来）</p>
+<p><code>int[] temp = new int[right - left + 1]; // 中间数组</code></p>
+<p>需要的大小也没什么好说的，很多申请数组的大小都是要有这么一个+1的内容。</p>
+<p>接下来，定义了两个下标i和j, i就是left，j是mid+1，也就是，i表示第一个数组的起始位置，j表示第二个数组的起始位置。k指的是temp这个数组里面已经填入的元素的个数。</p>
+<p>关于合并：<font color=#FF0000>在看了这段之后，一定要养成一个习惯：要合并两个有序的数组，它永远是这种三段式写法：</font></p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="built_in">i</span> &lt;= mid &amp;&amp; <span class="built_in">j</span> &lt;= right) &#123;</span><br><span class="line">    temp[k++] = arr[<span class="built_in">i</span>] &lt;= arr[<span class="built_in">j</span>] ? arr[<span class="built_in">i</span>++] : arr[<span class="built_in">j</span>++];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (<span class="built_in">i</span> &lt;= mid)   temp[k++] = arr[<span class="built_in">i</span>++];</span><br><span class="line"><span class="keyword">while</span> (<span class="built_in">j</span> &lt;= right) temp[k++] = arr[<span class="built_in">j</span>++];</span><br></pre></td></tr></table></figure>
+
+<p>具体分析：</p>
+<p>第一个while：保证i没有循环完且j也没有循环完（所以有i&lt;=mid和j&lt;=right），然后比较a[i]和a[j]中的较小者，把较小者拿出来放到temp[k]里面去。同时，用了a[i]，就让i++（因为要再去用下一个元素了），用了a[j]，就让j++（同理），然后放入到temp[k]之后，毫无疑问k也要k++。</p>
+<p>上面的这一大段逻辑，就三行写完，很是巧妙：</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="built_in">i</span> &lt;= mid &amp;&amp; <span class="built_in">j</span> &lt;= right) &#123;</span><br><span class="line">    temp[k++] = arr[<span class="built_in">i</span>] &lt;= arr[<span class="built_in">j</span>] ? arr[<span class="built_in">i</span>++] : arr[<span class="built_in">j</span>++];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><font color=#FF0000>但是，强调，这句话不是奇技淫巧！对于编程写得比较多的人，这句话是经常用的！</font></p>
+<p>所以要习惯于写这么一句话。这句话的逻辑是非常清晰的，而且简明扼要。它做得事情就是，比较a[i]和a[j]中的较小者，取出来之后，把较小者赋值给temp[k]，同时a[i]或者a[j]谁被用到，就让下标加一用于下次使用，然后k也要移动用于下一次使用。</p>
+<p>这个循环写完之后，可以保证一点，就是i全部走完子数组，或者j全部走完了子数组。</p>
+<p>接下来要做的，如果i没有走完，那么把i的剩余部分赋值到temp[k]里面去，或者j没有走完的话，把j剩余部分复制到temp[k]里面去。</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="built_in">i</span> &lt;= mid)   temp[k++] = arr[<span class="built_in">i</span>++];</span><br><span class="line"><span class="keyword">while</span> (<span class="built_in">j</span> &lt;= right) temp[k++] = arr[<span class="built_in">j</span>++];</span><br></pre></td></tr></table></figure>
+
+<p>在这两个while循环也写完之后，你可以发现，整个数组已经完成了归并，放到了temp[]里面了。</p>
+<p>因为我们在merge这个函数里面是要对arr[]进行排序，所以我们要再把temp里面的所有元素再拷贝回array里面去。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="built_in">int</span> p = <span class="number">0</span>; p &lt; temp.length; p++) &#123;</span><br><span class="line">    arr[left + p] = temp[p];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 也可以用 System.arraycopy(a, start1, b, start2, length)</span></span><br></pre></td></tr></table></figure>
+
+<p>对于归并排序的代码，希望大家多多练习，把这段代码写得更细腻。</p>
+<p>以及，<font color=#FF0000>把这段很能体现编程内力的代码可以在白板上写出来，面试官肯定会刮目相看的。</font></p>
+<p><strong>小总结</strong></p>
+<p>归并 和 快排 具有相似性，但步骤顺序相反。</p>
+<ul>
+<li>归并：线排序左右子数组，然后合并两个有序子数组。</li>
+<li>快排：先调配出左右子数组，然后对左右子数组进行合并。</li>
+</ul>
+<p>快排先调配左右子数组，就是让左边的数组的所有元素都小于右边数组的所有元素（中间的元素为pivot，就是pivot左边的所有元素都小于pivot，右边的所有元素都大于pivot）。但是左、右的元素在这个时候仍然还是无序的，那么然后对于左、右子数组分别调用排序的函数进行分治。</p>
+<p><font color=#FF0000>快排和归并排序都讲完了，这两个是高级排序的面试的重点，一定要细细品味，多过遍数。</font></p>
+<ul>
+<li><strong>堆排序(Merge Sort)</strong></li>
+</ul>
+<p>堆插入时间复杂度为O(logN)，取堆顶，最大/小值，时间复杂度为O(1)</p>
+<p>堆排序的过程：</p>
+<ol>
+<li>对元素依次建立最小堆</li>
+<li>依次取堆顶元素，并删除</li>
+</ol>
+<p>堆本身是一种很有意思的数据结构，使用数组存储一个树状结构，通过自身的规律，可以用简单的公式获取到当前某个节点的父节点或者左右孩子节点(注意起始坐标是0还是1，公式有区别)。</p>
+<p>关键点就是，每次你在调整之前，儿子节点如果大于父亲节点，两者就交换，一直到当前节点小于其他祖宗节点。</p>
+<p><strong>非比较类排序</strong></p>
+<ul>
+<li>计数排序(Counting Sort)</li>
+</ul>
+<p>计数排序要求输入的数据必须是有确定范围的整数。将输入的数据值转化为键存储在额外开辟的数组空间中；然后依次把计数大于1的填充回原数组。<font color=#FF0000>总之，你的元素必须是整数，而且元素值不能太大，否则浪费空间。</font></p>
+<ul>
+<li>桶排序(Bucket Sort)</li>
+</ul>
+<p>工作原理：假设输入数据服从均匀分布，将数据分到有限数量的桶里，每个桶再分别排序(有可能再使用别的排序算法或是以递归方式继续使用桶排序进行排序)。</p>
+<ul>
+<li>基数排序(Radix Sort)</li>
+</ul>
+<p>按照低位先排序，然后收集；再按照高位排序，然后再收集；依次类推，直到最高位。有时候有些属性是有优先级顺序的，先按低优先级排序，再按高优先级排序。<font color=#FF0000>先按照个位进行排序，也就是放到0,1,2…9的位置，把低位先排好序。然后再排十位，再按照0-9的值排上去。然后百位，以此类推。这样一来，排序的数组只需要存储0-9的数字，这是比较巧妙的地方。但是基数排序也是有一个短板，就是只能存储整数，不能存储小数的值。<br></font></p>
+]]></content>
+      <categories>
+        <category>Algorithms Note</category>
+      </categories>
+      <tags>
+        <tag>LeetCode</tag>
+        <tag>Algorithms</tag>
+      </tags>
   </entry>
   <entry>
     <title>LeetCode-Practice-by-Categories-Bitwise-Operation</title>
