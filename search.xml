@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>DataBase-Interview</title>
+    <url>/2020/02/19/DataBase-Interview/</url>
+    <content><![CDATA[<blockquote>
+<p>才能一旦让懒惰支配，它就一无可为。——克雷洛夫</p>
+</blockquote>
+<a id="more"></a>
+
+]]></content>
+      <categories>
+        <category>Study Note</category>
+      </categories>
+      <tags>
+        <tag>DataBase</tag>
+        <tag>Interview</tag>
+        <tag>MYSQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Analysis-of-LeetCode-High-Frequency-Problems-IV</title>
     <url>/2020/02/12/Analysis-of-LeetCode-High-Frequency-Problems-IV/</url>
     <content><![CDATA[<p>详细讲解LeetCode考察较多的3道题目：336、340、407。</p>
