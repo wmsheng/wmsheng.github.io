@@ -56,13 +56,20 @@
 <meta property="og:site_name" content="Hi, This is Bennett">
 <meta property="og:description" content="才能一旦让懒惰支配，它就一无可为。——克雷洛夫">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.ax1x.com/2020/02/19/3Ax1HO.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/02/19/3VOG60.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/02/19/3VXkEF.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/02/19/3Vvr1s.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/02/20/3ZCI3D.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/02/20/3ZP7GT.png">
 <meta property="article:published_time" content="2020-02-19T03:12:58.000Z">
-<meta property="article:modified_time" content="2020-02-19T03:21:56.730Z">
+<meta property="article:modified_time" content="2020-02-19T16:34:57.121Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="DataBase">
 <meta property="article:tag" content="Interview">
 <meta property="article:tag" content="MYSQL">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.ax1x.com/2020/02/19/3Ax1HO.png">
 
 <link rel="canonical" href="http://yoursite.com/2020/02/19/DataBase-Interview/">
 
@@ -213,10 +220,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-02-19 11:12:58 / Modified: 11:21:56" itemprop="dateCreated datePublished" datetime="2020-02-19T11:12:58+08:00">2020-02-19</time>
+              <time title="Created: 2020-02-19 11:12:58" itemprop="dateCreated datePublished" datetime="2020-02-19T11:12:58+08:00">2020-02-19</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-20 00:34:57" itemprop="dateModified" datetime="2020-02-20T00:34:57+08:00">2020-02-20</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -243,7 +256,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>23</span>
+              <span>2.4k</span>
             </span>
 
         </div>
@@ -260,7 +273,86 @@
 </blockquote>
 <a id="more"></a>
 
-
+<h2 id="数据库架构设计"><a href="#数据库架构设计" class="headerlink" title="数据库架构设计"></a>数据库架构设计</h2><p>如果提问：如何设计一个关系型数据库？实际上是考察你对数据库模块化的划分能力，当然也包括对数据库的概念的理解程度。</p>
+<p>要开发数据库需要以下模块：</p>
+<p><img src="https://s2.ax1x.com/2020/02/19/3Ax1HO.png" alt="3Ax1HO.png"></p>
+<ul>
+<li><p>存储管理模块可以控制IO次数，因为读取次数会非常花时间，在实际中，一次读取多行的效率远比多次读取(每次读取一两行)要省时间的多。</p>
+</li>
+<li><p>非常常用的一种方法，就是引入缓存机制，把取出来的数据块存放在缓存里，下次需要的时候直接从内存返回，而不用发生IO。管理缓存的方法很多，可以使用比如LRU等。注意，我们的缓存不宜过大，而且算法中需要有淘汰机制。</p>
+</li>
+</ul>
+<p>总的来说，要回答如何设计一个关系型数据库(RDBMS：Relational Database Management System),首先要将其划分成两大部分，一个是存储部分，该部分类似一个文件系统，将数据持久化到存储设备当中。另一个是程序实例模块来对存储进行管理。而在程序实例模块中，需要包含下面八个模块：</p>
+<p>①. 将数据的逻辑关系转换成物理存储关系的存储管理模块；</p>
+<p>②. 优化执行效率的缓存机制模块</p>
+<p>③. 将SQL语句进行解析的SQL解析模块</p>
+<p>④. 记录操作的日志管理模块</p>
+<p>⑤. 进行多用户权限管理的权限划分模块</p>
+<p>⑥. 灾难恢复的容灾模块</p>
+<p>⑦. <strong>优化查询效率的索引管理模块</strong> (重点)</p>
+<p>⑧. <strong>使数据库支持并发操作的锁模块</strong> (重点)</p>
+<p>实际上，数据库开发设计的模块结构和我们自己设计和开发的软件系统很相似，这个架构是很经典的，对程序的开发和设计也是很有借鉴意义的。</p>
+<h2 id="索引相关问题"><a href="#索引相关问题" class="headerlink" title="索引相关问题"></a>索引相关问题</h2><h3 id="为什么要使用索引？"><a href="#为什么要使用索引？" class="headerlink" title="为什么要使用索引？"></a>为什么要使用索引？</h3><p>索引(Index)是可以帮助MYSQL高效获取数据的数据结构。如果数据量很小，那么哪怕是全表扫描，也可能比加了缩阴之后更快。但是如果数据量很大，那么全表扫描将是噩梦。</p>
+<p>实际上，可以理解索引的灵感来自于”字典”，通过类似”偏旁部首”之类的”索引”可以更快速地找到要查的词。</p>
+<p>具体作用描述：</p>
+<ol>
+<li>索引能极大地减少存储引擎需要扫描的数据量</li>
+<li>索引可以把随机IO变成顺序IO</li>
+<li>索引可以帮助我们在进行分组、排序等操作时，避免使用临时表</li>
+</ol>
+<h3 id="什么样的信息能成为索引？"><a href="#什么样的信息能成为索引？" class="headerlink" title="什么样的信息能成为索引？"></a>什么样的信息能成为索引？</h3><ul>
+<li>主键、唯一键及普通键等</li>
+</ul>
+<h3 id="索引的数据结构"><a href="#索引的数据结构" class="headerlink" title="索引的数据结构"></a>索引的数据结构</h3><p>在选择建并且生成索引之后，可以选择不同的数据结构进行索引的查找。一般常用的是二分查找树进行二分查找、建立B-树结构查找、建立B+树查找(MySQL选择的结构)、建立Hash结构查找。下面简单介绍每种结构的细节。</p>
+<p>回答：<font color=#FF0000>通常来说，索引的数据结构是B+树，比较小众的也有哈希结构、BitMap(位图)等</font></p>
+<h4 id="二叉查找树结构进行索引查找"><a href="#二叉查找树结构进行索引查找" class="headerlink" title="二叉查找树结构进行索引查找"></a>二叉查找树结构进行索引查找</h4><p>大体的结构：</p>
+<p><img src="https://s2.ax1x.com/2020/02/19/3VOG60.png" alt="3VOG60.png"></p>
+<ul>
+<li>二叉查找树符合左小右大的规则，查找的时候使用二分查找</li>
+<li>检索深度每增加1，就会增加1次IO。但是需要注意的是整个树是通过很多数据块组合而成的，当许多数据块组合在一起的时候，会造成二叉树的深度很大，从而基本上没法避免多次的IO，从而造成很悲剧的后果：使用了索引，速度甚至可能比不用更慢，因为IO次数太多了。</li>
+</ul>
+<h4 id="B-树结构进行索引查找"><a href="#B-树结构进行索引查找" class="headerlink" title="B- 树结构进行索引查找"></a>B- 树结构进行索引查找</h4><p>B-树又称作”多路平衡查找树”</p>
+<p><img src="https://s2.ax1x.com/2020/02/19/3VXkEF.png" alt="3VXkEF.png"></p>
+<p>定义：</p>
+<ul>
+<li>根节点至少包括两个孩子</li>
+<li>树中每个结点最多含有m个孩子(m&gt;=2)</li>
+<li>除根节点和叶节点外，其他每个节点至少有ceil(m/2)个孩子(ceil为取上限，举例，1.2和1.5，都是取2)</li>
+<li>所有叶子节点都位于同一层(即叶子节点高度都相同)</li>
+</ul>
+<h4 id="B-树结构进行索引查找-1"><a href="#B-树结构进行索引查找-1" class="headerlink" title="B+树结构进行索引查找"></a>B+树结构进行索引查找</h4><p><img src="https://s2.ax1x.com/2020/02/19/3Vvr1s.png" alt="3Vvr1s.png"></p>
+<p>B+树实际上是B树的变体，其定义和B树不同的地方为：</p>
+<ul>
+<li>非叶子节点的子树指针与关键字个数相同</li>
+<li>非叶子节点的子树指针P[i]，指向关键字值[K[i],K[i+1])<font color=#FFF0000>(左闭右开，即可以大于等于K[i]，但必须大于K[i+1]  )</font>的子树</li>
+<li>非叶子节点仅用来索引，数据都保存在叶子节点中。<font color=#FFF0000>所有的数据实际都存储在叶子节点上，所以每一次遍历都必须遍历到叶子节点上。</font>这也使得B+树的层级可以更少，树可以更矮。</li>
+<li>所有叶子节点均有一个链指针指向下一个叶子节点。<font color=#FFF0000>搜索的实际是上图中粉色的块的部分。</font>这个链指针主要服务于<strong>范围统计</strong>，定位到了某个叶指针之后，可以快速横向地去做统计。比如要统计索引&gt;10的，找到了第二个Q之后，直接统计后面所有的Q内容即可。</li>
+</ul>
+<p>结论：B+树相比B树更适合用来做存储索引</p>
+<ul>
+<li>B+树的磁盘读写代价更低。B+树内部只存储索引(或者说叶子节点的指针)，B树需要不断在父节点和叶子节点之间来回移动，所以B+树的高度能降低。</li>
+<li>B+树查询效率更加稳定。因为所有实质内容都存储在根节点上，所以几乎所有数据的查询的时间都是稳定的：O(n)</li>
+<li>B+树更有利于对数据库的扫描。B+树只需要遍历叶子节点就可以实现全部关键字信息的扫描。比如之前提到的，数据库中频繁使用的范围查询，使用B+树查询能够大大增加效率。</li>
+</ul>
+<h4 id="Hash结构进行索引查找"><a href="#Hash结构进行索引查找" class="headerlink" title="Hash结构进行索引查找"></a>Hash结构进行索引查找</h4><p>和哈希表的原理类似，通过一个哈希函数，将不同的key通过某种哈希映射得到value，然后存储在不同的链表节点上。如图：</p>
+<p><img src="https://s2.ax1x.com/2020/02/20/3ZCI3D.png" alt="3ZCI3D.png"></p>
+<p>哈希索引在理论上性能优于B+树。</p>
+<p>但是哈希表相比B+树有一些缺点，却是更需要重视的：</p>
+<ul>
+<li>仅仅能满足”=”,”IN”，不能使用范围查询。因为哈希运算后得到的值之间的大小关系是根本不能保证和哈希运算前一样的，所以不能进行范围比较，只能进行具体的值的大小的比较。</li>
+<li>无法被用来避免数据的排序操作</li>
+<li>不能利用部分索引键查询</li>
+<li>不能避免表扫描</li>
+<li>遇到大量Hash值相等的情况后性能并不一定就会比B树索引高</li>
+</ul>
+<h4 id="BitMap索引"><a href="#BitMap索引" class="headerlink" title="BitMap索引"></a>BitMap索引</h4><p>需要注意，目前比较少的主流数据库支持位图索引，比较出名的是Oracl。位图索引不是主流索引。</p>
+<p><img src="https://s2.ax1x.com/2020/02/20/3ZP7GT.png" alt="3ZP7GT.png"></p>
+<p>这个索引可以算是一个”神器”。当表中的某个字段只有几种可能值的时候，比如性别，此时如果要实现性别统计，使用位图索引可以说是最佳选择。</p>
+<p>位图索引比较类似B+树。</p>
+<ul>
+<li>锁的力度大，不适合高并发的联机数据处理系统(OLTP系统)，适合并发较少，且统计较多的OLAP系统</li>
+</ul>
+<h3 id="密集索引和稀疏索引的区别"><a href="#密集索引和稀疏索引的区别" class="headerlink" title="密集索引和稀疏索引的区别"></a>密集索引和稀疏索引的区别</h3><h3 id="索引额外的问题"><a href="#索引额外的问题" class="headerlink" title="索引额外的问题"></a>索引额外的问题</h3><h4 id="Sql如何调优"><a href="#Sql如何调优" class="headerlink" title="Sql如何调优"></a>Sql如何调优</h4><h4 id="最左匹配原则的成因"><a href="#最左匹配原则的成因" class="headerlink" title="最左匹配原则的成因"></a>最左匹配原则的成因</h4><h4 id="索引是建立得越多越好么？"><a href="#索引是建立得越多越好么？" class="headerlink" title="索引是建立得越多越好么？"></a>索引是建立得越多越好么？</h4>
     </div>
 
 
@@ -349,6 +441,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库架构设计"><span class="nav-text">数据库架构设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引相关问题"><span class="nav-text">索引相关问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要使用索引？"><span class="nav-text">为什么要使用索引？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么样的信息能成为索引？"><span class="nav-text">什么样的信息能成为索引？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引的数据结构"><span class="nav-text">索引的数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#二叉查找树结构进行索引查找"><span class="nav-text">二叉查找树结构进行索引查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树结构进行索引查找"><span class="nav-text">B- 树结构进行索引查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树结构进行索引查找-1"><span class="nav-text">B+树结构进行索引查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hash结构进行索引查找"><span class="nav-text">Hash结构进行索引查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BitMap索引"><span class="nav-text">BitMap索引</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#密集索引和稀疏索引的区别"><span class="nav-text">密集索引和稀疏索引的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引额外的问题"><span class="nav-text">索引额外的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Sql如何调优"><span class="nav-text">Sql如何调优</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最左匹配原则的成因"><span class="nav-text">最左匹配原则的成因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#索引是建立得越多越好么？"><span class="nav-text">索引是建立得越多越好么？</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -433,7 +526,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">115k</span>
+    <span title="Symbols count total">118k</span>
 </div>
 
 
@@ -450,7 +543,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共39.9k字</span>
+  <span class="post-count">博客全站共41.9k字</span>
 </div>
 
         
