@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>DataBase-Interview</title>
+    <title>DataBase Interview</title>
     <url>/2020/02/19/DataBase-Interview/</url>
     <content><![CDATA[<blockquote>
 <p>才能一旦让懒惰支配，它就一无可为。——克雷洛夫</p>
@@ -27,7 +27,7 @@
 <p>⑦. <strong>优化查询效率的索引管理模块</strong> (重点)</p>
 <p>⑧. <strong>使数据库支持并发操作的锁模块</strong> (重点)</p>
 <p>实际上，数据库开发设计的模块结构和我们自己设计和开发的软件系统很相似，这个架构是很经典的，对程序的开发和设计也是很有借鉴意义的。</p>
-<h2 id="索引相关问题"><a href="#索引相关问题" class="headerlink" title="索引相关问题"></a>索引相关问题</h2><h3 id="为什么要使用索引？"><a href="#为什么要使用索引？" class="headerlink" title="为什么要使用索引？"></a>为什么要使用索引？</h3><p>索引(Index)是可以帮助MYSQL高效获取数据的数据结构。如果数据量很小，那么哪怕是全表扫描，也可能比加了缩阴之后更快。但是如果数据量很大，那么全表扫描将是噩梦。</p>
+<h2 id="索引相关问题"><a href="#索引相关问题" class="headerlink" title="索引相关问题"></a>索引相关问题</h2><h3 id="为什么要使用索引？"><a href="#为什么要使用索引？" class="headerlink" title="为什么要使用索引？"></a>为什么要使用索引？</h3><p>索引(Index)是可以帮助MYSQL高效获取数据的数据结构。如果数据量很小，那么哪怕是全表扫描，也可能比加了索引之后更快。但是如果数据量很大，那么全表扫描将是噩梦。</p>
 <p>实际上，可以理解索引的灵感来自于”字典”，通过类似”偏旁部首”之类的”索引”可以更快速地找到要查的词。</p>
 <p>具体作用描述：</p>
 <ol>
@@ -36,7 +36,7 @@
 <li>索引可以帮助我们在进行分组、排序等操作时，避免使用临时表</li>
 </ol>
 <h3 id="什么样的信息能成为索引？"><a href="#什么样的信息能成为索引？" class="headerlink" title="什么样的信息能成为索引？"></a>什么样的信息能成为索引？</h3><ul>
-<li>主键、唯一键及普通键等</li>
+<li>主键、唯一键及普通键等，只要能让数据具备一定区分性的字段，都可以成为索引。</li>
 </ul>
 <h3 id="索引的数据结构"><a href="#索引的数据结构" class="headerlink" title="索引的数据结构"></a>索引的数据结构</h3><p>在选择建并且生成索引之后，可以选择不同的数据结构进行索引的查找。一般常用的是二分查找树进行二分查找、建立B-树结构查找、建立B+树查找(MySQL选择的结构)、建立Hash结构查找。下面简单介绍每种结构的细节。</p>
 <p>回答：<font color=#FF0000>通常来说，索引的数据结构是B+树，比较小众的也有哈希结构、BitMap(位图)等</font></p>
@@ -87,7 +87,45 @@
 <ul>
 <li>锁的力度大，不适合高并发的联机数据处理系统(OLTP系统)，适合并发较少，且统计较多的OLAP系统</li>
 </ul>
-<h3 id="密集索引和稀疏索引的区别"><a href="#密集索引和稀疏索引的区别" class="headerlink" title="密集索引和稀疏索引的区别"></a>密集索引和稀疏索引的区别</h3><h3 id="索引额外的问题"><a href="#索引额外的问题" class="headerlink" title="索引额外的问题"></a>索引额外的问题</h3><h4 id="Sql如何调优"><a href="#Sql如何调优" class="headerlink" title="Sql如何调优"></a>Sql如何调优</h4><h4 id="最左匹配原则的成因"><a href="#最左匹配原则的成因" class="headerlink" title="最左匹配原则的成因"></a>最左匹配原则的成因</h4><h4 id="索引是建立得越多越好么？"><a href="#索引是建立得越多越好么？" class="headerlink" title="索引是建立得越多越好么？"></a>索引是建立得越多越好么？</h4>]]></content>
+<h3 id="密集索引和稀疏索引的区别"><a href="#密集索引和稀疏索引的区别" class="headerlink" title="密集索引和稀疏索引的区别"></a>密集索引和稀疏索引的区别</h3><ul>
+<li>密集索引文件中的每个搜索码值都对应一个索引值</li>
+<li>稀疏索引文件只为索引码的某些值建立索引项</li>
+</ul>
+<p>密集索引和稀疏索引如下图所示：</p>
+<p><img src="https://s2.ax1x.com/2020/02/20/3ZY1eA.png" alt="3ZY1eA.png"></p>
+<p>一个表只能创建一个密集索引。</p>
+<p>针对Mysql进行分析，其主要有两种存储引擎：MyISAM和InnoDB：</p>
+<ul>
+<li>MyISAM(数据和索引是分开的，文件后缀为.MYI、.MYD,前者存储索引，后者存储数据)：主键索引、唯一建索引和普通索引，全部都是稀疏索引。</li>
+<li>InnoDB(数据和索引是合在一起的，文件后缀为.idb)则有且仅有一个密集索引。</li>
+</ul>
+<p>对于InnoDB的索引的额外知识：</p>
+<ul>
+<li>若一个主键被定义，该主键则作为密集索引</li>
+<li>若没有主键被定义，该表的第一个唯一非空索引则作为密集索引</li>
+<li>若没有主键，也没有合适的唯一索引，innodb内部会生成一个隐藏主键(是一个6字节的列，该列的值会随着数据的插入而自增)(密集索引)</li>
+<li>非主键索引存储相关键位和其对应的主键值，包含两次查找(一次查找次级索引自身，一次查找主键)</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2020/02/20/3ZagE9.png" alt="3ZagE9.png"></p>
+<h3 id="索引额外的问题，以mysql为例"><a href="#索引额外的问题，以mysql为例" class="headerlink" title="索引额外的问题，以mysql为例"></a>索引额外的问题，以mysql为例</h3><h4 id="如何定位并优化慢查询Sql"><a href="#如何定位并优化慢查询Sql" class="headerlink" title="如何定位并优化慢查询Sql"></a>如何定位并优化慢查询Sql</h4><p>这个问题主要考察有没有做过sql优化，需要具体场景具体分析，这里给出大致思路</p>
+<ul>
+<li>根据慢日志定位慢查询sql</li>
+<li>使用explain等工具分析sql</li>
+<li>修改sql或尽量让sql走索引</li>
+</ul>
+<p>下面具体分析：</p>
+<ul>
+<li>根据慢日志定位慢查询sql</li>
+</ul>
+<p>什么是慢日志？——用来记录一些执行比较慢的sql</p>
+<p><code>show variables like &#39;%quer%&#39;;//查看相关变量</code></p>
+<p>查询结果：</p>
+<p><img src="https://s2.ax1x.com/2020/02/20/3ZXX0f.png" alt="3ZXX0f.png"></p>
+<p>其中需要重点关注三个变量：</p>
+<p><code>show_query_log</code>(慢日志是否打开),</p>
+<p><code>slow_query_log_file</code>(日志写入的文件路径)，</p>
+<p><code>long_query_time</code>(多少秒以上的sql语句会被当做慢语句记录到文件中)</p>
+<h4 id="联合索引的最左匹配原则的成因"><a href="#联合索引的最左匹配原则的成因" class="headerlink" title="联合索引的最左匹配原则的成因"></a>联合索引的最左匹配原则的成因</h4><h4 id="索引是建立得越多越好么？"><a href="#索引是建立得越多越好么？" class="headerlink" title="索引是建立得越多越好么？"></a>索引是建立得越多越好么？</h4>]]></content>
       <categories>
         <category>Study Note</category>
       </categories>
