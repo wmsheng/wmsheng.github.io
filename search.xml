@@ -1,7 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>DataBase Interview</title>
+    <title>DataBase Interview II(Mysql)</title>
+    <url>/2020/02/20/Database-Interview-II/</url>
+    <content><![CDATA[<blockquote>
+<p>人真正的强大，不是维护着自尊心的时候，而是抛开自尊心的时候——《请回答1988》</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="1-数据库的三范式是什么？"><a href="#1-数据库的三范式是什么？" class="headerlink" title="1. 数据库的三范式是什么？"></a>1. 数据库的三范式是什么？</h2><p>第一范式：强调的是列的原子性，即数据库表的每一列都是不可分割的原子数据项。</p>
+<p>第二范式：要求实体的属性完全依赖于主关键字。所谓完全依赖是指不能存在仅依赖主关键字一部分的属性。</p>
+<p>第三范式：任何非主属性不依赖于其它非主属性。</p>
+<h2 id="2-一张自增表里面总共有17条数据，删除了最后2条数据，重启mysql数据库，又插入了一条数据，此时id是几？"><a href="#2-一张自增表里面总共有17条数据，删除了最后2条数据，重启mysql数据库，又插入了一条数据，此时id是几？" class="headerlink" title="2.一张自增表里面总共有17条数据，删除了最后2条数据，重启mysql数据库，又插入了一条数据，此时id是几？"></a>2.一张自增表里面总共有17条数据，删除了最后2条数据，重启mysql数据库，又插入了一条数据，此时id是几？</h2><p>• 表类型如果是 MyISAM ，那 id 就是 18。<br>• 表类型如果是 InnoDB，那 id 就是 15。</p>
+<p>InnoDB 表只会把自增主键的最大 id 记录在内存中，所以重启之后会导致最大 id 丢失。</p>
+<h2 id="3-如何获取当前数据库版本？"><a href="#3-如何获取当前数据库版本？" class="headerlink" title="3.如何获取当前数据库版本？"></a>3.如何获取当前数据库版本？</h2><p>使用 select version() 获取当前 MySQL 数据库版本。</p>
+<h2 id="4-说一下ACID是什么？"><a href="#4-说一下ACID是什么？" class="headerlink" title="4.说一下ACID是什么？"></a>4.说一下ACID是什么？</h2><p>• Atomicity（原子性）：一个事务（transaction）中的所有操作，或者全部完成，或者全部不完成，不会结束在中间某个环节。事务在执行过程中发生错误，会被恢复（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样。即，事务不可分割、不可约简。<br>• Consistency（一致性）：在事务开始之前和事务结束以后，数据库的完整性没有被破坏。这表示写入的资料必须完全符合所有的预设约束、触发器、级联回滚等<br>• Isolation（隔离性）：数据库允许多个并发事务同时对其数据进行读写和修改的能力，隔离性可以防止多个事务并发执行时由于交叉执行而导致数据的不一致。事务隔离分为不同级别，包括读未提交（Read uncommitted）、读提交（read committed）、可重复读（repeatable read）和串行化（Serializable）。</p>
+<p>• Durability（持久性）：事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失</p>
+<h2 id="5-char和varchar的区别是什么？"><a href="#5-char和varchar的区别是什么？" class="headerlink" title="5.char和varchar的区别是什么？"></a>5.char和varchar的区别是什么？</h2><p>char(n) ：固定长度类型，比如订阅 char(10)，当你输入”abc”三个字符的时候，它们占的空间还是 10 个字节，其他 7 个是空字节。</p>
+<p>chat 优点：效率高；缺点：占用空间；适用场景：存储密码的 md5 值，固定长度的，使用 char 非常合适。</p>
+<p>varchar(n) ：可变长度，存储的值是每个值占用的字节再加上一个用来记录其长度的字节的长度。</p>
+<p>所以，从空间上考虑 varcahr 比较合适；从效率上考虑 char 比较合适，二者使用需要权衡。</p>
+<h2 id="6-float和double的区别是什么？"><a href="#6-float和double的区别是什么？" class="headerlink" title="6.float和double的区别是什么？"></a>6.float和double的区别是什么？</h2><p>• float 最多可以存储 8 位的十进制数，并在内存中占 4 字节。<br>• double 最可可以存储 16 位的十进制数，并在内存中占 8 字节。</p>
+<h2 id="7-mysql的内连接、左连接、右连接有什么区别"><a href="#7-mysql的内连接、左连接、右连接有什么区别" class="headerlink" title="7.mysql的内连接、左连接、右连接有什么区别?"></a>7.mysql的内连接、左连接、右连接有什么区别?</h2><p>内连接关键字：inner join；左连接：left join；右连接：right join。</p>
+<p>内连接是把匹配的关联数据显示出来；左连接是左边的表全部显示出来，右边的表显示出符合条件的数据；右连接正好相反。</p>
+<h2 id="8-mysql的索引是什么实现的？"><a href="#8-mysql的索引是什么实现的？" class="headerlink" title="8.mysql的索引是什么实现的？"></a>8.mysql的索引是什么实现的？</h2><p>索引是满足某种特定查找算法的数据结构，而这些数据结构会以某种方式指向数据，从而实现高效查找数据。</p>
+<p>具体来说 MySQL 中的索引，不同的数据引擎实现有所不同，但目前主流的数据库引擎的索引都是 B+ 树实现的，B+ 树的搜索效率，可以到达二分法的性能，找到数据区域之后就找到了完整的数据结构了，所有索引的性能也是更好的。</p>
+<h2 id="9-怎么验证mysql的索引是否满足需求？"><a href="#9-怎么验证mysql的索引是否满足需求？" class="headerlink" title="9.怎么验证mysql的索引是否满足需求？"></a>9.怎么验证mysql的索引是否满足需求？</h2><p>使用 explain 查看 SQL 是如何执行查询语句的，从而分析你的索引是否满足需求。</p>
+<p>explain 语法：explain select * from table where type=1。</p>
+<h2 id="10-说一下数据库的事务隔离？"><a href="#10-说一下数据库的事务隔离？" class="headerlink" title="10.说一下数据库的事务隔离？"></a>10.说一下数据库的事务隔离？</h2><p>MySQL 的事务隔离是在 MySQL. ini 配置文件里添加的，在文件的最后添加：transaction-isolation = REPEATABLE-READ</p>
+<p>可用的配置值：READ-UNCOMMITTED、READ-COMMITTED、REPEATABLE-READ、SERIALIZABLE。<br>• READ-UNCOMMITTED：未提交读，最低隔离级别、事务未提交前，就可被其他事务读取（会出现幻读、脏读、不可重复读）。<br>• READ-COMMITTED：提交读，一个事务提交后才能被其他事务读取到（会造成幻读、不可重复读）。<br>• REPEATABLE-READ：可重复读，默认级别，保证多次读取同一个数据时，其值都和事务开始时候的内容是一致，禁止读取到别的事务未提交的数据（会造成幻读）。<br>• SERIALIZABLE：序列化，代价最高最可靠的隔离级别，该隔离级别能防止脏读、不可重复读、幻读。</p>
+<p>脏读 ：表示一个事务能够读取另一个事务中还未提交的数据。比如，某个事务尝试插入记录 A，此时该事务还未提交，然后另一个事务尝试读取到了记录 A。</p>
+<p>不可重复读 ：是指在一个事务内，多次读同一数据。</p>
+<p>幻读 ：指同一个事务内多次查询返回的结果集不一样。比如同一个事务 A 第一次查询时候有 n 条记录，但是第二次同等条件下查询却有 n+1 条记录，这就好像产生了幻觉。发生幻读的原因也是另外一个事务新增或者删除或者修改了第一个事务结果集里面的数据，同一个记录的数据内容被修改了，所有数据行的记录就变多或者变少了。</p>
+<h2 id="11-说一下Mysql常用的引擎？"><a href="#11-说一下Mysql常用的引擎？" class="headerlink" title="11.说一下Mysql常用的引擎？"></a>11.说一下Mysql常用的引擎？</h2><p>InnoDB 引擎：InnoDB 引擎提供了对数据库 acid 事务的支持，并且还提供了行级锁和外键的约束，它的设计的目标就是处理大数据容量的数据库系统。</p>
+<p>MySQL 运行的时候，InnoDB 会在内存中建立缓冲池，用于缓冲数据和索引。但是该引擎是不支持全文搜索，同时启动也比较的慢，它是不会保存表的行数的，所以当进行 select count(*) from table 指令的时候，需要进行扫描全表。由于锁的粒度小，写操作是不会锁定全表的,所以在并发度较高的场景下使用会提升效率的。</p>
+<p>MyIASM 引擎：MySQL 的默认引擎，但不提供事务的支持，也不支持行级锁和外键。因此当执行插入和更新语句时，即执行写操作的时候需要锁定这个表，所以会导致效率会降低。不过和 InnoDB 不同的是，MyIASM 引擎是保存了表的行数，于是当进行 select count(*) from table 语句时，可以直接的读取已经保存的值而不需要进行扫描全表。所以，如果表的读操作远远多于写操作时，并且不需要事务的支持的，可以将 MyIASM 作为数据库引擎的首选。</p>
+<h2 id="12-说一下mysql的行锁和表锁？"><a href="#12-说一下mysql的行锁和表锁？" class="headerlink" title="12.说一下mysql的行锁和表锁？"></a>12.说一下mysql的行锁和表锁？</h2><p>MyISAM 只支持表锁，InnoDB 支持表锁和行锁，默认为行锁。<br>• 表级锁：开销小，加锁快，不会出现死锁。锁定粒度大，发生锁冲突的概率最高，并发量最低。<br>• 行级锁：开销大，加锁慢，会出现死锁。锁力度小，发生锁冲突的概率小，并发度最高。</p>
+<h2 id="13-说一下乐观锁和悲观锁？"><a href="#13-说一下乐观锁和悲观锁？" class="headerlink" title="13.说一下乐观锁和悲观锁？"></a>13.说一下乐观锁和悲观锁？</h2><p>• 乐观锁：每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在提交更新的时候会判断一下在此期间别人有没有去更新这个数据。<br>• 悲观锁：每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会阻止，直到这个锁被释放。</p>
+<p>数据库的乐观锁需要自己实现，在表里面添加一个 version 字段，每次修改成功值加 1，这样每次修改的时候先对比一下，自己拥有的 version 和数据库现在的 version 是否一致，如果不一致就不修改，这样就实现了乐观锁。 </p>
+<h2 id="14-mysql问题排查都有哪些手段？"><a href="#14-mysql问题排查都有哪些手段？" class="headerlink" title="14.mysql问题排查都有哪些手段？"></a>14.mysql问题排查都有哪些手段？</h2><p>• 使用 show processlist 命令查看当前所有连接信息。<br>• 使用 explain 命令查询 SQL 语句执行计划。<br>• 开启慢查询日志，查看慢查询的 SQL。</p>
+<h2 id="15-如何做mysql的性能优化？"><a href="#15-如何做mysql的性能优化？" class="headerlink" title="15.如何做mysql的性能优化？"></a>15.如何做mysql的性能优化？</h2><p>• 为搜索字段创建索引。<br>• 避免使用 select *，列出需要查询的字段。<br>• 垂直分割分表。<br>选择正确的存储引擎。</p>
+]]></content>
+      <categories>
+        <category>Study Note</category>
+      </categories>
+      <tags>
+        <tag>DataBase</tag>
+        <tag>Interview</tag>
+        <tag>MYSQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DataBase Interview I</title>
     <url>/2020/02/19/DataBase-Interview/</url>
     <content><![CDATA[<blockquote>
 <p>才能一旦让懒惰支配，它就一无可为。——克雷洛夫</p>
@@ -124,8 +174,47 @@
 <p>其中需要重点关注三个变量：</p>
 <p><code>show_query_log</code>(慢日志是否打开),</p>
 <p><code>slow_query_log_file</code>(日志写入的文件路径)，</p>
-<p><code>long_query_time</code>(多少秒以上的sql语句会被当做慢语句记录到文件中)</p>
-<h4 id="联合索引的最左匹配原则的成因"><a href="#联合索引的最左匹配原则的成因" class="headerlink" title="联合索引的最左匹配原则的成因"></a>联合索引的最左匹配原则的成因</h4><h4 id="索引是建立得越多越好么？"><a href="#索引是建立得越多越好么？" class="headerlink" title="索引是建立得越多越好么？"></a>索引是建立得越多越好么？</h4>]]></content>
+<p><code>long_query_time</code>(多少秒以上的sql语句会被当做慢语句记录到文件中,一般设置为1秒)</p>
+<p>一般来说可以用set设置慢查询开关和阈值时间(路径一般不迫切更改)</p>
+<blockquote>
+<p>set global slow_query_log = on;</p>
+<p>set global long_query_time = 1;//必须重连才能生效</p>
+</blockquote>
+<p>但是如果想要永久生效，最好是去配置文件里面配好，而不是用set的方式。</p>
+<p>查看系统慢查询的数量的语句：<code>show status like &#39;%slow_queries%&#39;</code>，能够把运行下来执行慢的语句数量统计出来。</p>
+<p>通过查看慢日志的具体值，可以在分析之后进行调优。</p>
+<ul>
+<li>使用explain等工具分析sql</li>
+</ul>
+<p>在分析查询性能的时候explain关键字非常管用，一般放在select语句前面，用于描述mysql如何执行查询操作。以及mysql返回的结果和需要查询的行数。</p>
+<p><img src="https://s2.ax1x.com/2020/02/20/3er9iQ.png" alt="3er9iQ.png"></p>
+<p>重点介绍看两个字段：type和extra</p>
+<ol>
+<li>type：如果出现了index或all，表示语句进行了全表扫描，需要优化</li>
+<li>extra：类型很多，其中using filesort/Using temporary出现的话，会对性能产生较大影响，必须优化：</li>
+</ol>
+<p><img src="https://s2.ax1x.com/2020/02/20/3erzOx.png" alt="3erzOx.png"></p>
+<ul>
+<li>修改sql或者尽量让sql走索引</li>
+</ul>
+<p>当我们进行查询的时候，如果一开始用的属性是没有索引的，可以更改成有索引的对象，可以减少查询时间。</p>
+<p>但是有时候我们就是不能用带索引的属性，那么只能在新的需要查询的属性中加上索引了。</p>
+<p>Mysql的索引优化器本质上也是一个软件，在不同的查询条件下可能就算你用了主键，查询效果也不够好。这个时候可以利用关键字<code>force index(primary)</code>进行对比，综合判断哪个索引的值最适合做此次的查询。</p>
+<p>举一个调优的最简单的例子：如果我们是用户表，其中有用户账号account和用户名name，其中account有索引，则如果我们用name查询用了10s，用account查询用了6秒，那么实际我们将此次mysql查询的性能优化了40%</p>
+<h4 id="联合索引的最左匹配原则的成因"><a href="#联合索引的最左匹配原则的成因" class="headerlink" title="联合索引的最左匹配原则的成因"></a>联合索引的最左匹配原则的成因</h4><p>什么是联合索引？——由多列组成的索引</p>
+<p>假设将数据库某张表中的A列和B列设置成联合索引，查询的时候在where语句中调用(where A=** and B=**)的时候会走A和B这个组合索引；而且如果单独用A查询，也会走AB联合索引。<font color=#FF0000>但是如果直接select B，则会走”ALL”，即不走索引，全表扫描。</font></p>
+<ul>
+<li>最左匹配原则本身很重要。简单理解，是Mysql会从左一直向右匹配直到遇到范围查询(&gt;,&lt;,between,like)就停止匹配。比如a=3 and b=4 and c&gt;5 and d=6,如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到。其中a,b,d的顺序可以任意调整，比如(b,a,d,c),(a,d,b,c)，结果都是一样的。注意这里不是没有用到索引，而是最多只用到了(a)(a,b),(a,b,c)索引，没有能够用到(a,b,c,d)索引</li>
+<li>=和in可以乱序的。比如a = 1 and b = 2 and c = 3建立(a,b,c)索引可以任意顺序，mysql的查询优化器会帮你优化成索引可以识别的形式。</li>
+</ul>
+<p>对于(a,b,c,d)这个例子，mysql创建复合索引的规则是首先会对复合索引的最左边的，也就是第一个a字段的数据进行排序，在第一个字段的排序基础上，然后再对后面第二个的b字段进行排序，如果此时c是范围查询的话，则没法获取到有序的d，因此是不行的。</p>
+<h4 id="索引是建立得越多越好么？"><a href="#索引是建立得越多越好么？" class="headerlink" title="索引是建立得越多越好么？"></a>索引是建立得越多越好么？</h4><p>当时不是：</p>
+<ul>
+<li>数据量小的表不需要建立索引，增加额外的索引开销(比如看一两页的宣传手册，谁会需要索引呢？)</li>
+<li>数据变更需要维护索引，因此更多的索引意味着更多的维护成本</li>
+<li>更多的索引以为这也需要更多的空间(一本100页的书，目录不能是50页呀)</li>
+</ul>
+<h2 id="锁相关问题"><a href="#锁相关问题" class="headerlink" title="锁相关问题"></a>锁相关问题</h2>]]></content>
       <categories>
         <category>Study Note</category>
       </categories>

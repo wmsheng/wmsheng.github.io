@@ -51,7 +51,7 @@
 
   <meta name="description" content="才能一旦让懒惰支配，它就一无可为。——克雷洛夫">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DataBase Interview">
+<meta property="og:title" content="DataBase Interview I">
 <meta property="og:url" content="http://yoursite.com/2020/02/19/DataBase-Interview/index.html">
 <meta property="og:site_name" content="Hi, This is Bennett">
 <meta property="og:description" content="才能一旦让懒惰支配，它就一无可为。——克雷洛夫">
@@ -65,8 +65,10 @@
 <meta property="og:image" content="https://s2.ax1x.com/2020/02/20/3ZY1eA.png">
 <meta property="og:image" content="https://s2.ax1x.com/2020/02/20/3ZagE9.png">
 <meta property="og:image" content="https://s2.ax1x.com/2020/02/20/3ZXX0f.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/02/20/3er9iQ.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/02/20/3erzOx.png">
 <meta property="article:published_time" content="2020-02-19T03:12:58.000Z">
-<meta property="article:modified_time" content="2020-02-20T05:45:40.570Z">
+<meta property="article:modified_time" content="2020-02-20T16:18:15.162Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="DataBase">
 <meta property="article:tag" content="Interview">
@@ -86,7 +88,7 @@
   };
 </script>
 
-  <title>DataBase Interview | Hi, This is Bennett</title>
+  <title>DataBase Interview I | Hi, This is Bennett</title>
   
 
 
@@ -171,7 +173,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">17</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">18</span></a>
 
   </li>
   </ul>
@@ -214,7 +216,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          DataBase Interview
+          DataBase Interview I
         </h1>
 
         <div class="post-meta">
@@ -231,7 +233,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-20 13:45:40" itemprop="dateModified" datetime="2020-02-20T13:45:40+08:00">2020-02-20</time>
+                <time title="Modified: 2020-02-21 00:18:15" itemprop="dateModified" datetime="2020-02-21T00:18:15+08:00">2020-02-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -259,7 +261,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>3.1k</span>
+              <span>4.6k</span>
             </span>
 
         </div>
@@ -392,8 +394,47 @@
 <p>其中需要重点关注三个变量：</p>
 <p><code>show_query_log</code>(慢日志是否打开),</p>
 <p><code>slow_query_log_file</code>(日志写入的文件路径)，</p>
-<p><code>long_query_time</code>(多少秒以上的sql语句会被当做慢语句记录到文件中)</p>
-<h4 id="联合索引的最左匹配原则的成因"><a href="#联合索引的最左匹配原则的成因" class="headerlink" title="联合索引的最左匹配原则的成因"></a>联合索引的最左匹配原则的成因</h4><h4 id="索引是建立得越多越好么？"><a href="#索引是建立得越多越好么？" class="headerlink" title="索引是建立得越多越好么？"></a>索引是建立得越多越好么？</h4>
+<p><code>long_query_time</code>(多少秒以上的sql语句会被当做慢语句记录到文件中,一般设置为1秒)</p>
+<p>一般来说可以用set设置慢查询开关和阈值时间(路径一般不迫切更改)</p>
+<blockquote>
+<p>set global slow_query_log = on;</p>
+<p>set global long_query_time = 1;//必须重连才能生效</p>
+</blockquote>
+<p>但是如果想要永久生效，最好是去配置文件里面配好，而不是用set的方式。</p>
+<p>查看系统慢查询的数量的语句：<code>show status like &#39;%slow_queries%&#39;</code>，能够把运行下来执行慢的语句数量统计出来。</p>
+<p>通过查看慢日志的具体值，可以在分析之后进行调优。</p>
+<ul>
+<li>使用explain等工具分析sql</li>
+</ul>
+<p>在分析查询性能的时候explain关键字非常管用，一般放在select语句前面，用于描述mysql如何执行查询操作。以及mysql返回的结果和需要查询的行数。</p>
+<p><img src="https://s2.ax1x.com/2020/02/20/3er9iQ.png" alt="3er9iQ.png"></p>
+<p>重点介绍看两个字段：type和extra</p>
+<ol>
+<li>type：如果出现了index或all，表示语句进行了全表扫描，需要优化</li>
+<li>extra：类型很多，其中using filesort/Using temporary出现的话，会对性能产生较大影响，必须优化：</li>
+</ol>
+<p><img src="https://s2.ax1x.com/2020/02/20/3erzOx.png" alt="3erzOx.png"></p>
+<ul>
+<li>修改sql或者尽量让sql走索引</li>
+</ul>
+<p>当我们进行查询的时候，如果一开始用的属性是没有索引的，可以更改成有索引的对象，可以减少查询时间。</p>
+<p>但是有时候我们就是不能用带索引的属性，那么只能在新的需要查询的属性中加上索引了。</p>
+<p>Mysql的索引优化器本质上也是一个软件，在不同的查询条件下可能就算你用了主键，查询效果也不够好。这个时候可以利用关键字<code>force index(primary)</code>进行对比，综合判断哪个索引的值最适合做此次的查询。</p>
+<p>举一个调优的最简单的例子：如果我们是用户表，其中有用户账号account和用户名name，其中account有索引，则如果我们用name查询用了10s，用account查询用了6秒，那么实际我们将此次mysql查询的性能优化了40%</p>
+<h4 id="联合索引的最左匹配原则的成因"><a href="#联合索引的最左匹配原则的成因" class="headerlink" title="联合索引的最左匹配原则的成因"></a>联合索引的最左匹配原则的成因</h4><p>什么是联合索引？——由多列组成的索引</p>
+<p>假设将数据库某张表中的A列和B列设置成联合索引，查询的时候在where语句中调用(where A=** and B=**)的时候会走A和B这个组合索引；而且如果单独用A查询，也会走AB联合索引。<font color=#FF0000>但是如果直接select B，则会走”ALL”，即不走索引，全表扫描。</font></p>
+<ul>
+<li>最左匹配原则本身很重要。简单理解，是Mysql会从左一直向右匹配直到遇到范围查询(&gt;,&lt;,between,like)就停止匹配。比如a=3 and b=4 and c&gt;5 and d=6,如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到。其中a,b,d的顺序可以任意调整，比如(b,a,d,c),(a,d,b,c)，结果都是一样的。注意这里不是没有用到索引，而是最多只用到了(a)(a,b),(a,b,c)索引，没有能够用到(a,b,c,d)索引</li>
+<li>=和in可以乱序的。比如a = 1 and b = 2 and c = 3建立(a,b,c)索引可以任意顺序，mysql的查询优化器会帮你优化成索引可以识别的形式。</li>
+</ul>
+<p>对于(a,b,c,d)这个例子，mysql创建复合索引的规则是首先会对复合索引的最左边的，也就是第一个a字段的数据进行排序，在第一个字段的排序基础上，然后再对后面第二个的b字段进行排序，如果此时c是范围查询的话，则没法获取到有序的d，因此是不行的。</p>
+<h4 id="索引是建立得越多越好么？"><a href="#索引是建立得越多越好么？" class="headerlink" title="索引是建立得越多越好么？"></a>索引是建立得越多越好么？</h4><p>当时不是：</p>
+<ul>
+<li>数据量小的表不需要建立索引，增加额外的索引开销(比如看一两页的宣传手册，谁会需要索引呢？)</li>
+<li>数据变更需要维护索引，因此更多的索引意味着更多的维护成本</li>
+<li>更多的索引以为这也需要更多的空间(一本100页的书，目录不能是50页呀)</li>
+</ul>
+<h2 id="锁相关问题"><a href="#锁相关问题" class="headerlink" title="锁相关问题"></a>锁相关问题</h2>
     </div>
 
 
@@ -417,7 +458,10 @@
     <a href="/2020/02/12/Analysis-of-LeetCode-High-Frequency-Problems-IV/" rel="prev" title="Analysis of LeetCode High Frequency Problems IV">
       <i class="fa fa-chevron-left"></i> Analysis of LeetCode High Frequency Problems IV
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/02/20/Database-Interview-II/" rel="next" title="DataBase Interview II(Mysql)">
+      DataBase Interview II(Mysql) <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -482,7 +526,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库架构设计"><span class="nav-text">数据库架构设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引相关问题"><span class="nav-text">索引相关问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要使用索引？"><span class="nav-text">为什么要使用索引？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么样的信息能成为索引？"><span class="nav-text">什么样的信息能成为索引？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引的数据结构"><span class="nav-text">索引的数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#二叉查找树结构进行索引查找"><span class="nav-text">二叉查找树结构进行索引查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树结构进行索引查找"><span class="nav-text">B- 树结构进行索引查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树结构进行索引查找-1"><span class="nav-text">B+树结构进行索引查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hash结构进行索引查找"><span class="nav-text">Hash结构进行索引查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BitMap索引"><span class="nav-text">BitMap索引</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#密集索引和稀疏索引的区别"><span class="nav-text">密集索引和稀疏索引的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引额外的问题，以mysql为例"><span class="nav-text">索引额外的问题，以mysql为例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#如何定位并优化慢查询Sql"><span class="nav-text">如何定位并优化慢查询Sql</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#联合索引的最左匹配原则的成因"><span class="nav-text">联合索引的最左匹配原则的成因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#索引是建立得越多越好么？"><span class="nav-text">索引是建立得越多越好么？</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库架构设计"><span class="nav-text">数据库架构设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引相关问题"><span class="nav-text">索引相关问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要使用索引？"><span class="nav-text">为什么要使用索引？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么样的信息能成为索引？"><span class="nav-text">什么样的信息能成为索引？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引的数据结构"><span class="nav-text">索引的数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#二叉查找树结构进行索引查找"><span class="nav-text">二叉查找树结构进行索引查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树结构进行索引查找"><span class="nav-text">B- 树结构进行索引查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-树结构进行索引查找-1"><span class="nav-text">B+树结构进行索引查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hash结构进行索引查找"><span class="nav-text">Hash结构进行索引查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BitMap索引"><span class="nav-text">BitMap索引</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#密集索引和稀疏索引的区别"><span class="nav-text">密集索引和稀疏索引的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引额外的问题，以mysql为例"><span class="nav-text">索引额外的问题，以mysql为例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#如何定位并优化慢查询Sql"><span class="nav-text">如何定位并优化慢查询Sql</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#联合索引的最左匹配原则的成因"><span class="nav-text">联合索引的最左匹配原则的成因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#索引是建立得越多越好么？"><span class="nav-text">索引是建立得越多越好么？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁相关问题"><span class="nav-text">锁相关问题</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -498,7 +542,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -567,7 +611,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">118k</span>
+    <span title="Symbols count total">123k</span>
 </div>
 
 
@@ -584,7 +628,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共42.4k字</span>
+  <span class="post-count">博客全站共45.7k字</span>
 </div>
 
         
