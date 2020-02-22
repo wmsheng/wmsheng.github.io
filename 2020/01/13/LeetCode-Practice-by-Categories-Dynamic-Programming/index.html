@@ -56,12 +56,14 @@
 <meta property="og:site_name" content="Hi, This is Bennett">
 <meta property="og:description" content="每个人都是自己命运的主宰——斯蒂尔斯  LeetCode大量动态规划相关题目，其解决思路和具体代码。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.ax1x.com/2020/02/21/3uunUK.png">
 <meta property="article:published_time" content="2020-01-13T04:47:08.000Z">
-<meta property="article:modified_time" content="2020-02-20T05:53:38.948Z">
+<meta property="article:modified_time" content="2020-02-21T09:27:47.160Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.ax1x.com/2020/02/21/3uunUK.png">
 
 <link rel="canonical" href="http://yoursite.com/2020/01/13/LeetCode-Practice-by-Categories-Dynamic-Programming/">
 
@@ -220,7 +222,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-20 13:53:38" itemprop="dateModified" datetime="2020-02-20T13:53:38+08:00">2020-02-20</time>
+                <time title="Modified: 2020-02-21 17:27:47" itemprop="dateModified" datetime="2020-02-21T17:27:47+08:00">2020-02-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,7 +250,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>59</span>
+              <span>3.8k</span>
             </span>
 
         </div>
@@ -267,6 +269,56 @@
 <a id="more"></a>
 
 <p>动态规划不是空中楼阁。</p>
+<h2 id="70-Climbing-stairsl-爬楼梯-Easy"><a href="#70-Climbing-stairsl-爬楼梯-Easy" class="headerlink" title="70. Climbing-stairsl(爬楼梯)(Easy)"></a><a href="https://leetcode-cn.com/problems/climbing-stairs/" target="_blank" rel="noopener">70. Climbing-stairsl(爬楼梯)(Easy)</a></h2><p>You are climbing a stair case. It takes n steps to reach to the top.</p>
+<p>Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?</p>
+<p>Note: Given <em>n</em> will be a positive integer.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Input:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">Output:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">Explanation:</span> <span class="string">There</span> <span class="string">are</span> <span class="string">two</span> <span class="string">ways</span> <span class="string">to</span> <span class="string">climb</span> <span class="string">to</span> <span class="string">the</span> <span class="string">top.</span></span><br><span class="line"><span class="number">1</span><span class="string">.</span> <span class="number">1</span> <span class="string">step</span> <span class="string">+</span> <span class="number">1</span> <span class="string">step</span></span><br><span class="line"><span class="number">2</span><span class="string">.</span> <span class="number">2</span> <span class="string">steps</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Input:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">Output:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">Explanation:</span> <span class="string">There</span> <span class="string">are</span> <span class="string">three</span> <span class="string">ways</span> <span class="string">to</span> <span class="string">climb</span> <span class="string">to</span> <span class="string">the</span> <span class="string">top.</span></span><br><span class="line"><span class="number">1</span><span class="string">.</span> <span class="number">1</span> <span class="string">step</span> <span class="string">+</span> <span class="number">1</span> <span class="string">step</span> <span class="string">+</span> <span class="number">1</span> <span class="string">step</span></span><br><span class="line"><span class="number">2</span><span class="string">.</span> <span class="number">1</span> <span class="string">step</span> <span class="string">+</span> <span class="number">2</span> <span class="string">steps</span></span><br><span class="line"><span class="number">3</span><span class="string">.</span> <span class="number">2</span> <span class="string">steps</span> <span class="string">+</span> <span class="number">1</span> <span class="string">step</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>解：爬楼梯很经典，变型也很多。首先结论是，单纯的这道题，通过数学归纳的思路(或者说递归的思路)，不难发现其实结果就是前两个元素为1,2的斐波那契数列。(斐波那契数列为509题，因为类似这里就不记录了，链接<a href="https://leetcode-cn.com/problems/fibonacci-number/" target="_blank" rel="noopener">点击这里</a>)</p>
+<p>方法一：递归，可以画出递归树发现，因为每个层级都会在上一层的数量基础上多出2倍的节点，所以时间复杂度为O(2^n)，指数级别，不可以接受。而且实际测试中在N为44的时候会出现超时。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> climbStairs(<span class="built_in">int</span> n) &#123;</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">2</span>) <span class="keyword">return</span> n;</span><br><span class="line">        <span class="keyword">return</span> climbHelper(<span class="number">0</span>,n);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> climbHelper(<span class="built_in">int</span> curr, <span class="built_in">int</span> target) &#123;</span><br><span class="line">        <span class="comment">// terminator</span></span><br><span class="line">        <span class="comment">// 跨过了目标阶梯，不算入方法</span></span><br><span class="line">        <span class="keyword">if</span>(curr &gt; target) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 刚好攀登到某个位置</span></span><br><span class="line">        <span class="keyword">if</span>(curr == target) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> climbHelper(curr + <span class="number">1</span>, target) + climbHelper(curr + <span class="number">2</span>, target);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>方法二：基于递归，加上备忘录，进行有记忆的递归，可以把之前计算过的结果保存下来，有很好的剪枝效果。因为有记录所有的过程，所以子问题的数量就是f(1),f(2)…，为O(n),而且每个子问题解决的时间为O(n)</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> climbStairs(<span class="built_in">int</span> n) &#123;</span><br><span class="line">        <span class="comment">// 基于暴力递归，进行有记忆的递归，把每一步的结果存储在mem数组之中，每当有函数被再次调用，就直接从memo数组返回结果，减少计算次数</span></span><br><span class="line">        <span class="built_in">int</span>[] memo = new <span class="built_in">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">2</span>) <span class="keyword">return</span> n;</span><br><span class="line">        <span class="keyword">return</span> climbHelper(<span class="number">0</span>,n,memo);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> climbHelper(<span class="built_in">int</span> curr, <span class="built_in">int</span> target, <span class="built_in">int</span>[] memo) &#123;</span><br><span class="line">        <span class="comment">// terminator</span></span><br><span class="line">        <span class="comment">// 跨过了目标阶梯，不算入方法</span></span><br><span class="line">        <span class="keyword">if</span>(curr &gt; target) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 刚好攀登到某个位置</span></span><br><span class="line">        <span class="keyword">if</span>(curr == target) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果当前N阶梯数量已经计算过，直接从memo返回</span></span><br><span class="line">        <span class="keyword">if</span>(memo[curr] &gt; <span class="number">0</span>) <span class="keyword">return</span> memo[curr];</span><br><span class="line">        </span><br><span class="line">        memo[curr] =  climbHelper(curr + <span class="number">1</span>, target, memo) + climbHelper(curr + <span class="number">2</span>, target, memo);</span><br><span class="line">        <span class="keyword">return</span> memo[curr];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>方法三：常规动态规划，时间复杂度为O(n)，空间复杂度也为O(n)</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> climbStairs(<span class="built_in">int</span> n) &#123;</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">2</span>) <span class="keyword">return</span> n;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// dp[i]表示爬到第i阶共有的爬法</span></span><br><span class="line">        <span class="built_in">int</span>[] dp = new <span class="built_in">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">1</span>] = <span class="number">1</span>; dp[<span class="number">2</span>] = <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">3</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            dp[i] = dp[i<span class="number">-1</span>] + dp[i<span class="number">-2</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>方法四：基于常规动态规划的优化。在空间复杂度上可以提升到O(1)。实际上在一开始的时间复杂度的基础上都可以进行空间的优化，比如O(n)可以优化到O(1),O(m*n)可以优化到O(n)。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> climbStairs(<span class="built_in">int</span> n) &#123;</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">2</span>) <span class="keyword">return</span> n;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">int</span> f1 = <span class="number">1</span>, f2 = <span class="number">2</span>, f3 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">3</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            f3 = f1 + f2;</span><br><span class="line">            f1 = f2;</span><br><span class="line">            f2 = f3;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> f3;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="322-Coin-Change-零钱兑换-Mid"><a href="#322-Coin-Change-零钱兑换-Mid" class="headerlink" title="322. Coin Change(零钱兑换)(Mid)"></a><a href="https://leetcode-cn.com/problems/coin-change/" target="_blank" rel="noopener">322. Coin Change(零钱兑换)(Mid)</a></h2><p>You are given coins of different denominations and a total amount of money <em>amount</em>. Write a function to compute the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return <code>-1</code>.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Input:</span> <span class="string">coins</span> <span class="string">=</span> <span class="string">[1,</span> <span class="number">2</span><span class="string">,</span> <span class="number">5</span><span class="string">],</span> <span class="string">amount</span> <span class="string">=</span> <span class="number">11</span></span><br><span class="line"><span class="attr">Output:</span> <span class="number">3</span> </span><br><span class="line"><span class="attr">Explanation:</span> <span class="number">11</span> <span class="string">=</span> <span class="number">5</span> <span class="string">+</span> <span class="number">5</span> <span class="string">+</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Input:</span> <span class="string">coins</span> <span class="string">=</span> <span class="string">[2],</span> <span class="string">amount</span> <span class="string">=</span> <span class="number">3</span></span><br><span class="line"><span class="attr">Output:</span> <span class="number">-1</span></span><br></pre></td></tr></table></figure>
+
+
+<p><strong>Note:</strong></p>
+<p>You may assume that you have an infinite number of each kind of coin.</p>
+<hr>
+<p>解：这道题其实和之前的爬楼梯问题是异曲同工之处，可以看成每次可以走coins数组里面的步伐，最后要到达amount的高度，有多少种走法。当然这里有点变化，就是比如112和121，在爬楼梯问题是不同方法，而在这里coin change则是相同的，一种方法。但是写DP方程的话差不多了。</p>
+<p>方法一：暴力法，用递归的方式。</p>
+<p><img src="https://s2.ax1x.com/2020/02/21/3uunUK.png" alt="3uunUK.png"></p>
+<p>题目变成：在状态树中找到叶子节点为0的，并且层数最小的。<br>可以用树的广度优先遍历，直到碰到数值为0的节点，当前层数就是最小硬币数，就是我们的答案。</p>
+<p>但是这个方法会存在指数级别的时间复杂度。</p>
+<p>方法二：DP</p>
+<p>a. subproblems</p>
+<p>b. DP array：f(n) = min{f(n-k), for k in [1,2,5]} + 1, 遍历可以选择的面值的数组，直到n被减到0为止，然后取得到的硬币数的最小值。加一是因为一开始的n-k没有被算入，后面补上。</p>
+<p>c. DP方程</p>
+<p>代码：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> coinChange(<span class="built_in">int</span>[] coins, <span class="built_in">int</span> amount) &#123;</span><br><span class="line">        <span class="comment">// amount + 1 是无法到达的，以此判断最后是否不能到达amount</span></span><br><span class="line">        <span class="built_in">int</span> max = amount+<span class="number">1</span>;</span><br><span class="line">        <span class="comment">// dp数组的下标是当前金额，里面的值是需要的硬币的个数，初始化是不可达的max</span></span><br><span class="line">        <span class="built_in">int</span>[] dp = new <span class="built_in">int</span>[max];</span><br><span class="line">        <span class="comment">// 初始化dp,初始化考虑只有面值为1的硬币，需要max个</span></span><br><span class="line">        Arrays.fill(dp,max);</span><br><span class="line">        <span class="comment">// 当拿到的amount是0的时候，需要0个硬币，类似爬楼梯，初始化就在0级台阶</span></span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 外层，遍历所有下标的元素，也就是当前凑到的面值数</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">1</span>; i &lt;= amount; i++) &#123;</span><br><span class="line">            <span class="comment">// 每次都从coins里面取元素出来，比如coins是[1,2,5]，每次在要凑下标</span></span><br><span class="line">            <span class="comment">// 值的时候，都会把1,2,5取出来进行值的拼凑</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">int</span> j = <span class="number">0</span>; j &lt; coins.length; j++) &#123;</span><br><span class="line">                <span class="comment">// 如果当前coins里面取出来的值比下标小，才能用。否则比如你下标是3，</span></span><br><span class="line">                <span class="comment">// 即当前要凑到3的值，但当前conis里面硬币值是10，那肯定不用这个</span></span><br><span class="line">                <span class="keyword">if</span>(coins[j] &lt;= i) &#123;</span><br><span class="line">                    <span class="comment">// 用DP方程进行递推</span></span><br><span class="line">                    dp[i] = Math.min(dp[i], dp[i-coins[j]] + <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果最后一个没有被修改，则没办法组成这个金额。否则返回最后amount下标的值</span></span><br><span class="line">        <span class="keyword">return</span> dp[amount] == max ? <span class="number">-1</span> : dp[amount];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>动态规划一般脱离递归，直接由循环迭代完成计算。</p>
+<p>动态规划问题最难的就是写出状态转移方程。</p>
+<p>时间复杂度：O(m*n)</p>
 
     </div>
 
@@ -358,6 +410,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#70-Climbing-stairsl-爬楼梯-Easy"><span class="nav-text">70. Climbing-stairsl(爬楼梯)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#322-Coin-Change-零钱兑换-Mid"><span class="nav-text">322. Coin Change(零钱兑换)(Mid)</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -442,7 +495,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">123k</span>
+    <span title="Symbols count total">130k</span>
 </div>
 
 
@@ -459,7 +512,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共45.7k字</span>
+  <span class="post-count">博客全站共48.7k字</span>
 </div>
 
         

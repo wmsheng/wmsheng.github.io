@@ -57,7 +57,7 @@
 <meta property="og:description" content="时间像海绵里的水，只要你愿意挤，总还是有的。——鲁迅  LeetCode其他题目其解决思路和具体代码。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-01-13T04:51:23.000Z">
-<meta property="article:modified_time" content="2020-02-20T05:53:17.741Z">
+<meta property="article:modified_time" content="2020-02-22T02:02:26.325Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -220,7 +220,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-20 13:53:17" itemprop="dateModified" datetime="2020-02-20T13:53:17+08:00">2020-02-20</time>
+                <time title="Modified: 2020-02-22 10:02:26" itemprop="dateModified" datetime="2020-02-22T10:02:26+08:00">2020-02-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,7 +248,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>1k</span>
+              <span>3.2k</span>
             </span>
 
         </div>
@@ -286,6 +286,31 @@
 <li>时间复杂度：O(n)</li>
 <li>空间复杂度：O(1)</li>
 </ul>
+<h2 id="146-LRU-Cache-LRU缓存机制-Mid"><a href="#146-LRU-Cache-LRU缓存机制-Mid" class="headerlink" title="146. LRU Cache(LRU缓存机制)(Mid)"></a><a href="https://leetcode-cn.com/problems/lru-cache/" target="_blank" rel="noopener">146. LRU Cache(LRU缓存机制)(Mid)</a></h2><p>Design and implement a data structure for <strong>Least Recently Used (LRU)</strong> cache. It should support the following operations: <code>get</code> and <code>put</code>.</p>
+<p><code>get(key)</code> - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.<br><code>put(key, value)</code> - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.</p>
+<p>The cache is initialized with a <strong>positive</strong> capacity.</p>
+<p><strong>Follow up:</strong></p>
+<p>Could you do both operations in <strong>O(1)</strong> time complexity?</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">LRUCache <span class="keyword">cache</span> = new LRUCache( <span class="number">2</span> <span class="comment">/* capacity */</span> );</span><br><span class="line"></span><br><span class="line"><span class="keyword">cache</span>.put(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="keyword">cache</span>.put(<span class="number">2</span>, <span class="number">2</span>);</span><br><span class="line"><span class="keyword">cache</span>.get(<span class="number">1</span>);       // <span class="keyword">returns</span> <span class="number">1</span></span><br><span class="line"><span class="keyword">cache</span>.put(<span class="number">3</span>, <span class="number">3</span>);    // evicts key <span class="number">2</span></span><br><span class="line"><span class="keyword">cache</span>.get(<span class="number">2</span>);       // <span class="keyword">returns</span> <span class="number">-1</span> (<span class="keyword">not</span> <span class="built_in">found</span>)</span><br><span class="line"><span class="keyword">cache</span>.put(<span class="number">4</span>, <span class="number">4</span>);    // evicts key <span class="number">1</span></span><br><span class="line"><span class="keyword">cache</span>.get(<span class="number">1</span>);       // <span class="keyword">returns</span> <span class="number">-1</span> (<span class="keyword">not</span> <span class="built_in">found</span>)</span><br><span class="line"><span class="keyword">cache</span>.get(<span class="number">3</span>);       // <span class="keyword">returns</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">cache</span>.get(<span class="number">4</span>);       // <span class="keyword">returns</span> <span class="number">4</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>解：本质上，这个替换算法和现在的推荐系统有异曲同工之妙。</p>
+<p>推荐算法就是根据之前元素被使用的频次和被使用的时间，来预测新来的元素为某一个老元素的概率是多少。</p>
+<p>现代计算机中，替换算法越来越使用人工智能来做了，而不是简单基于逻辑式的公式。</p>
+<p>LRU cache源自于用得非常多的缓存的思想。它有两个比较重要的策略：大小和替换策略。除了LRU(Least Recently Used)，还有一种可以和它相似的，只是替换策略不同的缓存机制：LFU(Least Frequently Used)，具体区别可以从名字中看出。</p>
+<p>按照题目的要求，我们自己完成的LRU cache应当保证<strong>查询</strong>与<strong>修改</strong>的时间复杂度都为O(1)。</p>
+<p>如果最朴素的，全部自己实现，那么就是哈希表加双向链表。这样就训练一下双向链表怎么写。</p>
+<p>所有双向链表或者单向链表的题目，没有巧，就是多练，即可。</p>
+<p>在现实工作中，其实不太可能去手写一个链表、map、set或者排序，都是有现成的库。</p>
+<p>有些公司可能比较刻板，需要多练一些基本功。</p>
+<p>官方题解中，给出了两种解法，<a href="https://leetcode-cn.com/problems/lru-cache/solution/lru-huan-cun-ji-zhi-by-leetcode/" target="_blank" rel="noopener">详情可以点击这里</a></p>
+<p>方法一：使用<strong>有序字典</strong>这个数据结构，它综合了哈希表和链表。对于java，系统使用了LinkedHashMap这个类实现；对于Python，系统使用了OrderedDict实现字典序。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">LRUCache</span> <span class="symbol">extends</span> <span class="symbol">LinkedHashMap</span>&lt;<span class="symbol">Integer, <span class="symbol">Integer</span></span>&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> capacity;</span><br><span class="line">    <span class="keyword">public</span> LRUCache(<span class="built_in">int</span> capacity) &#123;</span><br><span class="line">        <span class="keyword">super</span>(capacity, <span class="number">0.75</span>F, <span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">this</span>.capacity = capacity;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> <span class="keyword">get</span>(<span class="built_in">int</span> key) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.getOrDefault(key, <span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">void</span> put(<span class="built_in">int</span> key, <span class="built_in">int</span> value) &#123;</span><br><span class="line">        <span class="keyword">super</span>.put(key, value);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    <span class="keyword">protected</span> <span class="built_in">bool</span>ean removeEldestEntry(Map.Entry&lt;Integer, Integer&gt; eldest) &#123;</span><br><span class="line">        <span class="keyword">return</span> size() &gt; capacity;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your LRUCache object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * LRUCache obj = new LRUCache(capacity);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj.get(key);</span></span><br><span class="line"><span class="comment"> * obj.put(key,value);</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>拓展:</strong>linkedhashmap和hashmap有什么区别？<br>HashMap就只是一个哈希表，键值对对应，最多允许一条记录的键值为Null，而且HashMap不支持线程同步，即任一时刻如果多个线程同时写HashMap，可能导致数据的不一致性。如果需要同步，对于HashMap，可以用Collections的synchronizedMap方法使HashMap拥有同步的能力。</p>
+<p>LinkedHashMap也是一个HashMap，<strong>但是它内部维持了一个双向链表</strong>，可以保持顺序。</p>
+<p>总之，LinkedHashMap的内部实现原理，就是一个双向的LinkedList+HashMap,所以名字是：LinkedHashMap。</p>
 
     </div>
 
@@ -377,7 +402,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#169-Majority-Element-多数元素-Easy"><span class="nav-text">169. Majority Element(多数元素)(Easy)</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#169-Majority-Element-多数元素-Easy"><span class="nav-text">169. Majority Element(多数元素)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#146-LRU-Cache-LRU缓存机制-Mid"><span class="nav-text">146. LRU Cache(LRU缓存机制)(Mid)</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -462,7 +487,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">123k</span>
+    <span title="Symbols count total">130k</span>
 </div>
 
 
@@ -479,7 +504,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共45.7k字</span>
+  <span class="post-count">博客全站共48.7k字</span>
 </div>
 
         

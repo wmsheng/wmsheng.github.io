@@ -208,13 +208,39 @@
 <li>=和in可以乱序的。比如a = 1 and b = 2 and c = 3建立(a,b,c)索引可以任意顺序，mysql的查询优化器会帮你优化成索引可以识别的形式。</li>
 </ul>
 <p>对于(a,b,c,d)这个例子，mysql创建复合索引的规则是首先会对复合索引的最左边的，也就是第一个a字段的数据进行排序，在第一个字段的排序基础上，然后再对后面第二个的b字段进行排序，如果此时c是范围查询的话，则没法获取到有序的d，因此是不行的。</p>
-<h4 id="索引是建立得越多越好么？"><a href="#索引是建立得越多越好么？" class="headerlink" title="索引是建立得越多越好么？"></a>索引是建立得越多越好么？</h4><p>当时不是：</p>
+<h4 id="索引是建立得越多越好么？"><a href="#索引是建立得越多越好么？" class="headerlink" title="索引是建立得越多越好么？"></a>索引是建立得越多越好么？</h4><p>当然不是：</p>
 <ul>
 <li>数据量小的表不需要建立索引，增加额外的索引开销(比如看一两页的宣传手册，谁会需要索引呢？)</li>
 <li>数据变更需要维护索引，因此更多的索引意味着更多的维护成本</li>
 <li>更多的索引以为这也需要更多的空间(一本100页的书，目录不能是50页呀)</li>
 </ul>
-<h2 id="锁相关问题"><a href="#锁相关问题" class="headerlink" title="锁相关问题"></a>锁相关问题</h2>]]></content>
+<h2 id="锁相关问题"><a href="#锁相关问题" class="headerlink" title="锁相关问题"></a>锁相关问题</h2><h3 id="MyISAM与InnoDB关于锁方面的区别是什么"><a href="#MyISAM与InnoDB关于锁方面的区别是什么" class="headerlink" title="MyISAM与InnoDB关于锁方面的区别是什么"></a>MyISAM与InnoDB关于锁方面的区别是什么</h3><ul>
+<li><p>MyISAM默认用的是表级锁，不支持行级锁</p>
+</li>
+<li><p>InnoDB默认用的是行级锁，但是也支持表级锁</p>
+</li>
+</ul>
+<p>分别来说：</p>
+<h4 id="MyISAM默认用的是表级锁，不支持行级锁"><a href="#MyISAM默认用的是表级锁，不支持行级锁" class="headerlink" title="MyISAM默认用的是表级锁，不支持行级锁"></a>MyISAM默认用的是表级锁，不支持行级锁</h4><p>当使用MyISAM作为Mysql引擎时，对一个表进行操作时，会锁住整张表，其他session不能操作</p>
+<p>读锁（共享锁）不释放，无法增加写锁</p>
+<p>读锁（共享锁）不释放，可以增加读锁</p>
+<p>写锁（排他锁）不释放，无法增加读锁</p>
+<p>写锁 (排它锁) 不释放，无法增加写锁</p>
+<p>给表加上读锁写锁或者读锁的写法：</p>
+<blockquote>
+<p>lock tables *** read | write;<br>unlock tables;</p>
+</blockquote>
+<h4 id="InnoDB默认用的是行级锁，但是也支持表级锁"><a href="#InnoDB默认用的是行级锁，但是也支持表级锁" class="headerlink" title="InnoDB默认用的是行级锁，但是也支持表级锁"></a>InnoDB默认用的是行级锁，但是也支持表级锁</h4><p>InnoDB使用的是二段锁，也就是加锁和解锁分成两个步骤进行，就像军训走正步一样，一个动作全部加锁，一个动作全部解锁。</p>
+<p>InnoDB的行级锁会把某张表中的某一行锁住，这样如果你锁住了第3行，那么操作第4行是不会受影响的。</p>
+<p>需要注意，InnoDB在sql没有用到索引的时候，会自动走表级锁。但是如果sql用到了索引，就会转为使用行级锁。</p>
+<h4 id="MyISAM和InnoDB各自适合的场景"><a href="#MyISAM和InnoDB各自适合的场景" class="headerlink" title="MyISAM和InnoDB各自适合的场景"></a>MyISAM和InnoDB各自适合的场景</h4><ul>
+<li>MyISAM适合的场景：<ul>
+<li>频繁执行全表count语句(InnoDB不保存表的具体行数，但MyISAM会使用一个变量保存整张表的行数，执行count的时候可以调用之前保存过的变量,)</li>
+<li>对数据进行增删改的频率不高，查询非常频繁</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据库事务的四大特性"><a href="#数据库事务的四大特性" class="headerlink" title="数据库事务的四大特性"></a>数据库事务的四大特性</h3><h3 id="事务隔离级别以及各级别下的并发访问问题"><a href="#事务隔离级别以及各级别下的并发访问问题" class="headerlink" title="事务隔离级别以及各级别下的并发访问问题"></a>事务隔离级别以及各级别下的并发访问问题</h3><h3 id="InnoDB可重复读隔离级别下如何避免幻读"><a href="#InnoDB可重复读隔离级别下如何避免幻读" class="headerlink" title="InnoDB可重复读隔离级别下如何避免幻读"></a>InnoDB可重复读隔离级别下如何避免幻读</h3><h3 id="RC、RP级别下的InnoDB的非阻塞读如何实现"><a href="#RC、RP级别下的InnoDB的非阻塞读如何实现" class="headerlink" title="RC、RP级别下的InnoDB的非阻塞读如何实现"></a>RC、RP级别下的InnoDB的非阻塞读如何实现</h3>]]></content>
       <categories>
         <category>Study Note</category>
       </categories>
@@ -457,6 +483,31 @@
 <li>时间复杂度：O(n)</li>
 <li>空间复杂度：O(1)</li>
 </ul>
+<h2 id="146-LRU-Cache-LRU缓存机制-Mid"><a href="#146-LRU-Cache-LRU缓存机制-Mid" class="headerlink" title="146. LRU Cache(LRU缓存机制)(Mid)"></a><a href="https://leetcode-cn.com/problems/lru-cache/" target="_blank" rel="noopener">146. LRU Cache(LRU缓存机制)(Mid)</a></h2><p>Design and implement a data structure for <strong>Least Recently Used (LRU)</strong> cache. It should support the following operations: <code>get</code> and <code>put</code>.</p>
+<p><code>get(key)</code> - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.<br><code>put(key, value)</code> - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.</p>
+<p>The cache is initialized with a <strong>positive</strong> capacity.</p>
+<p><strong>Follow up:</strong></p>
+<p>Could you do both operations in <strong>O(1)</strong> time complexity?</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line">LRUCache <span class="keyword">cache</span> = new LRUCache( <span class="number">2</span> <span class="comment">/* capacity */</span> );</span><br><span class="line"></span><br><span class="line"><span class="keyword">cache</span>.put(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="keyword">cache</span>.put(<span class="number">2</span>, <span class="number">2</span>);</span><br><span class="line"><span class="keyword">cache</span>.get(<span class="number">1</span>);       // <span class="keyword">returns</span> <span class="number">1</span></span><br><span class="line"><span class="keyword">cache</span>.put(<span class="number">3</span>, <span class="number">3</span>);    // evicts key <span class="number">2</span></span><br><span class="line"><span class="keyword">cache</span>.get(<span class="number">2</span>);       // <span class="keyword">returns</span> <span class="number">-1</span> (<span class="keyword">not</span> <span class="built_in">found</span>)</span><br><span class="line"><span class="keyword">cache</span>.put(<span class="number">4</span>, <span class="number">4</span>);    // evicts key <span class="number">1</span></span><br><span class="line"><span class="keyword">cache</span>.get(<span class="number">1</span>);       // <span class="keyword">returns</span> <span class="number">-1</span> (<span class="keyword">not</span> <span class="built_in">found</span>)</span><br><span class="line"><span class="keyword">cache</span>.get(<span class="number">3</span>);       // <span class="keyword">returns</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">cache</span>.get(<span class="number">4</span>);       // <span class="keyword">returns</span> <span class="number">4</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>解：本质上，这个替换算法和现在的推荐系统有异曲同工之妙。</p>
+<p>推荐算法就是根据之前元素被使用的频次和被使用的时间，来预测新来的元素为某一个老元素的概率是多少。</p>
+<p>现代计算机中，替换算法越来越使用人工智能来做了，而不是简单基于逻辑式的公式。</p>
+<p>LRU cache源自于用得非常多的缓存的思想。它有两个比较重要的策略：大小和替换策略。除了LRU(Least Recently Used)，还有一种可以和它相似的，只是替换策略不同的缓存机制：LFU(Least Frequently Used)，具体区别可以从名字中看出。</p>
+<p>按照题目的要求，我们自己完成的LRU cache应当保证<strong>查询</strong>与<strong>修改</strong>的时间复杂度都为O(1)。</p>
+<p>如果最朴素的，全部自己实现，那么就是哈希表加双向链表。这样就训练一下双向链表怎么写。</p>
+<p>所有双向链表或者单向链表的题目，没有巧，就是多练，即可。</p>
+<p>在现实工作中，其实不太可能去手写一个链表、map、set或者排序，都是有现成的库。</p>
+<p>有些公司可能比较刻板，需要多练一些基本功。</p>
+<p>官方题解中，给出了两种解法，<a href="https://leetcode-cn.com/problems/lru-cache/solution/lru-huan-cun-ji-zhi-by-leetcode/" target="_blank" rel="noopener">详情可以点击这里</a></p>
+<p>方法一：使用<strong>有序字典</strong>这个数据结构，它综合了哈希表和链表。对于java，系统使用了LinkedHashMap这个类实现；对于Python，系统使用了OrderedDict实现字典序。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">LRUCache</span> <span class="symbol">extends</span> <span class="symbol">LinkedHashMap</span>&lt;<span class="symbol">Integer, <span class="symbol">Integer</span></span>&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> capacity;</span><br><span class="line">    <span class="keyword">public</span> LRUCache(<span class="built_in">int</span> capacity) &#123;</span><br><span class="line">        <span class="keyword">super</span>(capacity, <span class="number">0.75</span>F, <span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">this</span>.capacity = capacity;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> <span class="keyword">get</span>(<span class="built_in">int</span> key) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.getOrDefault(key, <span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">void</span> put(<span class="built_in">int</span> key, <span class="built_in">int</span> value) &#123;</span><br><span class="line">        <span class="keyword">super</span>.put(key, value);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    <span class="keyword">protected</span> <span class="built_in">bool</span>ean removeEldestEntry(Map.Entry&lt;Integer, Integer&gt; eldest) &#123;</span><br><span class="line">        <span class="keyword">return</span> size() &gt; capacity;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your LRUCache object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * LRUCache obj = new LRUCache(capacity);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj.get(key);</span></span><br><span class="line"><span class="comment"> * obj.put(key,value);</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>拓展:</strong>linkedhashmap和hashmap有什么区别？<br>HashMap就只是一个哈希表，键值对对应，最多允许一条记录的键值为Null，而且HashMap不支持线程同步，即任一时刻如果多个线程同时写HashMap，可能导致数据的不一致性。如果需要同步，对于HashMap，可以用Collections的synchronizedMap方法使HashMap拥有同步的能力。</p>
+<p>LinkedHashMap也是一个HashMap，<strong>但是它内部维持了一个双向链表</strong>，可以保持顺序。</p>
+<p>总之，LinkedHashMap的内部实现原理，就是一个双向的LinkedList+HashMap,所以名字是：LinkedHashMap。</p>
 ]]></content>
       <categories>
         <category>Algorithms Note</category>
@@ -483,8 +534,7 @@
 <p>国内面试中经常会问到排序方面问题。如果开放性强的话，可能直接问你有关排序，可以畅所欲言。但是考察得更多的应该还是排序的的思路和代码，尤其是快排、归并。</p>
 <p>首先，排序分为比较类排序和非比较类排序，如下图所示：</p>
 <p><img src="https://s2.ax1x.com/2020/02/13/1O9RkF.png" alt="1O9RkF.png"></p>
-<p><strong>如何理解比较类排序和非比较类排序？</strong></p>
-<ol>
+<h2 id="如何理解比较类排序和非比较类排序？"><a href="#如何理解比较类排序和非比较类排序？" class="headerlink" title="如何理解比较类排序和非比较类排序？"></a><strong>如何理解比较类排序和非比较类排序？</strong></h2><ol>
 <li>比较类排序： 通过比较来决定元素间的相对次序，由于其时间复杂度不能突破O(nlogn), 因此也称为非线性时间比较类排序。</li>
 </ol>
 <ul>
@@ -519,11 +569,7 @@
 <p>这三种初级排序没有太大差别，其实是异曲同工的原理。</p>
 <p><font color=#FF0000>而面试中，考察技术能力的时候，他考察的一般也都是O(nlogn)的排序，所以准备过程中也应该尽量多花时间去看时间复杂度为O(nlogn)的排序算法。</font>主要是三个：堆排序、快速排序、归并排序。</p>
 <hr>
-<p><strong>高级排序</strong> —— O(N*logN) </p>
-<ul>
-<li><strong>快速排序(Quick Sort)</strong></li>
-</ul>
-<p>数组取标杆pivot，将小元素放到pivot左边，大元素放右边，然后依次对左边和右边的子数组继续快排；以达到整个序列有序。</p>
+<h2 id="高级排序-——-O-N-logN"><a href="#高级排序-——-O-N-logN" class="headerlink" title="高级排序 —— O(N*logN)"></a><strong>高级排序</strong> —— O(N*logN)</h2><h3 id="快速排序-Quick-Sort"><a href="#快速排序-Quick-Sort" class="headerlink" title="快速排序(Quick Sort)"></a><strong>快速排序(Quick Sort)</strong></h3><p>数组取标杆pivot，将小元素放到pivot左边，大元素放右边，然后依次对左边和右边的子数组继续快排；以达到整个序列有序。</p>
 <p>快排用到了<strong>分治</strong>的思想，首先，如果想要把排序的时间复杂度从O(n^2)降到O(N logN)，那么分治毫无疑问是要考虑的问题。</p>
 <p><font color=#FF0000>快排的方法：拿到一个pivot的位置，将所有小于pivot的元素移动到左边去，大于pivot的移动到右边去，且分别对左右侧再进行递归，调用快排。</font>可以通过主定理，证明整个递归下来的时间复杂度为O(N logN)。</p>
 <p>快排的样例代码：</p>
@@ -538,10 +584,7 @@
 <p>这里一开始我也没能理解，但是用纸笔模拟了一下之后，发现真的很巧妙。一开始counter和i都是begin，是从相同的地方开始的，然后counter用于指在最后一个小于a[pivot]的元素上，i的值来进行循环，如果碰到比末尾的pivot值大的值，就跳过（因为这个是要留给counter进行交换的,counter此时的作用是把大的元素和后面的i位置的，而且比a[pivot]小元素进行交换），i只要碰到了小于a[pivot]的，就让前面的counter和这个小于a[pivot]的元素交换，从而让大的元素移到后面去，然后把counter往后移，如果此时a[counter]的元素是大于a[pivot]的，那么此时counter所指的元素是为了进行下次交换的。保证counter前面的所有值都是小于a[pivot]的。</p>
 <p>一直这样下去，直到begin和end都遍历完了，然后交换a[pivot]和a[counter]，由此一来，绝对可以保证a[piovot]成为一个分水岭，pivot成为一个标杆，a[pivot]左边所有的元素都会是小于a[pivot]的，右边都是大于a[pivot]的。</p>
 <p>快排就是这样，大家写的时候，就是把这一段记好，多写几次，多写几次，记住关键的pivot和counter以及它们的作用。</p>
-<ul>
-<li><strong>归并排序(Merge Sort)</strong></li>
-</ul>
-<p>归并排序也用到了<strong>分治</strong>的思想。</p>
+<h3 id="归并排序-Merge-Sort"><a href="#归并排序-Merge-Sort" class="headerlink" title="归并排序(Merge Sort)"></a><strong>归并排序(Merge Sort)</strong></h3><p>归并排序也用到了<strong>分治</strong>的思想。</p>
 <p>归并具体流程：</p>
 <ol>
 <li>把待排序的数组从中间一分为二，注意这个分只是从中间直接”劈开”，不用做任何交换元素的操作。</li>
@@ -648,6 +691,56 @@
 <a id="more"></a>
 
 <p>动态规划不是空中楼阁。</p>
+<h2 id="70-Climbing-stairsl-爬楼梯-Easy"><a href="#70-Climbing-stairsl-爬楼梯-Easy" class="headerlink" title="70. Climbing-stairsl(爬楼梯)(Easy)"></a><a href="https://leetcode-cn.com/problems/climbing-stairs/" target="_blank" rel="noopener">70. Climbing-stairsl(爬楼梯)(Easy)</a></h2><p>You are climbing a stair case. It takes n steps to reach to the top.</p>
+<p>Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?</p>
+<p>Note: Given <em>n</em> will be a positive integer.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">Input:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">Output:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">Explanation:</span> <span class="string">There</span> <span class="string">are</span> <span class="string">two</span> <span class="string">ways</span> <span class="string">to</span> <span class="string">climb</span> <span class="string">to</span> <span class="string">the</span> <span class="string">top.</span></span><br><span class="line"><span class="number">1</span><span class="string">.</span> <span class="number">1</span> <span class="string">step</span> <span class="string">+</span> <span class="number">1</span> <span class="string">step</span></span><br><span class="line"><span class="number">2</span><span class="string">.</span> <span class="number">2</span> <span class="string">steps</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">Input:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">Output:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">Explanation:</span> <span class="string">There</span> <span class="string">are</span> <span class="string">three</span> <span class="string">ways</span> <span class="string">to</span> <span class="string">climb</span> <span class="string">to</span> <span class="string">the</span> <span class="string">top.</span></span><br><span class="line"><span class="number">1</span><span class="string">.</span> <span class="number">1</span> <span class="string">step</span> <span class="string">+</span> <span class="number">1</span> <span class="string">step</span> <span class="string">+</span> <span class="number">1</span> <span class="string">step</span></span><br><span class="line"><span class="number">2</span><span class="string">.</span> <span class="number">1</span> <span class="string">step</span> <span class="string">+</span> <span class="number">2</span> <span class="string">steps</span></span><br><span class="line"><span class="number">3</span><span class="string">.</span> <span class="number">2</span> <span class="string">steps</span> <span class="string">+</span> <span class="number">1</span> <span class="string">step</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>解：爬楼梯很经典，变型也很多。首先结论是，单纯的这道题，通过数学归纳的思路(或者说递归的思路)，不难发现其实结果就是前两个元素为1,2的斐波那契数列。(斐波那契数列为509题，因为类似这里就不记录了，链接<a href="https://leetcode-cn.com/problems/fibonacci-number/" target="_blank" rel="noopener">点击这里</a>)</p>
+<p>方法一：递归，可以画出递归树发现，因为每个层级都会在上一层的数量基础上多出2倍的节点，所以时间复杂度为O(2^n)，指数级别，不可以接受。而且实际测试中在N为44的时候会出现超时。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> climbStairs(<span class="built_in">int</span> n) &#123;</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">2</span>) <span class="keyword">return</span> n;</span><br><span class="line">        <span class="keyword">return</span> climbHelper(<span class="number">0</span>,n);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> climbHelper(<span class="built_in">int</span> curr, <span class="built_in">int</span> target) &#123;</span><br><span class="line">        <span class="comment">// terminator</span></span><br><span class="line">        <span class="comment">// 跨过了目标阶梯，不算入方法</span></span><br><span class="line">        <span class="keyword">if</span>(curr &gt; target) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 刚好攀登到某个位置</span></span><br><span class="line">        <span class="keyword">if</span>(curr == target) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> climbHelper(curr + <span class="number">1</span>, target) + climbHelper(curr + <span class="number">2</span>, target);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>方法二：基于递归，加上备忘录，进行有记忆的递归，可以把之前计算过的结果保存下来，有很好的剪枝效果。因为有记录所有的过程，所以子问题的数量就是f(1),f(2)…，为O(n),而且每个子问题解决的时间为O(n)</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> climbStairs(<span class="built_in">int</span> n) &#123;</span><br><span class="line">        <span class="comment">// 基于暴力递归，进行有记忆的递归，把每一步的结果存储在mem数组之中，每当有函数被再次调用，就直接从memo数组返回结果，减少计算次数</span></span><br><span class="line">        <span class="built_in">int</span>[] memo = new <span class="built_in">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">2</span>) <span class="keyword">return</span> n;</span><br><span class="line">        <span class="keyword">return</span> climbHelper(<span class="number">0</span>,n,memo);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> climbHelper(<span class="built_in">int</span> curr, <span class="built_in">int</span> target, <span class="built_in">int</span>[] memo) &#123;</span><br><span class="line">        <span class="comment">// terminator</span></span><br><span class="line">        <span class="comment">// 跨过了目标阶梯，不算入方法</span></span><br><span class="line">        <span class="keyword">if</span>(curr &gt; target) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 刚好攀登到某个位置</span></span><br><span class="line">        <span class="keyword">if</span>(curr == target) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果当前N阶梯数量已经计算过，直接从memo返回</span></span><br><span class="line">        <span class="keyword">if</span>(memo[curr] &gt; <span class="number">0</span>) <span class="keyword">return</span> memo[curr];</span><br><span class="line">        </span><br><span class="line">        memo[curr] =  climbHelper(curr + <span class="number">1</span>, target, memo) + climbHelper(curr + <span class="number">2</span>, target, memo);</span><br><span class="line">        <span class="keyword">return</span> memo[curr];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>方法三：常规动态规划，时间复杂度为O(n)，空间复杂度也为O(n)</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> climbStairs(<span class="built_in">int</span> n) &#123;</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">2</span>) <span class="keyword">return</span> n;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// dp[i]表示爬到第i阶共有的爬法</span></span><br><span class="line">        <span class="built_in">int</span>[] dp = new <span class="built_in">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">1</span>] = <span class="number">1</span>; dp[<span class="number">2</span>] = <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">3</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            dp[i] = dp[i<span class="number">-1</span>] + dp[i<span class="number">-2</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>方法四：基于常规动态规划的优化。在空间复杂度上可以提升到O(1)。实际上在一开始的时间复杂度的基础上都可以进行空间的优化，比如O(n)可以优化到O(1),O(m*n)可以优化到O(n)。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> climbStairs(<span class="built_in">int</span> n) &#123;</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">2</span>) <span class="keyword">return</span> n;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">int</span> f1 = <span class="number">1</span>, f2 = <span class="number">2</span>, f3 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">3</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            f3 = f1 + f2;</span><br><span class="line">            f1 = f2;</span><br><span class="line">            f2 = f3;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> f3;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="322-Coin-Change-零钱兑换-Mid"><a href="#322-Coin-Change-零钱兑换-Mid" class="headerlink" title="322. Coin Change(零钱兑换)(Mid)"></a><a href="https://leetcode-cn.com/problems/coin-change/" target="_blank" rel="noopener">322. Coin Change(零钱兑换)(Mid)</a></h2><p>You are given coins of different denominations and a total amount of money <em>amount</em>. Write a function to compute the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return <code>-1</code>.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">Input:</span> <span class="string">coins</span> <span class="string">=</span> <span class="string">[1,</span> <span class="number">2</span><span class="string">,</span> <span class="number">5</span><span class="string">],</span> <span class="string">amount</span> <span class="string">=</span> <span class="number">11</span></span><br><span class="line"><span class="attr">Output:</span> <span class="number">3</span> </span><br><span class="line"><span class="attr">Explanation:</span> <span class="number">11</span> <span class="string">=</span> <span class="number">5</span> <span class="string">+</span> <span class="number">5</span> <span class="string">+</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">Input:</span> <span class="string">coins</span> <span class="string">=</span> <span class="string">[2],</span> <span class="string">amount</span> <span class="string">=</span> <span class="number">3</span></span><br><span class="line"><span class="attr">Output:</span> <span class="number">-1</span></span><br></pre></td></tr></table></figure>
+
+
+<p><strong>Note:</strong></p>
+<p>You may assume that you have an infinite number of each kind of coin.</p>
+<hr>
+<p>解：这道题其实和之前的爬楼梯问题是异曲同工之处，可以看成每次可以走coins数组里面的步伐，最后要到达amount的高度，有多少种走法。当然这里有点变化，就是比如112和121，在爬楼梯问题是不同方法，而在这里coin change则是相同的，一种方法。但是写DP方程的话差不多了。</p>
+<p>方法一：暴力法，用递归的方式。</p>
+<p><img src="https://s2.ax1x.com/2020/02/21/3uunUK.png" alt="3uunUK.png"></p>
+<p>题目变成：在状态树中找到叶子节点为0的，并且层数最小的。<br>可以用树的广度优先遍历，直到碰到数值为0的节点，当前层数就是最小硬币数，就是我们的答案。</p>
+<p>但是这个方法会存在指数级别的时间复杂度。</p>
+<p>方法二：DP</p>
+<p>a. subproblems</p>
+<p>b. DP array：f(n) = min{f(n-k), for k in [1,2,5]} + 1, 遍历可以选择的面值的数组，直到n被减到0为止，然后取得到的硬币数的最小值。加一是因为一开始的n-k没有被算入，后面补上。</p>
+<p>c. DP方程</p>
+<p>代码：</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> coinChange(<span class="built_in">int</span>[] coins, <span class="built_in">int</span> amount) &#123;</span><br><span class="line">        <span class="comment">// amount + 1 是无法到达的，以此判断最后是否不能到达amount</span></span><br><span class="line">        <span class="built_in">int</span> max = amount+<span class="number">1</span>;</span><br><span class="line">        <span class="comment">// dp数组的下标是当前金额，里面的值是需要的硬币的个数，初始化是不可达的max</span></span><br><span class="line">        <span class="built_in">int</span>[] dp = new <span class="built_in">int</span>[max];</span><br><span class="line">        <span class="comment">// 初始化dp,初始化考虑只有面值为1的硬币，需要max个</span></span><br><span class="line">        Arrays.fill(dp,max);</span><br><span class="line">        <span class="comment">// 当拿到的amount是0的时候，需要0个硬币，类似爬楼梯，初始化就在0级台阶</span></span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 外层，遍历所有下标的元素，也就是当前凑到的面值数</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">1</span>; i &lt;= amount; i++) &#123;</span><br><span class="line">            <span class="comment">// 每次都从coins里面取元素出来，比如coins是[1,2,5]，每次在要凑下标</span></span><br><span class="line">            <span class="comment">// 值的时候，都会把1,2,5取出来进行值的拼凑</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">int</span> j = <span class="number">0</span>; j &lt; coins.length; j++) &#123;</span><br><span class="line">                <span class="comment">// 如果当前coins里面取出来的值比下标小，才能用。否则比如你下标是3，</span></span><br><span class="line">                <span class="comment">// 即当前要凑到3的值，但当前conis里面硬币值是10，那肯定不用这个</span></span><br><span class="line">                <span class="keyword">if</span>(coins[j] &lt;= i) &#123;</span><br><span class="line">                    <span class="comment">// 用DP方程进行递推</span></span><br><span class="line">                    dp[i] = Math.min(dp[i], dp[i-coins[j]] + <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果最后一个没有被修改，则没办法组成这个金额。否则返回最后amount下标的值</span></span><br><span class="line">        <span class="keyword">return</span> dp[amount] == max ? <span class="number">-1</span> : dp[amount];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>动态规划一般脱离递归，直接由循环迭代完成计算。</p>
+<p>动态规划问题最难的就是写出状态转移方程。</p>
+<p>时间复杂度：O(m*n)</p>
 ]]></content>
       <categories>
         <category>Algorithms Note</category>
@@ -1818,8 +1911,9 @@
 <p>设计模式相关内容介绍，尤其着重Java的单例模拟，看完必有收获。</p>
 <a id="more"></a>
 
-<h1 id="如何用java写一个单例模式？"><a href="#如何用java写一个单例模式？" class="headerlink" title="如何用java写一个单例模式？"></a>如何用java写一个单例模式？</h1><p>单例模式虽然看起来简单，但是如果往深了挖，又可以考察出候选者对于并发、类加载、序列化等知识点的掌握。</p>
-<h2 id="什么是单例模式？"><a href="#什么是单例模式？" class="headerlink" title="什么是单例模式？"></a>什么是单例模式？</h2><p>一个类只有一个实例，并且提供一个全局可以访问的入口(比如getInstance()方法)。比如《火影忍者》中漩涡鸣人特别喜欢用的影分身之术，实际上，每一个影分身都只对应着一个真身。</p>
+<h1 id="如何用java写一个单例模式？"><a href="#如何用java写一个单例模式？" class="headerlink" title="如何用java写一个单例模式？"></a>如何用java写一个单例模式？</h1><p>只能生成一个实例的类是实现了Singleton(单例)模式的类。由于设计模式在面向对象编程中起到了举足轻重的作用，所以在面试中很多公司都会问。而在常用的设计模式中，Singleton是唯一一个能够用短短几十行代码完整实现的设计模式，<font color=#FF0000>所以写一个Singleton是一个很常见的面试题</font>。</p>
+<p>单例模式虽然看起来简单，但是如果往深了挖，又可以考察出候选者对于并发、类加载、序列化等知识点的掌握。</p>
+<h2 id="什么是单例模式？"><a href="#什么是单例模式？" class="headerlink" title="什么是单例模式？"></a>什么是单例模式？</h2><p>如上面所说，只能生成一个实例的类是实现了Singleton(单例模式)的类，也就是一个单例模式的类只有一个实例，并且提供一个全局可以访问的入口(比如getInstance()方法)。比如《火影忍者》中漩涡鸣人特别喜欢用的影分身之术，实际上，每一个影分身都只对应着一个真身。</p>
 <p>为什么要有只有一个实例的这种类？我们为什么需要它？</p>
 <p><strong>理由一：</strong>为了节省内存、节省计算。很多情况下，我们只需要一个实例，如果出现了更多实例，反而是浪费。</p>
 <p>举例：</p>
