@@ -59,7 +59,7 @@
 <meta property="og:image" content="https://s2.ax1x.com/2020/01/10/lfTzJs.png">
 <meta property="og:image" content="https://s2.ax1x.com/2020/01/10/lhCFII.png">
 <meta property="article:published_time" content="2019-12-25T15:57:54.000Z">
-<meta property="article:modified_time" content="2020-02-22T12:33:55.863Z">
+<meta property="article:modified_time" content="2020-02-22T14:42:39.987Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="Design Pattern">
 <meta property="article:tag" content="Foundation">
@@ -223,7 +223,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-22 20:33:55" itemprop="dateModified" datetime="2020-02-22T20:33:55+08:00">2020-02-22</time>
+                <time title="Modified: 2020-02-22 22:42:39" itemprop="dateModified" datetime="2020-02-22T22:42:39+08:00">2020-02-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -301,7 +301,7 @@
 <p>接下来看第二种<strong>懒汉式</strong>。</p>
 <figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 线程不安全的懒汉式写法</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Singleton</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span>(<span class="params"></span>)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton == <span class="literal">null</span>) &#123;</span><br><span class="line">            singleton = <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>但是需要注意，上面这个懒汉式写法只能用于多线程。因为如果一个线程进入了 <code>if(singleton == null)</code> 判断语句块，还没来得及往下执行，另一个线程也通过了这个判断语句，此时会多次创建实例。所以这里需要注意，在多线程环境下，不能用上面这种懒汉式写法，它是错误的。</p>
+<p>但是需要注意，上面这个懒汉式写法只能用于单线程。因为如果一个线程进入了 <code>if(singleton == null)</code> 判断语句块，还没来得及往下执行，另一个线程也通过了这个判断语句，此时会多次创建实例。所以这里需要注意，在多线程环境下，不能用上面这种懒汉式写法，它是错误的。</p>
 <p>当然，懒汉式写法可以进行升级，让其成为线程安全的懒汉式写法。升级之后：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 线程安全的懒汉式写法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton == <span class="keyword">null</span>) &#123;</span><br><span class="line">            singleton = <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -533,7 +533,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">130k</span>
+    <span title="Symbols count total">131k</span>
 </div>
 
 
@@ -550,7 +550,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共48.7k字</span>
+  <span class="post-count">博客全站共49.4k字</span>
 </div>
 
         
