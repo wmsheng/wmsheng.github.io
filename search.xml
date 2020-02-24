@@ -265,7 +265,219 @@
 <li>Isolation，<strong>隔离性</strong>，事务之间是互相独立的。一个事务的执行不能影响其他事务。</li>
 <li>Durability，<strong>持久性</strong>，事务需要是持久的，比如介质受损了，比如断电之后，数据也还能保存。</li>
 </ul>
-<h3 id="事务隔离级别以及各级别下的并发访问问题"><a href="#事务隔离级别以及各级别下的并发访问问题" class="headerlink" title="事务隔离级别以及各级别下的并发访问问题"></a>事务隔离级别以及各级别下的并发访问问题</h3><h3 id="InnoDB可重复读隔离级别下如何避免幻读"><a href="#InnoDB可重复读隔离级别下如何避免幻读" class="headerlink" title="InnoDB可重复读隔离级别下如何避免幻读"></a>InnoDB可重复读隔离级别下如何避免幻读</h3><h3 id="RC、RP级别下的InnoDB的非阻塞读如何实现"><a href="#RC、RP级别下的InnoDB的非阻塞读如何实现" class="headerlink" title="RC、RP级别下的InnoDB的非阻塞读如何实现"></a>RC、RP级别下的InnoDB的非阻塞读如何实现</h3>]]></content>
+<p>其中，Isolation，隔离性，是最关键的一个属性。</p>
+<p>事务隔离级别有四个。事务会先begin transaction，然后开始做。</p>
+<ul>
+<li>Read uncommitted，事务的隔离级别非常低，别的事务完成到了一半还没committ的时候，就能够被我读出来。（不能避免脏读）</li>
+<li>Read Committed，顾名思义，只能读取到别人已经Committed的内容。但是如果你已经读取了，在你读取之后别人又有了修改，别人修改之后你再读，读取到的是别人修改之后的内容，隔离性相对来说也不是很强。(可以避免脏读)</li>
+<li>Repeatable Reads,这个针对上一个，这种读法始终只能读取到我自己begin transaction时候的值。</li>
+<li>Serializable， 两个事务同时发生的时候，一定只会读取到其中一个的结果。</li>
+</ul>
+<h3 id="事务隔离级别以及各级别下的并发访问问题"><a href="#事务隔离级别以及各级别下的并发访问问题" class="headerlink" title="事务隔离级别以及各级别下的并发访问问题"></a>事务隔离级别以及各级别下的并发访问问题</h3><h4 id="事务并发访问引起的问题以及如何避免"><a href="#事务并发访问引起的问题以及如何避免" class="headerlink" title="事务并发访问引起的问题以及如何避免"></a>事务并发访问引起的问题以及如何避免</h4><ul>
+<li>更新丢失(lost update)，即数据库的一个更新覆盖掉了另一个更新的内容。但是现在Mysql所有事务隔离级别在数据库层面上均可避免这个问题。</li>
+</ul>
+<p>举一个银行取款存款事务的例子：</p>
+<p><img src="https://s2.ax1x.com/2020/02/23/3lQIZ4.png" alt="3lQIZ4.png"></p>
+<ul>
+<li>脏读(Dirty Read)，指一个事务读到了另一个事务未提交的更新数据。这个问题可以在READ-COMMITTED事务隔离级别以上才能避免。</li>
+</ul>
+<p>查看事务隔离级别：</p>
+<blockquote>
+<p>select @@tx_isolation</p>
+</blockquote>
+<p>NOTE:tx就是事务(transaction)缩写</p>
+<p>设置事务隔离级别：</p>
+<blockquote>
+<p>set session transaction isolation level read committed;</p>
+</blockquote>
+<p>开启事务：</p>
+<blockquote>
+<p>start tansaction;</p>
+</blockquote>
+<ul>
+<li>不可重复读(None repeatable read),事务A多次读取了数据，但是事务B在事务A读取的过程中有操作数据，导致事务A多次读取出来的数据不一致。把事务隔离级别修改成REPEATABLE-READ级别以上可以避免这个问题。</li>
+</ul>
+<p>InnoDB默认的隔离级别就是REPEATABLE-READ，支持多次读也<br>能读取到相同结果。</p>
+<p>设置事务隔离级别为REPEATABLE-READ：</p>
+<blockquote>
+<p>set session transaction isolation level repeatable read;</p>
+</blockquote>
+<p>事务的隔离级别设置到REPEATABLE-READ以上，就可以避免不可重复度的问题。</p>
+<p>实际上，InnoDB引擎默认的事务隔离级别就是REPEATABLE-READ。</p>
+<ul>
+<li>幻读(Phantom read)：事务A读取与搜索条件相匹配的若干行，而事务B同时进行了添加、删除的操作，导致A每次结果都不一样，貌似出现了幻觉。设置事务隔离级别为SERIALIZABLE可以解决。</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h4><ul>
+<li>更新丢失——Mysql所有事务隔离级别在数据库层面上均可避免。</li>
+<li>脏读——READ-COMMITTED事务隔离级别以上可以避免</li>
+<li>不可重复读——REPEATABLE-READ事务隔离级别以上可以避免</li>
+<li>幻读——SERIALIZABLE事务隔离级别可避免</li>
+</ul>
+<p>如下图：</p>
+<p><img src="https://s2.ax1x.com/2020/02/23/33EMr9.png" alt="33EMr9.png"></p>
+<p>感觉上不可重复度和幻读这两个问题很相似。实际上，不可重复读侧重对同一数据的修改。幻读则侧重添加和删除。</p>
+<p>数据库事务隔离级别越高，串行度越高。虽然可以避免错误的发生，但其并发性能会降低，效率会降低。Oracle默认为Read Committed、MySQL默认为REPETABLE READ。</p>
+<h3 id="InnoDB可重复读隔离级别下如何避免幻读"><a href="#InnoDB可重复读隔离级别下如何避免幻读" class="headerlink" title="InnoDB可重复读隔离级别下如何避免幻读"></a>InnoDB可重复读隔离级别下如何避免幻读</h3><p><strong>表象：快照读(非阻塞读)——伪MVCC(多版本并发控制)</strong></p>
+<p>表象不是真正原因。</p>
+<p>当前读有以下操作：</p>
+<blockquote>
+<p>select … lock in share mode, select … for update </p>
+<p>update, delete, insert</p>
+</blockquote>
+<p>当前读是加了锁的增删改查语句，不论是加了共享锁还是排它锁，都是当前读。当前读的特点是读取当前最新的记录，并且锁住当前数据使得其他事务不能修改数据。</p>
+<p>当前读的操作原理：</p>
+<p><img src="https://s2.ax1x.com/2020/02/23/33JNzd.png" alt="33JNzd.png"></p>
+<ul>
+<li>快照读：简单的select操作，不加锁的非阻塞读。<font color=#FF0000>当然，“不加锁”的前提是事务隔离级别不为Serializable，否则都是串行执行的，快照读就退化为当前读了。</font></li>
+</ul>
+<h4 id="RC、RR级别下的InnoDB的非阻塞读如何实现"><a href="#RC、RR级别下的InnoDB的非阻塞读如何实现" class="headerlink" title="RC、RR级别下的InnoDB的非阻塞读如何实现"></a>RC、RR级别下的InnoDB的非阻塞读如何实现</h4><ul>
+<li><p>数据行里DB_TRX_ID, DB_ROLL_PTR, DB_ROW_ID字段</p>
+<ul>
+<li>DB_TRX_ID：最后一次对本行数据做修改的事务ID</li>
+<li>DB_ROLL_PTR：回滚指针，undo日志记录</li>
+<li>DB_ROW_ID：行号，单调递增。</li>
+</ul>
+</li>
+<li><p>undo日志：当用户对数据产生变更时，就会产生undo记录。undo记录中存储的是老版数据。</p>
+</li>
+</ul>
+<p>undo log包含两种：Insert undo log和update undo log。其中Insert undo log会记录Insert的操作，用于回滚，并且在commit只后可以立即丢弃，它不是重点。重点是update undo log。 事务对数据进行delete、update的时候会产生update undo log，它不仅在事务回滚的时候需要，快照读也需要，它不能随便删除，只有当数据库不需要此类日志的时候才会删除。</p>
+<p>事务对某行的数据更新的过程：</p>
+<p><img src="https://s2.ax1x.com/2020/02/24/33tSun.png" alt="33tSun.png"></p>
+<p>流程：</p>
+<ol>
+<li>锁定该行</li>
+<li>将该行的数据拷贝一份到undo log中</li>
+<li>修改当前行的值</li>
+<li>使用回滚指针指向undo log中修改前的行</li>
+</ol>
+<p>后面如果要对历史数据操作，可以去undo log里面找。</p>
+<ul>
+<li>read view：用来做可见性判断。当我们执行快照读select的时候，会针对查询的数据创建特定的read view来决定可以查看当前哪一个版本的数据。</li>
+</ul>
+<p>MVCC(Multi Version Concurrency Control)：多版本并发控制，读写不冲突。</p>
+<h4 id="Gap锁"><a href="#Gap锁" class="headerlink" title="Gap锁"></a>Gap锁</h4><ul>
+<li><p>Gap锁会用在非唯一索引或者不走索引的当前读中</p>
+</li>
+<li><p>走非唯一索引</p>
+</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2020/02/24/33I4ns.png" alt="33I4ns.png"></p>
+<p>官方文档有介绍，给出需要修改的索引，会对对象的周边进行上锁，上锁的范围会是左开右闭的区间。</p>
+<p><img src="https://s2.ax1x.com/2020/02/24/33oVud.png" alt="33oVud.png"></p>
+<ul>
+<li>不走索引</li>
+</ul>
+<p>若当前读不走索引，它会对所有的Gap都上锁，就类似锁表了，同样可以达到防止幻读的效果。</p>
+<p><img src="https://s2.ax1x.com/2020/02/24/38SGWj.png" alt="38SGWj.png"></p>
+<p>但是相比表锁，这样上锁的代价更大，会降低数据库的效率。</p>
+<h4 id="锁模块之RR如何避免幻读"><a href="#锁模块之RR如何避免幻读" class="headerlink" title="锁模块之RR如何避免幻读"></a>锁模块之RR如何避免幻读</h4><p><strong>内在：next-key锁(行锁+gap锁)</strong></p>
+<ul>
+<li>行锁：对单个行记录上的锁</li>
+<li>Gap锁：防止同一事务两次读，防止出现幻读</li>
+</ul>
+<p>主键或者唯一索引会用Gap锁么？——视情况而定</p>
+<ul>
+<li>如果where条件全部命中，则不用Gap锁，只会加记录锁</li>
+<li>如果where条件部分命中或者全不命中，则会加Gap锁。Gap锁用在非唯一索引或不走索引的当前读中。</li>
+</ul>
+<p>需要注意，加锁的时候，如果我们走的时候主键之外的索引，那么我们需要对当前索引以及主键索引对应的记录都上锁。</p>
+<p>加锁的具体情况举例：</p>
+<p>当where条件全部命中的时候，不会加gap锁，只加记录锁。</p>
+<p><img src="https://s2.ax1x.com/2020/02/24/33gGuV.png" alt="33gGuV.png"></p>
+<h4 id="锁模块小结"><a href="#锁模块小结" class="headerlink" title="锁模块小结"></a>锁模块小结</h4><p>常见问题：</p>
+<ul>
+<li>MyISAM与InnoDB关于锁方面的区别是什么</li>
+<li>数据库事务的四大特性</li>
+<li>事务隔离级别以及各级别下的并发访问问题</li>
+<li>InnoDB可重复读隔离级别下如何避免幻读</li>
+<li>RC、RR级别下的InnoDB的非阻塞读如何实现</li>
+</ul>
+<h3 id="关键语法"><a href="#关键语法" class="headerlink" title="关键语法"></a>关键语法</h3><p>很多复杂的SQL都和查询、筛选相关。</p>
+<ul>
+<li>GROUP BY</li>
+<li>HAVING</li>
+<li>统计相关：COUNT, SUM, MAX, MIN, AVG</li>
+</ul>
+<p>和他们相关的，都是完成一些统计的任务。</p>
+<h4 id="GROUP-BY"><a href="#GROUP-BY" class="headerlink" title="GROUP BY"></a>GROUP BY</h4><p>作用：根据给定数据列的每个成员，对查询结果进行分组统计，最终得到一个分组汇总表。</p>
+<p>条件：</p>
+<ul>
+<li>满足”SELECT子句中的列明必须为分组列或列函数”。说白了意思就是，如果你用了GROUP BY,那么查询的结果要么包含GRAOUP BY使用的列，要么带有统计函数(COUNT, SUM, MAX ,MIN ,AVG等)相关的列。而且这个条件只针对同一张表成立。</li>
+<li>列函数对于GROUP BY子句定义的每个组返回一个结果</li>
+</ul>
+<p>举一个例子，首先看举例的三张表之间的关系</p>
+<p><img src="https://s2.ax1x.com/2020/02/24/38uMnS.png" alt="38uMnS.png"></p>
+<p>其中学生通过主键student_id与score连接，course通过主键course_id和score连接。</p>
+<p>不同表的建立语句：</p>
+<p>student表：<br><img src="https://s2.ax1x.com/2020/02/24/38voG9.png" alt="38voG9.png"></p>
+<p>course表：<br><img src="https://s2.ax1x.com/2020/02/24/38v7x1.png" alt="38v7x1.png"></p>
+<p>score表：<br><img src="https://s2.ax1x.com/2020/02/24/38vT2R.png" alt="38vT2R.png"></p>
+<p>完成查询的功能：</p>
+<blockquote>
+<p>查询所有同学的学号、选课数、总成绩</p>
+</blockquote>
+<p>解决这类写SQL问题的技巧之一，就是根据题目描述，写出所有可能的子SQL，然后再把这些子SQL拼接起来，达到要求。</p>
+<p>比如这里要查询所有同学，所以要用学生表的主键: group by student_id</p>
+<p>然后需要查询学生的学号、选课数、总成绩，所以需要select:<br>select student_id,count(course_id),sum(score);</p>
+<p>而同时出现了学生、课程和分数的表，只有score表：from score</p>
+<p>整合上面这些子SQL，可以写出：</p>
+<blockquote>
+<p>select student_id,count(course_id),sum(score)</p>
+<p>from score</p>
+<p>group by student_id;</p>
+</blockquote>
+<p>group by 会按照student_id把学生进行分组，然后count()和sum()函数会针对每个组进行聚合计算。</p>
+<p>列函数会对于group by子句定义的每个组各返回一个结果。</p>
+<p>如果选了group by,那么你的select 语句中选出的列要么是你group by里用到的列，要么就是带有之前sum,count等列函数的列。<font color=#FF0000>但是这个理论只针对同一张表有效。</font></p>
+<p>比如要解决这个查询问题：</p>
+<blockquote>
+<p>查询所有同学的学号、姓名、选课数、总成绩</p>
+</blockquote>
+<p>相比之前的查询，多了一个姓名。此时只从score中查询就不够了，需要联合student表取出列名。</p>
+<blockquote>
+<p>select s.studnet_id, stu.name, count(s.course_id),sum(s.score)</p>
+<p>from</p>
+<p>score s, student stu</p>
+<p>where</p>
+<p>s.studnet_id = stu.student_id</p>
+<p>group by s.student_id; </p>
+</blockquote>
+<p>注意，where一定要写在group by前面，</p>
+<p>结合这个新的例子，我们可以知道：group by里面出现某个表的字段，select里面的列要么是该group by里出现的列，要么是别的表的列或者带有函数的列。</p>
+<h4 id="HAVING"><a href="#HAVING" class="headerlink" title="HAVING"></a>HAVING</h4><p>如果没有group by子句，那么having和where是可以互换的。</p>
+<ul>
+<li>通常与group by一起使用。当它与group by一起使用时，可以放在group by 后面作为过滤的条件。HAVING相当于所有where的操作符</li>
+<li>WHERE过滤行，HAVING过滤组</li>
+<li>出现在同一sql的顺序：WHERE &gt; GROUP BY &gt; HAVING</li>
+</ul>
+<p>还是以之前三张表为例，完成这个查询：<strong>查询平均成绩大于60分的同学的学号和平均成绩</strong></p>
+<blockquote>
+<p>select student_id,avg(score)</p>
+<p>from score</p>
+<p>group by student_id</p>
+<p>having avg(score)&gt;60 </p>
+</blockquote>
+<p><strong>取出studnet_id为1的学生的成绩情况</strong></p>
+<blockquote>
+<p>select * from score where student_ir=1;</p>
+</blockquote>
+<p>下面这个写法结果相同：</p>
+<blockquote>
+<p>select * from score having student_id=1;</p>
+</blockquote>
+<p><strong>查询没有学全所有课的同学的学号、姓名</strong></p>
+<blockquote>
+<p>select studnet_id,name</p>
+<p>from</p>
+<p>studnet stu,</p>
+<p>score s</p>
+<p>where stu.studnet_id = s.student_id</p>
+<p>group by s.student_id</p>
+<p>having count( * )&lt;(select count( * ) from course)</p>
+</blockquote>
+<p>最后需要结合大量实战题目，才能提升编写SQL的能力和基本功。</p>
+]]></content>
       <categories>
         <category>Study Note</category>
       </categories>
