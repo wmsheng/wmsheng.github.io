@@ -49,15 +49,15 @@
   };
 </script>
 
-  <meta name="description" content="1.并行和并发有什么区别？• 并行是指两个或者多个事件在同一时刻发生；而并发是指两个或多个事件在同一时间间隔发生。• 并行是在不同实体上的多个事件，并发是在同一实体上的多个事件。• 在一台处理器上“同时”处理多个任务，在多台处理器上同时处理多个任务。如hadoop分布式集群。 所以并发编程的目标是充分的利用处理器的每一个核，以达到最高的处理性能。 2.线程和进程的区别？简而言之，进程是程序运行">
+  <meta name="description" content="耐心和恒心总会得到报酬的。——爱因斯坦">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java-Concurrent Programming Interview II">
 <meta property="og:url" content="http://yoursite.com/2020/02/24/Java-Concurrent-Programming-Interview-II/index.html">
 <meta property="og:site_name" content="Hi, This is Bennett">
-<meta property="og:description" content="1.并行和并发有什么区别？• 并行是指两个或者多个事件在同一时刻发生；而并发是指两个或多个事件在同一时间间隔发生。• 并行是在不同实体上的多个事件，并发是在同一实体上的多个事件。• 在一台处理器上“同时”处理多个任务，在多台处理器上同时处理多个任务。如hadoop分布式集群。 所以并发编程的目标是充分的利用处理器的每一个核，以达到最高的处理性能。 2.线程和进程的区别？简而言之，进程是程序运行">
+<meta property="og:description" content="耐心和恒心总会得到报酬的。——爱因斯坦">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-02-24T12:27:40.000Z">
-<meta property="article:modified_time" content="2020-02-24T14:48:08.456Z">
+<meta property="article:modified_time" content="2020-02-24T16:02:00.126Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="Interview">
 <meta property="article:tag" content="Java">
@@ -161,7 +161,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">20</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">25</span></a>
 
   </li>
   </ul>
@@ -213,10 +213,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-02-24 20:27:40 / Modified: 22:48:08" itemprop="dateCreated datePublished" datetime="2020-02-24T20:27:40+08:00">2020-02-24</time>
+              <time title="Created: 2020-02-24 20:27:40" itemprop="dateCreated datePublished" datetime="2020-02-24T20:27:40+08:00">2020-02-24</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-25 00:02:00" itemprop="dateModified" datetime="2020-02-25T00:02:00+08:00">2020-02-25</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -255,7 +261,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <a id="more"></a>
+        <blockquote>
+<p>耐心和恒心总会得到报酬的。——爱因斯坦</p>
+</blockquote>
+<a id="more"></a>
 
 <h2 id="1-并行和并发有什么区别？"><a href="#1-并行和并发有什么区别？" class="headerlink" title="1.并行和并发有什么区别？"></a>1.并行和并发有什么区别？</h2><p>• 并行是指两个或者多个事件在同一时刻发生；而并发是指两个或多个事件在同一时间间隔发生。<br>• 并行是在不同实体上的多个事件，并发是在同一实体上的多个事件。<br>• 在一台处理器上“同时”处理多个任务，在多台处理器上同时处理多个任务。如hadoop分布式集群。</p>
 <p>所以并发编程的目标是充分的利用处理器的每一个核，以达到最高的处理性能。</p>
@@ -305,10 +314,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/02/24/Java-Concurrent-Programming-Interview-I/" rel="prev" title="Java-Concurrent Programming Interview I">
-      <i class="fa fa-chevron-left"></i> Java-Concurrent Programming Interview I
+    <a href="/2020/02/24/Java-Concurrent-Programming-Interview-I/" rel="prev" title="Java Concurrent Programming Interview I">
+      <i class="fa fa-chevron-left"></i> Java Concurrent Programming Interview I
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/02/25/Java-Concurrent-Programming-Study-I/" rel="next" title="Java-Concurrent-Programming-Study-I">
+      Java-Concurrent-Programming-Study-I <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -389,7 +401,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -458,7 +470,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">138k</span>
+    <span title="Symbols count total">139k</span>
 </div>
 
 
@@ -475,7 +487,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共54.2k字</span>
+  <span class="post-count">博客全站共55.1k字</span>
 </div>
 
         
