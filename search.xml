@@ -1,6 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java-Concurrent Programming Interview II</title>
+    <url>/2020/02/24/Java-Concurrent-Programming-Interview-II/</url>
+    <content><![CDATA[<a id="more"></a>
+
+<h2 id="1-并行和并发有什么区别？"><a href="#1-并行和并发有什么区别？" class="headerlink" title="1.并行和并发有什么区别？"></a>1.并行和并发有什么区别？</h2><p>• 并行是指两个或者多个事件在同一时刻发生；而并发是指两个或多个事件在同一时间间隔发生。<br>• 并行是在不同实体上的多个事件，并发是在同一实体上的多个事件。<br>• 在一台处理器上“同时”处理多个任务，在多台处理器上同时处理多个任务。如hadoop分布式集群。</p>
+<p>所以并发编程的目标是充分的利用处理器的每一个核，以达到最高的处理性能。</p>
+<h2 id="2-线程和进程的区别？"><a href="#2-线程和进程的区别？" class="headerlink" title="2.线程和进程的区别？"></a>2.线程和进程的区别？</h2><p>简而言之，进程是程序运行和资源分配的基本单位，一个程序至少有一个进程，一个进程至少有一个线程。进程在执行过程中拥有独立的内存单元，而多个线程共享内存资源，减少切换次数，从而效率更高。线程是进程的一个实体，是cpu调度和分派的基本单位，是比程序更小的能独立运行的基本单位。同一进程中的多个线程之间可以并发执行。</p>
+<h2 id="3-守护进程是什么？"><a href="#3-守护进程是什么？" class="headerlink" title="3.守护进程是什么？"></a>3.守护进程是什么？</h2><p>守护线程（即daemon thread），是个服务线程，准确地来说就是服务其他的线程。</p>
+<h2 id="4-创建线程有哪几种方式？"><a href="#4-创建线程有哪几种方式？" class="headerlink" title="4.创建线程有哪几种方式？"></a>4.创建线程有哪几种方式？</h2><p>1.继承Thread类创建线程类<br>• 定义Thread类的子类，并重写该类的run方法，该run方法的方法体就代表了线程要完成的任务。因此把run()方法称为执行体。<br>• 创建Thread子类的实例，即创建了线程对象。<br>• 调用线程对象的start()方法来启动该线程。</p>
+<p>2.通过Runnable接口创建线程类<br>• 定义runnable接口的实现类，并重写该接口的run()方法，该run()方法的方法体同样是该线程的线程执行体。<br>• 创建 Runnable实现类的实例，并依此实例作为Thread的target来创建Thread对象，该Thread对象才是真正的线程对象。<br>• 调用线程对象的start()方法来启动该线程。</p>
+<p>3.通过Callable和Future创建线程<br>• 创建Callable接口的实现类，并实现call()方法，该call()方法将作为线程执行体，并且有返回值。<br>• 创建Callable实现类的实例，使用FutureTask类来包装Callable对象，该FutureTask对象封装了该Callable对象的call()方法的返回值。<br>• 使用FutureTask对象作为Thread对象的target创建并启动新线程。<br>• 调用FutureTask对象的get()方法来获得子线程执行结束后的返回值。</p>
+<h2 id="5-说一下runnable-和-callable-有什么区别？"><a href="#5-说一下runnable-和-callable-有什么区别？" class="headerlink" title="5.说一下runnable 和 callable 有什么区别？"></a>5.说一下runnable 和 callable 有什么区别？</h2><p>有点深的问题了，也看出一个Java程序员学习知识的广度。<br>• Runnable接口中的run()方法的返回值是void，它做的事情只是纯粹地去执行run()方法中的代码而已；<br>Callable接口中的call()方法是有返回值的，是一个泛型，和Future、FutureTask配合可以用来获取异步执行的结果。</p>
+<h2 id="6-线程有哪些状态？"><a href="#6-线程有哪些状态？" class="headerlink" title="6.线程有哪些状态？"></a>6.线程有哪些状态？</h2><p>线程通常都有五种状态，创建、就绪、运行、阻塞和死亡。<br>• 创建状态。在生成线程对象，并没有调用该对象的start方法，这是线程处于创建状态。<br>• 就绪状态。当调用了线程对象的start方法之后，该线程就进入了就绪状态，但是此时线程调度程序还没有把该线程设置为当前线程，此时处于就绪状态。在线程运行之后，从等待或者睡眠中回来之后，也会处于就绪状态。<br>• 运行状态。线程调度程序将处于就绪状态的线程设置为当前线程，此时线程就进入了运行状态，开始运行run函数当中的代码。<br>• 阻塞状态。线程正在运行的时候，被暂停，通常是为了等待某个时间的发生(比如说某项资源就绪)之后再继续运行。sleep,suspend，wait等方法都可以导致线程阻塞。<br>• 死亡状态。如果一个线程的run方法执行结束或者调用stop方法后，该线程就会死亡。对于已经死亡的线程，无法再使用start方法令其进入就绪</p>
+<h2 id="7-sleep-和-wait-有什么区别？"><a href="#7-sleep-和-wait-有什么区别？" class="headerlink" title="7.sleep() 和 wait() 有什么区别？"></a>7.sleep() 和 wait() 有什么区别？</h2><p>sleep()：方法是线程类（Thread）的静态方法，让调用线程进入睡眠状态，让出执行机会给其他线程，等到休眠时间结束后，线程进入就绪状态和其他线程一起竞争cpu的执行时间。因为sleep() 是static静态的方法，他不能改变对象的机锁，当一个synchronized块中调用了sleep() 方法，线程虽然进入休眠，但是对象的机锁没有被释放，其他线程依然无法访问这个对象。</p>
+<p>wait()：wait()是Object类的方法，当一个线程执行到wait方法时，它就进入到一个和该对象相关的等待池，同时释放对象的机锁，使得其他线程能够访问，可以通过notify，notifyAll方法来唤醒等待的线程</p>
+<h2 id="8-notify-和-notifyAll-有什么区别？"><a href="#8-notify-和-notifyAll-有什么区别？" class="headerlink" title="8.notify() 和 notifyAll() 有什么区别？"></a>8.notify() 和 notifyAll() 有什么区别？</h2><p>• 如果线程调用了对象的 wait()方法，那么线程便会处于该对象的等待池中，等待池中的线程不会去竞争该对象的锁。<br>• 当有线程调用了对象的 notifyAll()方法（唤醒所有 wait 线程）或 notify()方法（只随机唤醒一个 wait 线程），被唤醒的的线程便会进入该对象的锁池中，锁池中的线程会去竞争该对象锁。也就是说，调用了notify后只要一个线程会由等待池进入锁池，而notifyAll会将该对象等待池内的所有线程移动到锁池中，等待锁竞争。<br>• 优先级高的线程竞争到对象锁的概率大，假若某线程没有竞争到该对象锁，它还会留在锁池中，唯有线程再次调用 wait()方法，它才会重新回到等待池中。而竞争到对象锁的线程则继续往下执行，直到执行完了 synchronized 代码块，它会释放掉该对象锁，这时锁池中的线程会继续竞争该对象锁。</p>
+<h2 id="9-线程的run-和-start-有什么区别？"><a href="#9-线程的run-和-start-有什么区别？" class="headerlink" title="9.线程的run() 和 start() 有什么区别？"></a>9.线程的run() 和 start() 有什么区别？</h2><p>每个线程都是通过某个特定Thread对象所对应的方法run()来完成其操作的，方法run()称为线程体。通过调用Thread类的start()方法来启动一个线程。</p>
+<p>start()方法来启动一个线程，真正实现了多线程运行。这时无需等待run方法体代码执行完毕，可以直接继续执行下面的代码；这时此线程是处于就绪状态， 并没有运行。然后通过此Thread类调用方法run()来完成其运行状态， 这里方法run()称为线程体，它包含了要执行的这个线程的内容， Run方法运行结束， 此线程终止。然后CPU再调度其它线程。</p>
+<p>run()方法是在本线程里的，只是线程里的一个函数,而不是多线程的。 如果直接调用run(),其实就相当于是调用了一个普通函数而已，直接待用run()方法必须等待run()方法执行完毕才能执行下面的代码，所以执行路径还是只有一条，根本就没有线程的特征，所以在多线程执行时要使用start()方法而不是run()方法。</p>
+<h2 id="10-创建线程池有哪几种方式？"><a href="#10-创建线程池有哪几种方式？" class="headerlink" title="10.创建线程池有哪几种方式？"></a>10.创建线程池有哪几种方式？</h2><p>1.newFixedThreadPool(int nThreads)</p>
+<p>创建一个固定长度的线程池，每当提交一个任务就创建一个线程，直到达到线程池的最大数量，这时线程规模将不再变化，当线程发生未预期的错误而结束时，线程池会补充一个新的线程。</p>
+<p>2.newCachedThreadPool()</p>
+<p>创建一个可缓存的线程池，如果线程池的规模超过了处理需求，将自动回收空闲线程，而当需求增加时，则可以自动添加新线程，线程池的规模不存在任何限制。</p>
+<ol start="3">
+<li>newSingleThreadExecutor()</li>
+</ol>
+<p>这是一个单线程的Executor，它创建单个工作线程来执行任务，如果这个线程异常结束，会创建一个新的来替代它；它的特点是能确保依照任务在队列中的顺序来串行执行。</p>
+<ol start="4">
+<li>newScheduledThreadPool(int corePoolSize)</li>
+</ol>
+<p>创建了一个固定长度的线程池，而且以延迟或定时的方式来执行任务，类似于Timer。</p>
+]]></content>
+      <categories>
+        <category>Interview Note</category>
+      </categories>
+      <tags>
+        <tag>Interview</tag>
+        <tag>Java</tag>
+        <tag>concurrent</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java-Concurrent Programming Interview I</title>
+    <url>/2020/02/24/Java-Concurrent-Programming-Interview-I/</url>
+    <content><![CDATA[<a id="more"></a>
+
+]]></content>
+      <categories>
+        <category>Interview Note</category>
+      </categories>
+      <tags>
+        <tag>Interview</tag>
+        <tag>Java</tag>
+        <tag>concurrent</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>DataBase Interview II(Mysql)</title>
     <url>/2020/02/20/Database-Interview-II/</url>
     <content><![CDATA[<blockquote>
@@ -42,7 +99,7 @@
 <h2 id="15-如何做mysql的性能优化？"><a href="#15-如何做mysql的性能优化？" class="headerlink" title="15.如何做mysql的性能优化？"></a>15.如何做mysql的性能优化？</h2><p>• 为搜索字段创建索引。<br>• 避免使用 select *，列出需要查询的字段。<br>• 垂直分割分表。<br>选择正确的存储引擎。</p>
 ]]></content>
       <categories>
-        <category>Study Note</category>
+        <category>Interview Note</category>
       </categories>
       <tags>
         <tag>DataBase</tag>
@@ -479,7 +536,7 @@
 <p>最后需要结合大量实战题目，才能提升编写SQL的能力和基本功。</p>
 ]]></content>
       <categories>
-        <category>Study Note</category>
+        <category>Interview Note</category>
       </categories>
       <tags>
         <tag>DataBase</tag>
