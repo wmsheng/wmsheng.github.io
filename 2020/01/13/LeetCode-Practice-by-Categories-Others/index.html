@@ -57,7 +57,7 @@
 <meta property="og:description" content="时间像海绵里的水，只要你愿意挤，总还是有的。——鲁迅  LeetCode其他题目其解决思路和具体代码。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-01-13T04:51:23.000Z">
-<meta property="article:modified_time" content="2020-02-22T02:02:26.325Z">
+<meta property="article:modified_time" content="2020-02-26T01:11:59.279Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -150,7 +150,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">9</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">10</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -220,7 +220,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-22 10:02:26" itemprop="dateModified" datetime="2020-02-22T10:02:26+08:00">2020-02-22</time>
+                <time title="Modified: 2020-02-26 09:11:59" itemprop="dateModified" datetime="2020-02-26T09:11:59+08:00">2020-02-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -278,7 +278,7 @@
 <p>思路一：如果你头脑足够灵活，数学感觉足够好，那么实际上抓住一个点就可以：题目问的多数元素，其实不算真正的众数。这里的多数元素出现的次数必须大于 <code>n/2</code> ，所以，如果一个数组中一定有众数，那么这个数组排好序之后，下标为 <code>nums.length/2</code> 的那个元素，就是众数。利用排序，排好序之后返回下标为 <code>nums.length/2</code>的元素，就是这道题需要的结果。</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> majorityElement(<span class="built_in">int</span>[] nums) &#123;</span><br><span class="line">        Arrays.sort(nums);</span><br><span class="line">        <span class="keyword">return</span> nums[nums.length/<span class="number">2</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>因为用到了系统自带的排序方法，所以这种方法的时间复杂度是O(logN)。</p>
+<p>因为用到了系统自带的排序方法，所以这种方法的时间复杂度是O(NlogN)。</p>
 <p>方法二：开两个变量，result为最后返回的结果，count用于统计，因为按照题目定义，众数出现次数一定大于 n/2 ，所以count只要回到了0，说明当前result不可能是最后的众数。</p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> majorityElement(<span class="built_in">int</span>[] nums) &#123;</span><br><span class="line">        <span class="built_in">int</span> result = <span class="number">0</span>, count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> num : nums) &#123;</span><br><span class="line">            <span class="keyword">if</span>(count == <span class="number">0</span>) </span><br><span class="line">                result = num;</span><br><span class="line">            <span class="keyword">if</span>(result != num) </span><br><span class="line">                count --;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                count ++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -431,7 +431,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -487,7 +487,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">139k</span>
+    <span title="Symbols count total">145k</span>
 </div>
 
 
@@ -504,7 +504,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共55.1k字</span>
+  <span class="post-count">博客全站共59.7k字</span>
 </div>
 
         
