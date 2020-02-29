@@ -438,14 +438,48 @@
       </tags>
   </entry>
   <entry>
-    <title>Java-JVM-Study-I</title>
+    <title>Java JVM Study I</title>
     <url>/2020/02/25/Java-JVM-Study-I/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<blockquote>
+<p>知识犹如人体的血液一样宝贵。——高士其</p>
+</blockquote>
+<a id="more"></a>
+
+<p>每种语言都有其独特的优势和特点。对于Java来说，其独特之处主要可以从六个方面来说：</p>
+<ul>
+<li>平台无关性</li>
+<li>面向对象</li>
+<li>GC(垃圾回收)</li>
+<li>类库</li>
+<li>语言特性和异常处理</li>
+</ul>
+<h1 id="Java的平台无关性如何实现"><a href="#Java的平台无关性如何实现" class="headerlink" title="Java的平台无关性如何实现"></a>Java的平台无关性如何实现</h1><p>平台无关性，实际上就是java代码”编译一次，到处执行”这个特点的简称。</p>
+<p><img src="https://s2.ax1x.com/2020/02/28/3DqNYq.png" alt="3DqNYq.png"></p>
+<p>可以说，生成”.class”文件，是java跨平台的基础。</p>
+<p><strong>为什么JVM不把java解析成机器码然后执行呢？</strong></p>
+<p>主要是两个原因，一个是如果解析成机器码，需要大量准备工作，每次执行都需要根据机器的内部构造去设定值。另一个原因是，解析成class文件，可以让JVM虚拟机发挥更大的作用，比如Scala语言也可以通过解析成class文件来通过JVM虚拟机运行。</p>
+]]></content>
+      <categories>
+        <category>Study Note</category>
+      </categories>
+      <tags>
+        <tag>JVM</tag>
+      </tags>
   </entry>
   <entry>
-    <title>Java-JVM-Interview-I</title>
+    <title>Java JVM Interview I</title>
     <url>/2020/02/25/Java-JVM-Interview-I/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<blockquote>
+<p>知识犹如人体的血液一样宝贵。——高士其</p>
+</blockquote>
+<a id="more"></a>]]></content>
+      <categories>
+        <category>Interview Note</category>
+      </categories>
+      <tags>
+        <tag>Interview</tag>
+        <tag>JVM</tag>
+      </tags>
   </entry>
   <entry>
     <title>Java-Concurrent-Programming-Study-I</title>
@@ -1180,11 +1214,16 @@
 <li>从堆中取最小的数，所需时间都是O(logk)</li>
 <li>如果每个链表平均长度为n，则共有nk个元素，即用大小为k的最小堆过滤nk个元素</li>
 <li>整体时间复杂度为O(nk*log(k))</li>
+<li>空间复杂度为O(k)，我们有k个list，占据k个空间</li>
 </ul>
 </li>
 </ul>
 <p>我们一直维护这个大小为k的最小堆，直到遍历完所有链表的节点</p>
-<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Solution &#123;</span><br><span class="line">    <span class="keyword">public</span> ListNode mergeKLists(ListNode[] lists) &#123;</span><br><span class="line">        <span class="comment">// 如果输入为[]，边界条件</span></span><br><span class="line">        <span class="keyword">if</span>(lists.length == <span class="number">0</span> || lists == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 利用一个空的链表头方便我们插入节点</span></span><br><span class="line">        ListNode fakeHead = <span class="keyword">new</span> ListNode(<span class="number">0</span>), p = fakeHead;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 定义一个最小堆来保存k个链表节点</span></span><br><span class="line">        <span class="keyword">int</span> k = lists.length;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 将k个链表的头放到最小堆中,因为要维护最小堆，所以重新定义比较器，降序排列。</span></span><br><span class="line">        <span class="comment">// 不手动定义比较器的话默认升序排列</span></span><br><span class="line">        PriorityQueue&lt;ListNode&gt; heap = <span class="keyword">new</span> PriorityQueue&lt;&gt;(k, <span class="keyword">new</span> Comparator&lt;ListNode&gt;() &#123;</span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">int</span> compare(ListNode a, ListNode b) &#123;</span><br><span class="line">                <span class="keyword">return</span> a.val - b.val;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 从最小堆中将当前最小节点取出，插入到结果链表中</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(lists[i] != <span class="keyword">null</span>) &#123;</span><br><span class="line">                heap.offer(lists[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果发现该节点后还有后序节点，将其加入到最小堆中</span></span><br><span class="line">        <span class="keyword">while</span>(!heap.isEmpty()) &#123;</span><br><span class="line">            ListNode node = heap.poll();</span><br><span class="line">            </span><br><span class="line">            p.<span class="keyword">next</span> = node;</span><br><span class="line">            p = p.<span class="keyword">next</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(node.<span class="keyword">next</span> != <span class="keyword">null</span>) &#123;</span><br><span class="line">                heap.offer(node.<span class="keyword">next</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 最后返回结果链表</span></span><br><span class="line">        <span class="keyword">return</span> fakeHead.<span class="keyword">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Solution &#123;</span><br><span class="line">    <span class="keyword">public</span> ListNode mergeKLists(ListNode[] lists) &#123;</span><br><span class="line">        <span class="comment">// 如果输入为[]，边界条件</span></span><br><span class="line">        <span class="keyword">if</span>(lists.length == <span class="number">0</span> || lists == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 利用一个空的链表头方便我们插入节点</span></span><br><span class="line">        ListNode fakeHead = <span class="keyword">new</span> ListNode(<span class="number">0</span>), p = fakeHead;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 定义一个最小堆来保存k个链表节点</span></span><br><span class="line">        <span class="keyword">int</span> k = lists.length;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 将k个链表的头放到最小堆中,因为使用ListNode数据结构，所以重新定义比较器</span></span><br><span class="line">        PriorityQueue&lt;ListNode&gt; heap = <span class="keyword">new</span> PriorityQueue&lt;&gt;(k, <span class="keyword">new</span> Comparator&lt;ListNode&gt;() &#123;</span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">int</span> compare(ListNode a, ListNode b) &#123;</span><br><span class="line">                <span class="keyword">return</span> a.val - b.val;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 从最小堆中将当前最小节点取出，插入到结果链表中,相当于初始化的步骤</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(lists[i] != <span class="keyword">null</span>) &#123;</span><br><span class="line">                heap.offer(lists[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果发现该节点后还有后序节点，将其加入到最小堆中</span></span><br><span class="line">        <span class="keyword">while</span>(!heap.isEmpty()) &#123;</span><br><span class="line">            ListNode node = heap.poll();</span><br><span class="line">            </span><br><span class="line">            p.<span class="keyword">next</span> = node;</span><br><span class="line">            p = p.<span class="keyword">next</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(node.<span class="keyword">next</span> != <span class="keyword">null</span>) &#123;</span><br><span class="line">                heap.offer(node.<span class="keyword">next</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 最后返回结果链表</span></span><br><span class="line">        <span class="keyword">return</span> fakeHead.<span class="keyword">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述定义小顶堆的代码也可以用Lambda表达式简化：</p>
+<figure class="highlight coffeescript"><table><tr><td class="code"><pre><span class="line">PriorityQueue&lt;ListNode&gt; heap = <span class="keyword">new</span> PriorityQueue&lt;&gt;(</span><br><span class="line">    (a,b) -&gt; a.val - b.val</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
 
 <p><strong>解法三：分治法</strong></p>
 <p>利用分治思想，非常类似归并排序操作。</p>
@@ -2285,7 +2324,13 @@
 <a id="more"></a>
 
 <p>点击题目链接为中国站题目，页面附上英文题目。</p>
-<p><font color=#FF0000><strong>我总觉得，高超精简的算法，其精彩程度不输好的影视剧！</strong></font></p>
+<p><strong>对于链表，在操作上实际是有需要注意的地方的。</strong><br><font color=#FF0000></p>
+<ol>
+<li>利用快慢指针(有时候需要用到三个指针)。例如，链表翻转、寻找倒数第k个元素、寻找链表中间元素、判断链表是否有环</font><font color=#FF0000></li>
+<li>构建一个虚假的链表头，一般用在需要返回一个新的链表的题目中。(整合两个有序链表、整合奇数偶数链表)。如果不创建空的链表头，每次都要多一个if else判断头结点是否为空。</font>
+
+</li>
+</ol>
 <h1 id="数组、链表、跳表"><a href="#数组、链表、跳表" class="headerlink" title="数组、链表、跳表"></a>数组、链表、跳表</h1><h2 id="283-Move-zeros-移动零-Easy"><a href="#283-Move-zeros-移动零-Easy" class="headerlink" title="283.Move zeros(移动零)(Easy)"></a><a href="https://leetcode-cn.com/problems/move-zeroes/?utm_source=LCUS&utm_medium=ip_redirect_q_uns&utm_campaign=transfer2china" target="_blank" rel="noopener">283.Move zeros(移动零)(Easy)</a></h2><p>Given an array <code>nums</code> , write a function to move all 0’s to the end of it while maintaining the relative order of the non-zero elements.</p>
 <p><strong>Examples:</strong></p>
 <figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">Input: [<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">3</span>,<span class="number">12</span>]</span><br><span class="line">Output: [<span class="number">1</span>,<span class="number">3</span>,<span class="number">12</span>,<span class="number">0</span>,<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
