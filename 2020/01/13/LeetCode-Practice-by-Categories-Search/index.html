@@ -58,7 +58,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://assets.leetcode-cn.com/aliyun-lc-upload/original_images/17_telephone_keypad.png">
 <meta property="article:published_time" content="2020-01-13T04:46:07.000Z">
-<meta property="article:modified_time" content="2020-02-20T05:53:10.227Z">
+<meta property="article:modified_time" content="2020-03-03T03:14:23.890Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -222,7 +222,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-20 13:53:10" itemprop="dateModified" datetime="2020-02-20T13:53:10+08:00">2020-02-20</time>
+                <time title="Modified: 2020-03-03 11:14:23" itemprop="dateModified" datetime="2020-03-03T11:14:23+08:00">2020-03-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -250,7 +250,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>5.1k</span>
+              <span>8.3k</span>
             </span>
 
         </div>
@@ -269,6 +269,59 @@
 <a id="more"></a>
 
 <p>在树的章节中已经包括了很多有关DFS和BFS的题目，比如，非常经典和重要的，树的层次遍历(102)和树的一些遍历。之前重复的在这里先不再写了。</p>
+<h2 id="74-Search-a-2D-Matrix-搜索二维矩阵-Mid"><a href="#74-Search-a-2D-Matrix-搜索二维矩阵-Mid" class="headerlink" title="74. Search a 2D Matrix(搜索二维矩阵)(Mid)"></a><a href="https://leetcode-cn.com/problems/search-a-2d-matrix/" target="_blank" rel="noopener">74. Search a 2D Matrix(搜索二维矩阵)(Mid)</a></h2><p>Write an efficient algorithm that searches for a value in an m x n matrix. This matrix has the following properties:</p>
+<ul>
+<li>Integers in each row are sorted from left to right.</li>
+<li>The first integer of each row is greater than the last integer of the previous row.</li>
+</ul>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Input:</span><br><span class="line">matrix = [</span><br><span class="line">  [<span class="number">1</span>,   <span class="number">3</span>,  <span class="number">5</span>,  <span class="number">7</span>],</span><br><span class="line">  [<span class="number">10</span>, <span class="number">11</span>, <span class="number">16</span>, <span class="number">20</span>],</span><br><span class="line">  [<span class="number">23</span>, <span class="number">30</span>, <span class="number">34</span>, <span class="number">50</span>]</span><br><span class="line">]</span><br><span class="line">target = <span class="number">3</span></span><br><span class="line">Output: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Input:</span><br><span class="line">matrix = [</span><br><span class="line">  [<span class="number">1</span>,   <span class="number">3</span>,  <span class="number">5</span>,  <span class="number">7</span>],</span><br><span class="line">  [<span class="number">10</span>, <span class="number">11</span>, <span class="number">16</span>, <span class="number">20</span>],</span><br><span class="line">  [<span class="number">23</span>, <span class="number">30</span>, <span class="number">34</span>, <span class="number">50</span>]</span><br><span class="line">]</span><br><span class="line">target = <span class="number">13</span></span><br><span class="line">Output: <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>解：这道题和下一道题几乎是兄弟模样，但是比240更简单，主要因为properties的第二条——他在保证了每一行为递增的之外，还保证下一行的第一个元素一定大于上一行的最后一个。</p>
+<p>经典的二分查找的思想，把整个二维数组当成是一个排好序的数组对待即可。</p>
+<p>需要注意的一个很有用的公式：</p>
+<ul>
+<li>把m*n的二维矩阵转换成一个数组：matrix[x][y] =&gt; array[x * n + y]</li>
+<li>把一个array转换成m*n的二维矩阵：array[x] =&gt; matrix[x/n][x%n]</li>
+</ul>
+<p>抓住了上面这个转换机制，就抓住了关键</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span>ean searchMatrix(<span class="built_in">int</span>[][] matrix, <span class="built_in">int</span> target) &#123;</span><br><span class="line">        <span class="comment">// corner case</span></span><br><span class="line">        <span class="keyword">if</span>(matrix == <span class="literal">null</span> || matrix.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="comment">// start为开始的位置，end为当前终止的位置</span></span><br><span class="line">        <span class="comment">// rows为行数，cols为列数</span></span><br><span class="line">        <span class="built_in">int</span> start = <span class="number">0</span>, rows = matrix.length, cols = matrix[<span class="number">0</span>].length;</span><br><span class="line">        <span class="built_in">int</span> end = rows * cols - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(start &lt;= end) &#123;</span><br><span class="line">            <span class="comment">// 找到当前中间位置的元素mid</span></span><br><span class="line">            <span class="built_in">int</span> mid = (end + start) &gt;&gt; <span class="number">1</span> ;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 最关键的是用start和end与二维矩阵matrix之间的转换公式</span></span><br><span class="line">            <span class="comment">// 二维矩阵转换中最重要的是列数，这个和定义二维数组的时候，可以没有</span></span><br><span class="line">            <span class="comment">// 行数，但是必须声明列数的道理是一样的</span></span><br><span class="line">            <span class="keyword">if</span>(matrix[mid / cols][mid % cols] == target) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 如果当前mid比target小，那么target一定在mid右边，就要把start右移</span></span><br><span class="line">            <span class="comment">// vice versa</span></span><br><span class="line">            <span class="keyword">if</span>(matrix[mid / cols][mid % cols] &lt; target) &#123;</span><br><span class="line">                start = mid + <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                end = mid - <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：标准的二分查找，时间复杂度为O(log(m*n))</li>
+<li>空间复杂度：O(1)</li>
+</ul>
+<h2 id="240-Search-a-2D-Matrix-II-搜索二维矩阵-Mid"><a href="#240-Search-a-2D-Matrix-II-搜索二维矩阵-Mid" class="headerlink" title="240. Search a 2D Matrix II(搜索二维矩阵)(Mid)"></a><a href="https://leetcode-cn.com/problems/search-a-2d-matrix-ii/" target="_blank" rel="noopener">240. Search a 2D Matrix II(搜索二维矩阵)(Mid)</a></h2><p>Write an efficient algorithm that searches for a value in an m x n matrix. This matrix has the following properties:</p>
+<ul>
+<li>Integers in each row are sorted in ascending from left to right.</li>
+<li>Integers in each column are sorted in ascending from top to bottom.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<p>Consider the following matrix:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  [<span class="number">1</span>,   <span class="number">4</span>,  <span class="number">7</span>, <span class="number">11</span>, <span class="number">15</span>],</span><br><span class="line">  [<span class="number">2</span>,   <span class="number">5</span>,  <span class="number">8</span>, <span class="number">12</span>, <span class="number">19</span>],</span><br><span class="line">  [<span class="number">3</span>,   <span class="number">6</span>,  <span class="number">9</span>, <span class="number">16</span>, <span class="number">22</span>],</span><br><span class="line">  [<span class="number">10</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">17</span>, <span class="number">24</span>],</span><br><span class="line">  [<span class="number">18</span>, <span class="number">21</span>, <span class="number">23</span>, <span class="number">26</span>, <span class="number">30</span>]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>Given target = <code>5</code>, return <code>true</code>.</p>
+<p>Given target = <code>20</code>, return <code>false</code>.</p>
+<hr>
+<p>解：和74的区别是，此题输入的数组下一行的首元素和上一行相比不是递增的，而是在行和列这两个方向上是递增的，这样一来解题思路和上一题就完全不同了。上一题因为存储方式和二维矩阵与数组的转换方式有吻合之处所以可以用二分法，这里也可以，但是没有上一题那么容易解了。</p>
+<p>但是不难发现，因为在行和列这两个方向是递增的，所以右上角成为了突破口。右上角的元素如果大于target，那么再次查找target的时候可以排除之前的一列；如果右上角元素小于target，那么再次查找的时候可以排除之前元素的这一行。</p>
+<p>写法一：从右上角开始突破。</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public boolean searchMatrix(int[][] <span class="built_in">matrix</span>, int target) &#123;</span><br><span class="line">        // corner case</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">matrix</span> == null || <span class="built_in">matrix</span>.<span class="built_in">length</span> == <span class="number">0</span>) <span class="built_in">return</span> <span class="literal">false</span>;</span><br><span class="line">        // 从右上角开始</span><br><span class="line">        // start our pointer fron top-right</span><br><span class="line">        int <span class="built_in">row</span> = <span class="number">0</span>, <span class="built_in">col</span> = <span class="built_in">matrix</span>[<span class="number">0</span>].<span class="built_in">length</span> - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(<span class="built_in">col</span> &gt;= <span class="number">0</span> &amp;&amp; <span class="built_in">row</span> &lt;= <span class="built_in">matrix</span>.<span class="built_in">length</span> - <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">matrix</span>[<span class="built_in">row</span>][<span class="built_in">col</span>] == target) &#123; // found it</span><br><span class="line">                <span class="built_in">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">matrix</span>[<span class="built_in">row</span>][<span class="built_in">col</span>] &lt; target) &#123;</span><br><span class="line">                <span class="built_in">row</span>++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">col</span>--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同理，其实从左下角开始也可以，可以把左下角当做搜索的突破口，若当前元素小于target，那么下次从当前元素的右边开始，剔除掉当前元素在的列；如果当前元素大于target,下次从当前元素上一个开始，剔除掉当前元素在的行。</p>
+<p>写法二：从左下角开始突破</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public boolean searchMatrix(int[][] <span class="built_in">matrix</span>, int target) &#123;</span><br><span class="line">        // corner case</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">matrix</span> == null || <span class="built_in">matrix</span>.<span class="built_in">length</span> == <span class="number">0</span>) <span class="built_in">return</span> <span class="literal">false</span>;</span><br><span class="line">        // 从左下角开始</span><br><span class="line">        // start our pointer fron bottom-left</span><br><span class="line">        int <span class="built_in">col</span> = <span class="number">0</span>, <span class="built_in">row</span> = <span class="built_in">matrix</span>.<span class="built_in">length</span> - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(<span class="built_in">row</span> &gt;= <span class="number">0</span> &amp;&amp; <span class="built_in">col</span> &lt;= <span class="built_in">matrix</span>[<span class="number">0</span>].<span class="built_in">length</span> - <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">matrix</span>[<span class="built_in">row</span>][<span class="built_in">col</span>] == target) <span class="built_in">return</span> <span class="literal">true</span>; // found it</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">matrix</span>[<span class="built_in">row</span>][<span class="built_in">col</span>] &lt; target) &#123;</span><br><span class="line">                <span class="built_in">col</span>++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">row</span>--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>时间复杂度：O(m + n)。时间复杂度分析的关键是注意到在每次迭代（我们不返回 true）时，行或列都会精确地递减/递增一次。由于行只能减少 mm 次，而列只能增加 nn 次，因此在导致 while 循环终止之前，循环不能运行超过 n+mn+m 次。因为所有其他的工作都是常数，所以总的时间复杂度在矩阵维数之和中是线性的。</p>
+</li>
+<li><p>空间复杂度：O(1)。因为这种方法都只需要处理几个指针，所以内存占用是恒定的。</p>
+</li>
+</ul>
 <h2 id="127-Word-Ladder-单词接龙-Mid"><a href="#127-Word-Ladder-单词接龙-Mid" class="headerlink" title="127. Word Ladder(单词接龙)(Mid)"></a><a href="https://leetcode-cn.com/problems/word-ladder/" target="_blank" rel="noopener">127. Word Ladder(单词接龙)(Mid)</a></h2><p>Given two words (<em>beginWord</em> and <em>endWord</em>), and a dictionary’s word list, find the length of shortest transformation sequence from <em>beginWord</em> to <em>endWord</em>, such that:</p>
 <ol>
 <li>Only one letter can be changed at a time.</li>
@@ -419,7 +472,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#127-Word-Ladder-单词接龙-Mid"><span class="nav-text">127. Word Ladder(单词接龙)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#126-单词接龙-II-Hard"><span class="nav-text">126. (单词接龙 II)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#433-Minimum-Genetic-Mutation-最小基因变化-Mid"><span class="nav-text">433. Minimum Genetic Mutation(最小基因变化)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#17-Letter-Combinations-of-a-Phone-Number-电话号码的字母组合-Mid"><span class="nav-text">17. Letter Combinations of a Phone Number(电话号码的字母组合)(Mid)</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#74-Search-a-2D-Matrix-搜索二维矩阵-Mid"><span class="nav-text">74. Search a 2D Matrix(搜索二维矩阵)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#240-Search-a-2D-Matrix-II-搜索二维矩阵-Mid"><span class="nav-text">240. Search a 2D Matrix II(搜索二维矩阵)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#127-Word-Ladder-单词接龙-Mid"><span class="nav-text">127. Word Ladder(单词接龙)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#126-单词接龙-II-Hard"><span class="nav-text">126. (单词接龙 II)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#433-Minimum-Genetic-Mutation-最小基因变化-Mid"><span class="nav-text">433. Minimum Genetic Mutation(最小基因变化)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#17-Letter-Combinations-of-a-Phone-Number-电话号码的字母组合-Mid"><span class="nav-text">17. Letter Combinations of a Phone Number(电话号码的字母组合)(Mid)</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -504,7 +557,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">159k</span>
+    <span title="Symbols count total">163k</span>
 </div>
 
 
@@ -521,7 +574,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共68.7k字</span>
+  <span class="post-count">博客全站共70.4k字</span>
 </div>
 
         
