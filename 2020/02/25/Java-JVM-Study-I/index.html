@@ -57,8 +57,10 @@
 <meta property="og:description" content="知识犹如人体的血液一样宝贵。——高士其">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://s2.ax1x.com/2020/02/28/3DqNYq.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/04/3503A1.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/04/3508tx.png">
 <meta property="article:published_time" content="2020-02-24T16:24:58.000Z">
-<meta property="article:modified_time" content="2020-02-28T12:11:59.504Z">
+<meta property="article:modified_time" content="2020-03-04T02:46:04.729Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary">
@@ -161,7 +163,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">25</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">26</span></a>
 
   </li>
   </ul>
@@ -221,7 +223,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-28 20:11:59" itemprop="dateModified" datetime="2020-02-28T20:11:59+08:00">2020-02-28</time>
+                <time title="Modified: 2020-03-04 10:46:04" itemprop="dateModified" datetime="2020-03-04T10:46:04+08:00">2020-03-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -249,7 +251,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>313</span>
+              <span>1.7k</span>
             </span>
 
         </div>
@@ -274,11 +276,45 @@
 <li>类库</li>
 <li>语言特性和异常处理</li>
 </ul>
+<p>而Java的JVM最值得学习的点，是：<font color=#FF0000>JVM内存结构模型和GC</font></p>
 <h1 id="Java的平台无关性如何实现"><a href="#Java的平台无关性如何实现" class="headerlink" title="Java的平台无关性如何实现"></a>Java的平台无关性如何实现</h1><p>平台无关性，实际上就是java代码”编译一次，到处执行”这个特点的简称。</p>
 <p><img src="https://s2.ax1x.com/2020/02/28/3DqNYq.png" alt="3DqNYq.png"></p>
 <p>可以说，生成”.class”文件，是java跨平台的基础。</p>
 <p><strong>为什么JVM不把java解析成机器码然后执行呢？</strong></p>
 <p>主要是两个原因，一个是如果解析成机器码，需要大量准备工作，每次执行都需要根据机器的内部构造去设定值。另一个原因是，解析成class文件，可以让JVM虚拟机发挥更大的作用，比如Scala语言也可以通过解析成class文件来通过JVM虚拟机运行。</p>
+<h1 id="JVM如何加载class文件"><a href="#JVM如何加载class文件" class="headerlink" title="JVM如何加载class文件"></a>JVM如何加载class文件</h1><p>Java是跨平台的，这意味着 Java 开发出来的程序经过编译后，可以在 Linux 上运行，也可以在 Windows 上运行；可以在 PC、服务器上运行，也可以在手机上运行；可以在 X86 的 CPU 上运行，也可以在 ARM 的 CPU 上运行。</p>
+<p>不同操作系统，特别是不同 CPU 架构，是不可能执行相同的指令的。Java之所以拥有能够在不同平台运行的神奇特性，就是因为 Java 编译的字节码文件不是直接在底层的系统平台上运行的，而是在 Java 虚拟机 JVM 上运行，JVM 屏蔽了底层系统的不同，为 Java 字节码文件构造了一个统一的运行环境。JVM 本质上也是一个应用程序，启动以后加载执行 Java 字节码文件。</p>
+<p>JVM的是内存中的虚拟机。</p>
+<p>JVM的详细的内存结构模型如图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/04/3503A1.jpg" alt="JVM详细内存结构模型"></p>
+<p>只要符合class Loader的格式要求就能加载。</p>
+<p>因为java执行效率不如C和C++，有时候需要用Native Interface去调用别的语言的库。</p>
+<p><code>Class.forName()</code>作用：返回与给定字符串名称相关联的类或者接口对应的class对象。</p>
+<h2 id="类从编译到执行的过程"><a href="#类从编译到执行的过程" class="headerlink" title="类从编译到执行的过程"></a>类从编译到执行的过程</h2><ul>
+<li>编译器将**.java源文件编译为.class字节码文件</li>
+<li>ClassLoader将字节码转化为JVM的Class对象</li>
+<li>JVM利用Class对象实例化Robot对象</li>
+</ul>
+<p>对上图进行简化之后可以得到：</p>
+<p><img src="https://s2.ax1x.com/2020/03/04/3508tx.png" alt="JVM简化内存结构模型"></p>
+<h1 id="什么是反射？"><a href="#什么是反射？" class="headerlink" title="什么是反射？"></a>什么是反射？</h1><p>理论上来说：</p>
+<p><strong>Java反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意方法和属性；这种动态获取信息以及动态调用对象方法的功能称为Java语言的反射机制。</strong></p>
+<p>但是这里回答比较理论，最好可以列举几个常用的反射函数，或者写反射的例子。</p>
+<p>重要的部分：Class、Class.forName、newInstance()、Method、getDeclareMethod、setAccessible()、invoke()</p>
+<p>NOTE:</p>
+<ul>
+<li>“getDeclardeMethod”可以获取public, private, protected的方法，但是不能获取继承的方法和实现接口的方法</li>
+<li>“getMethod”可以获取public方法，此外还可以获取继承的方法和实现接口的方法</li>
+<li>反射就是把java中的各种成分映射成java对象，比如这里映射成了class,filed,method</li>
+</ul>
+<h1 id="ClassLoader"><a href="#ClassLoader" class="headerlink" title="ClassLoader"></a>ClassLoader</h1><h2 id="类从编译到执行的过程-1"><a href="#类从编译到执行的过程-1" class="headerlink" title="类从编译到执行的过程"></a>类从编译到执行的过程</h2><p>以Robot.java这个源文件的执行流程举例：</p>
+<ul>
+<li>编译器将Robot.java源文件编译为Robot.class字节码文件</li>
+<li>ClassLoader将字节码转换为JVM中的Class<Robot>对象</li>
+<li>JVM利用Class<Robot>对象实例化为Robot对象</li>
+</ul>
+<h2 id="谈谈ClassLoader"><a href="#谈谈ClassLoader" class="headerlink" title="谈谈ClassLoader"></a>谈谈ClassLoader</h2><p>ClassLoader在Java中有着非常重要的作用，他主要工作在Class装载的加载阶段，它的主要作用是从系统外部获得Class二进制数据流。它是Java的核心组件，<strong>所有Class都将由ClassLoader进行加载，ClassLoader负责通过将Class文件里的二进制数据流装载进系统，然后交给Java虚拟机进行连接、初始化等操作。</strong></p>
+<p>ClassLoader是一个抽象类(abstract class)。</p>
 
     </div>
 
@@ -369,7 +405,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java的平台无关性如何实现"><span class="nav-text">Java的平台无关性如何实现</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java的平台无关性如何实现"><span class="nav-text">Java的平台无关性如何实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM如何加载class文件"><span class="nav-text">JVM如何加载class文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#类从编译到执行的过程"><span class="nav-text">类从编译到执行的过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是反射？"><span class="nav-text">什么是反射？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ClassLoader"><span class="nav-text">ClassLoader</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#类从编译到执行的过程-1"><span class="nav-text">类从编译到执行的过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#谈谈ClassLoader"><span class="nav-text">谈谈ClassLoader</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -385,7 +421,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -454,7 +490,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">163k</span>
+    <span title="Symbols count total">173k</span>
 </div>
 
 
@@ -471,7 +507,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共70.4k字</span>
+  <span class="post-count">博客全站共75k字</span>
 </div>
 
         

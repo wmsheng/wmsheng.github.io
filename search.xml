@@ -1,6 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java-Basic-Interview-I</title>
+    <url>/2020/03/04/Java-Basic-Interview-I/</url>
+    <content><![CDATA[<blockquote>
+<p>知识犹如人体的血液一样宝贵。——高士其</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="1-JDK和JRE有什么区别？"><a href="#1-JDK和JRE有什么区别？" class="headerlink" title="1.JDK和JRE有什么区别？"></a>1.JDK和JRE有什么区别？</h2><p>• JDK：Java Development Kit 的简称，java 开发工具包，提供了 java 的开发环境和运行环境。<br>• JRE：Java Runtime Environment 的简称，java 运行环境，为 java 的运行提供了所需环境。</p>
+<p>具体来说 JDK 其实包含了 JRE，同时还包含了编译 java 源码的编译器 javac，还包含了很多 java 程序调试和分析的工具。简单来说：如果你需要运行 java 程序，只需安装 JRE 就可以了，如果你需要编写 java 程序，需要安装 JDK。</p>
+<h2 id="2-和equals的区别"><a href="#2-和equals的区别" class="headerlink" title="2.==和equals的区别"></a>2.==和equals的区别</h2><p><font color=#FF000>== 解读</font></p>
+<p>对于基本类型和引用类型 == 的作用效果是不同的，如下所示：<br>• 基本类型：比较的是值是否相同；<br>• 引用类型：比较的是引用是否相同；</p>
+<p>代码示例：</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line">String x = <span class="string">"string"</span>;</span><br><span class="line">String y = <span class="string">"string"</span>;</span><br><span class="line">String z = <span class="keyword">new</span> <span class="constructor">String(<span class="string">"string"</span>)</span>;</span><br><span class="line"><span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(x==y); <span class="comment">// true</span></span><br><span class="line"><span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(x==z); <span class="comment">// false</span></span><br><span class="line"><span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(x.equals(y)); <span class="comment">// true</span></span><br><span class="line"><span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(x.equals(z)); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>代码解读：因为 x 和 y 指向的是同一个引用，所以 == 也是 true，而 new String()方法则重写开辟了内存空间，所以 == 结果为 false，而 equals 比较的一直是值，所以结果都为true</p>
+<p><font color=#FF000>equals 解读</font></p>
+<p>equals 本质上就是 ==，只不过 String 和 Integer 等重写了 equals 方法，把它变成了值比较。看下面的代码就明白了。</p>
+<p>首先来看默认情况下 equals 比较一个有相同值的对象，代码如下：</p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span> &#123;</span>    </span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Cat</span><span class="params">(<span class="keyword">String</span> name)</span> </span>&#123;        </span><br><span class="line">	<span class="keyword">this</span>.name = name;    </span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">String</span> name;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">String</span> <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	        <span class="keyword">return</span> name;    </span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(<span class="keyword">String</span> name)</span> </span>&#123;</span><br><span class="line">	        <span class="keyword">this</span>.name = name;    </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">Cat c1 = <span class="keyword">new</span> Cat(<span class="string">"王磊"</span>);</span><br><span class="line">Cat c2 = <span class="keyword">new</span> Cat(<span class="string">"王磊"</span>);</span><br><span class="line">System.out.<span class="built_in">println</span>(c1.equals(c2)); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<p>输出结果出乎我们的意料，竟然是 false？这是怎么回事，看了 equals 源码就知道了，源码如下：</p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">this</span> == obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原来 equals 本质上就是 ==。</p>
+<p>那问题来了，两个相同值的 String 对象，为什么返回的是 true？代码如下：</p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="keyword">String</span> s1 = <span class="keyword">new</span> <span class="keyword">String</span>(<span class="string">"老王"</span>);</span><br><span class="line"><span class="keyword">String</span> s2 = <span class="keyword">new</span> <span class="keyword">String</span>(<span class="string">"老王"</span>);</span><br><span class="line">System.out.<span class="built_in">println</span>(s1.equals(s2)); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>同样的，当我们进入 String 的 equals 方法，找到了答案，代码如下：</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line"><span class="built_in">public</span> <span class="type">boolean</span> equals(<span class="keyword">Object</span> anObject) &#123;</span><br><span class="line">    <span class="keyword">if</span> (this == anObject) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (anObject instanceof String) &#123;</span><br><span class="line">        String anotherString = (String)anObject;</span><br><span class="line">        <span class="type">int</span> n = <span class="keyword">value</span>.length;</span><br><span class="line">        <span class="keyword">if</span> (n == anotherString.<span class="keyword">value</span>.length) &#123;</span><br><span class="line">            <span class="type">char</span> v1[] = <span class="keyword">value</span>;</span><br><span class="line">            <span class="type">char</span> v2[] = anotherString.<span class="keyword">value</span>;</span><br><span class="line">            <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> (n<span class="comment">-- != 0) &#123;</span></span><br><span class="line">                <span class="keyword">if</span> (v1[i] != v2[i])</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原来是 String 重写了 Object 的 equals 方法，把引用比较改成了值比较。</p>
+<p>总结 ：== 对于基本类型来说是值比较，对于引用类型来说是比较的是引用；而 equals 默认情况下是引用比较，只是很多类重新了 equals 方法，比如 String、Integer 等把它变成了值比较，所以一般情况下 equals 比较的是值是否相等。</p>
+<h2 id="3-两个对象的hashCode-相同，则equals-也一定为true，对么？"><a href="#3-两个对象的hashCode-相同，则equals-也一定为true，对么？" class="headerlink" title="3.两个对象的hashCode()相同，则equals()也一定为true，对么？"></a>3.两个对象的hashCode()相同，则equals()也一定为true，对么？</h2><p>不对，两个对象的 hashCode()相同，equals()不一定 true。</p>
+<p>代码示例：</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">"通话"</span>;</span><br><span class="line">String str2 = <span class="string">"重地"</span>;</span><br><span class="line"><span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(<span class="module-access"><span class="module"><span class="identifier">String</span>.</span></span>format(<span class="string">"str1：%d | str2：%d"</span>,</span><br><span class="line">                                       str1.hash<span class="constructor">Code()</span>, str2.hash<span class="constructor">Code()</span>));</span><br><span class="line"><span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(str1.equals(str2));</span><br></pre></td></tr></table></figure>
+
+
+<p>执行的结果：</p>
+<p>str1：1179395 | str2：1179395</p>
+<p>false</p>
+<p>代码解读：很显然“通话”和“重地”的 hashCode() 相同，然而 equals() 则为 false，因为在散列表中，hashCode()相等即两个键值对的哈希值相等，然而哈希值相等，并不一定能得出键值对相等。</p>
+<h2 id="4-final在java中有什么作用？"><a href="#4-final在java中有什么作用？" class="headerlink" title="4.final在java中有什么作用？"></a>4.final在java中有什么作用？</h2><p>• final 修饰的类叫最终类，该类不能被继承。<br>• final 修饰的方法不能被重写。<br>• final 修饰的变量叫常量，常量必须初始化，初始化之后值就不能被修改。</p>
+<h2 id="5-java中的Math-round-1-5-等于多少？"><a href="#5-java中的Math-round-1-5-等于多少？" class="headerlink" title="5.java中的Math.round(-1.5)等于多少？"></a>5.java中的Math.round(-1.5)等于多少？</h2><p>等于 -1，因为在数轴上取值时，中间值（0.5）向右取整，所以正 0.5 是往上取整，负 0.5 是直接舍弃。</p>
+<h2 id="6-String属于基础的数据类型么？"><a href="#6-String属于基础的数据类型么？" class="headerlink" title="6.String属于基础的数据类型么？"></a>6.String属于基础的数据类型么？</h2><p>String 不属于基础类型，基础类型有 8 种：byte（一个字节，8位）、 boolean（只有true和false两个值，默认false）、char（两个字节，十六位）、short（两个字节，十六位，最大存储值是65536，数据范围是-32768<del>32767之间）、int（四个字节，三十二位，最大存储容量是2的32次方减1，范围是负2的31次方到正的2的31次方减1）、float（四个字节，三十二位，数据范围在3.4e-45</del>1.4e38）、long（八个字节，六十四位，最大存储容量是2的64次方减1,范围是负2的63次方到正2的63次方减1）、double（八个字节，六十四位，数据范围在4.9e-324~1.8e308，赋值时可以加d也可以不加），而 String 属于对象。</p>
+<p><img src="https://s2.ax1x.com/2020/03/04/35IdWF.png" alt="Java数据类型"></p>
+<p>数据之间的转换：</p>
+<p>1.表示值范围小的，可以自动转换成范围大的。比如下面都可以自动转换：</p>
+<p>byte b;int i=b; long l=b; float f=b; double d=b;</p>
+<p>2.但是如果低级的char向高级类型转换的时候，会转换成对应的ASCII码值。例如：</p>
+<p>char c=’c’; int i=c;<br>System.out.println(“output:”+i);输出：output:99;</p>
+<p>3.每个包装类中会有形为xxValue()的方法，可以得到其对饮的简单类型数据。利用这种方法，也可以实现不同数值型变量间的转换，例如，对于一个双精度实型类，intValue()可以得到其对应的整型变量，而doubleValue()可以得到其对应的双精度实型变量。</p>
+<p>4.字符串和其他类型的转换<br>首先是其他类型向字符串类型转换：</p>
+<pre><code>①. 调用类的串转换方法：X.toString();
+②. 自动转换：X + &quot;&quot;;
+③. 使用String的方法：String.valueOf(X)</code></pre><p>然后字符串作为值，转换成其他类型：</p>
+<pre><code>①. 静态parseXXX方法
+比如，String s=&quot;1&quot;;
+byte b = Byte.parseByte( s );
+short t = Short.parseShort( s );
+int i = Integer.parseInt( s );
+long l = Long.parseLong( s );
+Float f = Float.parseFloat( s );
+Double d = Double.parseDouble( s );
+
+②. Character的getNumericValue(char ch)方法
+
+③. 先转换成相应的封装类实例，再调用对应的方法转换成其他类型</code></pre><p>例如，字符中”32.1”转换double型的值的格式为:new Float(“32.1”).doubleValue()。也可以用:Double.valueOf(“32.1”).doubleValue()</p>
+<p>5.Date类与其他数据类型的转换<br>（暂省略）</p>
+<p><strong>小总结：</strong></p>
+<p>只有boolean不参与数据类型的转换<br>（1）.自动类型的转换：</p>
+<p>a.常数在表数范围内是能够自动类型转换的</p>
+<p>b.数据范围小的能够自动数据类型大的转换（注意特例）<br>int到float，long到float，long到double 是不会自动转换的，不然将会丢失精度</p>
+<p>c.引用类型能够自动转换为父类的</p>
+<p>d.基本类型和它们包装类型是能够互相转换的</p>
+<p>（2）.强制类型转换：用圆括号括起来目标类型，置于变量前</p>
+<p>注：<font color=#FF0000>java有五种引用类型：数组、类、接口、枚举、标注</font></p>
+<p>个人总结：</p>
+<p>①：如果是小数类型，而且位数比较小，比如四位，建议用BigDecimal，如果是double类型会有失精度，有时候会用科学技术法表示（比如1.0E-4，不利于人看），而且用double有时候还要对类型进行转换</p>
+<p>②： Int  double都是包装类型的，建议使用包装类型，包装类型能区分null 和 0，就像在 spring-mvc接收时使用int类型接收值，如果这个属性不传值，ajax请求会报400错误，而且不能区分这个数值是否为空</p>
+<p>③： for 循环中如果要对字符串进行拼接，建议使用 StringBuffer ，如果没有线程安全问题，直接使用 StringBuilder，原因StringBuffer的所有操作是保证线程安全的，可以理解成使用了 synchronized 关键字，对性能是有影响的。</p>
+<p>④：对所有包装类进行操作（比如toString()）要进行空指针判断，我们不能保证这个是有值的</p>
+<h2 id="7-java中操作字符串都有哪些类？他们之间有什么区别？"><a href="#7-java中操作字符串都有哪些类？他们之间有什么区别？" class="headerlink" title="7.java中操作字符串都有哪些类？他们之间有什么区别？"></a>7.java中操作字符串都有哪些类？他们之间有什么区别？</h2><p>操作字符串的类有：String、StringBuffer、StringBuilder。</p>
+<p>String 和 StringBuffer、StringBuilder 的区别在于 String 声明的是不可变的对象，每次操作都会生成新的 String 对象，然后将指针指向新的 String 对象，而 StringBuffer、StringBuilder 可以在原有对象的基础上进行操作，所以在经常改变字符串内容的情况下最好不要使用 String。</p>
+<p>StringBuffer 和 StringBuilder 最大的区别在于，StringBuffer 是线程安全的，而 StringBuilder 是非线程安全的，但 StringBuilder 的性能却高于 StringBuffer，所以在单线程环境下推荐使用 StringBuilder，多线程环境下推荐使用 StringBuffer。</p>
+<h2 id="8-String-str-”i”-与-String-str-new-String-“i”-一样吗？"><a href="#8-String-str-”i”-与-String-str-new-String-“i”-一样吗？" class="headerlink" title="8.String str=”i” 与 String str=new String(“i”) 一样吗？"></a>8.String str=”i” 与 String str=new String(“i”) 一样吗？</h2><p>不一样，因为内存的分配方式不一样。String str=”i”的方式，java 虚拟机会将其分配到常量池中；而 String str=new String(“i”) 则会被分到堆内存中。</p>
+<h2 id="9-如何将字符串反转？"><a href="#9-如何将字符串反转？" class="headerlink" title="9.如何将字符串反转？"></a>9.如何将字符串反转？</h2><p>使用 StringBuilder 或者 stringBuffer 的 reverse() 方法。</p>
+<p>实例代码：</p>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line">// <span class="keyword">StringBuffer </span><span class="keyword">reverse</span></span><br><span class="line"><span class="keyword">StringBuffer </span><span class="keyword">stringBuffer </span>= new <span class="keyword">StringBuffer();</span></span><br><span class="line"><span class="keyword">stringBuffer.append("abcdefg");</span></span><br><span class="line"><span class="keyword">System.out.println(stringBuffer.reverse()); </span>// gfedcba</span><br><span class="line">// <span class="keyword">StringBuilder </span><span class="keyword">reverse</span></span><br><span class="line"><span class="keyword">StringBuilder </span><span class="keyword">stringBuilder </span>= new <span class="keyword">StringBuilder();</span></span><br><span class="line"><span class="keyword">stringBuilder.append("abcdefg");</span></span><br><span class="line"><span class="keyword">System.out.println(stringBuilder.reverse()); </span>// gfedcba</span><br></pre></td></tr></table></figure>
+
+<h2 id="10-String类的常用方法都有哪些？"><a href="#10-String类的常用方法都有哪些？" class="headerlink" title="10.String类的常用方法都有哪些？"></a>10.String类的常用方法都有哪些？</h2><p>• indexOf()：返回指定字符的索引。<br>• charAt()：返回指定索引处的字符。<br>• replace()：字符串替换。<br>• trim()：去除字符串两端空白。<br>• split()：分割字符串，返回一个分割后的字符串数组。<br>• getBytes()：返回字符串的 byte 类型数组。<br>• length()：返回字符串长度。<br>• toLowerCase()：将字符串转成小写字母。<br>• toUpperCase()：将字符串转成大写字符。<br>• substring()：截取字符串。<br>• equals()：字符串比较。</p>
+<h2 id="11-抽象类必须要有抽象方法吗？"><a href="#11-抽象类必须要有抽象方法吗？" class="headerlink" title="11.抽象类必须要有抽象方法吗？"></a>11.抽象类必须要有抽象方法吗？</h2><p>不需要，抽象类不一定非要有抽象方法。</p>
+<p>示例代码：</p>
+<figure class="highlight cs"><table><tr><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Cat</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sayHi</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="string">"hi~"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码，抽象类并没有抽象方法但完全可以正常运行。</p>
+<h2 id="12-普通类和抽象类有哪些区别？"><a href="#12-普通类和抽象类有哪些区别？" class="headerlink" title="12.普通类和抽象类有哪些区别？"></a>12.普通类和抽象类有哪些区别？</h2><p>• 普通类不能包含抽象方法，抽象类可以包含抽象方法。<br>• 抽象类不能直接实例化，普通类可以直接实例化。</p>
+<h2 id="13-抽象类能使用final修饰吗？"><a href="#13-抽象类能使用final修饰吗？" class="headerlink" title="13.抽象类能使用final修饰吗？"></a>13.抽象类能使用final修饰吗？</h2><p>不能，定义抽象类就是让其他类继承的，如果定义为 final 该类就不能被继承，这样彼此就会产生矛盾，所以 final 不能修饰抽象类，如下图所示，编辑器也会提示错误信息：</p>
+<p><img src="https://s2.ax1x.com/2020/03/04/35Iwz4.jpg" alt="35Iwz4.jpg"></p>
+<h2 id="14-接口和抽象类有什么区别？"><a href="#14-接口和抽象类有什么区别？" class="headerlink" title="14.接口和抽象类有什么区别？"></a>14.接口和抽象类有什么区别？</h2><p>• 实现：抽象类的子类使用 extends 来继承；接口必须使用 implements 来实现接口。<br>• 构造函数：抽象类可以有构造函数；接口不能有。<br>• main 方法：抽象类可以有 main 方法，并且我们能运行它；接口不能有 main 方法。<br>• 实现数量：类可以实现很多个接口；但是只能继承一个抽象类。<br>• 访问修饰符：接口中的方法默认使用 public 修饰；抽象类中的方法可以是任意访问修饰符。</p>
+<h2 id="15-java中的IO流分为几种？"><a href="#15-java中的IO流分为几种？" class="headerlink" title="15.java中的IO流分为几种？"></a>15.java中的IO流分为几种？</h2><p>按功能来分：输入流（input）、输出流（output）。</p>
+<p>按类型来分：字节流和字符流。</p>
+<p>字节流和字符流的区别是：字节流按 8 位传输以字节为单位输入输出数据，字符流按 16 位传输以字符为单位输入输出数据。</p>
+<h2 id="16-BIO、NIO、AIO有什么区别？"><a href="#16-BIO、NIO、AIO有什么区别？" class="headerlink" title="16.BIO、NIO、AIO有什么区别？"></a>16.BIO、NIO、AIO有什么区别？</h2><p>• BIO：Block IO 同步阻塞式 IO，就是我们平常使用的传统 IO，它的特点是模式简单使用方便，并发处理能力低。<br>• NIO：New IO 同步非阻塞 IO，是传统 IO 的升级，客户端和服务器端通过 Channel（通道）通讯，实现了多路复用。<br>• AIO：Asynchronous IO 是 NIO 的升级，也叫 NIO2，实现了异步非堵塞 IO ，异步 IO 的操作基于事件和回调机制。</p>
+<h2 id="17-Files的常用方法有哪些？"><a href="#17-Files的常用方法有哪些？" class="headerlink" title="17.Files的常用方法有哪些？"></a>17.Files的常用方法有哪些？</h2><p>• Files.exists()：检测文件路径是否存在。<br>• Files.createFile()：创建文件。<br>• Files.createDirectory()：创建文件夹。<br>• Files.delete()：删除一个文件或目录。<br>• Files.copy()：复制文件。<br>• Files.move()：移动文件。<br>• Files.size()：查看文件个数。<br>• Files.read()：读取文件。<br>• Files.write()：写入文件。</p>
+]]></content>
+      <categories>
+        <category>Interview Note</category>
+      </categories>
+      <tags>
+        <tag>Interview</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Operating System Interview I</title>
     <url>/2020/02/25/Operating-System-Interview-I/</url>
     <content><![CDATA[<blockquote>
@@ -453,11 +567,45 @@
 <li>类库</li>
 <li>语言特性和异常处理</li>
 </ul>
+<p>而Java的JVM最值得学习的点，是：<font color=#FF0000>JVM内存结构模型和GC</font></p>
 <h1 id="Java的平台无关性如何实现"><a href="#Java的平台无关性如何实现" class="headerlink" title="Java的平台无关性如何实现"></a>Java的平台无关性如何实现</h1><p>平台无关性，实际上就是java代码”编译一次，到处执行”这个特点的简称。</p>
 <p><img src="https://s2.ax1x.com/2020/02/28/3DqNYq.png" alt="3DqNYq.png"></p>
 <p>可以说，生成”.class”文件，是java跨平台的基础。</p>
 <p><strong>为什么JVM不把java解析成机器码然后执行呢？</strong></p>
 <p>主要是两个原因，一个是如果解析成机器码，需要大量准备工作，每次执行都需要根据机器的内部构造去设定值。另一个原因是，解析成class文件，可以让JVM虚拟机发挥更大的作用，比如Scala语言也可以通过解析成class文件来通过JVM虚拟机运行。</p>
+<h1 id="JVM如何加载class文件"><a href="#JVM如何加载class文件" class="headerlink" title="JVM如何加载class文件"></a>JVM如何加载class文件</h1><p>Java是跨平台的，这意味着 Java 开发出来的程序经过编译后，可以在 Linux 上运行，也可以在 Windows 上运行；可以在 PC、服务器上运行，也可以在手机上运行；可以在 X86 的 CPU 上运行，也可以在 ARM 的 CPU 上运行。</p>
+<p>不同操作系统，特别是不同 CPU 架构，是不可能执行相同的指令的。Java之所以拥有能够在不同平台运行的神奇特性，就是因为 Java 编译的字节码文件不是直接在底层的系统平台上运行的，而是在 Java 虚拟机 JVM 上运行，JVM 屏蔽了底层系统的不同，为 Java 字节码文件构造了一个统一的运行环境。JVM 本质上也是一个应用程序，启动以后加载执行 Java 字节码文件。</p>
+<p>JVM的是内存中的虚拟机。</p>
+<p>JVM的详细的内存结构模型如图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/04/3503A1.jpg" alt="JVM详细内存结构模型"></p>
+<p>只要符合class Loader的格式要求就能加载。</p>
+<p>因为java执行效率不如C和C++，有时候需要用Native Interface去调用别的语言的库。</p>
+<p><code>Class.forName()</code>作用：返回与给定字符串名称相关联的类或者接口对应的class对象。</p>
+<h2 id="类从编译到执行的过程"><a href="#类从编译到执行的过程" class="headerlink" title="类从编译到执行的过程"></a>类从编译到执行的过程</h2><ul>
+<li>编译器将**.java源文件编译为.class字节码文件</li>
+<li>ClassLoader将字节码转化为JVM的Class对象</li>
+<li>JVM利用Class对象实例化Robot对象</li>
+</ul>
+<p>对上图进行简化之后可以得到：</p>
+<p><img src="https://s2.ax1x.com/2020/03/04/3508tx.png" alt="JVM简化内存结构模型"></p>
+<h1 id="什么是反射？"><a href="#什么是反射？" class="headerlink" title="什么是反射？"></a>什么是反射？</h1><p>理论上来说：</p>
+<p><strong>Java反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意方法和属性；这种动态获取信息以及动态调用对象方法的功能称为Java语言的反射机制。</strong></p>
+<p>但是这里回答比较理论，最好可以列举几个常用的反射函数，或者写反射的例子。</p>
+<p>重要的部分：Class、Class.forName、newInstance()、Method、getDeclareMethod、setAccessible()、invoke()</p>
+<p>NOTE:</p>
+<ul>
+<li>“getDeclardeMethod”可以获取public, private, protected的方法，但是不能获取继承的方法和实现接口的方法</li>
+<li>“getMethod”可以获取public方法，此外还可以获取继承的方法和实现接口的方法</li>
+<li>反射就是把java中的各种成分映射成java对象，比如这里映射成了class,filed,method</li>
+</ul>
+<h1 id="ClassLoader"><a href="#ClassLoader" class="headerlink" title="ClassLoader"></a>ClassLoader</h1><h2 id="类从编译到执行的过程-1"><a href="#类从编译到执行的过程-1" class="headerlink" title="类从编译到执行的过程"></a>类从编译到执行的过程</h2><p>以Robot.java这个源文件的执行流程举例：</p>
+<ul>
+<li>编译器将Robot.java源文件编译为Robot.class字节码文件</li>
+<li>ClassLoader将字节码转换为JVM中的Class<Robot>对象</li>
+<li>JVM利用Class<Robot>对象实例化为Robot对象</li>
+</ul>
+<h2 id="谈谈ClassLoader"><a href="#谈谈ClassLoader" class="headerlink" title="谈谈ClassLoader"></a>谈谈ClassLoader</h2><p>ClassLoader在Java中有着非常重要的作用，他主要工作在Class装载的加载阶段，它的主要作用是从系统外部获得Class二进制数据流。它是Java的核心组件，<strong>所有Class都将由ClassLoader进行加载，ClassLoader负责通过将Class文件里的二进制数据流装载进系统，然后交给Java虚拟机进行连接、初始化等操作。</strong></p>
+<p>ClassLoader是一个抽象类(abstract class)。</p>
 ]]></content>
       <categories>
         <category>Study Note</category>
@@ -1357,7 +1505,7 @@
 <p>这三种初级排序没有太大差别，其实是异曲同工的原理。</p>
 <p><font color=#FF0000>而面试中，考察技术能力的时候，他考察的一般也都是O(nlogn)的排序，所以准备过程中也应该尽量多花时间去看时间复杂度为O(nlogn)的排序算法。</font>主要是三个：堆排序、快速排序、归并排序。</p>
 <hr>
-<h2 id="高级排序-——-O-N-logN"><a href="#高级排序-——-O-N-logN" class="headerlink" title="高级排序 —— O(N*logN)"></a><strong>高级排序</strong> —— O(N*logN)</h2><h3 id="快速排序-Quick-Sort"><a href="#快速排序-Quick-Sort" class="headerlink" title="快速排序(Quick Sort)"></a><strong>快速排序(Quick Sort)</strong></h3><p>数组取标杆pivot，将小元素放到pivot左边，大元素放右边，然后依次对左边和右边的子数组继续快排；以达到整个序列有序。</p>
+<h2 id="高级排序-——-O-N-logN"><a href="#高级排序-——-O-N-logN" class="headerlink" title="高级排序 —— O(N*logN)"></a><strong>高级排序</strong> —— O(N*logN)</h2><h3 id="快速排序-Quick-Sort"><a href="#快速排序-Quick-Sort" class="headerlink" title="快速排序(Quick Sort)"></a><strong>快速排序(Quick Sort)</strong></h3><p>数组取标杆pivot，将比pivot小的元素放到pivot左边，比它大的元素放在它的右边，然后依次对左边和右边的子数组继续快排；以达到整个序列有序。</p>
 <p>快排用到了<strong>分治</strong>的思想，首先，如果想要把排序的时间复杂度从O(n^2)降到O(N logN)，那么分治毫无疑问是要考虑的问题。</p>
 <p><font color=#FF0000>快排的方法：拿到一个pivot的位置，将所有小于pivot的元素移动到左边去，大于pivot的移动到右边去，且分别对左右侧再进行递归，调用快排。</font>可以通过主定理，证明整个递归下来的时间复杂度为O(N logN)。</p>
 <p>快排的样例代码：</p>
@@ -1372,6 +1520,7 @@
 <p>这里一开始我也没能理解，但是用纸笔模拟了一下之后，发现真的很巧妙。一开始counter和i都是begin，是从相同的地方开始的，然后counter用于指在最后一个小于a[pivot]的元素上，i的值来进行循环，如果碰到比末尾的pivot值大的值，就跳过（因为这个是要留给counter进行交换的,counter此时的作用是把大的元素和后面的i位置的，而且比a[pivot]小元素进行交换），i只要碰到了小于a[pivot]的，就让前面的counter和这个小于a[pivot]的元素交换，从而让大的元素移到后面去，然后把counter往后移，如果此时a[counter]的元素是大于a[pivot]的，那么此时counter所指的元素是为了进行下次交换的。保证counter前面的所有值都是小于a[pivot]的。</p>
 <p>一直这样下去，直到begin和end都遍历完了，然后交换a[pivot]和a[counter]，由此一来，绝对可以保证a[piovot]成为一个分水岭，pivot成为一个标杆，a[pivot]左边所有的元素都会是小于a[pivot]的，右边都是大于a[pivot]的。</p>
 <p>快排就是这样，大家写的时候，就是把这一段记好，多写几次，多写几次，记住关键的pivot和counter以及它们的作用。</p>
+<p><strong>但是需要注意快排的缺陷</strong>：如果一个数组本身已经排好序了，那么每一轮排序的时候都会以最后一个数字作为比较的标准，此时快排的效率退化成了O(n^2)。所以，在面试中只要碰到了和排序有关的问题，一定要问清楚具体环境，有哪些条件约束，在得到足够多的信息之后再选择最合适的排序算法。</p>
 <h3 id="归并排序-Merge-Sort"><a href="#归并排序-Merge-Sort" class="headerlink" title="归并排序(Merge Sort)"></a><strong>归并排序(Merge Sort)</strong></h3><p>归并排序也用到了<strong>分治</strong>的思想。</p>
 <p>归并具体流程：</p>
 <ol>
@@ -1423,6 +1572,7 @@
 <p>对于归并排序的代码，希望大家多多练习，把这段代码写得更细腻。</p>
 <p>以及，<font color=#FF0000>把这段很能体现编程内力的代码可以在白板上写出来，面试官肯定会刮目相看的。</font></p>
 <hr>
+<h3 id="给出一个时间复杂度为O-n-的排序算法？"><a href="#给出一个时间复杂度为O-n-的排序算法？" class="headerlink" title="给出一个时间复杂度为O(n)的排序算法？"></a>给出一个时间复杂度为O(n)的排序算法？</h3><p>理论上是不太合理的，但是如果这么问，那么我们一定要多问问题，问清楚O(n)排序算法的环境和背景。比如要给一个公司的几万名员工按照年龄进行排序，那么，首先，年龄的范围可以定位18-99，这是个有限大小的范围，我们可以申请这么大的数组(但是空间复杂度为O(1)，因为是确定的。)然后遍历一遍所有员工，每次在年龄对应的下标上加1，即可完成按照年龄的排序了。</p>
 <p><strong>小总结</strong></p>
 <p>归并 和 快排 具有相似性，但步骤顺序相反。</p>
 <ul>
@@ -1434,7 +1584,7 @@
 <ul>
 <li><strong>堆排序(Merge Sort)</strong></li>
 </ul>
-<p>堆插入时间复杂度为O(logN)，取堆顶，最大/小值，时间复杂度为O(1)</p>
+<p>堆插入时间复杂度为O(logN)，取堆顶，最大/小值，时间复杂度为O(1)。但是取完元素之后需要进行Heapify，所以要额外乘上O(n)的时间复杂度，整个的时间复杂度为O(N*logN)</p>
 <p>堆排序的过程：</p>
 <ol>
 <li>对元素依次建立最小堆</li>
@@ -2358,6 +2508,28 @@
 
 <p>时间复杂度：O(n)</p>
 <p>空间复杂度：O(1)</p>
+<h2 id="621-Task-Scheduler-任务调度-Mid"><a href="#621-Task-Scheduler-任务调度-Mid" class="headerlink" title="621.Task Scheduler(任务调度)(Mid)"></a><a href="https://leetcode-cn.com/problems/task-scheduler/" target="_blank" rel="noopener">621.Task Scheduler(任务调度)(Mid)</a></h2><p>Given a char array representing tasks CPU need to do. It contains capital letters A to Z where different letters represent different tasks. Tasks could be done without original order. Each task could be done in one interval. For each interval, CPU could finish one task or just be idle.</p>
+<p>However, there is a non-negative cooling interval <strong>n</strong> that means between two <strong>same tasks</strong>, there must be at least n intervals that CPU are doing different tasks or just be idle.</p>
+<p>You need to return the <strong>least</strong> number of intervals the CPU will take to finish all the given tasks.</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight clean"><table><tr><td class="code"><pre><span class="line">Input: tasks = [<span class="string">"A"</span>,<span class="string">"A"</span>,<span class="string">"A"</span>,<span class="string">"B"</span>,<span class="string">"B"</span>,<span class="string">"B"</span>], n = <span class="number">2</span></span><br><span class="line">Output: <span class="number">8</span></span><br><span class="line">Explanation: A -&gt; B -&gt; idle -&gt; A -&gt; B -&gt; idle -&gt; A -&gt; B.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong></p>
+<ol>
+<li>The number of tasks is in the range [1, 10000].</li>
+<li>The integer n is in the range [0, 100].</li>
+</ol>
+<hr>
+<p>解：</p>
+<ol>
+<li>因为所有任务都是大写字母，所以可以申请大小为26的数组来保存任务类型个数。</li>
+<li>对数组进行排序，按照出现的次数进行排序，优先记录出现次数多的任务。根据题意，时间至少为：retCount = (count - 1) * (n + 1) + 1 =&gt;A-&gt;X-&gt;X-&gt;A-&gt;X-&gt;X-&gt;A(X为其他任务或者待命)</li>
+<li>再排序下一个任务，如果下一个任务B个数和最大任务数一致，则retCount++ ==&gt; A-&gt;B-&gt;X-&gt;A-&gt;B-&gt;X-&gt;A-&gt;B</li>
+<li>如果空位都插满之后还有任务，那就随便在这些间隔里面插入就可以，因为间隔长度肯定会大于n，在这种情况下就是任务的总数是最小所需时间</li>
+</ol>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> leastInterval(char[] tasks, <span class="built_in">int</span> n) &#123;</span><br><span class="line">        <span class="comment">// corner case</span></span><br><span class="line">        <span class="keyword">if</span>(tasks.length &lt;= <span class="number">1</span> || n &lt; <span class="number">1</span>) <span class="keyword">return</span> tasks.length;</span><br><span class="line">        <span class="comment">// 步骤1</span></span><br><span class="line">        <span class="built_in">int</span>[] counts = new <span class="built_in">int</span>[<span class="number">26</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; tasks.length; i++) &#123;</span><br><span class="line">            counts[tasks[i] - <span class="string">'A'</span>]++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//步骤2</span></span><br><span class="line">        Arrays.sort(counts);</span><br><span class="line">        <span class="built_in">int</span> maxCount = counts[<span class="number">25</span>];</span><br><span class="line">        <span class="built_in">int</span> retCount = (maxCount - <span class="number">1</span>) * (n + <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">24</span>;</span><br><span class="line">        <span class="comment">// 步骤3</span></span><br><span class="line">        <span class="keyword">while</span>(i &gt;= <span class="number">0</span> &amp;&amp; counts[i] == maxCount) &#123;</span><br><span class="line">            retCount++;</span><br><span class="line">            i--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//步骤4</span></span><br><span class="line">        <span class="keyword">return</span> Math.max(retCount, tasks.length);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其他参考题解：<a href="https://leetcode-cn.com/problems/task-scheduler/solution/python-xiang-jie-by-jalan/" target="_blank" rel="noopener">参考这篇文章</a></p>
 <h2 id="84-Largest-Rectangle-in-Histogram-柱状图中最大的矩形-Hard"><a href="#84-Largest-Rectangle-in-Histogram-柱状图中最大的矩形-Hard" class="headerlink" title="84.Largest Rectangle in Histogram(柱状图中最大的矩形)(Hard)"></a><a href="https://leetcode-cn.com/problems/largest-rectangle-in-histogram/" target="_blank" rel="noopener">84.Largest Rectangle in Histogram(柱状图中最大的矩形)(Hard)</a></h2><p>Given <em>n</em> non-negative integers representing the histogram’s bar height where the width of each bar is 1, find the area of largest rectangle in the histogram.</p>
 <p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/10/12/histogram.png" alt="eg"></p>
 <p>Above is a histogram where width of each bar is 1, given height = <code>[2,1,5,6,2,3]</code>.</p>
@@ -2454,7 +2626,7 @@
 <li>当前高度小于等于栈顶高度，将墙的下标值入栈，后移指针。</li>
 <li>当前高度大于栈顶高度，出栈，计算当前墙和当前栈顶值的差值，为可存储的水量。然后用当前墙高度再和栈的新栈顶比较，重复两个判断，一直到当前墙的高度不大于栈顶高度或者栈为空，再把当前墙入栈，指针后移。</li>
 </ol>
-<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">trap6</span><span class="params">(<span class="keyword">int</span>[] <span class="built_in">height</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    Stack&lt;Integer&gt; <span class="built_in">stack</span> = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    <span class="keyword">int</span> current = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (current &lt; <span class="built_in">height</span>.length) &#123;</span><br><span class="line">        <span class="comment">//如果栈不空并且当前指向的高度大于栈顶高度就一直循环</span></span><br><span class="line">        <span class="keyword">while</span> (!<span class="built_in">stack</span>.empty() &amp;&amp; <span class="built_in">height</span>[current] &gt; <span class="built_in">height</span>[<span class="built_in">stack</span>.<span class="built_in">peek</span>()]) &#123;</span><br><span class="line">            <span class="keyword">int</span> h = <span class="built_in">height</span>[<span class="built_in">stack</span>.<span class="built_in">peek</span>()]; <span class="comment">//取出要出栈的元素</span></span><br><span class="line">            <span class="built_in">stack</span>.pop(); <span class="comment">//出栈</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">stack</span>.empty()) &#123; <span class="comment">// 栈空就出去</span></span><br><span class="line">                <span class="keyword">break</span>; </span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">int</span> distance = current - <span class="built_in">stack</span>.<span class="built_in">peek</span>() - <span class="number">1</span>; <span class="comment">//两堵墙之前的距离。</span></span><br><span class="line">            <span class="keyword">int</span> <span class="built_in">min</span> = Math.<span class="built_in">min</span>(<span class="built_in">height</span>[<span class="built_in">stack</span>.<span class="built_in">peek</span>()], <span class="built_in">height</span>[current]);</span><br><span class="line">            sum = sum + distance * (<span class="built_in">min</span> - h);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">stack</span>.push(current); <span class="comment">//当前指向的墙入栈</span></span><br><span class="line">        current++; <span class="comment">//指针后移</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：windliang</span><br><span class="line">链接：https:<span class="comment">//leetcode-cn.com/problems/trapping-rain-water/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-w-8/</span></span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>]]></content>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">trap6</span><span class="params">(<span class="keyword">int</span>[] <span class="built_in">height</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    Stack&lt;Integer&gt; <span class="built_in">stack</span> = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    <span class="keyword">int</span> current = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (current &lt; <span class="built_in">height</span>.length) &#123;</span><br><span class="line">        <span class="comment">//如果栈不空并且当前指向的高度大于栈顶高度就一直循环</span></span><br><span class="line">        <span class="keyword">while</span> (!<span class="built_in">stack</span>.empty() &amp;&amp; <span class="built_in">height</span>[current] &gt; <span class="built_in">height</span>[<span class="built_in">stack</span>.<span class="built_in">peek</span>()]) &#123;</span><br><span class="line">            <span class="keyword">int</span> h = <span class="built_in">height</span>[<span class="built_in">stack</span>.<span class="built_in">peek</span>()]; <span class="comment">//取出要出栈的元素</span></span><br><span class="line">            <span class="built_in">stack</span>.pop(); <span class="comment">//出栈</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">stack</span>.empty()) &#123; <span class="comment">// 栈空就出去</span></span><br><span class="line">                <span class="keyword">break</span>; </span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">int</span> distance = current - <span class="built_in">stack</span>.<span class="built_in">peek</span>() - <span class="number">1</span>; <span class="comment">//两堵墙之前的距离。</span></span><br><span class="line">            <span class="keyword">int</span> <span class="built_in">min</span> = Math.<span class="built_in">min</span>(<span class="built_in">height</span>[<span class="built_in">stack</span>.<span class="built_in">peek</span>()], <span class="built_in">height</span>[current]);</span><br><span class="line">            sum = sum + distance * (<span class="built_in">min</span> - h);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">stack</span>.push(current); <span class="comment">//当前指向的墙入栈</span></span><br><span class="line">        current++; <span class="comment">//指针后移</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>Algorithms Note</category>
       </categories>

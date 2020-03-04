@@ -61,7 +61,7 @@
 <meta property="og:image" content="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/10/12/histogram_area.png">
 <meta property="og:image" content="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/10/22/rainwatertrap.png">
 <meta property="article:published_time" content="2020-01-08T13:18:16.000Z">
-<meta property="article:modified_time" content="2020-03-02T07:17:15.629Z">
+<meta property="article:modified_time" content="2020-03-03T14:47:27.940Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -165,7 +165,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">25</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">26</span></a>
 
   </li>
   </ul>
@@ -225,7 +225,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-02 15:17:15" itemprop="dateModified" datetime="2020-03-02T15:17:15+08:00">2020-03-02</time>
+                <time title="Modified: 2020-03-03 22:47:27" itemprop="dateModified" datetime="2020-03-03T22:47:27+08:00">2020-03-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -253,7 +253,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>20k</span>
+              <span>21k</span>
             </span>
 
         </div>
@@ -411,6 +411,28 @@
 
 <p>时间复杂度：O(n)</p>
 <p>空间复杂度：O(1)</p>
+<h2 id="621-Task-Scheduler-任务调度-Mid"><a href="#621-Task-Scheduler-任务调度-Mid" class="headerlink" title="621.Task Scheduler(任务调度)(Mid)"></a><a href="https://leetcode-cn.com/problems/task-scheduler/" target="_blank" rel="noopener">621.Task Scheduler(任务调度)(Mid)</a></h2><p>Given a char array representing tasks CPU need to do. It contains capital letters A to Z where different letters represent different tasks. Tasks could be done without original order. Each task could be done in one interval. For each interval, CPU could finish one task or just be idle.</p>
+<p>However, there is a non-negative cooling interval <strong>n</strong> that means between two <strong>same tasks</strong>, there must be at least n intervals that CPU are doing different tasks or just be idle.</p>
+<p>You need to return the <strong>least</strong> number of intervals the CPU will take to finish all the given tasks.</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: tasks = [<span class="string">"A"</span>,<span class="string">"A"</span>,<span class="string">"A"</span>,<span class="string">"B"</span>,<span class="string">"B"</span>,<span class="string">"B"</span>], n = <span class="number">2</span></span><br><span class="line">Output: <span class="number">8</span></span><br><span class="line">Explanation: A -&gt; B -&gt; idle -&gt; A -&gt; B -&gt; idle -&gt; A -&gt; B.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong></p>
+<ol>
+<li>The number of tasks is in the range [1, 10000].</li>
+<li>The integer n is in the range [0, 100].</li>
+</ol>
+<hr>
+<p>解：</p>
+<ol>
+<li>因为所有任务都是大写字母，所以可以申请大小为26的数组来保存任务类型个数。</li>
+<li>对数组进行排序，按照出现的次数进行排序，优先记录出现次数多的任务。根据题意，时间至少为：retCount = (count - 1) * (n + 1) + 1 =&gt;A-&gt;X-&gt;X-&gt;A-&gt;X-&gt;X-&gt;A(X为其他任务或者待命)</li>
+<li>再排序下一个任务，如果下一个任务B个数和最大任务数一致，则retCount++ ==&gt; A-&gt;B-&gt;X-&gt;A-&gt;B-&gt;X-&gt;A-&gt;B</li>
+<li>如果空位都插满之后还有任务，那就随便在这些间隔里面插入就可以，因为间隔长度肯定会大于n，在这种情况下就是任务的总数是最小所需时间</li>
+</ol>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> leastInterval(char[] tasks, <span class="built_in">int</span> n) &#123;</span><br><span class="line">        <span class="comment">// corner case</span></span><br><span class="line">        <span class="keyword">if</span>(tasks.length &lt;= <span class="number">1</span> || n &lt; <span class="number">1</span>) <span class="keyword">return</span> tasks.length;</span><br><span class="line">        <span class="comment">// 步骤1</span></span><br><span class="line">        <span class="built_in">int</span>[] counts = new <span class="built_in">int</span>[<span class="number">26</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; tasks.length; i++) &#123;</span><br><span class="line">            counts[tasks[i] - <span class="string">'A'</span>]++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//步骤2</span></span><br><span class="line">        Arrays.sort(counts);</span><br><span class="line">        <span class="built_in">int</span> maxCount = counts[<span class="number">25</span>];</span><br><span class="line">        <span class="built_in">int</span> retCount = (maxCount - <span class="number">1</span>) * (n + <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">int</span> i = <span class="number">24</span>;</span><br><span class="line">        <span class="comment">// 步骤3</span></span><br><span class="line">        <span class="keyword">while</span>(i &gt;= <span class="number">0</span> &amp;&amp; counts[i] == maxCount) &#123;</span><br><span class="line">            retCount++;</span><br><span class="line">            i--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//步骤4</span></span><br><span class="line">        <span class="keyword">return</span> Math.max(retCount, tasks.length);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其他参考题解：<a href="https://leetcode-cn.com/problems/task-scheduler/solution/python-xiang-jie-by-jalan/" target="_blank" rel="noopener">参考这篇文章</a></p>
 <h2 id="84-Largest-Rectangle-in-Histogram-柱状图中最大的矩形-Hard"><a href="#84-Largest-Rectangle-in-Histogram-柱状图中最大的矩形-Hard" class="headerlink" title="84.Largest Rectangle in Histogram(柱状图中最大的矩形)(Hard)"></a><a href="https://leetcode-cn.com/problems/largest-rectangle-in-histogram/" target="_blank" rel="noopener">84.Largest Rectangle in Histogram(柱状图中最大的矩形)(Hard)</a></h2><p>Given <em>n</em> non-negative integers representing the histogram’s bar height where the width of each bar is 1, find the area of largest rectangle in the histogram.</p>
 <p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/10/12/histogram.png" alt="eg"></p>
 <p>Above is a histogram where width of each bar is 1, given height = <code>[2,1,5,6,2,3]</code>.</p>
@@ -507,7 +529,7 @@
 <li>当前高度小于等于栈顶高度，将墙的下标值入栈，后移指针。</li>
 <li>当前高度大于栈顶高度，出栈，计算当前墙和当前栈顶值的差值，为可存储的水量。然后用当前墙高度再和栈的新栈顶比较，重复两个判断，一直到当前墙的高度不大于栈顶高度或者栈为空，再把当前墙入栈，指针后移。</li>
 </ol>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">trap6</span><span class="params">(<span class="keyword">int</span>[] <span class="built_in">height</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    Stack&lt;Integer&gt; <span class="built_in">stack</span> = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    <span class="keyword">int</span> current = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (current &lt; <span class="built_in">height</span>.length) &#123;</span><br><span class="line">        <span class="comment">//如果栈不空并且当前指向的高度大于栈顶高度就一直循环</span></span><br><span class="line">        <span class="keyword">while</span> (!<span class="built_in">stack</span>.empty() &amp;&amp; <span class="built_in">height</span>[current] &gt; <span class="built_in">height</span>[<span class="built_in">stack</span>.<span class="built_in">peek</span>()]) &#123;</span><br><span class="line">            <span class="keyword">int</span> h = <span class="built_in">height</span>[<span class="built_in">stack</span>.<span class="built_in">peek</span>()]; <span class="comment">//取出要出栈的元素</span></span><br><span class="line">            <span class="built_in">stack</span>.pop(); <span class="comment">//出栈</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">stack</span>.empty()) &#123; <span class="comment">// 栈空就出去</span></span><br><span class="line">                <span class="keyword">break</span>; </span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">int</span> distance = current - <span class="built_in">stack</span>.<span class="built_in">peek</span>() - <span class="number">1</span>; <span class="comment">//两堵墙之前的距离。</span></span><br><span class="line">            <span class="keyword">int</span> <span class="built_in">min</span> = Math.<span class="built_in">min</span>(<span class="built_in">height</span>[<span class="built_in">stack</span>.<span class="built_in">peek</span>()], <span class="built_in">height</span>[current]);</span><br><span class="line">            sum = sum + distance * (<span class="built_in">min</span> - h);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">stack</span>.push(current); <span class="comment">//当前指向的墙入栈</span></span><br><span class="line">        current++; <span class="comment">//指针后移</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：windliang</span><br><span class="line">链接：https:<span class="comment">//leetcode-cn.com/problems/trapping-rain-water/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-w-8/</span></span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">trap6</span><span class="params">(<span class="keyword">int</span>[] <span class="built_in">height</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    Stack&lt;Integer&gt; <span class="built_in">stack</span> = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    <span class="keyword">int</span> current = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (current &lt; <span class="built_in">height</span>.length) &#123;</span><br><span class="line">        <span class="comment">//如果栈不空并且当前指向的高度大于栈顶高度就一直循环</span></span><br><span class="line">        <span class="keyword">while</span> (!<span class="built_in">stack</span>.empty() &amp;&amp; <span class="built_in">height</span>[current] &gt; <span class="built_in">height</span>[<span class="built_in">stack</span>.<span class="built_in">peek</span>()]) &#123;</span><br><span class="line">            <span class="keyword">int</span> h = <span class="built_in">height</span>[<span class="built_in">stack</span>.<span class="built_in">peek</span>()]; <span class="comment">//取出要出栈的元素</span></span><br><span class="line">            <span class="built_in">stack</span>.pop(); <span class="comment">//出栈</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">stack</span>.empty()) &#123; <span class="comment">// 栈空就出去</span></span><br><span class="line">                <span class="keyword">break</span>; </span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">int</span> distance = current - <span class="built_in">stack</span>.<span class="built_in">peek</span>() - <span class="number">1</span>; <span class="comment">//两堵墙之前的距离。</span></span><br><span class="line">            <span class="keyword">int</span> <span class="built_in">min</span> = Math.<span class="built_in">min</span>(<span class="built_in">height</span>[<span class="built_in">stack</span>.<span class="built_in">peek</span>()], <span class="built_in">height</span>[current]);</span><br><span class="line">            sum = sum + distance * (<span class="built_in">min</span> - h);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">stack</span>.push(current); <span class="comment">//当前指向的墙入栈</span></span><br><span class="line">        current++; <span class="comment">//指针后移</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     </div>
 
 
@@ -598,7 +620,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#20-Valid-Parentheses-有效的括号-Easy"><span class="nav-text">20.Valid Parentheses(有效的括号)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#155-Min-Stack-最小栈-Easy"><span class="nav-text">155.Min Stack(最小栈)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#641-Design-Circular-Deque-设计循环双端队列-Mid"><span class="nav-text">641.Design Circular Deque(设计循环双端队列)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#225-Implement-Stack-using-Queues-用队列实现栈-Easy"><span class="nav-text">225.Implement Stack using Queues(用队列实现栈)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#232-Implement-Queue-using-Stacks-用栈实现队列-Easy"><span class="nav-text">232.Implement Queue using Stacks(用栈实现队列)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#239-Sliding-Window-Maximum-滑动窗口最大值-Hard"><span class="nav-text">239.Sliding Window Maximum(滑动窗口最大值)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#84-Largest-Rectangle-in-Histogram-柱状图中最大的矩形-Hard"><span class="nav-text">84.Largest Rectangle in Histogram(柱状图中最大的矩形)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#42-Trapping-Rain-Water-接雨水-Hard"><span class="nav-text">42.Trapping Rain Water(接雨水)(Hard)</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#20-Valid-Parentheses-有效的括号-Easy"><span class="nav-text">20.Valid Parentheses(有效的括号)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#155-Min-Stack-最小栈-Easy"><span class="nav-text">155.Min Stack(最小栈)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#641-Design-Circular-Deque-设计循环双端队列-Mid"><span class="nav-text">641.Design Circular Deque(设计循环双端队列)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#225-Implement-Stack-using-Queues-用队列实现栈-Easy"><span class="nav-text">225.Implement Stack using Queues(用队列实现栈)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#232-Implement-Queue-using-Stacks-用栈实现队列-Easy"><span class="nav-text">232.Implement Queue using Stacks(用栈实现队列)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#239-Sliding-Window-Maximum-滑动窗口最大值-Hard"><span class="nav-text">239.Sliding Window Maximum(滑动窗口最大值)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#621-Task-Scheduler-任务调度-Mid"><span class="nav-text">621.Task Scheduler(任务调度)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#84-Largest-Rectangle-in-Histogram-柱状图中最大的矩形-Hard"><span class="nav-text">84.Largest Rectangle in Histogram(柱状图中最大的矩形)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#42-Trapping-Rain-Water-接雨水-Hard"><span class="nav-text">42.Trapping Rain Water(接雨水)(Hard)</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -614,7 +636,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -683,7 +705,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">163k</span>
+    <span title="Symbols count total">173k</span>
 </div>
 
 
@@ -700,7 +722,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共70.4k字</span>
+  <span class="post-count">博客全站共75k字</span>
 </div>
 
         
