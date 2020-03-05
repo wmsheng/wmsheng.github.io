@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/siyecao.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/siyecao.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false,"b2t":true,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="很多事情不是看到希望才去坚持，而是坚持了才看得到希望。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java GC Study I">
+<meta property="og:url" content="http://yoursite.com/2020/03/05/Java-GC-Study-I/index.html">
+<meta property="og:site_name" content="Hi, This is Bennett">
+<meta property="og:description" content="很多事情不是看到希望才去坚持，而是坚持了才看得到希望。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/37rfUg.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/37y678.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/37r2b8.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/37RmRg.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/37rWVS.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/37r5Cj.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/37rI8s.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/37qRlq.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3H1hJU.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3H1fiT.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3H1RoV.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3H12d0.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3H1gZq.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3H14WF.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3H15z4.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3H1oQJ.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3H1Ty9.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/37qRlq.png">
+<meta property="article:published_time" content="2020-03-05T07:09:12.000Z">
+<meta property="article:modified_time" content="2020-03-05T16:17:41.303Z">
+<meta property="article:author" content="Wang Mingsheng">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="GC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.ax1x.com/2020/03/05/37rfUg.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/05/Java-GC-Study-I/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Java GC Study I | Hi, This is Bennett</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hi, This is Bennett</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">13</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories<span class="badge">3</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">28</span></a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/05/Java-GC-Study-I/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/faceimage.jpg">
+      <meta itemprop="name" content="Wang Mingsheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hi, This is Bennett">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java GC Study I
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-05 15:09:12" itemprop="dateCreated datePublished" datetime="2020-03-05T15:09:12+08:00">2020-03-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-06 00:17:41" itemprop="dateModified" datetime="2020-03-06T00:17:41+08:00">2020-03-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Study-Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Study Note</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              
+              <span>5k</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>很多事情不是看到希望才去坚持，而是坚持了才看得到希望。</p>
+</blockquote>
+<a id="more"></a>
+
+<p>正是因为有垃圾回收机制，才可以让程序员不用考虑程序执行之后对象内存的释放问题，将其交给JVM管理即可。</p>
+<h1 id="垃圾回收——标记算法"><a href="#垃圾回收——标记算法" class="headerlink" title="垃圾回收——标记算法"></a>垃圾回收——标记算法</h1><h2 id="怎样的对象会被判定为垃圾？"><a href="#怎样的对象会被判定为垃圾？" class="headerlink" title="怎样的对象会被判定为垃圾？"></a>怎样的对象会被判定为垃圾？</h2><ul>
+<li>没有被其他对象引用</li>
+</ul>
+<p>此时这个对象占据的内存会被释放，此对象也会被销毁。</p>
+<h2 id="用什么方法判定对象不被引用了呢？"><a href="#用什么方法判定对象不被引用了呢？" class="headerlink" title="用什么方法判定对象不被引用了呢？"></a>用什么方法判定对象不被引用了呢？</h2><ul>
+<li>引用计数算法</li>
+<li>可达性分析算法</li>
+</ul>
+<h3 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h3><p><strong>通过判断对象的引用数量来决定对象是否可以被回收。</strong></p>
+<p>具体执行方法：</p>
+<ul>
+<li>每个对象实例都有一个引用计数器，被引用则+1，完成引用则-1</li>
+<li>任何引用计数为0的对象实例可以被当做垃圾收集</li>
+</ul>
+<p>引用计数算法的优劣：</p>
+<ul>
+<li>优点：执行效率高，程序执行受影响较小。因为我们只需要过滤掉引用计数为0的对象，然后将其回收即可，可以交织在程序运行中。由于垃圾回收的过程中可以做到几乎不打断程序的执行，所以这种方法适用于程序需要不被长时间打断的实时环境。</li>
+<li>缺点：无法检测出循环引用的情况，导致内存泄漏。这个缺点是很致命的，如果存在父对象与子对象互相引用的情况，那么它们的引用计数永远不可能为零，那么永远都不会被检测到为0，永远不会被释放。</li>
+</ul>
+<p>由于这种比较致命的缺点，主流JDK没有使用引用计数算法进行垃圾判定，而是用了下面的可达性分析算法。</p>
+<h3 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h3><p><strong>通过判断对象的引用链是否可达来决定对象是否可以被回收</strong>。</p>
+<p>这种方法从图论中引入。程序把所有的引用关系看作是一张图，通过一系列的名为GC Root的对象作为起始点，从这些节点开始向下搜索，搜索经过的路径会被称为”引用链”，即”reference chain”，当某个对象到其他图中的节点都不能相连的时候，也就是说从这个对象到其他部分的GC Root是不可达的，那么就判定这个对象为垃圾。</p>
+<p>如图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37rfUg.png" alt="可达性分析算法"></p>
+<p>蓝色为存活对象，即可达对象，灰色的部分不可达了，为垃圾对象。</p>
+<p>什么对象可以作为GC Root的对象呢？</p>
+<ul>
+<li>虚拟机栈中引用的对象(栈帧中的本地变量表)。比如在方法中new了一个Object，并赋值给了一个局部变量，那么在该局部变量没有被销毁之前，new出来的对象就会是GC Root。</li>
+<li>方法区中的常量引用的对象。比如在类中定义了一个常量，而该常量保存的是某个对象的地址，那么被保存的对象也会成为GC的根对象。</li>
+<li>方法区中的类静态属性引用的对象。这个和上面常量的情况如出一辙。</li>
+<li>本地方法栈中JNI(Native方法)的引用对象</li>
+<li>活跃线程的引用对象</li>
+</ul>
+<h1 id="垃圾回收——回收算法"><a href="#垃圾回收——回收算法" class="headerlink" title="垃圾回收——回收算法"></a>垃圾回收——回收算法</h1><p>判断了哪些对象是垃圾只是第一步，我们还需要解决一个很重要的问题：如何处理这些垃圾？或者说，如果回收这些垃圾？</p>
+<p>垃圾回收算法有以下这几种：</p>
+<h2 id="标记-清除算法-Mark-and-Sweep"><a href="#标记-清除算法-Mark-and-Sweep" class="headerlink" title="标记-清除算法(Mark and Sweep)"></a>标记-清除算法(Mark and Sweep)</h2><ul>
+<li>标记：从根集合进行扫描，对存活的对象进行标记</li>
+<li>清除：对堆内存从头到尾进行线性遍历，回收不可达对象内存</li>
+</ul>
+<p>如图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37y678.jpg" alt="标记-清除算法"></p>
+<p>如上图所示，经过了Mark阶段到达Sweep阶段的时候，所有不可达的对象都会被当做垃圾回收掉。</p>
+<p>但是这种方法会存在一些问题，在标记-清除之后，可能会产生大量不连续的碎片，空间碎片多，可能导致之后开辟大对象空间的时候出现内存不够用的情况。</p>
+<h2 id="复制算法-Copying"><a href="#复制算法-Copying" class="headerlink" title="复制算法(Copying)"></a>复制算法(Copying)</h2><p>复制算法将可用的内存按照容量和一定比例划分为两块或多块，并选择其中一块两块作为对象面，其他的作为空闲面。</p>
+<ul>
+<li>分为对象面和空闲面</li>
+<li>对象在对象面上创建 </li>
+<li>存活的对象被从对象面复制到空闲面。当被定义为对象面的块的内存用完了，就将还存活着的对象复制到其中一块空闲面上</li>
+<li>将对象面所有对象清除</li>
+</ul>
+<p>这种算法适用于对象存活率低的场景，比如年轻代。这样每次都对内存块进行回收，这样就解决了内存碎片的问题。</p>
+<p>推倒重建的过程只需要移动堆顶指针，按顺序分配内容即可。</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37r2b8.png" alt="复制算法"></p>
+<p>优势：</p>
+<ul>
+<li>解决碎片化问题</li>
+<li>顺序分配内存，简单高效</li>
+<li>适用于对象存活率低的场景(现在很多虚拟机都采用这种方法回收年轻代，因为年轻代每次都只存活10%左右，用复制算法效果不错)</li>
+</ul>
+<p>但是在老年代不能轻易选用这种算法，因为可能出现存活率特别高的情况。</p>
+<h2 id="标记-整理算法-Compacting"><a href="#标记-整理算法-Compacting" class="headerlink" title="标记-整理算法(Compacting)"></a>标记-整理算法(Compacting)</h2><p>这种算法比较适合用于老年代的对象回收。它使用类似”标记-清除”算法的方式进行对象的标记，但是在清除的时候不同。</p>
+<ul>
+<li>标记：从根集合进行扫描，对存活的对象进行标记</li>
+<li>清除：移动所有存活的对象，且按照内存地址次序依次排列，然后将末端内存地址以后的内存全部回收</li>
+</ul>
+<p>“标记-整理”算法是在”标记-清除”的基础上又进行了对象的移动，因此成本更高，但是能够解决内存碎片的问题。</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37RmRg.png" alt="标记整理算法"></p>
+<p>也可以参考这张图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37rWVS.png" alt="标记整理算法2"></p>
+<p>执行这个算法的时候会把存活的对象压缩到一端，然后将所有可回收的对象清除掉。</p>
+<p>这样做的好处：</p>
+<ul>
+<li>避免内存的不连续性</li>
+<li>不用设置两块内存互换</li>
+<li>适用于存活率高的场景(比如涉及分代收集算法中老年代的回收)</li>
+</ul>
+<h2 id="分代收集算法-Generational-Collector"><a href="#分代收集算法-Generational-Collector" class="headerlink" title="分代收集算法(Generational Collector)"></a>分代收集算法(Generational Collector)</h2><p>这是一种比较主流的垃圾回收算法。</p>
+<p>可以理解是一套”组合拳”</p>
+<ul>
+<li>垃圾回收算法的组合拳</li>
+<li>按照对象生命周期的不同划分区域以采用不同的垃圾回收算法</li>
+<li>目的：提高JVM的回收效率</li>
+</ul>
+<p>前面已经提过，JDK8之前，比如JDK6和JDK7，里面有年轻代、老年代和永久代，如下图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37r5Cj.png" alt="JDK6+7"></p>
+<p>但是JDK8之后(包括JDK8)就去掉了永久代：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37rI8s.png" alt="JDK8后去掉永久代"></p>
+<p>可以看到，JDK6、JDK7和JDK8中都有年轻代和老年代。其中年轻代的对象存活率低，采用复制算法。而老年代存活率高，一般使用”标记-清除算法”或者”标记-整理算法”。</p>
+<h2 id="GC的分类"><a href="#GC的分类" class="headerlink" title="GC的分类"></a>GC的分类</h2><p>分代收集的GC分为两种：</p>
+<ul>
+<li>Minor GC。发生在年轻代中的垃圾收集工作，采用复制算法。</li>
+<li>Full GC。与老年代的垃圾回收相关。</li>
+</ul>
+<p>年轻代是所有Java对象出生的地方，即Java对象申请的内存和存放对象，都是在年轻代进行的。</p>
+<p>实际上，Java大部分对象都不会长久存活，”朝生夕灭”。新生代是GC发生的频繁区域。</p>
+<p>老年代的回收一般伴随着年轻代的垃圾收集，因此第二种垃圾回收方式被命名为”Full GC”</p>
+<h2 id="年轻代：尽可能快速地收集掉那些生命周期短的对象"><a href="#年轻代：尽可能快速地收集掉那些生命周期短的对象" class="headerlink" title="年轻代：尽可能快速地收集掉那些生命周期短的对象"></a>年轻代：尽可能快速地收集掉那些生命周期短的对象</h2><ul>
+<li>Eden区</li>
+<li>两个Survivor区</li>
+</ul>
+<p>对象刚被创建出来的时候，其内存空间首先被分配在Eden区。如果Eden区放不下新创建的对象的话，对象也有可能被直接放在Survivor甚至是老年代中。</p>
+<p>而两个Survivor则分别被定义在from区和to区，并且哪个是from区，哪个是to区，也不是固定的，会随着垃圾回收的进行而相互转换。</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37qRlq.png" alt="年轻代"></p>
+<h3 id="年轻代垃圾回收的过程演示"><a href="#年轻代垃圾回收的过程演示" class="headerlink" title="年轻代垃圾回收的过程演示"></a>年轻代垃圾回收的过程演示</h3><p>通过一个实例演示年轻代的垃圾回收过程：</p>
+<p>演示过程暂时忽略Eden区和Survivor区的大小比例，并且假设每个对象的大小都是一样的。Eden区最多能保存四个对象，Survivor区最多能保存三个对象。</p>
+<p>一开始，如果对象在Eden出生，并且Eden被挤满，如下图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H1hJU.png" alt="3H1hJU.png"></p>
+<p>此时会触发一次Minor GC。此时如果对象还存活(绿色的为存活对象)，它就会被复制到一个Survivor区里面，假设是复制到了S0里面，此时我们称S0为from区。复制之后会增加1个年龄。比如图中复制过去之后年龄为1.</p>
+<p>然后清理所有使用过的Eden区域，如下图： </p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H1fiT.png" alt="3H1fiT.png"></p>
+<p>之后会清空Eden</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H1RoV.png" alt="3H1RoV.png"></p>
+<p>然后过了一段时间，发现Eden区又被填满了，如图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H12d0.png" alt="3H12d0.png"></p>
+<p>此时又会触发一次Minor GC，然后将Eden和S0里面的存活的对象都拷贝到S1里面，同时会把存活的对象的年龄都加1。</p>
+<p>此时S1从to区变成了from区，而S0从from区变成了to区。</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H1gZq.png" alt="3H1gZq.png"></p>
+<p>拷贝完成后，Eden和S0都会被清空，以此完成了第二次Minor GC。</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H14WF.png" alt="3H14WF.png"></p>
+<p>之后我们假设Eden区又满了：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H15z4.png" alt="3H15z4.png"></p>
+<p>此时会出发第三次Minor GC，操作行为也和之前一样，年龄加1。同时S1里面如果有一个对象没有被用到，那么也要把它清除。</p>
+<p>每次拷贝，存活对象的年龄都要加1.</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H1oQJ.png" alt="3H1oQJ.png"></p>
+<p>拷贝完成后，S1和Eden又会被再次清空：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H1Ty9.png" alt="3H1Ty9.png"></p>
+<p>周而复始。对象在Survivor区每熬过一次Minor GC，其年龄就会被加1，当对象的年龄达到某个值之后(默认是15岁)，这些对象会成为老年代。</p>
+<p>NOTE：这个默认年龄可以通过<code>-XX:MaxTenuringThreshold</code>调整</p>
+<p>但这也不是一定的，如果存储的对象过大，Eden区和Survivor区都存不下，可能会需要用到老年代的空间协助存储。</p>
+<h3 id="对象如何晋升到老年代"><a href="#对象如何晋升到老年代" class="headerlink" title="对象如何晋升到老年代"></a>对象如何晋升到老年代</h3><p>在分代算法当中，对象如何晋升到老年代？</p>
+<ul>
+<li>经历一定Minor次数依然存活的对象</li>
+<li>Survivor区中村放不下的对象</li>
+<li>新生成的大对象(可以用:<code>-XX:+PretenuerSizeThreshold</code>来控制大对象的大小，只要大于这个大小，对象生成之后直接放入老年代)</li>
+</ul>
+<h3 id="常用的调优参数"><a href="#常用的调优参数" class="headerlink" title="常用的调优参数"></a>常用的调优参数</h3><p>介绍几个常用的用来做性能调优的参数。</p>
+<ul>
+<li>-XX:SurvivorRatio：Eden和Survivor的比值，默认8:1</li>
+<li>-XX:NewRatio：老年代和年轻代内存大小的比例(比如若值为2，则老年代是年轻代大小的两倍，即young generation占据内存的三分之一)。</li>
+<li>-XX:MaxTenuringThreshold:对象从年轻代晋升到老生代经历过GC次数的最大阈值</li>
+</ul>
+<p>新生代和老年代的总内存大小是通过”-Xms”和”-Xmx”来决定的。</p>
+<h2 id="老年代：存放生命周期较长的对象"><a href="#老年代：存放生命周期较长的对象" class="headerlink" title="老年代：存放生命周期较长的对象"></a>老年代：存放生命周期较长的对象</h2><p>回顾这副图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37qRlq.png" alt="年轻代"></p>
+<p>可以看到，老年代占的内存比新生代大，而且大致的比例为2:1</p>
+<p>老年代的对象存活率较高，而且没有额外空间做担保，所以老年代主要用的算法为：</p>
+<ul>
+<li>标记-清理算法</li>
+<li>标记-整理算法</li>
+</ul>
+<p>之前已经详细介绍过这两种算法，这里就不再介绍了。</p>
+<h3 id="Full-GC"><a href="#Full-GC" class="headerlink" title="Full GC"></a>Full GC</h3><p>当触发老年代的垃圾回收的时候，往往也会伴随对新生代堆内存的回收，即对整个堆进行垃圾回收，也就是所谓的Full GC，或者叫做Major GC。Major GC和Full GC是等价的，即收集所有的GC堆。</p>
+<p>主要是因为HotSpot VM发展了很多年，外界对很多名词的解读都已经混乱了，当有人说到了”Major GC”的时候，一定要问清楚，他说的到底是针对所有代的Full GC，还是只是针对老年代的GC。</p>
+<p>Full GC比Minor GC慢(慢十倍)，但因为老年代里面元素本身就不容易被淘汰，所以执行频率也会更低。</p>
+<h3 id="触发Full-GC的条件"><a href="#触发Full-GC的条件" class="headerlink" title="触发Full GC的条件"></a>触发Full GC的条件</h3><ul>
+<li>老年代空间不足——如果创建的对象很大，Eden区域放不下这个对象，会放入到老年代中。如果老年代空间也不足，就会触发Full GC。为了避免这种情况，最好就是不要创建太大的对象。</li>
+<li>永久代空间不足——这主要是针对JDK7以及以前的版本。当系统中需要加载和调用的类很多，而同时持久代当中没有足够的空间去存放类的信息和方法信息的时候，就会触发出一次Full GC。而JDK8以后由于取消了永久代，就不存在”永久代空间不足”这种情况了。(这也是JDK8后面用元空间替代永久代的原因之一，为了降低Full GC的频率，减少GC的负担，提升其效率)</li>
+<li>CMS GC时出现promotion failed, concurrent mode failure。对于采用CMS 进行老年代GC的程序而言，如果GC日志中出现了这两个字段。如果出现了，可能会触发Full GC。</li>
+<li>Minor GC晋升到老年代的平均大小大于老年代的剩余空间</li>
+<li>调用System.gc()——这个是我们在程序里面手动调用的，触发Full GC。需要注意这个方法只是提醒虚拟机，程序员希望你在这里回收一下对象。但是具体怎么做还是要看虚拟机自己，程序员没有控制权</li>
+<li>使用RMI来进行RPC或管理的JDK应用，每小时执行1次Full GC</li>
+</ul>
+<p>这些点很多，面试的时候只要能够提到3点，基本可以点到为止了，可以答到老年代空间不足，程序手动调用System.gc()，然后如果用的JDK版本比较老，在JDK8之前的版本，会有永久代空间不足的情况。当然其他的能说出来更好。</p>
+<p>需要注意：</p>
+<p>1.promotion failed是在进行Minor GC的时候Survivor放不下了，对象只能放入老年代，而此时恰好老年代也放不下，这时候就会造成promotion failed。</p>
+<p>2.concurrent mode failure是在执行CMS GC的过程中同时有对象要放入老年代中，而此时老年代空间不足，就会造成这个failure。</p>
+<p>而对于Minor GC晋升的这第四点，是比较复杂的触发情况。HotSpot为了避免由于新生代对象晋升到老年代而导致老年代空间不足的现象，在进行Minor GC的时候做了一个判断：如果之前统计所得到的Minor GC晋升到老年代的平均大小大于老年代的剩余空间，就直接触发Full GC。例如，程序第一次触发GC后有6M的对象晋升到老年代，当下一次Minor GC发生的时候，首先先检查老年代的剩余空间是否大于6M，如果小于6M，则执行Full GC。</p>
+<h1 id="垃圾回收——新生代垃圾收集器"><a href="#垃圾回收——新生代垃圾收集器" class="headerlink" title="垃圾回收——新生代垃圾收集器"></a>垃圾回收——新生代垃圾收集器</h1>
+    </div>
+
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i># Java</a>
+              <a href="/tags/GC/" rel="tag"><i class="fa fa-tag"></i># GC</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/04/Java-Basic-Interview-I/" rel="prev" title="Java Basic Interview I">
+      <i class="fa fa-chevron-left"></i> Java Basic Interview I
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/05/Java-GC-Interview-I/" rel="next" title="Java GC Interview I">
+      Java GC Interview I <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODAxMC8yNDUwNw=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#垃圾回收——标记算法"><span class="nav-text">垃圾回收——标记算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#怎样的对象会被判定为垃圾？"><span class="nav-text">怎样的对象会被判定为垃圾？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用什么方法判定对象不被引用了呢？"><span class="nav-text">用什么方法判定对象不被引用了呢？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引用计数算法"><span class="nav-text">引用计数算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可达性分析算法"><span class="nav-text">可达性分析算法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#垃圾回收——回收算法"><span class="nav-text">垃圾回收——回收算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#标记-清除算法-Mark-and-Sweep"><span class="nav-text">标记-清除算法(Mark and Sweep)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复制算法-Copying"><span class="nav-text">复制算法(Copying)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标记-整理算法-Compacting"><span class="nav-text">标记-整理算法(Compacting)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分代收集算法-Generational-Collector"><span class="nav-text">分代收集算法(Generational Collector)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC的分类"><span class="nav-text">GC的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#年轻代：尽可能快速地收集掉那些生命周期短的对象"><span class="nav-text">年轻代：尽可能快速地收集掉那些生命周期短的对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#年轻代垃圾回收的过程演示"><span class="nav-text">年轻代垃圾回收的过程演示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象如何晋升到老年代"><span class="nav-text">对象如何晋升到老年代</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用的调优参数"><span class="nav-text">常用的调优参数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#老年代：存放生命周期较长的对象"><span class="nav-text">老年代：存放生命周期较长的对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Full-GC"><span class="nav-text">Full GC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#触发Full-GC的条件"><span class="nav-text">触发Full GC的条件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#垃圾回收——新生代垃圾收集器"><span class="nav-text">垃圾回收——新生代垃圾收集器</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wang Mingsheng"
+      src="/images/faceimage.jpg">
+  <p class="site-author-name" itemprop="name">Wang Mingsheng</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wmsheng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wmsheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wangmingshenghku@163.com" title="E-Mail → mailto:wangmingshenghku@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/my/m/music/playlist?id=372605964" title="Music → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;my&#x2F;m&#x2F;music&#x2F;playlist?id&#x3D;372605964" rel="noopener" target="_blank"><i class="fa fa-fw fa-youtube"></i>Music</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+
+    </div>
+    
+    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=3314336&auto=1&height=66">
+    </iframe>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wang Mingsheng</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">184k</span>
+</div>
+
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_uv">
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_pv">
+    本站访问量<span id="busuanzi_value_site_pv"></span>
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共83.8k字</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>

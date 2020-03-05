@@ -65,9 +65,16 @@
 <meta property="og:image" content="https://s2.ax1x.com/2020/03/04/3IRg4e.png">
 <meta property="og:image" content="https://s2.ax1x.com/2020/03/04/3I5ko6.png">
 <meta property="og:image" content="https://s2.ax1x.com/2020/03/04/3IqmNR.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3TNVFx.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3TNefK.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3TyMCj.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3TRPXR.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3TRpp4.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/05/3TR91J.png">
 <meta property="article:published_time" content="2020-02-24T16:24:58.000Z">
-<meta property="article:modified_time" content="2020-03-04T10:19:56.170Z">
+<meta property="article:modified_time" content="2020-03-05T07:10:35.530Z">
 <meta property="article:author" content="Wang Mingsheng">
+<meta property="article:tag" content="Java">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://s2.ax1x.com/2020/02/28/3DqNYq.png">
@@ -159,7 +166,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">12</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">13</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -169,7 +176,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">26</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">28</span></a>
 
   </li>
   </ul>
@@ -229,7 +236,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-04 18:19:56" itemprop="dateModified" datetime="2020-03-04T18:19:56+08:00">2020-03-04</time>
+                <time title="Modified: 2020-03-05 15:10:35" itemprop="dateModified" datetime="2020-03-05T15:10:35+08:00">2020-03-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -257,7 +264,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>4.9k</span>
+              <span>8.3k</span>
             </span>
 
         </div>
@@ -397,7 +404,90 @@
 <li>操作数栈：在执行字节码指令过程中被用到，这种方式类似原生CPU寄存器。大部分JVM字节码把时间花费在操作数栈的操作上，包括入栈、出栈、复制、交换、产生消费变量</li>
 </ul>
 <p>栈本身是一个后进先出的数据结构。因此当前执行的方法在栈的顶部，每次方法调用时一个新的栈帧创建，并压入栈顶。当方法正常返回或抛出未捕获的异常时，栈帧就会出栈。除了栈帧的压栈和出栈，栈不能被直接操作。</p>
-<h2 id="线程共享部分"><a href="#线程共享部分" class="headerlink" title="线程共享部分"></a>线程共享部分</h2><h1 id="Java内存模型常考题解析"><a href="#Java内存模型常考题解析" class="headerlink" title="Java内存模型常考题解析"></a>Java内存模型常考题解析</h1>
+<p>解读Java可能出现的异常</p>
+<p><strong>java.lang.StackOverflowError</strong></p>
+<p>递归为什么会引发java.lang.StackOverflowError异常？</p>
+<p>递归执行次数过多，栈帧过高。每次调用递归，都会创建一个对应的栈帧，并把建立的栈帧压入虚拟机栈中。</p>
+<ol>
+<li>如果递归层数过高，不断调用自身，每新调用一次方法，就会生成一个栈帧。</li>
+<li>它会保存当前方法的栈帧状态</li>
+<li>栈帧上下文切换的时候会切换到最新的方法栈帧当中</li>
+</ol>
+<p>如果递归调用过多，则会产生过多的栈帧，栈帧超过虚拟栈深度限制，就会报错。</p>
+<p>解决的方法主要是限制递归的次数，或者可以直接用循环替换递归。</p>
+<p><strong>java.lang.OutOfMemoryError</strong></p>
+<p>虚拟机栈过多会引发java.lang.OutOfMemoryError异常。当虚拟机栈可以动态扩展时，如果无法申请足够多的内存，就会抛出这个异常。</p>
+<p>如果虚拟机栈可以动态扩展，并超出内存，就会报这个错误。</p>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><ul>
+<li>与虚拟机栈类似，主要作用于标注了native的方法</li>
+</ul>
+<p>带有native关键字的方法，比如之前的forName0()之类的方法，用的是本地方法栈。</p>
+<h3 id="小总结"><a href="#小总结" class="headerlink" title="小总结"></a>小总结</h3><p>虚拟机栈是Java虚拟机自动管理的。栈类似一个集合，但是有容量限制，由多个栈帧组合而成。编写代码的时候，每调用一个方法，Java虚拟机就为其分配一块空间，就增加一层栈帧。<font color=#FF0000>而当方法调用结束后，对应的栈帧就会被自动释放掉。这就是为什么栈不需要GC，但是堆需要</font>。</p>
+<h2 id="线程共享部分"><a href="#线程共享部分" class="headerlink" title="线程共享部分"></a>线程共享部分</h2><p>从之前”JDK8内存模型”这张图中可以看到，JVM里线程共享的主要是两个部分：MataSpace和Java堆</p>
+<h3 id="元空间-MetaSpace-与永久代-PermGen-的区别"><a href="#元空间-MetaSpace-与永久代-PermGen-的区别" class="headerlink" title="元空间(MetaSpace)与永久代(PermGen)的区别"></a>元空间(MetaSpace)与永久代(PermGen)的区别</h3><p>JDK8之后，MetaSpace开始把类的元数据放在本地堆内存中，这段区域在JDK7以及以前，都是属于永久代的。</p>
+<p>元空间和永久代都用来存储class的相关信息，包括class对象的方法和filed等。</p>
+<p>元空间永久代都是方法区的实现，实现方法不同。方法区只是一种JVM的规范。</p>
+<p>Java7之后，把原先位于方法区的字符串常量池移动到了Java堆中，并且在JDK8之后，使用源空间替代了永久代。</p>
+<p>这一替代不仅是名字上的替代，两者最大的区别是：<strong>元空间使用本地内存，而永久代使用的是JVM的内存</strong>。这样设置的一个好处就是解决了内存不足的问题，<code>java.lang.OutOfMemoryError:PemGen space</code>这个错误将不复存在。因为此时MetaSpace的大小取决于本地内存的大小。本地内存有多大，MetaSpace就有多大。当然，实际运行的时候不可能放任MetaSpace的壮大，JVM在运行的时候会根据需要动态地设置其大小。</p>
+<p><strong>MetaSpace相比PermGen的优势</strong></p>
+<ul>
+<li>字符串常量池存在永久代中，容易出现性能问题和内存溢出</li>
+<li>永久代类和方法的信息大小难以确定，给永久代的大小指定带来困难</li>
+<li>永久代会为GC带来不必要的复杂性，而且回收效率可能较低</li>
+<li>用元空间方便HotSpot与其他JVM如Jrockit的集成</li>
+</ul>
+<p><font color=#FF0000>重点记住：元空间和永久代的主要区别，是前者内存空间主要使用的是本机内存。</font>MetaSpace没有了字符串常量池，它在JDK7中已经被移动到了堆中。MetaSpace其他存储的东西，包括类文件，在JVM运行时候的数据结构，以及class相关的内容，如method,filed，大体上都与永久代一样，只是划分上更加合理。比如类元素的生命周期与类加载器一致，每个类加载器(classLoader)都会分配一个单独的存储空间。</p>
+<h3 id="Java堆-Heap"><a href="#Java堆-Heap" class="headerlink" title="Java堆(Heap)"></a>Java堆(Heap)</h3><p>对于大多数应用来说，Java堆是Java虚拟机所管理的内存中最大的一块。Java堆是被所有内存共享的一块内存区域。在虚拟机启动时创建此内存区域的唯一目的，就是存放对象实例，几乎所有的对象实例都在这里分配内存。</p>
+<p>以一个32位处理器的Java内存布局为例：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3TNVFx.png" alt="32位处理器的Java内存布局"></p>
+<p>可以看到，Java堆会占用非常大的一块内存。</p>
+<p>此外，Java堆是垃圾收集器管理的主要区域，因此很多时候也被称为GC堆。</p>
+<p>如果从内存回收的角度看，由于现在的收集器基本都采用分代收集的算法，所以Java堆中还可以细分为新生代和老年代。</p>
+<p>可以参见下图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3TNefK.png" alt="GC堆"></p>
+<h1 id="Java内存模型常考题解析"><a href="#Java内存模型常考题解析" class="headerlink" title="Java内存模型常考题解析"></a>Java内存模型常考题解析</h1><h2 id="JVM三大性能条有参数：-Xms-Xmx-Xss的含义"><a href="#JVM三大性能条有参数：-Xms-Xmx-Xss的含义" class="headerlink" title="JVM三大性能条有参数：-Xms -Xmx -Xss的含义"></a>JVM三大性能条有参数：-Xms -Xmx -Xss的含义</h2><p>在调用java指令执行程序的时候，我们可以使用这三个参数去调整Java堆和线程所占内存的大小。它们的作用分别是：</p>
+<ul>
+<li>-Xss：规定了每个线程虚拟机栈(堆栈)的大小</li>
+<li>-Xms：堆的初始值</li>
+<li>-Xmx：堆能达到的最大值</li>
+</ul>
+<p>-Xss一般来说256K就够了，此配置会影响此进程中并发线程数的大小。</p>
+<p>-Xms为初始的Java堆的大小，即该进程刚创建出来的时候它的专属Java堆的大小。一旦对象容量超过了Java堆的初始容量，Java堆会自动扩容，扩容至-Xmx的大小。</p>
+<p>在很多情况下，我们通常将-Xms和-Xmx设置成一样大，因为当Heap不够用而发生扩容时，会发生内存抖动，影响程序运行时的稳定性。</p>
+<p>当程序运行比较慢，或者频繁报出内存方面的错误的时候，可以试着从这三个参数入手，尝试调整堆和线程的大小，以求程序性能可以达到要求，但是在程序性能还能满足要求的时候没必要调整。</p>
+<h2 id="Java内存模型中堆和栈的区别——内存分配策略"><a href="#Java内存模型中堆和栈的区别——内存分配策略" class="headerlink" title="Java内存模型中堆和栈的区别——内存分配策略"></a>Java内存模型中堆和栈的区别——内存分配策略</h2><ul>
+<li>静态存储：编译时确定每个数组目标在运行时的存储空间需求。这种方式不允许程序中有可变数据结构的存在，也不允许有递归和嵌套的结构出现，因为它们都会导致编译程序无法计算准确的存储空间。</li>
+<li>栈式存储：数据区需求在编译时未知，运行时模块入口前确定。这种方式也可以被称为动态的存储方式。分配过程和栈一样，先进后出的方式。</li>
+<li>堆式存储：编译时或运行时模块入口都无法确定，动态分配。比如可变长度串和对象实例。</li>
+</ul>
+<h2 id="Java内存模型中堆和栈的区别"><a href="#Java内存模型中堆和栈的区别" class="headerlink" title="Java内存模型中堆和栈的区别"></a>Java内存模型中堆和栈的区别</h2><ul>
+<li>两者联系：引用对象、数组时，栈里定义变量保存堆中目标的首地址。</li>
+</ul>
+<p>创建好的数组和对象都会保存在堆中，想要引用堆中的某个对象或者数组，可以在栈中定义一个特殊的变量，让栈中的这个变量保存目标对象或者数组在堆中的首地址，由此一来，栈中的这个变量就是数组或者对象的引用变量，以后就可以在程序中使用栈的这个引用变量来访问堆中的数组或者对象。引用变量相当于是为数组或者对象起的一个名称。</p>
+<p>引用变量也是一个普通变量，在程序运行到其作用域之外后就会被释放掉。而数组和对象本身在堆中分配，即使程序运行到了其范围之外，它们本身也不会被释放掉。它们在没有引用变量指向的时候，才会变成垃圾，在后面被GC掉。</p>
+<p>如图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3TyMCj.png" alt="堆和栈的区别"></p>
+<p>具体区别：</p>
+<ul>
+<li>管理方式：栈可以自动释放，堆需要GC</li>
+<li>空间大小：栈比堆小。栈存储地址，堆在Java程序中占的空间总是比较大，因为要存储对象实例和数组。</li>
+<li>碎片相关：栈产生的碎片远小于堆。堆虽然有GC，但是不是实时的，随着使用就会积攒起来碎片。而栈的操作基本都是一一对应的，而且每一个最小单位和堆空间里面复杂的结构不同。所以栈在使用过程中很少出现内存碎片。</li>
+<li>分配方式：栈空间支持静态和动态分配两种方式，而堆仅支持动态分配。而且栈空间分配的内存完全不需要考虑释放的问题，而堆空间虽然有GC，但是我们还是要考虑其垃圾释放的问题。</li>
+<li>效率：栈的效率比堆高</li>
+</ul>
+<p>栈空间只有两个操作：入栈和出栈。</p>
+<p>栈空间相比堆空间，弱点是灵活度不高，尤其是在动态网页的时候。而堆空间优点在于动态分配，实现方式可能是动态链表的结构，所以其管理的时候操作方式也比栈空间复杂很多。但是也使得堆空间的效率不如栈空间，而且要低很多。</p>
+<h2 id="元空间-Meta-Space-、堆、线程独占部分间的联系——内存角度"><a href="#元空间-Meta-Space-、堆、线程独占部分间的联系——内存角度" class="headerlink" title="元空间(Meta Space)、堆、线程独占部分间的联系——内存角度"></a>元空间(Meta Space)、堆、线程独占部分间的联系——内存角度</h2><p>以一段程序为例：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3TRPXR.png" alt="样例程序"></p>
+<p>hw就是存在于虚拟机栈上面的一个变量，它指向我们真正创建好的HelloWorld实例。我们通过对hw的引用就可以定位到堆中的HelloWorld实例的地址，调用它的setName方法将”test”赋值到name这个成员变量里面。</p>
+<p>样例程序执行过程：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3TRpp4.png" alt="样例程序执行过程"></p>
+<p>面试官可能会抓住不同版本的JDK的差异来做文章，其中比较有代表性的就是String的intern()方法。它的差异主要体现在JDK6和JDK6之后。</p>
+<p>解释一下JDK6和JDK6之后版本的intern()方法的区别？</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3TR91J.png" alt="JDK版本问题"></p>
+<p>总的来说，JDK6和JDK6+版本的区别在于JDK6中通过intern()方法仅会在字符串常量池里添加字符串对象，而JDK6+不仅可以向池中添加字符串对象，还能添加字符串对象在堆中的引用。</p>
+<p>可以举个例子，用JDK6，调用intern()方法，当字符串常量池被挤爆了之后，会报<code>java.lang.OutOfMemoryError:PemGen space</code>这个错。</p>
+
     </div>
 
 
@@ -407,6 +497,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i># Java</a>
               <a href="/tags/JVM/" rel="tag"><i class="fa fa-tag"></i># JVM</a>
           </div>
 
@@ -487,7 +578,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java的平台无关性如何实现"><span class="nav-text">Java的平台无关性如何实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM如何加载class文件"><span class="nav-text">JVM如何加载class文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#类从编译到执行的过程"><span class="nav-text">类从编译到执行的过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是反射？"><span class="nav-text">什么是反射？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ClassLoader"><span class="nav-text">ClassLoader</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#类从编译到执行的过程-1"><span class="nav-text">类从编译到执行的过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#谈谈ClassLoader"><span class="nav-text">谈谈ClassLoader</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类加载器-ClassLoader-的双亲委派机制"><span class="nav-text">类加载器(ClassLoader)的双亲委派机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要用双亲委派机制去加载类？"><span class="nav-text">为什么要用双亲委派机制去加载类？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#loadClass和forName的区别"><span class="nav-text">loadClass和forName的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#类的加载方式"><span class="nav-text">类的加载方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类的装载过程"><span class="nav-text">类的装载过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#loadClass和forName的区别-1"><span class="nav-text">loadClass和forName的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java内存模型-Java-Memory-Model"><span class="nav-text">Java内存模型(Java Memory Model)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#内存简介"><span class="nav-text">内存简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#地址空间的划分"><span class="nav-text">地址空间的划分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程独占部分"><span class="nav-text">线程独占部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#程序计数器-Program-Counter-Register-即PC"><span class="nav-text">程序计数器(Program Counter Register,即PC)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java虚拟机栈-Stack"><span class="nav-text">Java虚拟机栈(Stack)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程共享部分"><span class="nav-text">线程共享部分</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java内存模型常考题解析"><span class="nav-text">Java内存模型常考题解析</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java的平台无关性如何实现"><span class="nav-text">Java的平台无关性如何实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM如何加载class文件"><span class="nav-text">JVM如何加载class文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#类从编译到执行的过程"><span class="nav-text">类从编译到执行的过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是反射？"><span class="nav-text">什么是反射？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ClassLoader"><span class="nav-text">ClassLoader</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#类从编译到执行的过程-1"><span class="nav-text">类从编译到执行的过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#谈谈ClassLoader"><span class="nav-text">谈谈ClassLoader</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类加载器-ClassLoader-的双亲委派机制"><span class="nav-text">类加载器(ClassLoader)的双亲委派机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要用双亲委派机制去加载类？"><span class="nav-text">为什么要用双亲委派机制去加载类？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#loadClass和forName的区别"><span class="nav-text">loadClass和forName的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#类的加载方式"><span class="nav-text">类的加载方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类的装载过程"><span class="nav-text">类的装载过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#loadClass和forName的区别-1"><span class="nav-text">loadClass和forName的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java内存模型-Java-Memory-Model"><span class="nav-text">Java内存模型(Java Memory Model)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#内存简介"><span class="nav-text">内存简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#地址空间的划分"><span class="nav-text">地址空间的划分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程独占部分"><span class="nav-text">线程独占部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#程序计数器-Program-Counter-Register-即PC"><span class="nav-text">程序计数器(Program Counter Register,即PC)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java虚拟机栈-Stack"><span class="nav-text">Java虚拟机栈(Stack)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地方法栈"><span class="nav-text">本地方法栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小总结"><span class="nav-text">小总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程共享部分"><span class="nav-text">线程共享部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#元空间-MetaSpace-与永久代-PermGen-的区别"><span class="nav-text">元空间(MetaSpace)与永久代(PermGen)的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java堆-Heap"><span class="nav-text">Java堆(Heap)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java内存模型常考题解析"><span class="nav-text">Java内存模型常考题解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM三大性能条有参数：-Xms-Xmx-Xss的含义"><span class="nav-text">JVM三大性能条有参数：-Xms -Xmx -Xss的含义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java内存模型中堆和栈的区别——内存分配策略"><span class="nav-text">Java内存模型中堆和栈的区别——内存分配策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java内存模型中堆和栈的区别"><span class="nav-text">Java内存模型中堆和栈的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#元空间-Meta-Space-、堆、线程独占部分间的联系——内存角度"><span class="nav-text">元空间(Meta Space)、堆、线程独占部分间的联系——内存角度</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -503,7 +594,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -516,7 +607,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -572,7 +663,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">176k</span>
+    <span title="Symbols count total">184k</span>
 </div>
 
 
@@ -589,7 +680,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共77.3k字</span>
+  <span class="post-count">博客全站共83.8k字</span>
 </div>
 
         
