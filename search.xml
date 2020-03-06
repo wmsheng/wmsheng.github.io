@@ -1156,7 +1156,155 @@ Double d = Double.parseDouble( s );
   <entry>
     <title>Java-Concurrent-Programming-Study-I</title>
     <url>/2020/02/25/Java-Concurrent-Programming-Study-I/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<blockquote>
+<p>盼望一件事会发生的人祈祷；相信一件事将发生的人专注；让一件事能发生的人行动</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="Java进程和线程的关系"><a href="#Java进程和线程的关系" class="headerlink" title="Java进程和线程的关系"></a>Java进程和线程的关系</h1><ul>
+<li>Java对操作系统提供的功能进行封装，包括进程和线程</li>
+<li>运行一个Java程序会产生一个进程，一个进程包含至少一个线程</li>
+<li>每一个Java进程对应一个JVM实例，而每一个JVM实例会唯一对应一个堆。每个线程都有自己私有的栈</li>
+<li>Java采用单线程编程模型，如果程序不声明创建线程，程序会自动创建主线程——进程就好像投资者，线程才是真正干活的人。</li>
+<li>当Java程序启动时，主线程立刻运行。主线程可以创建子线程，原则上要后于子线程完成执行。</li>
+</ul>
+<p>因为主要干活的都是线程，所以后面分析都以线程为主，进程为辅。</p>
+<h1 id="Thread中的start和run方法的区别"><a href="#Thread中的start和run方法的区别" class="headerlink" title="Thread中的start和run方法的区别"></a>Thread中的start和run方法的区别</h1><p>用run()方法会沿用主线程执行方法，用start()会新创建一个子线程。</p>
+<p>如下图所示：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3qXBa6.png" alt="3qXBa6.png"></p>
+<p>总结来是：</p>
+<ul>
+<li>调用start()方法会创建一个新的子线程并启动</li>
+<li>run()方法只是Thread的一个普通方法的调用</li>
+</ul>
+<p>如果结合源码，会发现调用start的时候，会调用到thread_entry这个方法，会新创建内容。如下图所示：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3qXjZq.png" alt="3qXjZq.png"></p>
+<h1 id="Thread和Runnable的关系"><a href="#Thread和Runnable的关系" class="headerlink" title="Thread和Runnable的关系"></a>Thread和Runnable的关系</h1><ul>
+<li>Thread是一个类，而Runnable是一个接口。具体来说，Thread是实现了Runnable接口的类，使得run支持多线程。</li>
+<li>由于Java类的单一继承原则，推荐多使用Runnable接口</li>
+</ul>
+<p>Thread是一个类：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3qjBOs.png" alt="3qjBOs.png"></p>
+<p>Runnable是一个接口：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3qjwlQ.png" alt="3qjwlQ.png"></p>
+<p>实际上Runnable里面并没有多线程的特性，而是依赖实现它的Thread去调用start()方法来创建新线程的，然后再在这个子线程里面调用Thread实现好的run方法来执行相应的业务逻辑。</p>
+<h1 id="如何实现处理线程的返回值"><a href="#如何实现处理线程的返回值" class="headerlink" title="如何实现处理线程的返回值"></a>如何实现处理线程的返回值</h1><h2 id="如何给run-传参"><a href="#如何给run-传参" class="headerlink" title="如何给run()传参"></a>如何给run()传参</h2><p>一般来说和线程相关的业务逻辑需要放在run()里面去执行。但是既然run()没有参数，那么如何给run()传参数呢？</p>
+<p>主要有三种方法：</p>
+<ul>
+<li>构造函数传参</li>
+<li>成员变量传参——用setName之类的方法给成员变量赋值</li>
+<li>回调函数传参</li>
+</ul>
+<h2 id="实现处理线程的返回值是痛点"><a href="#实现处理线程的返回值是痛点" class="headerlink" title="实现处理线程的返回值是痛点"></a>实现处理线程的返回值是痛点</h2><p>这里考查的是有没有活用线程相关的知识。</p>
+<p>实现方式也是有三种：</p>
+<ol>
+<li><strong>主线程等待法——让主线程循环等待，直到目标子线程返回值为止。缺点是需要自己手动实现等待的逻辑。</strong></li>
+</ol>
+<p>代码实例：</p>
+<p>一开始按照原先的多线程的案例去尝试打印，发现只让线程sleep()一下，我们不能精准控制等到start()子任务执行完返回结果的时候才执行下一条语句。</p>
+<p>如下图所示：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3LSdNq.png" alt="3LSdNq.png"></p>
+<p>在这个例子中，主线程在执行完t.start()之后，没有等run()里面sleep()执行完，而是直接往下走去执行打印的语句了，所以最后打印出来的结果，cw.value是null。</p>
+<p>那如何让其等到子线程的返回值再执行打印呢？——我们可以用主线程等待法。</p>
+<p>如下图所示：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3LpHzT.png" alt="3LpHzT.png"></p>
+<p>但是因为需要自己手动实现这个等待的逻辑，所以当需要等待的变量很多的时候，代码会变得臃肿。更致命的是，具体要等待多久比较难把握，比较难有精准的控制。</p>
+<ol start="2">
+<li><strong>使用Thread类的join()阻塞当前线程以等待子线程处理完毕</strong></li>
+</ol>
+<p>如下图所示：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3L9Ine.png" alt="3L9Ine.png"></p>
+<p>只需要加一行<code>t.join()</code>代码即可成功等待，并且也不需要让线程去等待了。</p>
+<p>join()等待法可以做到比主线程等待法更精准的控制，实现起来也更简单。</p>
+<p>但是缺点是粒度不够细。</p>
+<ol start="3">
+<li><strong>通过Callable接口实现：通过FutureTask 或 线程池获取</strong></li>
+</ol>
+<p>在JDK5之前，线程是没有返回值的。</p>
+<h1 id="线程的状态"><a href="#线程的状态" class="headerlink" title="线程的状态"></a>线程的状态</h1><p>按照官方的说法，线程的状态一共有如下图所示的留个状态：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3LiilV.png" alt="3LiilV.png"></p>
+<p>具体来说：</p>
+<ol>
+<li>新建(New)：创建后尚未启动的线程的状态。刚创建的线程，如果还没有调用start()方法，那么这个线程会处于New状态。</li>
+<li>运行(Runnable)：包含Running和Ready。处于此状态的进程可能正在执行，也可能正在等待CPU为它分配执行时间。</li>
+<li>无限期等待(Waiting)：不会被分配CPU执行时间，需要显式被唤醒</li>
+</ol>
+<p>让线程进入无限期等待有三种方法：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3LFpHe.png" alt="3LFpHe.png"></p>
+<ol start="4">
+<li>限期等待(Timed Waiting)：在一定时间后会由系统自动唤醒。处于这种状态的进程也不会被CPU分配执行时间，但是不用显示唤醒，过一段时间后系统会自动唤醒它们。</li>
+</ol>
+<p>让线程进入限期等待主要有六种方法：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3LFsv6.png" alt="3LFsv6.png"></p>
+<ol start="5">
+<li>阻塞(Blocked):等待获取排它锁。</li>
+</ol>
+<p>阻塞状态和等待状态的区别是，阻塞状态在等待获取一个排它锁(这会在另一个线程放弃这个锁的时候发生)。而等待状态就是等时间或者被唤醒，不用等其他线程的锁。</p>
+<p>比如说，当某个线程进入到了synchronized修饰的方法或者代码块，即获取锁去执行的时候，其他想进入此方法或者代码块的线程就只能等待，他们的状态就都是blocked</p>
+<ol start="6">
+<li>结束(Terminated)：已终止线程的状态，线程已经结束执行。</li>
+</ol>
+<p>当线程的run()或者主线程的main()完成时，我们就认为它终止了。这个线程对象虽然可能还是活的，但是它已经不是一个单独执行的线程了。</p>
+<p>线程只要终止了，就不能再复生。在一个终止的线程上调用start()会抛出<code>java.lang.IllegalThreadStateException</code>这个异常。 </p>
+<p>程序举例：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3L8a6S.png" alt="3L8a6S.png"></p>
+<p>在关闭了线程之后再次启动，也无法执行。</p>
+<h1 id="sleep和wait的区别"><a href="#sleep和wait的区别" class="headerlink" title="sleep和wait的区别"></a>sleep和wait的区别</h1><h2 id="基本的差别"><a href="#基本的差别" class="headerlink" title="基本的差别"></a>基本的差别</h2><ul>
+<li>sleep是Thread类的方法，wait是Object类中定义的方法</li>
+<li>sleep()方法可以在任何地方使用</li>
+<li>wait()方法只能在synchronized方法或synchronized块中使用</li>
+</ul>
+<h2 id="最主要的本职区别"><a href="#最主要的本职区别" class="headerlink" title="最主要的本职区别"></a>最主要的本职区别</h2><ul>
+<li>Thread.sleep只会让出CPU，不会导致锁行为的改变</li>
+<li>Object.wait不仅让出CPU，还会释放已经占有的同步资源锁</li>
+</ul>
+<h1 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h1><h2 id="线程安全问题的主要诱因"><a href="#线程安全问题的主要诱因" class="headerlink" title="线程安全问题的主要诱因"></a>线程安全问题的主要诱因</h2><ul>
+<li>存在共享数据(也称临界资源)</li>
+<li>存在多条线程共同操作这些共享数据</li>
+</ul>
+<h2 id="解决问题的根本方法"><a href="#解决问题的根本方法" class="headerlink" title="解决问题的根本方法"></a>解决问题的根本方法</h2><p>同一时刻有且只有一个线程在操作共享数据，其他线程必须等到该线程处理完数据后再对共享数据进行操作</p>
+<h2 id="互斥锁的特性"><a href="#互斥锁的特性" class="headerlink" title="互斥锁的特性"></a>互斥锁的特性</h2><p>互斥锁可以达到互斥访问的目的。简单来说就是某个共享数据如果在某时刻正在被一个线程访问，如果数据被当前访问的数据加了互斥锁，那么在同一时刻其他线程只能处于等待状态，直到当前线程处理完释放掉该锁。</p>
+<p>互斥锁有两种特性：</p>
+<ol>
+<li>互斥性：即在同一时间只允许一个线程持有某个对象锁，通过这种特性来实现多线程的协调机制，这样在同一时间只有一个线程对需要同步的代码块(符合操作)进行访问。互斥性也称为操作的原子性。</li>
+<li>可见性：必须确保在锁被释放之前，对共享变量所做的修改，对随后获得该锁的另一个线程是可见的(即在获得锁时应获得最新共享变量的值)，否则另一个线程可能是在本地缓存的某个副本上继续操作，从而引起不一致。</li>
+<li>synchronized锁的不是代码，而是<strong>对象</strong>。</li>
+</ol>
+<p>之前已经知道了，JVM的堆存储空间是线程间共享的，所以恰当地、合理地给一个线程上锁，是解决线程安全问题的关键。</p>
+<h2 id="根据获取的锁的分类：获取对象锁和获取类锁"><a href="#根据获取的锁的分类：获取对象锁和获取类锁" class="headerlink" title="根据获取的锁的分类：获取对象锁和获取类锁"></a>根据获取的锁的分类：获取对象锁和获取类锁</h2><p>获取对象锁的两种用法：</p>
+<ol>
+<li>同步代码块(synchronized(this), synchronized(类实例对象))，锁是小括号()中的实例对象。</li>
+<li>同步非静态方法(synchronized method)，锁是当前对象的实例对象</li>
+</ol>
+<p>获取类锁的两种用法</p>
+<ol>
+<li>同步代码块(synchronized (类.class))，锁是小括号()中的类对象(Class对象)。</li>
+<li>同步静态方法(synchronized static method)，锁是当前对象的类对象(Class对象)。</li>
+</ol>
+<h2 id="对象锁和类锁的总结"><a href="#对象锁和类锁的总结" class="headerlink" title="对象锁和类锁的总结"></a>对象锁和类锁的总结</h2><ol>
+<li>有线程访问对象的同步代码块时，另外的线程可以访问该对象的非同步代码块；</li>
+<li>若锁住的是同一个对象，一个线程在访问对象的同步代码块时，另一个访问对象的同步代码块的线程会被阻塞；</li>
+<li>若锁住的是同一个对象，一个线程在访问对象的同步方法时，另一个访问对象同步方法的线程会被阻塞；</li>
+<li>若锁住的是同一个对象，一个线程在访问对象的同步代码块时，另一个访问对象同步方法的线程会被阻塞，反之亦然；</li>
+<li>同一个类的不同对象的对象锁互不干扰；</li>
+<li>类锁由于也是一种特殊的对象锁，因此表现和上述1,2,3,4一致，而由于一个类只有一把对象锁，所以同一个类的不同对象使用类锁将会是同步的；</li>
+<li>类锁和对象锁互不干扰</li>
+</ol>
+<h1 id="synchronized底层实现原理"><a href="#synchronized底层实现原理" class="headerlink" title="synchronized底层实现原理"></a>synchronized底层实现原理</h1><ul>
+<li>Java对象头</li>
+<li>Monitor</li>
+</ul>
+<h1 id="synchronized和ReentrantLock的区别"><a href="#synchronized和ReentrantLock的区别" class="headerlink" title="synchronized和ReentrantLock的区别"></a>synchronized和ReentrantLock的区别</h1><p>Java5之前只有synchronized，Java5之后开始提供ReentrantLock(再入锁)。ReentrantLock的语义和synchronized基本相同</p>
+<p>ReentrantLock位于<code>java.util.concurrent.locks</code>包下，也就是业界著名的”JUC”。</p>
+<p>ReentrantLock和CountDownLatch、FutureTask、Semaphore一样都是基于AQS实现的。</p>
+]]></content>
+      <categories>
+        <category>Study Note</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>concurrent</tag>
+      </tags>
   </entry>
   <entry>
     <title>Java-Concurrent Programming Interview II</title>
