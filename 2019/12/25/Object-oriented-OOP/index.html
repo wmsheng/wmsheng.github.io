@@ -49,14 +49,16 @@
   };
 </script>
 
-  <meta property="og:type" content="article">
-<meta property="og:title" content="Object oriented(OOP)">
+  <meta name="description" content="在乎的是，自己以及他所在乎的人，能不能够秉持着自己的心意与信念，在人生中大部分时间里都能自在、快乐">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Object Oriented Programming(OOP)">
 <meta property="og:url" content="http://yoursite.com/2019/12/25/Object-oriented-OOP/index.html">
 <meta property="og:site_name" content="Hi, This is Bennett">
+<meta property="og:description" content="在乎的是，自己以及他所在乎的人，能不能够秉持着自己的心意与信念，在人生中大部分时间里都能自在、快乐">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://s2.ax1x.com/2019/12/30/lKcqcd.md.jpg">
 <meta property="article:published_time" content="2019-12-25T15:58:41.000Z">
-<meta property="article:modified_time" content="2020-02-20T05:51:32.090Z">
+<meta property="article:modified_time" content="2020-03-13T07:38:41.193Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://s2.ax1x.com/2019/12/30/lKcqcd.md.jpg">
@@ -73,7 +75,7 @@
   };
 </script>
 
-  <title>Object oriented(OOP) | Hi, This is Bennett</title>
+  <title>Object Oriented Programming(OOP) | Hi, This is Bennett</title>
   
 
 
@@ -201,7 +203,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Object oriented(OOP)
+          Object Oriented Programming(OOP)
         </h1>
 
         <div class="post-meta">
@@ -218,7 +220,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-20 13:51:32" itemprop="dateModified" datetime="2020-02-20T13:51:32+08:00">2020-02-20</time>
+                <time title="Modified: 2020-03-13 15:38:41" itemprop="dateModified" datetime="2020-03-13T15:38:41+08:00">2020-03-13</time>
               </span>
 
           
@@ -235,7 +237,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>0</span>
+              <span>4.6k</span>
             </span>
 
         </div>
@@ -248,7 +250,92 @@
 
       
         <p><img src="https://s2.ax1x.com/2019/12/30/lKcqcd.md.jpg" alt=""></p>
+<blockquote>
+<p>在乎的是，自己以及他所在乎的人，能不能够秉持着自己的心意与信念，在人生中大部分时间里都能自在、快乐</p>
+</blockquote>
 <a id="more"></a>
+
+<p>本文参考<a href="https://blog.csdn.net/baidu_33714003/article/details/52290627" target="_blank" rel="noopener">https://blog.csdn.net/baidu_33714003/article/details/52290627</a></p>
+<h1 id="面向对象和面向过程的区别"><a href="#面向对象和面向过程的区别" class="headerlink" title="面向对象和面向过程的区别"></a>面向对象和面向过程的区别</h1><ol>
+<li><strong>出发点不同</strong>。面向对象强调把问题直接映射到对象以及对象之间的接口上；而面向过程强调的则是过程的抽象化和模块化，它是以过程为中心构造或者处理客观世界问题的。</li>
+<li><strong>层次逻辑关系不同</strong>。面向对象尽量会用计算机逻辑来模拟客观世界的物理存在，用类的层次结构展现类之间的继承和发展；而面向过程的处理问题的基本单位是能够清晰准确表达过程的模块，而且用模块之间的关系和内容表述计算机处理问题的过程。</li>
+<li><strong>数据处理方式与控制程序方式不同</strong>。面向对象方法是”事件驱动”的，通过事件来激活和运行程序，而且它会把对应的代码封装成一个整体，原则上其他类不能直接修改其数据；面向过程则通过直接调用程序来处理数据，处理完后显示结果，在控制的方式上是按照涉及调用或者返回程序，不能导航，各模块之间存在控制与被控制，调用与被调用的关系。</li>
+<li><strong>分析设计与编码转换方式不同</strong>。面向对象是无缝连接，从分析到设计再到编码是采用一致性的模型表示的；面向对象是有缝链接，它强调分析、设计以及编码之间按照规则的转换，过程中使用的模型是不一样的。</li>
+</ol>
+<h1 id="面向对象有哪些特征"><a href="#面向对象有哪些特征" class="headerlink" title="面向对象有哪些特征"></a>面向对象有哪些特征</h1><p>应当记住这段话：<strong>封装可以隐藏实现细节，使得代码模块化；继承可以扩展已存在的代码模块（类）；它们的目的都是为了——代码重用。而多态则是为了实现另一个目的——接口重用！多态的作用，就是为了类在继承和派生的时候，保证使用“家谱”中任一类的实例的某一属性时的正确调用。</strong></p>
+<p>主要包括：抽象、继承、封装和多态</p>
+<ol>
+<li><strong>抽象</strong>。抽象包括两个方面，一是<strong>过程抽象</strong>，二是<strong>数据抽象</strong>；忽略一个主体中与当前目标无关的方面和细节，以便更充分地注意与当前目标有关的方面。</li>
+<li><strong>封装</strong>。可以说是最好理解的了，把客观事物封装成抽象的类，并且类可以把自己的数据和方法只让可信的类或者对象操作，对不可信的进行信息隐藏。</li>
+<li><strong>继承</strong>。通过继承，子类可以使用父类中的一些成员变量和方法，从而能够提高代码的复用性，提高开发效率。</li>
+<li><strong>多态</strong>。多态也是实现代码重用的重要机制，简单来说，就是实现接口的重用。它能够实现父类和一个或者多个它的子对象<strong>相等</strong>，但是有不同的表现形式。专业点说，就是<strong>允许将子类类型的指针赋值给父类类型的指针</strong>。</li>
+</ol>
+<h2 id="详解继承"><a href="#详解继承" class="headerlink" title="详解继承"></a>详解继承</h2><p>继承可以让子类使用父类中的一些成员变量和方法，从而能够提高代码复用性，提高开发效率。</p>
+<p>继承的特点：在继承关系中，父类更通用，子类更具体。父类具有更一般的特征和行为，而子类除了具有父类的特征和行为，还具有一些自己特殊的特征和行为。</p>
+<p>Java语言中，有关继承的术语主要是，被继承类叫做的父类或者基类(superclass)，继承父类的类叫做派生类或子类(subclass)。</p>
+<p>在继承关系中，父类和子类需要满足”is-a”的关系，”子类是父类”。</p>
+<h3 id="继承的特性"><a href="#继承的特性" class="headerlink" title="继承的特性"></a>继承的特性</h3><ol>
+<li>Java语言不支持多重继承，也就是说一个子类至多只能有一个父类，但是可以通过实现多个接口来达到多重继承的目的，这一点上可以理解继承和多态有了overlap</li>
+<li><strong>子类只能继承父类的非私有(public 和 protected)成员变量和方法</strong>。<font color=#FF0000>注意这一点经常容易出题，注意是”子类能继承父类的非私有方法和状态”</font></li>
+<li>当子类中的成员变量与父类中的成员变量同名时，子类中的成员变量会覆盖父类的成员变量，而不会继承。可以理解为”就近原则”</li>
+<li>当子类中的方法与父类中的方法有相同的函数签名(相同的方法名，相同的参数个数与类型)时，子类将会覆盖父类的方法，而不会继承。</li>
+</ol>
+<h3 id="为什么要继承？什么时候应该避免继承？"><a href="#为什么要继承？什么时候应该避免继承？" class="headerlink" title="为什么要继承？什么时候应该避免继承？"></a>为什么要继承？什么时候应该避免继承？</h3><p>继承可以有效实现代码复用，避免重复代码的出现。</p>
+<p>当两个类具有相同的特征(属性)和行为(方法)时，可以将相同的部分抽取出来放到一个类中作为父类，其他两个类继承这个父类。</p>
+<p>继承实现了面向对象的原则：write once, only once(编写一次，且只编写一次)</p>
+<p>实际上，能用组合(下面<code>继承与组合的区别</code>部分有介绍什么是组合)的话就尽量别用继承，除非两个类之间确定是”is-a”的关系。<font color=#FF0000>具体使用，应当遵循以下两点原则</font>：</p>
+<ol>
+<li>除非两个类之间是”is-a”的关系，否则不要轻易使用继承。不要单纯为了实现代码重用而使用继承，因为过多的继承会破坏代码的可维护性，因为当父类被修改时，会影响所有继承了它的子类，从而增加程序的维护难度与成本。</li>
+<li>不要仅仅为了实现多态而使用继承，如果类之间没有”is-a”的关系，可以通过实现接口与组合的方式来达到相同的目的。设计模式中的策略模式可以很好地说明这一点，采用接口与组合的方式比采用继承的方式具有更好的可扩展性。</li>
+</ol>
+<h4 id="小总结"><a href="#小总结" class="headerlink" title="小总结"></a>小总结</h4><p>由于Java只支持单继承，如果想要同时继承两个类或多个类，无法用继承实现，只能选择实现多个接口。</p>
+<p>同时，Java语言中，如果继承使用太多，也会让一个class里面的内容变得臃肿不堪。<font color=#FF0000>所以，在Java语言中，能使用组合就尽量不要用继承。</font></p>
+<h3 id="如何实现继承"><a href="#如何实现继承" class="headerlink" title="如何实现继承"></a>如何实现继承</h3><p>在Java中，用extends(扩展)关键字实现，使用格式为：</p>
+<p><code>class 子类名 extends 父类名</code></p>
+<p>在父类中只定义一些通用的属性和方法，之后子类继承父类之后自动获取父类的属性和方法。当然子类可以定义特定的属性和方法，或子类重新定义父亲的属性、重写父亲的方法，这样可以获得与父类不同的功能。</p>
+<p>如果想在子类中使用父类的构造方法，可以通过super()关键字调用父类方法，但是要注意调用父类的构造方法语句(super语句)必须是构造方法中的第一条语句，因为创建对象时西安仓就爱你父类对象，再创建子类对象。如果没有显示调用父类的构造方法，将自动调用父类的无参构造方法。</p>
+<h3 id="一切类的老大-祖先-Object"><a href="#一切类的老大-祖先-Object" class="headerlink" title="一切类的老大(祖先)Object"></a>一切类的老大(祖先)Object</h3><p>所有类都直接或者间接地继承了java.lang.Object类，Object类中定义了所有的java对象都具有的相同行为，是所有类的祖先。</p>
+<p>一个类如果没有使用extends关键字，那么这个类直接继承自Object类。</p>
+<h3 id="继承与组合的区别"><a href="#继承与组合的区别" class="headerlink" title="继承与组合的区别"></a>继承与组合的区别</h3><p>继承和组合是面向对象的两种代码复用的方式。<strong>组合是指在新类里面创建原有类的对象，从而重复利用已有类的功能</strong>，而<strong>继承则允许设计人员根据其他类的实现来定义一个新类的实现。</strong></p>
+<p>继承和组合都允许在新的类中定义子对象，但是组合是显示的，继承是隐式的。</p>
+<p>组合与继承存在着对应关系：组合中的整体类和继承中的子类对应，组合中的局部类和继承中的父类对应。</p>
+<p>正如之前所说了，在继承中父类和子类需要满足”is-a”的关系，即要满足”子类是父类”；而组合则是两个类之间有”<br>has-a”的关系，即”组合类有父类”</p>
+<p>比如现在有三个类：Car(汽车)、Vehicle(交通工具)、Tire(轮胎)，那么正确的关系应该是：Car继承Vehicle(汽车是交通工具)、Car组合Tire(汽车拥有多个轮胎)，具体实现方法如下代码：</p>
+<p>继承：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Vehicle</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span> <span class="keyword">extends</span> <span class="title">Vehicle</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>组合：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Vehicle</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tire</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span> <span class="keyword">extends</span> <span class="title">Vehicle</span></span>&#123;</span><br><span class="line">	<span class="type">Tire</span> tire = <span class="keyword">new</span> <span class="type">Tire</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>继承和组合在实际使用中的选择，可以参考上面<code>什么时候应该避免使用继承？</code>模块。</p>
+<h2 id="详解多态"><a href="#详解多态" class="headerlink" title="详解多态"></a>详解多态</h2><p>多态是实现代码重用的重要机制，主要表现在同一个操作在作用在不同对象的时候，有不同的语义(或者说操作内容不同)，从而会产生不同的结果。</p>
+<h3 id="使用多态的好处"><a href="#使用多态的好处" class="headerlink" title="使用多态的好处"></a>使用多态的好处</h3><p>可以增强程序的可扩展性以及可维护性，也可以使得代码更加简洁。</p>
+<h3 id="实现多态机制的方法"><a href="#实现多态机制的方法" class="headerlink" title="实现多态机制的方法"></a>实现多态机制的方法</h3><p>实现多态机制主要有两种方法：方法重载(overload)和方法覆盖(override)(也叫作方法重写)</p>
+<h3 id="方法重载-overload"><a href="#方法重载-overload" class="headerlink" title="方法重载(overload)"></a>方法重载(overload)</h3><p>具体实现：</p>
+<p>方法的重载(overload)：重载是发生在<strong>类内部</strong>，实质是不同的方法，也可以用不同的方法名进行替换，但是采用同一方法名能间接体现方法之间的内在相似性。</p>
+<p>使用方法重载的目的：</p>
+<ol>
+<li>节省方法名</li>
+<li>体现这些方法之间的内在联系</li>
+</ol>
+<p>举例：</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> class KeyValue &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">HashMap</span>&lt;<span class="keyword">String</span> , <span class="keyword">Object</span>&gt; kvs = <span class="keyword">new</span> <span class="keyword">HashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">public</span> KeyValue put(<span class="keyword">String</span> <span class="built_in">key</span> , <span class="built_in">int</span> value) &#123;</span><br><span class="line">        kvs.put(<span class="built_in">key</span> , value);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> KeyValue put(<span class="keyword">String</span> <span class="built_in">key</span> , <span class="keyword">long</span> value) &#123;</span><br><span class="line">        kvs.put(<span class="built_in">key</span> , value);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> KeyValue put(<span class="keyword">String</span> <span class="built_in">key</span> , <span class="keyword">String</span> value)&#123;</span><br><span class="line">    	kvs.put(<span class="built_in">key</span> , value);</span><br><span class="line">    	<span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为这些有着相同方法名的方法参数不同，所以在<strong>编译时</strong>就可以确定到底用哪个方法，<font color=#FF0000>它是一种编译时多态</font>。</p>
+<h3 id="方法覆盖-重写-override"><a href="#方法覆盖-重写-override" class="headerlink" title="方法覆盖/重写(override)"></a>方法覆盖/重写(override)</h3><p>方法覆盖发生在继承里，子类根据需要，重写继承的方法。</p>
+<p>目的：用父类的方法名重写了一个新的方法。</p>
+<p>需要覆盖的方法要和父类方法具有完全相同的方法名，返回值，参数列表（个数、类型、顺序）</p>
+<p>举例：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Base</span>&#123;</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">String</span> name;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">String</span> <span class="class"><span class="keyword">class</span>;</span></span><br><span class="line">	Base()&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">printFuc</span><span class="params">(<span class="keyword">int</span> data,<span class="keyword">char</span> cr,<span class="keyword">String</span> strings)</span></span>&#123;</span><br><span class="line">		System.out.<span class="built_in">println</span>(<span class="string">"父类"</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现多态的子类为SubBase</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="symbol">SubBase</span> <span class="symbol">extends</span> <span class="symbol">Base</span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="built_in">int</span> printFuc(<span class="built_in">int</span> data,char cr,String <span class="built_in">string</span>s)&#123;</span><br><span class="line">		<span class="built_in">int</span> a=<span class="number">3</span>;</span><br><span class="line">		<span class="built_in">int</span> b=<span class="number">3</span>;</span><br><span class="line">		<span class="keyword">class</span> <span class="symbol">inner</span>&#123;</span><br><span class="line">			<span class="keyword">public</span> <span class="built_in">int</span> add(<span class="built_in">int</span> a, <span class="built_in">int</span> b)&#123;</span><br><span class="line">				<span class="keyword">return</span> a + b;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		inner nomean = new inner();</span><br><span class="line">		System.<span class="keyword">out</span>.println(<span class="string">"重写父类"</span>);</span><br><span class="line">		<span class="keyword">return</span> nomean.add(a , b);		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>只有在<strong>运行时</strong>才能确定调用哪个方法，因此<font color=#FF0000>通过方法覆盖实现的多态也被称为运行时多态</font>。</p>
+<h2 id="继承与多态的区别"><a href="#继承与多态的区别" class="headerlink" title="继承与多态的区别"></a>继承与多态的区别</h2><p>继承，子类继承父类中所以的属性和方法，但是对于private的属相和方法，由于这个是父类的隐私，所以子类虽然是继承了，但是没有可以访问这些属性和方法的引用，所以相当于没有继承到。很多时候，可以理解为，没有继承。</p>
+<p>多态：就是父类引用可以持有子类对象。这时候只能调用父类中的方法，而子类中特有方法是无法访问的，因为这个时候（编译时）你把他看作父类对象的原因，但是到了运行的时候，编译器就会发现这个父类引用中原来是一个子类的对像，所以如果父类和子类中有相同的方法时，调用的会是子类中的方法，而不是父类的。</p>
+<p>可以这么说：编译时看父类，运行时看子类。</p>
+
     </div>
 
 
@@ -335,6 +422,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#面向对象和面向过程的区别"><span class="nav-text">面向对象和面向过程的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#面向对象有哪些特征"><span class="nav-text">面向对象有哪些特征</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#详解继承"><span class="nav-text">详解继承</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#继承的特性"><span class="nav-text">继承的特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要继承？什么时候应该避免继承？"><span class="nav-text">为什么要继承？什么时候应该避免继承？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#小总结"><span class="nav-text">小总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现继承"><span class="nav-text">如何实现继承</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一切类的老大-祖先-Object"><span class="nav-text">一切类的老大(祖先)Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#继承与组合的区别"><span class="nav-text">继承与组合的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#详解多态"><span class="nav-text">详解多态</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用多态的好处"><span class="nav-text">使用多态的好处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现多态机制的方法"><span class="nav-text">实现多态机制的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法重载-overload"><span class="nav-text">方法重载(overload)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法覆盖-重写-override"><span class="nav-text">方法覆盖&#x2F;重写(override)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#继承与多态的区别"><span class="nav-text">继承与多态的区别</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -419,7 +507,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">209k</span>
+    <span title="Symbols count total">235k</span>
 </div>
 
 
@@ -436,7 +524,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共96.6k字</span>
+  <span class="post-count">博客全站共108.1k字</span>
 </div>
 
         

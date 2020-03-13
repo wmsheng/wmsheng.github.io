@@ -57,7 +57,7 @@
 <meta property="og:description" content="时间像海绵里的水，只要你愿意挤，总还是有的。——鲁迅  LeetCode其他题目其解决思路和具体代码。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-01-13T04:51:23.000Z">
-<meta property="article:modified_time" content="2020-02-26T01:11:59.279Z">
+<meta property="article:modified_time" content="2020-03-11T08:56:34.631Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -220,7 +220,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-26 09:11:59" itemprop="dateModified" datetime="2020-02-26T09:11:59+08:00">2020-02-26</time>
+                <time title="Modified: 2020-03-11 16:56:34" itemprop="dateModified" datetime="2020-03-11T16:56:34+08:00">2020-03-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,7 +248,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>3.2k</span>
+              <span>8.3k</span>
             </span>
 
         </div>
@@ -286,6 +286,91 @@
 <li>时间复杂度：O(n)</li>
 <li>空间复杂度：O(1)</li>
 </ul>
+<h2 id="7-Reverse-Integer-整数反转-Mid"><a href="#7-Reverse-Integer-整数反转-Mid" class="headerlink" title="7. Reverse Integer(整数反转)(Mid)"></a><a href="https://leetcode-cn.com/problems/reverse-integer/" target="_blank" rel="noopener">7. Reverse Integer(整数反转)(Mid)</a></h2><p>Given a 32-bit signed integer, reverse digits of an integer.</p>
+<p><strong>Example 1</strong>:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Input:</span> <span class="number">123</span></span><br><span class="line"><span class="attr">Output:</span> <span class="number">321</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2</strong>:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Input:</span> <span class="number">-123</span></span><br><span class="line"><span class="attr">Output:</span> <span class="number">-321</span></span><br></pre></td></tr></table></figure>
+<p><strong>Example 3</strong>:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Input:</span> <span class="number">120</span></span><br><span class="line"><span class="attr">Output:</span> <span class="number">21</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong><br>Assume we are dealing with an environment which could only store integers within the 32-bit signed integer range: [−2^31,  2^31 − 1]. For the purpose of this problem, assume that your function returns 0 when the reversed integer overflows.</p>
+<hr>
+<p>解：x最大可以取2^31-1，但是当x取最大值的时候，再reverse之后的数字大小会超出原本Integer能够保存的最大2^31-1的范围了，会报错移除。所以我们需要考虑到如何解决这个溢出的问题。</p>
+<p>需要注意：1，翻转后的数字是否会溢出、2，有关负数的处理</p>
+<ol>
+<li><p>如果不发生溢出，每次的当前结果可以得到是<code>x0*10+y=x1</code>，x1为计算之后得到的新的值。此时我们可以转换一下，解出来x的值：<code>x=(x1-y)/10</code>，可以想到，如果整个计算结果不发生溢出，这个式子是成立的。但是如果计算结果发生了溢出(比如到了2^31-1)，那么这个式子会不成立，我们可以通过这个方式检查当前数字反转之后是否会溢出。</p>
+</li>
+<li><p>比如传入的是-123，那么<code>-123/10=-12</code>，而且<code>-123%10=-3</code>，然后<code>result*10+x%10</code>这个公式实际上也是负数之间的计算，所以对于负数，不用单独考虑，就用一样的公式计算即可。</p>
+</li>
+</ol>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> reverse(<span class="built_in">int</span> x) &#123;</span><br><span class="line">        <span class="built_in">int</span> result = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(x != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// 用一个公式的正和反是否相等来判断当前数字是否溢出</span></span><br><span class="line">            <span class="comment">// result表示以前的数字，乘10再加上新来的数字即为翻转后的数newReverse</span></span><br><span class="line">            <span class="built_in">int</span> newReverse = result * <span class="number">10</span> + x % <span class="number">10</span>;</span><br><span class="line">            <span class="keyword">if</span>((newReverse - x % <span class="number">10</span>) / <span class="number">10</span> != result) <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 溢出则返回0</span></span><br><span class="line">            result = newReverse;</span><br><span class="line">            x /= <span class="number">10</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-Palindrome-Number-回文数-Mid"><a href="#9-Palindrome-Number-回文数-Mid" class="headerlink" title="9. Palindrome Number(回文数)(Mid)"></a><a href="https://leetcode-cn.com/problems/palindrome-number/" target="_blank" rel="noopener">9. Palindrome Number(回文数)(Mid)</a></h2><p>Determine whether an integer is a palindrome. An integer is a palindrome when it reads the same backward as forward.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Input:</span> <span class="number">121</span></span><br><span class="line"><span class="attr">Output:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: <span class="number">-121</span></span><br><span class="line">Output: <span class="literal">false</span></span><br><span class="line">Explanation: From left <span class="built_in">to</span> <span class="literal">right</span>, <span class="keyword">it</span> reads <span class="number">-121.</span> From <span class="literal">right</span> <span class="built_in">to</span> left, <span class="keyword">it</span> becomes <span class="number">121</span>-. Therefore <span class="keyword">it</span> is <span class="keyword">not</span> <span class="keyword">a</span> palindrome.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 3:</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Input:</span> <span class="number">10</span></span><br><span class="line"><span class="attr">Output:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">Explanation:</span> <span class="string">Reads</span> <span class="number">01</span> <span class="string">from</span> <span class="string">right</span> <span class="string">to</span> <span class="string">left.</span> <span class="string">Therefore</span> <span class="string">it</span> <span class="string">is</span> <span class="string">not</span> <span class="string">a</span> <span class="string">palindrome.</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Follow up:</strong></p>
+<p>Coud you solve it without converting the integer to a string?</p>
+<hr>
+<p>解：为了避免溢出问题(如果给的数字本身不是回文，翻转之后有可能大于int.MAX,造成溢出)，直接比较反转的int数的一半即可。</p>
+<p>首先要处理临界情况，所有的负数都不可能是回文(这就可以过滤到很多啦！)。</p>
+<p>后面的操作就是取出来数字了，取个位可以用对10取余，取十位可以用除以10之后再对10取余。</p>
+<p>判断是否到了原始数字的一半，可以让原始数字除以10，再让反转后的数字乘上10。此时如果原始数字小于反转后的数字，就意味着我们已经处理了一半位数的数字了。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span>ean isPalindrome(<span class="built_in">int</span> x) &#123;</span><br><span class="line">        <span class="comment">// 处理特殊情况</span></span><br><span class="line">        <span class="comment">// 所有负数都一定不是回文数</span></span><br><span class="line">        <span class="comment">// 如果某一个数字最后一位是0，那么如果它是回文数，</span></span><br><span class="line">        <span class="comment">// 那么开头也一定要是0，只有0符合</span></span><br><span class="line">        <span class="keyword">if</span>(x &lt; <span class="number">0</span> || (x % <span class="number">10</span> == <span class="number">0</span> &amp;&amp; x != <span class="number">0</span>)) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">int</span> revertedNumber  = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>( x &gt; revertedNumber ) &#123;</span><br><span class="line">            revertedNumber  = revertedNumber  * <span class="number">10</span> + x % <span class="number">10</span>;</span><br><span class="line">            x = x/<span class="number">10</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 当数字长度为奇数时，我们可以通过 revertedNumber/10 去除处于中位的数字。</span></span><br><span class="line">        <span class="comment">// 例如，当输入为 12321 时，在 while 循环的末尾我们可以得到 x = 12，revertedNumber = 123，</span></span><br><span class="line">        <span class="comment">// 由于处于中位的数字不影响回文（它总是与自己相等），所以我们可以简单地将其去除。</span></span><br><span class="line">        <span class="keyword">return</span> (x == revertedNumber  || x == revertedNumber /<span class="number">10</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：O(log10(N))，因为每次迭代，我们会将输入除以10，因此时间复杂度为O(log10(N))</li>
+<li>空间复杂度：O(1)</li>
+</ul>
+<h2 id="1109-Corporate-Flight-Bookings-航班预订统计-Mid"><a href="#1109-Corporate-Flight-Bookings-航班预订统计-Mid" class="headerlink" title="1109. Corporate Flight Bookings(航班预订统计)(Mid)"></a><a href="https://leetcode-cn.com/problems/corporate-flight-bookings/" target="_blank" rel="noopener">1109. Corporate Flight Bookings(航班预订统计)(Mid)</a></h2><p>There are <code>n</code> flights, and they are labeled from <code>1</code> to <code>n</code>.</p>
+<p>We have a list of flight bookings.  The <code>i</code>-th booking <code>bookings[i] = [i, j, k]</code> means that we booked <code>k</code> seats from flights labeled <code>i</code> to <code>j</code> inclusive.</p>
+<p>Return an array <code>answer</code> of length <code>n</code>, representing the number of seats booked on each flight in order of their label.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: bookings = [[<span class="number">1</span>,<span class="number">2</span>,<span class="number">10</span>],[<span class="number">2</span>,<span class="number">3</span>,<span class="number">20</span>],[<span class="number">2</span>,<span class="number">5</span>,<span class="number">25</span>]], n = <span class="number">5</span></span><br><span class="line">Output: [<span class="number">10</span>,<span class="number">55</span>,<span class="number">45</span>,<span class="number">25</span>,<span class="number">25</span>]</span><br></pre></td></tr></table></figure>
+
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>1 &lt;= bookings.length &lt;= 20000</code></li>
+<li><code>1 &lt;= bookings[i][0] &lt;= bookings[i][1] &lt;= n &lt;= 20000</code></li>
+<li><code>1 &lt;= bookings[i][2] &lt;= 10000</code></li>
+</ul>
+<hr>
+<p>解：这道题利用很经典的”上下车”的思路，可以把<code>booking[i]=[i, j, k]</code>理解成在<code>i</code>站上车<code>k</code>人，这些人乘坐到了第<code>j</code>站，然后在<code>j+1</code>站下车，我们要返回的是按照顺序的每一站上车的人数。</p>
+<p>根据上面的思路，定义一个<code>counter[]</code>数组来记录每站人数的变化，<strong><code>counter[i]</code>表示第i+1站</strong>。遍历<code>bookings[],bookings[i]=[i,j,k]</code>表示在i站增加<code>k</code>人,即<code>counter[i-1] += k</code>，在<code>j+1</code>站减少<code>k</code>人，即<code>counter[j] -= k</code></p>
+<p>最后遍历counter[]数组，得到每站的总人数：每站的总人数为前一站人数加上当前人数变化：counter[i] += counter[i-1]</p>
+<p>重点：第i站上车、第j+1站下车。一开始counter只用于记录某一站人数的变化，后面counter用于保存每一站总共的人数。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span>[] corpFlightBookings(<span class="built_in">int</span>[][] bookings, <span class="built_in">int</span> n) &#123;</span><br><span class="line">        <span class="comment">// 需要注意：counter记录的是人数变化量</span></span><br><span class="line">        <span class="built_in">int</span>[] counter = new <span class="built_in">int</span>[n];</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span>[] booking : bookings) &#123;</span><br><span class="line">            <span class="comment">// counter[i]表示第i-1站上车，上车人数是booking[2]</span></span><br><span class="line">            counter[booking[<span class="number">0</span>] - <span class="number">1</span>] += booking[<span class="number">2</span>];</span><br><span class="line">            <span class="keyword">if</span>(booking[<span class="number">1</span>] &lt; n) &#123; <span class="comment">// 如果在最后一站或者最后一站之前下车，就要减去</span></span><br><span class="line">                counter[booking[<span class="number">1</span>]] -= booking[<span class="number">2</span>];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 统计最后每一站的人数的结果</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">            counter[i] += counter[i - <span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> counter;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：O(n),n是航班的数量</li>
+<li>空间复杂度：O(n)</li>
+</ul>
+<h2 id="135-Candy-分发糖果-Hard"><a href="#135-Candy-分发糖果-Hard" class="headerlink" title="135. Candy(分发糖果)(Hard)"></a><a href="https://leetcode-cn.com/problems/candy/" target="_blank" rel="noopener">135. Candy(分发糖果)(Hard)</a></h2><p>There are <em>N</em> children standing in a line. Each child is assigned a rating value.</p>
+<p>You are giving candies to these children subjected to the following requirements:</p>
+<ul>
+<li>Each child must have at least one candy.</li>
+<li>Children with a higher rating get more candies than their neighbors.</li>
+</ul>
+<p>What is the minimum candies you must give?</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: [<span class="number">1</span>,<span class="number">0</span>,<span class="number">2</span>]</span><br><span class="line">Output: <span class="number">5</span></span><br><span class="line">Explanation: You can allocate to the first, second <span class="keyword">and</span> third child with <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span> candies respectively.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Input: [<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>]</span><br><span class="line">Output: <span class="number">4</span></span><br><span class="line">Explanation: You can allocate <span class="built_in">to</span> <span class="keyword">the</span> <span class="keyword">first</span>, <span class="keyword">second</span> <span class="keyword">and</span> <span class="keyword">third</span> child <span class="keyword">with</span> <span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span> candies respectively.</span><br><span class="line">             The <span class="keyword">third</span> child gets <span class="number">1</span> candy because <span class="keyword">it</span> satisfies <span class="keyword">the</span> above <span class="literal">two</span> conditions.</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>解：需要注意题目说的是，评分高的children分到的candy是比他的<strong>neighbors</strong>多，而不是比其他所有评分比他低的小孩多</p>
+<p>一个比较巧妙的方法是，可以从左往右和从右往左两次遍历，改变当前结果数组candy需要遵循这个公式：<code>candy[i] = Math.max(candy[i],candy[i+1]+1)</code></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> candy(<span class="built_in">int</span>[] ratings) &#123;</span><br><span class="line">        <span class="keyword">if</span>(ratings == <span class="literal">null</span> || ratings.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">int</span> len = ratings.length;</span><br><span class="line">        <span class="comment">// 最后的结果数组</span></span><br><span class="line">        <span class="built_in">int</span>[] result = new <span class="built_in">int</span>[len];</span><br><span class="line">        <span class="comment">// 初始化每个小孩至少有一个糖果</span></span><br><span class="line">        Arrays.fill(result, <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// 然后开始遍历，一次从前往后，一次从后往前</span></span><br><span class="line">        <span class="comment">// 两次遍历的过程中第一个都不用管，因为在下一次遍历中会遍历到的</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 从左往右,从第2个小孩开始直到最后一个</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="comment">// 如果当前小孩评分比他右边的小孩高，他分到的糖果数</span></span><br><span class="line">            <span class="comment">// 就比他右边的小孩多1个</span></span><br><span class="line">            <span class="keyword">if</span>(ratings[i] &gt; ratings[i - <span class="number">1</span>]) &#123;</span><br><span class="line">                result[i] = result[i - <span class="number">1</span>] + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 从右往左，从倒数第二个小孩开始直到第一个</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = len - <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="comment">// 如果当前小孩评分比他左边小孩低，他左边小孩分到的</span></span><br><span class="line">            <span class="comment">// 糖果数是其本身存储的值和当前右边小孩糖果数+1的最大值</span></span><br><span class="line">            <span class="keyword">if</span>(ratings[i] &gt; ratings[i+<span class="number">1</span>]) &#123;</span><br><span class="line">                result[i] = Math.max(result[i], result[i + <span class="number">1</span>] + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> temp : result) sum += temp;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="146-LRU-Cache-LRU缓存机制-Mid"><a href="#146-LRU-Cache-LRU缓存机制-Mid" class="headerlink" title="146. LRU Cache(LRU缓存机制)(Mid)"></a><a href="https://leetcode-cn.com/problems/lru-cache/" target="_blank" rel="noopener">146. LRU Cache(LRU缓存机制)(Mid)</a></h2><p>Design and implement a data structure for <strong>Least Recently Used (LRU)</strong> cache. It should support the following operations: <code>get</code> and <code>put</code>.</p>
 <p><code>get(key)</code> - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.<br><code>put(key, value)</code> - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.</p>
 <p>The cache is initialized with a <strong>positive</strong> capacity.</p>
@@ -402,7 +487,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#169-Majority-Element-多数元素-Easy"><span class="nav-text">169. Majority Element(多数元素)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#146-LRU-Cache-LRU缓存机制-Mid"><span class="nav-text">146. LRU Cache(LRU缓存机制)(Mid)</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#169-Majority-Element-多数元素-Easy"><span class="nav-text">169. Majority Element(多数元素)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Reverse-Integer-整数反转-Mid"><span class="nav-text">7. Reverse Integer(整数反转)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-Palindrome-Number-回文数-Mid"><span class="nav-text">9. Palindrome Number(回文数)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1109-Corporate-Flight-Bookings-航班预订统计-Mid"><span class="nav-text">1109. Corporate Flight Bookings(航班预订统计)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#135-Candy-分发糖果-Hard"><span class="nav-text">135. Candy(分发糖果)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#146-LRU-Cache-LRU缓存机制-Mid"><span class="nav-text">146. LRU Cache(LRU缓存机制)(Mid)</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -487,7 +572,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">209k</span>
+    <span title="Symbols count total">235k</span>
 </div>
 
 
@@ -504,7 +589,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共96.6k字</span>
+  <span class="post-count">博客全站共108.1k字</span>
 </div>
 
         

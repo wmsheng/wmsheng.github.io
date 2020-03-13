@@ -66,7 +66,7 @@
 <meta property="og:image" content="https://s2.ax1x.com/2020/01/04/ldDjSA.jpg">
 <meta property="og:image" content="https://assets.leetcode.com/uploads/2018/12/28/237_example.png">
 <meta property="article:published_time" content="2019-12-28T01:38:41.000Z">
-<meta property="article:modified_time" content="2020-03-09T01:03:44.474Z">
+<meta property="article:modified_time" content="2020-03-12T05:23:06.178Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -230,7 +230,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-09 09:03:44" itemprop="dateModified" datetime="2020-03-09T09:03:44+08:00">2020-03-09</time>
+                <time title="Modified: 2020-03-12 13:23:06" itemprop="dateModified" datetime="2020-03-12T13:23:06+08:00">2020-03-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -258,7 +258,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>32k</span>
+              <span>33k</span>
             </span>
 
         </div>
@@ -373,10 +373,26 @@
 <p>A linked list can be reversed either iteratively or recursively. Could you implement both?</p>
 <hr>
 <p>解：就按照题目，给出迭代(iteratively)和递归(recursively)两种方法的解法。</p>
-<p><strong>方法一：迭代</strong></p>
-<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> ListNode reverseList(ListNode head) &#123;</span><br><span class="line">        ListNode <span class="keyword">new</span><span class="type">Header</span> = <span class="literal">null</span>;</span><br><span class="line">        ListNode curr = head;</span><br><span class="line">        <span class="keyword">while</span>(curr != <span class="literal">null</span>) &#123;</span><br><span class="line">            ListNode nextTemp = curr.next;</span><br><span class="line">            curr.next = <span class="keyword">new</span><span class="type">Header</span>;</span><br><span class="line">            <span class="keyword">new</span><span class="type">Header</span> = curr;</span><br><span class="line">            curr = nextTemp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span><span class="type">Header</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>方法一：栈</strong></p>
+<p>这个方法是参考Kevin大神的思路，因为要反转整个链表，所以最直接的想法就是依次遍历整个链表之后把每一个节点都放到栈里，然后再反过来取出来。但是这样的做法会使得空间复杂度很高，这点可以在方法二的迭代中得到优化。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> Solution &#123;</span><br><span class="line">    <span class="keyword">public</span> ListNode reverseList(ListNode head) &#123;</span><br><span class="line">        Stack&lt;ListNode&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">        <span class="keyword">while</span>(head != <span class="keyword">null</span>) &#123;</span><br><span class="line">            stack.<span class="keyword">push</span>(head);</span><br><span class="line">            head = head.<span class="keyword">next</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode dummyNode = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        head = dummyNode;</span><br><span class="line">        <span class="keyword">while</span>(!stack.isEmpty()) &#123;</span><br><span class="line">            <span class="comment">// 注意这里需要用current接住pop出来的节点，否则</span></span><br><span class="line">            <span class="comment">// pop()之后就没了</span></span><br><span class="line">            ListNode current = stack.<span class="keyword">pop</span>();</span><br><span class="line">            head.<span class="keyword">next</span> = <span class="keyword">new</span> ListNode(current.val);</span><br><span class="line">            head = head.<span class="keyword">next</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dummyNode.<span class="keyword">next</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><strong>方法二：递归</strong></p>
+
+<p><strong>方法二：迭代</strong></p>
+<p>可以直接利用head，也只需要新定义两个ListNode</p>
+<p>具体相等操作的过程可以记成修改指针指向的四步走。</p>
+<p>总的来说，head总是在newHeader的next的位置，nextTemp总是在head的next的位置。</p>
+<p>反转的四步：</p>
+<ol>
+<li>用nextTemp记录保存head.next</li>
+<li>将head.next往前指，即指向newHeader</li>
+<li>将newHeader往前移动一个位置指到head</li>
+<li>把head往前一个位置，让其与nextTemp位置相同。但是因为下一次循环nextTemp又会在head.next的位置，所以不影响后面的反转。</li>
+</ol>
+<p>当跳出循环的时候，head为null，newHeader为反转后的链表的头结点，返回newHeader即可，不像方法一那样从0重新构建一个链表然后返回dummyNode.next。</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> ListNode reverseList(ListNode head) &#123;</span><br><span class="line">        ListNode <span class="keyword">new</span><span class="type">Header</span> = <span class="literal">null</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 最后返回的时候head为null，返回newHeader即可</span></span><br><span class="line">        <span class="keyword">while</span>(head != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 第一步，记录head的next，避免head.next丢失</span></span><br><span class="line">            ListNode nextTemp = head.next;</span><br><span class="line">            <span class="comment">// 第二部，翻转操作，把原先的head.next指向前面</span></span><br><span class="line">            head.next = <span class="keyword">new</span><span class="type">Header</span>;</span><br><span class="line">            <span class="comment">// newHeader指向旧的head的位置</span></span><br><span class="line">            <span class="keyword">new</span><span class="type">Header</span> = head;</span><br><span class="line">            <span class="comment">// head往后移动</span></span><br><span class="line">            head = nextTemp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span><span class="type">Header</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法三：递归</strong></p>
 <figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Definition <span class="keyword">for</span> singly-linked list.</span><br><span class="line"> * public class ListNode &#123;</span><br><span class="line"> *     int val;</span><br><span class="line"> *     ListNode <span class="keyword">next</span>;</span><br><span class="line"> *     ListNode(int x) &#123; val = x; &#125;</span><br><span class="line"> * &#125;</span><br><span class="line"> */</span><br><span class="line">class Solution &#123;</span><br><span class="line">    public ListNode reverseList(ListNode<span class="built_in"> head</span>) &#123;</span><br><span class="line">        </span><br><span class="line">		<span class="keyword">if</span><span class="built_in">(head</span> == null ||<span class="built_in"> head</span>.<span class="keyword">next</span> == null) <span class="keyword">return</span><span class="built_in"> head</span>;</span><br><span class="line">        </span><br><span class="line">        ListNode newHeader = reverseList<span class="built_in">(head</span>.<span class="keyword">next</span>);</span><br><span class="line">       <span class="built_in"> head</span>.<span class="keyword">next</span>.<span class="keyword">next</span> =<span class="built_in"> head</span>;</span><br><span class="line">       <span class="built_in"> head</span>.<span class="keyword">next</span> = null;</span><br><span class="line">        <span class="keyword">return</span> newHeader;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>针对递归方法值得注意的是，因为newHeader没有被动过，所以在一开始递归结束的时候，就返回的是反转之后的链表的新的head，也就是这个newHeader，所以最后的结果就是每一层的递归返回的都是一开始递归返回的newHeader，问题就迎刃而解了。</p>
@@ -686,8 +702,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2019/12/25/Object-oriented-OOP/" rel="prev" title="Object oriented(OOP)">
-      <i class="fa fa-chevron-left"></i> Object oriented(OOP)
+    <a href="/2019/12/25/Object-oriented-OOP/" rel="prev" title="Object Oriented Programming(OOP)">
+      <i class="fa fa-chevron-left"></i> Object Oriented Programming(OOP)
     </a></div>
       <div class="post-nav-item">
     <a href="/2020/01/08/LeetCode-Practice-by-Categories-Stack-Queue/" rel="next" title="LeetCode Practice by Categories(Stack, Queue)">
@@ -842,7 +858,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">209k</span>
+    <span title="Symbols count total">235k</span>
 </div>
 
 
@@ -859,7 +875,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共96.6k字</span>
+  <span class="post-count">博客全站共108.1k字</span>
 </div>
 
         
