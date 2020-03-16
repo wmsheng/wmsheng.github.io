@@ -1,9 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>SSL-and-TLS</title>
+    <title>Overview of SSL and TLS protocol operration mechanism</title>
     <url>/2020/03/16/SSL-and-TLS/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<blockquote>
+<p>不希望负担变轻，只希望肩膀变强</p>
+</blockquote>
+<a id="more"></a>
+
+<p>本文参考转载阮一峰老师的<a href="http://www.ruanyifeng.com/blog/2014/02/ssl_tls.html" target="_blank" rel="noopener">这篇文章</a></p>
+<p>都说HTTPS比HTTP更安全，WHY？主要就是因为HTTPS比HTTP多一个SSL/TLS协议。可以说，互联网的安全，是建立在SSL/TLS协议之上的。</p>
+<p>SSL/TLS使用非对称加密，即加密使用的秘钥和解密使用的秘钥是不相同的。</p>
+<p>本文简要介绍SSL/TLS协议的运行机制。文章的重点是设计思想和运行过程，不涉及具体的实现细节。</p>
+<h1 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h1><p>不使用SSL/TLS的HTTP通信，就是不加密的通信。所有信息明文传播，带来了三大风险。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">（<span class="number">1</span>） 窃听风险（eavesdropping）：第三方可以获知通信内容。</span><br><span class="line"></span><br><span class="line">（<span class="number">2</span>） 篡改风险（tampering）：第三方可以修改通信内容。</span><br><span class="line"></span><br><span class="line">（<span class="number">3</span>） 冒充风险（pretending）：第三方可以冒充他人身份参与通信。</span><br></pre></td></tr></table></figure>
+
+<p>SSL/TLS协议是为了解决这三大风险而设计的，希望达到：</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">（<span class="number">1</span>） 所有信息都是加密传播，第三方无法窃听。</span><br><span class="line"></span><br><span class="line">（<span class="number">2</span>） 具有校验机制，一旦被篡改，通信双方会立刻发现。</span><br><span class="line"></span><br><span class="line">（<span class="number">3</span>） 配备身份证书，防止身份被冒充。</span><br></pre></td></tr></table></figure>
+
+<p>互联网是开放环境，通信双方都是未知身份，这为协议的设计带来了很大的难度。而且，协议还必须能够经受所有匪夷所思的攻击，这使得SSL/TLS协议变得异常复杂。</p>
+<h1 id="基本运行过程"><a href="#基本运行过程" class="headerlink" title="基本运行过程"></a>基本运行过程</h1><p>SSL/TLS协议的基本思路是采用公钥加密法，也就是说，客户端先向服务器端索要公钥，然后用公钥加密信息，服务器收到密文后，用自己的私钥解密。(<strong>即非对称加密，加密和解密的秘钥不同</strong>)</p>
+<p>但是，这里有两个问题。</p>
+<p>（1）如何保证公钥不被篡改？</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">解决方法：将公钥放在数字证书中。只要证书是可信的，公钥就是可信的。</span><br></pre></td></tr></table></figure>
+
+<p>（2）公钥加密计算量太大，如何减少耗用的时间？</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line">解决方法：每一次对话（<span class="keyword">session</span>），客户端和服务器端都生成一个"对话密钥"（<span class="keyword">session</span> key），用它来加密信息。由于"对话密钥"是对称加密，所以运算速度非常快，而服务器公钥只用于加密"对话密钥"本身，这样就减少了加密运算的消耗时间。</span><br></pre></td></tr></table></figure>
+
+<p>因此，SSL/TLS协议的基本过程是这样的：</p>
+<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">（<span class="number">1</span>） 客户端向服务器端索要并验证公钥。</span><br><span class="line"></span><br><span class="line">（<span class="number">2</span>） 双方协商生成<span class="string">"对话密钥"</span>。</span><br><span class="line"></span><br><span class="line">（<span class="number">3</span>） 双方采用<span class="string">"对话密钥"</span>进行加密通信。</span><br></pre></td></tr></table></figure>
+
+<p>上面过程的前两步，又称为”握手阶段”（handshake）。</p>
+<h1 id="HTTPS四次握手详细过程"><a href="#HTTPS四次握手详细过程" class="headerlink" title="HTTPS四次握手详细过程"></a>HTTPS四次握手详细过程</h1><p>“握手阶段”的所有通信都是明文的。</p>
+<h2 id="客户端发出请求（ClientHello）"><a href="#客户端发出请求（ClientHello）" class="headerlink" title="客户端发出请求（ClientHello）"></a>客户端发出请求（ClientHello）</h2><p>首先，客户端（通常是浏览器）先向服务器发出加密通信的请求，这被叫做ClientHello请求。</p>
+<p>在这一步，客户端主要向服务器提供以下信息。</p>
+<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">（<span class="number">1</span>） 支持的协议版本，比如TLS <span class="number">1.0</span>版。</span><br><span class="line"></span><br><span class="line">（<span class="number">2</span>） 一个客户端生成的随机数，稍后用于生成<span class="string">"对话密钥"</span>。</span><br><span class="line"></span><br><span class="line">（<span class="number">3</span>） 支持的加密方法，比如RSA公钥加密。</span><br><span class="line"></span><br><span class="line">（<span class="number">4</span>） 支持的压缩方法。</span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意的是，客户端发送的信息之中不包括服务器的域名。也就是说，理论上服务器只能包含一个网站，否则会分不清应该向客户端提供哪一个网站的数字证书。这就是为什么通常一台服务器只能有一张数字证书的原因。</p>
+<p>对于虚拟主机的用户来说，这当然很不方便。2006年，TLS协议加入了一个Server Name Indication扩展，允许客户端向服务器提供它所请求的域名。</p>
+<h2 id="服务器回应（SeverHello）"><a href="#服务器回应（SeverHello）" class="headerlink" title="服务器回应（SeverHello）"></a>服务器回应（SeverHello）</h2><p>服务器收到客户端请求后，向客户端发出回应，这叫做SeverHello。服务器的回应包含以下内容。</p>
+<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">（<span class="number">1</span>） 确认使用的加密通信协议版本，比如TLS <span class="number">1.0</span>版本。如果浏览器与服务器支持的版本不一致，服务器关闭加密通信。</span><br><span class="line"></span><br><span class="line">（<span class="number">2</span>） 一个服务器生成的随机数，稍后用于生成<span class="string">"对话密钥"</span>。</span><br><span class="line"></span><br><span class="line">（<span class="number">3</span>） 确认使用的加密方法，比如RSA公钥加密。</span><br><span class="line"></span><br><span class="line">（<span class="number">4</span>） 服务器证书。</span><br></pre></td></tr></table></figure>
+
+<p>除了上面这些信息，如果服务器需要确认客户端的身份，就会再包含一项请求，要求客户端提供”客户端证书”。比如，金融机构往往只允许认证客户连入自己的网络，就会向正式客户提供USB密钥，里面就包含了一张客户端证书。</p>
+<h2 id="客户端回应"><a href="#客户端回应" class="headerlink" title="客户端回应"></a>客户端回应</h2><p>客户端收到服务器回应以后，首先验证服务器证书。如果证书不是可信机构颁布、或者证书中的域名与实际域名不一致、或者证书已经过期，就会向访问者显示一个警告，由其选择是否还要继续通信。</p>
+<p>如果证书没有问题，客户端就会从证书中取出服务器的公钥。然后，向服务器发送下面三项信息。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">（<span class="number">1</span>） 一个随机数。该随机数用服务器公钥加密，防止被窃听。</span><br><span class="line"></span><br><span class="line">（<span class="number">2</span>） 编码改变通知，表示随后的信息都将用双方商定的加密方法和密钥发送。</span><br><span class="line"></span><br><span class="line">（<span class="number">3</span>） 客户端握手结束通知，表示客户端的握手阶段已经结束。这一项同时也是前面发送的所有内容的hash值，用来供服务器校验。</span><br></pre></td></tr></table></figure>
+
+<p>上面第一项的随机数，是整个握手阶段出现的第三个随机数，又称”pre-master key”。有了它以后，客户端和服务器就同时有了三个随机数，接着双方就用事先商定的加密方法，各自生成本次会话所用的同一把”会话密钥”。</p>
+<p>至于为什么一定要用三个随机数，来生成”会话密钥”，dog250解释得很好：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="comment">"不管是客户端还是服务器，都需要随机数，这样生成的密钥才不会每次都一样。由于SSL协议中证书是静态的，因此十分有必要引入一种随机因素来保证协商出来的密钥的随机性。</span></span><br><span class="line"></span><br><span class="line">对于RSA密钥交换算法来说，<span class="keyword">pre</span>-master-key本身就是一个随机数，再加上hello消息中的随机，三个随机数通过一个密钥导出器最终导出一个对称密钥。</span><br><span class="line"></span><br><span class="line"><span class="keyword">pre</span> master的存在在于SSL协议不信任每个主机都能产生完全随机的随机数，如果随机数不随机，那么<span class="keyword">pre</span> master secret就有可能被猜出来，那么仅适用<span class="keyword">pre</span> master secret作为密钥就不合适了，因此必须引入新的随机因素，那么客户端和服务器加上<span class="keyword">pre</span> master secret三个随机数一同生成的密钥就不容易被猜出了，一个伪随机可能完全不随机，可是是三个伪随机就十分接近随机了，每增加一个自由度，随机性增加的可不是一。<span class="comment">"</span></span><br></pre></td></tr></table></figure>
+
+<p>此外，如果前一步，服务器要求客户端证书，客户端会在这一步发送证书及相关信息。</p>
+<h2 id="服务器的最后回应"><a href="#服务器的最后回应" class="headerlink" title="服务器的最后回应"></a>服务器的最后回应</h2><p>服务器收到客户端的第三个随机数pre-master key之后，计算生成本次会话所用的”会话密钥”。然后，向客户端最后发送下面信息。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">（<span class="number">1</span>）编码改变通知，表示随后的信息都将用双方商定的加密方法和密钥发送。</span><br><span class="line"></span><br><span class="line">（<span class="number">2</span>）服务器握手结束通知，表示服务器的握手阶段已经结束。这一项同时也是前面发送的所有内容的hash值，用来供客户端校验。</span><br></pre></td></tr></table></figure>
+
+<p>至此，整个握手阶段全部结束。<strong>接下来，客户端与服务器进入加密通信，就完全是使用普通的HTTP协议</strong>，只不过用”会话密钥”加密内容。</p>
+<p>如下图：</p>
+<p><img src="https://i.loli.net/2020/03/16/ekPaYWIzLdbwo9F.png" alt="HTTPS协议的加密.png"></p>
+]]></content>
       <categories>
         <category>Study Note</category>
         <category>Interview Note</category>
@@ -23,7 +77,7 @@
 <p>介绍RESTful核心概念，列举RESTful API设计与实践的案例</p>
 <a id="more"></a>
 
-<p>本文参考阮一峰老师博客系列文章<a href="http://www.ruanyifeng.com/blog/" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/</a></p>
+<p>本文参考转载阮一峰老师博客系列文章<a href="http://www.ruanyifeng.com/blog/" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/</a></p>
 <h1 id="理解RESTful架构"><a href="#理解RESTful架构" class="headerlink" title="理解RESTful架构"></a>理解RESTful架构</h1><h2 id="什么是RESTful架构"><a href="#什么是RESTful架构" class="headerlink" title="什么是RESTful架构"></a>什么是RESTful架构</h2><p>互联网发展到了现在，我们需要把网站看做是一个软件。它是一种”客户端-服务器”模式的软件，建立在分布式体系上，通过互联网通信，具有高延时和高并发的特性。</p>
 <p>(NOTE：高延时：high latency，指一个数据包从客户端发送到网站服务器，然后再立即从网站服务器返回用户计算机的来回时间，简单来说就是数据从用户这边发送到服务器那边所用的时间。网络延时越高，意味着网速越慢。网络延时1数值，代表1毫秒，通常使用网络管理工具<code>PING</code>来测量网络延时，典型数值为几十到几百毫秒。)</p>
 <p>但是在以前，软件开发和网络是不同的领域，而且少有交集。因为软件开发主要针对单机环境，网络则主要研究系统之间通信，而互联网的兴起，使得这两个领域开始融合。</p>
@@ -62,8 +116,128 @@
 <figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Accept:</span> vnd.example-<span class="keyword">com</span>.foo+json<span class="comment">; version=1.0</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">Accept:</span> vnd.example-<span class="keyword">com</span>.foo+json<span class="comment">; version=1.1</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">Accept:</span> vnd.example-<span class="keyword">com</span>.foo+json<span class="comment">; version=2.0</span></span><br></pre></td></tr></table></figure>
 
 <h1 id="RESTful-API设计指南"><a href="#RESTful-API设计指南" class="headerlink" title="RESTful API设计指南"></a>RESTful API设计指南</h1><h2 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h2><p>API与用户的通信协议，很多时候使用HTTPS协议。</p>
-<p>HTTPS协议和HTTP协议的区别就是在于SSL/TLS证书，可以参考</p>
-]]></content>
+<p>HTTPS协议和HTTP协议的区别就是在于SSL/TLS证书，可以参考<a href="http://wmsheng.cn/2020/03/16/SSL-and-TLS/" target="_blank" rel="noopener">这篇文章</a></p>
+<h2 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h2><p>应该尽量将API部署在专用域名之下。</p>
+<p><code>https://api.example.com</code></p>
+<p>如果确定API很简单，不会有进一步扩展，可以考虑放在主域名下。</p>
+<p><code>https://example.org/api/</code></p>
+<h2 id="版本-Versioning"><a href="#版本-Versioning" class="headerlink" title="版本(Versioning)"></a>版本(Versioning)</h2><p>应该将API的版本号放入URL。</p>
+<p><code>https://api.example.com/v1/</code></p>
+<p>另一种做法是，将版本号放在HTTP头信息中，但不如放入URL方便和直观。Github采用这种做法。</p>
+<h2 id="路径-Endpoint"><a href="#路径-Endpoint" class="headerlink" title="路径(Endpoint)"></a>路径(Endpoint)</h2><p>路径又称”终点”（endpoint），表示API的具体网址。</p>
+<p>在RESTful架构中，每个网址代表一种资源（resource），所以网址中不能有动词，只能有名词，而且所用的名词往往与数据库的表格名对应。一般来说，数据库中的表都是同种记录的”集合”（collection），所以API中的名词也应该使用复数。</p>
+<p>举例来说，有一个API提供动物园（zoo）的信息，还包括各种动物和雇员的信息，则它的路径应该设计成下面这样。</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//</span>api.example.com<span class="regexp">/v1/</span>zoos</span><br><span class="line">https:<span class="regexp">//</span>api.example.com<span class="regexp">/v1/</span>animals</span><br><span class="line">https:<span class="regexp">//</span>api.example.com<span class="regexp">/v1/</span>employees</span><br></pre></td></tr></table></figure>
+
+<h2 id="HTTP动词"><a href="#HTTP动词" class="headerlink" title="HTTP动词"></a>HTTP动词</h2><p>对于资源的具体操作类型，由HTTP动词表示。</p>
+<p>常用的HTTP动词有下面五个（括号里是对应的SQL命令）。</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">GET</span>（<span class="keyword">SELECT</span>）：从服务器取出资源（一项或多项）。</span><br><span class="line">POST（<span class="keyword">CREATE</span>）：在服务器新建一个资源。</span><br><span class="line">PUT（<span class="keyword">UPDATE</span>）：在服务器更新资源（客户端提供改变后的完整资源）。</span><br><span class="line">PATCH（<span class="keyword">UPDATE</span>）：在服务器更新资源（客户端提供改变的属性）。</span><br><span class="line"><span class="keyword">DELETE</span>（<span class="keyword">DELETE</span>）：从服务器删除资源。</span><br></pre></td></tr></table></figure>
+
+<p>还有两个不常用的HTTP动词。</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">HEAD</span>：获取资源的元数据。</span><br><span class="line"><span class="attribute"><span class="nomarkup">OPTIONS</span></span>：获取信息，关于资源的哪些属性是客户端可以改变的。</span><br></pre></td></tr></table></figure>
+
+<p>下面是一些例子。</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line">GET <span class="string">/zoos</span>：列出所有动物园</span><br><span class="line">POST <span class="string">/zoos</span>：新建一个动物园</span><br><span class="line">GET <span class="string">/zoos/ID</span>：获取某个指定动物园的信息</span><br><span class="line">PUT <span class="string">/zoos/ID</span>：更新某个指定动物园的信息（提供该动物园的全部信息）</span><br><span class="line">PATCH <span class="string">/zoos/ID</span>：更新某个指定动物园的信息（提供该动物园的部分信息）</span><br><span class="line">DELETE <span class="string">/zoos/ID</span>：删除某个动物园</span><br><span class="line">GET <span class="string">/zoos/ID/animals</span>：列出某个指定动物园的所有动物</span><br><span class="line">DELETE <span class="string">/zoos/ID/animals/ID</span>：删除某个指定动物园的指定动物</span><br></pre></td></tr></table></figure>
+
+<h2 id="过滤信息-Filtering"><a href="#过滤信息-Filtering" class="headerlink" title="过滤信息(Filtering)"></a>过滤信息(Filtering)</h2><p>如果记录数量很多，服务器不可能都将它们返回给用户。API应该提供参数，过滤返回结果。</p>
+<p>下面是一些常见的参数。</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">?<span class="attribute">limit</span>=10：指定返回记录的数量</span><br><span class="line">?<span class="attribute">offset</span>=10：指定返回记录的开始位置。</span><br><span class="line">?<span class="attribute">page</span>=2&amp;per_page=100：指定第几页，以及每页的记录数。</span><br><span class="line">?<span class="attribute">sortby</span>=name&amp;order=asc：指定返回结果按照哪个属性排序，以及排序顺序。</span><br><span class="line">?<span class="attribute">animal_type_id</span>=1：指定筛选条件</span><br></pre></td></tr></table></figure>
+<p>参数的设计允许存在冗余，即允许API路径和URL参数偶尔有重复。比如，GET /zoo/ID/animals 与 GET /animals?zoo_id=ID 的含义是相同的。</p>
+<h2 id="状态码-Status-Code"><a href="#状态码-Status-Code" class="headerlink" title="状态码(Status Code)"></a>状态码(Status Code)</h2><p>服务器向用户返回的状态码和提示信息，常见的有以下一些（方括号中是该状态码对应的HTTP动词）。</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="symbol">200 </span>OK - [<span class="keyword">GET</span>]：服务器成功返回用户请求的数据，该操作是幂等的（Idempotent）。</span><br><span class="line"><span class="symbol">201 </span>CREATED - [POST/<span class="keyword">PUT</span>/PATCH]：用户新建或修改数据成功。</span><br><span class="line"><span class="symbol">202 </span>Accepted - [*]：表示一个请求已经进入后台排队（异步任务）</span><br><span class="line"><span class="symbol">204 </span>NO CONTENT - [<span class="keyword">DELETE</span>]：用户删除数据成功。</span><br><span class="line"><span class="symbol">400 </span>INVALID REQUEST - [POST/<span class="keyword">PUT</span>/PATCH]：用户发出的请求有错误，服务器没有进行新建或修改数据的操作，该操作是幂等的。</span><br><span class="line"><span class="symbol">401 </span>Unauthorized - [*]：表示用户没有权限（令牌、用户名、密码错误）。</span><br><span class="line"><span class="symbol">403 </span>Forbidden - [*] 表示用户得到授权（与<span class="number">401</span>错误相对），但是访问是被禁止的。</span><br><span class="line"><span class="symbol">404 </span><span class="keyword">NOT</span> FOUND - [*]：用户发出的请求针对的是不存在的记录，服务器没有进行操作，该操作是幂等的。</span><br><span class="line"><span class="symbol">406 </span><span class="keyword">Not</span> Acceptable - [<span class="keyword">GET</span>]：用户请求的格式不可得（比如用户请求JSON格式，但是只有XML格式）。</span><br><span class="line"><span class="symbol">410 </span>Gone -[<span class="keyword">GET</span>]：用户请求的资源被永久删除，且不会再得到的。</span><br><span class="line"><span class="symbol">422 </span>Unprocesable entity - [POST/<span class="keyword">PUT</span>/PATCH] 当创建一个对象时，发生一个验证错误。</span><br><span class="line"><span class="symbol">500 </span>INTERNAL SERVER <span class="keyword">ERROR</span> - [*]：服务器发生错误，用户将无法判断发出的请求是否成功。</span><br></pre></td></tr></table></figure>
+
+<p>状态码的完全列表参见<a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html" target="_blank" rel="noopener">这里</a>。</p>
+<h2 id="错误处理-Error-handling"><a href="#错误处理-Error-handling" class="headerlink" title="错误处理(Error handling)"></a>错误处理(Error handling)</h2><p>如果状态码是4xx，就应该向用户返回出错信息。一般来说，返回的信息中将error作为键名，出错信息作为键值即可。</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attribute">error</span>: <span class="string">"Invalid API key"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="返回结果"><a href="#返回结果" class="headerlink" title="返回结果"></a>返回结果</h2><p>针对不同操作，服务器向用户返回的结果应该符合以下规范。</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line">GET <span class="string">/collection</span>：返回资源对象的列表（数组）</span><br><span class="line">GET <span class="string">/collection/resource</span>：返回单个资源对象</span><br><span class="line">POST <span class="string">/collection</span>：返回新生成的资源对象</span><br><span class="line">PUT <span class="string">/collection/resource</span>：返回完整的资源对象</span><br><span class="line">PATCH <span class="string">/collection/resource</span>：返回完整的资源对象</span><br><span class="line">DELETE <span class="string">/collection/resource</span>：返回一个空文档</span><br></pre></td></tr></table></figure>
+
+<h2 id="Hypermedia-API"><a href="#Hypermedia-API" class="headerlink" title="Hypermedia API"></a>Hypermedia API</h2><p>RESTful API最好做到Hypermedia，即返回结果中提供链接，连向其他API方法，使得用户不查文档，也知道下一步应该做什么。</p>
+<p>比如，当用户向api.example.com的根目录发出请求，会得到这样一个文档。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;<span class="attr">"link"</span>: &#123;</span><br><span class="line">  <span class="attr">"rel"</span>:   <span class="string">"collection https://www.example.com/zoos"</span>,</span><br><span class="line">  <span class="attr">"href"</span>:  <span class="string">"https://api.example.com/zoos"</span>,</span><br><span class="line">  <span class="attr">"title"</span>: <span class="string">"List of zoos"</span>,</span><br><span class="line">  <span class="attr">"type"</span>:  <span class="string">"application/vnd.yourformat+json"</span></span><br><span class="line">&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码表示，文档中有一个link属性，用户读取这个属性就知道下一步该调用什么API了。rel表示这个API与当前网址的关系（collection关系，并给出该collection的网址），href表示API的路径，title表示API的标题，type表示返回类型。</p>
+<p>Hypermedia API的设计被称为HATEOAS。Github的API就是这种设计，访问<a href="https://api.github.com/" target="_blank" rel="noopener">api.github.com</a>会得到一个所有可用API的网址列表。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"current_user_url"</span>: <span class="string">"https://api.github.com/user"</span>,</span><br><span class="line">  <span class="attr">"authorizations_url"</span>: <span class="string">"https://api.github.com/authorizations"</span>,</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面可以看到，如果想获取当前用户的信息，应该去访问api.github.com/user，然后就得到了下面结果。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"message"</span>: <span class="string">"Requires authentication"</span>,</span><br><span class="line">  <span class="attr">"documentation_url"</span>: <span class="string">"https://developer.github.com/v3"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码表示，服务器给出了提示信息，以及文档的网址。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>（1）API的身份认证应该使用OAuth 2.0框架。</p>
+<p>（2）服务器返回的数据格式，应该尽量使用JSON，避免使用XML。</p>
+<h1 id="RESTful-API最佳实践"><a href="#RESTful-API最佳实践" class="headerlink" title="RESTful API最佳实践"></a>RESTful API最佳实践</h1><p>RESTful 是目前最流行的 API 设计规范，用于 Web 数据接口的设计。</p>
+<p>它的大原则容易把握，但是细节不容易做对。本文总结 RESTful 的设计细节，介绍如何设计出易于理解和使用的 API。</p>
+<h2 id="URL设计"><a href="#URL设计" class="headerlink" title="URL设计"></a>URL设计</h2><h3 id="动词-宾语"><a href="#动词-宾语" class="headerlink" title="动词 + 宾语"></a>动词 + 宾语</h3><p>RESTful 的核心思想就是，客户端发出的数据操作指令都是”动词 + 宾语”的结构。比如，<code>GET /articles</code>这个命令，<code>GET</code>是动词，<code>/articles</code>是宾语。</p>
+<p>动词通常就是五种 HTTP 方法，对应 CRUD 操作。</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">GET</span>：读取（<span class="keyword">Read</span>）</span><br><span class="line">POST：新建（<span class="keyword">Create</span>）</span><br><span class="line">PUT：更新（<span class="keyword">Update</span>）</span><br><span class="line">PATCH：更新（<span class="keyword">Update</span>），通常是部分更新</span><br><span class="line"><span class="keyword">DELETE</span>：删除（<span class="keyword">Delete</span>）</span><br></pre></td></tr></table></figure>
+
+<p>根据 HTTP 规范，动词一律大写。</p>
+<h3 id="动词的覆盖"><a href="#动词的覆盖" class="headerlink" title="动词的覆盖"></a>动词的覆盖</h3><p>有些客户端只能使用<code>GET</code>和<code>POST</code>这两种方法。服务器必须接受POST模拟其他三个方法（PUT、PATCH、DELETE）。</p>
+<p>这时，客户端发出的 HTTP 请求，要加上X-HTTP-Method-Override属性，告诉服务器应该使用哪一个动词，覆盖POST方法。</p>
+<figure class="highlight oxygene"><table><tr><td class="code"><pre><span class="line">POST /api/Person/<span class="number">4</span> HTTP/<span class="number">1.1</span>  </span><br><span class="line">X-HTTP-<span class="function"><span class="keyword">Method</span>-<span class="title">Override</span>:</span> PUT</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，X-HTTP-Method-Override指定本次请求的方法是<code>PUT</code>，而不是<code>POST</code>。</p>
+<h3 id="宾语必须是名词"><a href="#宾语必须是名词" class="headerlink" title="宾语必须是名词"></a>宾语必须是名词</h3><p>宾语就是 API 的 URL，是 HTTP 动词作用的对象。它应该是名词，不能是动词。比如，<code>/articles</code>这个 URL 就是正确的，而下面的 URL 不是名词，所以都是错误的。</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line"><span class="string">/getAllCars</span></span><br><span class="line"><span class="string">/createNewCar</span></span><br><span class="line"><span class="string">/deleteAllRedCars</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="复数URL"><a href="#复数URL" class="headerlink" title="复数URL"></a>复数URL</h3><p>既然 URL 是名词，那么应该使用复数，还是单数？</p>
+<p>这没有统一的规定，但是常见的操作是读取一个集合，比如<code>GET /articles</code>（读取所有文章），这里明显应该是复数。</p>
+<p>为了统一起见，建议都使用复数 URL，比如<code>GET /articles/2</code>要好于<code>GET /article/2</code>。</p>
+<h3 id="避免多级URL"><a href="#避免多级URL" class="headerlink" title="避免多级URL"></a>避免多级URL</h3><p>常见的情况是，资源需要多级分类，因此很容易写出多级的 URL，比如获取某个作者的某一类文章。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">GET /authors/<span class="number">12</span>/categories/<span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p>这种 URL 不利于扩展，语义也不明确，往往要想一会，才能明白含义。</p>
+<p>更好的做法是，除了第一级，其他级别都用查询字符串表达。</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="builtin-name">GET</span> /authors/12?<span class="attribute">categories</span>=2</span><br></pre></td></tr></table></figure>
+
+<p>下面是另一个例子，查询已发布的文章。你可能会设计成下面的 URL。</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="builtin-name">GET</span> /articles/published</span><br></pre></td></tr></table></figure>
+
+<p>查询字符串的写法明显更好。</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="builtin-name">GET</span> /articles?<span class="attribute">published</span>=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h2><h3 id="状态码必须精确"><a href="#状态码必须精确" class="headerlink" title="状态码必须精确"></a>状态码必须精确</h3><p>客户端的每一次请求，服务器都必须给出回应。回应包括 HTTP 状态码和数据两部分。</p>
+<p>HTTP 状态码就是一个三位数，分成五个类别。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>xx：相关信息</span><br><span class="line"><span class="number">2</span>xx：操作成功</span><br><span class="line"><span class="number">3</span>xx：重定向</span><br><span class="line"><span class="number">4</span>xx：客户端错误</span><br><span class="line"><span class="number">5</span>xx：服务器错误</span><br></pre></td></tr></table></figure>
+
+<p>这五大类总共包含100多种状态码，覆盖了绝大部分可能遇到的情况。每一种状态码都有标准的（或者约定的）解释，客户端只需查看状态码，就可以判断出发生了什么情况，所以服务器应该返回尽可能精确的状态码。</p>
+<p>API 不需要<code>1xx</code>状态码，下面介绍其他四类状态码的精确含义。</p>
+<h3 id="2xx状态码"><a href="#2xx状态码" class="headerlink" title="2xx状态码"></a>2xx状态码</h3><p><code>200</code>状态码表示操作成功，但是不同的方法可以返回更精确的状态码。</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">GET:</span> <span class="number">200</span> <span class="string">OK</span></span><br><span class="line"><span class="attr">POST:</span> <span class="number">201</span> <span class="string">Created</span></span><br><span class="line"><span class="attr">PUT:</span> <span class="number">200</span> <span class="string">OK</span></span><br><span class="line"><span class="attr">PATCH:</span> <span class="number">200</span> <span class="string">OK</span></span><br><span class="line"><span class="attr">DELETE:</span> <span class="number">204</span> <span class="literal">No</span> <span class="string">Content</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>POST</code>返回<code>201</code>状态码，表示生成了新的资源；<code>DELETE</code>返回<code>204</code>状态码，表示资源已经不存在。</p>
+<p>此外，<code>202 Accepted</code>状态码表示服务器已经收到请求，但还未进行处理，会在未来再处理，通常用于异步操作。下面是一个例子。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">HTTP/1.1 <span class="number">202</span> Accepted</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  "task": &#123;</span><br><span class="line">    "href": "/api/company/job-management/jobs/2130040",</span><br><span class="line">    "id": "2130040"</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3xx状态码"><a href="#3xx状态码" class="headerlink" title="3xx状态码"></a>3xx状态码</h3><p>API 用不到<code>301</code>状态码（永久重定向）和<code>302</code>状态码（暂时重定向，<code>307</code>也是这个含义），因为它们可以由应用级别返回，浏览器会直接跳转，API 级别可以不考虑这两种情况。</p>
+<p>API 用到的<code>3xx</code>状态码，主要是<code>303 See Other</code>，表示参考另一个 URL。它与<code>302</code>和<code>307</code>的含义一样，也是”暂时重定向”，区别在于<code>302</code>和<code>307</code>用于<code>GET</code>请求，而<code>303</code>用于<code>POST</code>、<code>PUT</code>和<code>DELETE</code>请求。收到<code>303</code>以后，浏览器不会自动跳转，而会让用户自己决定下一步怎么办。下面是一个例子。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">HTTP/<span class="number">1.1</span> <span class="number">303</span> See Other</span><br><span class="line">Location: /api/orders/<span class="number">12345</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4xx状态码"><a href="#4xx状态码" class="headerlink" title="4xx状态码"></a>4xx状态码</h3><p><code>4xx</code>状态码表示客户端错误，主要有下面几种。</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="symbol">400 </span>Bad Request：服务器不理解客户端的请求，未做任何处理。</span><br><span class="line"></span><br><span class="line"><span class="symbol">401 </span>Unauthorized：用户未提供身份验证凭据，或者没有通过身份验证。</span><br><span class="line"></span><br><span class="line"><span class="symbol">403 </span>Forbidden：用户通过了身份验证，但是不具有访问资源所需的权限。</span><br><span class="line"></span><br><span class="line"><span class="symbol">404 </span><span class="keyword">Not</span> Found：所请求的资源不存在，或不可用。</span><br><span class="line"></span><br><span class="line"><span class="symbol">405 </span>Method <span class="keyword">Not</span> Allowed：用户已经通过身份验证，但是所用的 HTTP 方法不在他的权限之内。</span><br><span class="line"></span><br><span class="line"><span class="symbol">410 </span>Gone：所请求的资源已从这个地址转移，不再可用。</span><br><span class="line"></span><br><span class="line"><span class="symbol">415 </span>Unsupported Media Type：客户端要求的返回格式不支持。比如，API 只能返回 JSON 格式，但是客户端要求返回 XML 格式。</span><br><span class="line"></span><br><span class="line"><span class="symbol">422 </span>Unprocessable Entity ：客户端上传的附件无法处理，导致请求失败。</span><br><span class="line"></span><br><span class="line"><span class="symbol">429 </span>Too Many Requests：客户端的请求次数超过限额。</span><br></pre></td></tr></table></figure>
+
+<h3 id="5xx状态码"><a href="#5xx状态码" class="headerlink" title="5xx状态码"></a>5xx状态码</h3><p><code>5xx</code>状态码表示服务端错误。一般来说，API 不会向用户透露服务器的详细信息，所以只要两个状态码就够了。</p>
+<p><code>500 Internal Server Error</code>：客户端请求有效，服务器处理时发生了意外。</p>
+<p><code>503 Service Unavailable</code>：服务器无法处理请求，一般用于网站维护状态。</p>
+<h2 id="服务器回应"><a href="#服务器回应" class="headerlink" title="服务器回应"></a>服务器回应</h2><h3 id="不要返回纯文本"><a href="#不要返回纯文本" class="headerlink" title="不要返回纯文本"></a>不要返回纯文本</h3><p>API 返回的数据格式，不应该是纯文本，而应该是一个 JSON 对象，因为这样才能返回标准的结构化数据。所以，服务器回应的 HTTP 头的<code>Content-Type</code>属性要设为<code>application/json</code>。</p>
+<p>客户端请求时，也要明确告诉服务器，可以接受 JSON 格式，即请求的 HTTP 头的<code>ACCEPT</code>属性也要设成<code>application/json</code>。下面是一个例子。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">GET /orders/<span class="number">2</span> HTTP/<span class="number">1.1</span> </span><br><span class="line">Accept: application/json</span><br></pre></td></tr></table></figure>
+
+<h3 id="发生错误时，不要返回200状态码"><a href="#发生错误时，不要返回200状态码" class="headerlink" title="发生错误时，不要返回200状态码"></a>发生错误时，不要返回200状态码</h3><p>有一种不恰当的做法是，即使发生错误，也返回<code>200</code>状态码，把错误信息放在数据体里面，就像下面这样。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">HTTP/1.1 <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Content-Type</span>: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  "status": "failure",</span><br><span class="line">  "data": &#123;</span><br><span class="line">    "error": "Expected at least two items in list."</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，解析数据体以后，才能得知操作失败。</p>
+<p>这张做法实际上取消了状态码，这是完全不可取的。正确的做法是，状态码反映发生的错误，具体的错误信息放在数据体里面返回。下面是一个例子。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">HTTP/1.1 <span class="number">400</span> Bad Request</span><br><span class="line"><span class="attribute">Content-Type</span>: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  "error": "Invalid payoad.",</span><br><span class="line">  "detail": &#123;</span><br><span class="line">     "surname": "This field is required."</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="提供链接"><a href="#提供链接" class="headerlink" title="提供链接"></a>提供链接</h3><p>API 的使用者未必知道，URL 是怎么设计的。一个解决方法就是，在回应中，给出相关链接，便于下一步操作。这样的话，用户只要记住一个 URL，就可以发现其他的 URL。这种方法叫做 HATEOAS。</p>
+<p>举例来说，GitHub 的 API 都在 api.github.com 这个域名。访问它，就可以得到其他 URL。</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">...</span></span><br><span class="line">  <span class="string">"feeds_url"</span>: <span class="string">"https://api.github.com/feeds"</span>,</span><br><span class="line">  <span class="string">"followers_url"</span>: <span class="string">"https://api.github.com/user/followers"</span>,</span><br><span class="line">  <span class="string">"following_url"</span>: <span class="string">"https://api.github.com/user/following&#123;/target&#125;"</span>,</span><br><span class="line">  <span class="string">"gists_url"</span>: <span class="string">"https://api.github.com/gists&#123;/gist_id&#125;"</span>,</span><br><span class="line">  <span class="string">"hub_url"</span>: <span class="string">"https://api.github.com/hub"</span>,</span><br><span class="line">  <span class="string">...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的回应中，挑一个 URL 访问，又可以得到别的 URL。对于用户来说，不需要记住 URL 设计，只要从 api.github.com 一步步查找就可以了。</p>
+<p>HATEOAS 的格式没有统一规定，上面例子中，GitHub 将它们与其他属性放在一起。更好的做法应该是，将相关链接与其他属性分开。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">HTTP/1.1 <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Content-Type</span>: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  "status": "In progress",</span><br><span class="line">   "links": &#123;[</span><br><span class="line">    &#123; "rel":"cancel", "method": "delete", "href":"/api/status/12345" &#125; ,</span><br><span class="line">    &#123; "rel":"edit", "method": "put", "href":"/api/status/12345" &#125;</span><br><span class="line">  ]&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>Study Note</category>
         <category>Interview Note</category>
