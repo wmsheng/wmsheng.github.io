@@ -114,6 +114,17 @@
 <p>新增：我们可以选择从链表头新增，也可以选择从链表尾新增，如果是从链表尾新增的话，直接把当前节点追加到尾节点之后，本身节点自动变为尾节点。</p>
 <p>删除：把删除节点的后一个节点的 prev 指向其前一个节点，把删除节点的前一个节点的 next 指向其后一个节点，最后把删除的节点置为 null 即可。</p>
 <h1 id="Hashmap源码解析与架构-未完"><a href="#Hashmap源码解析与架构-未完" class="headerlink" title="Hashmap源码解析与架构(未完)"></a>Hashmap源码解析与架构(未完)</h1><p>首先HashMap的源码很长，面试题也很多，最好能弄清楚底层。</p>
+<h2 id="整体架构-未完"><a href="#整体架构-未完" class="headerlink" title="整体架构(未完)"></a>整体架构(未完)</h2><p>HashMap 底层的数据结构主要是：数组 + 链表 + 红黑树。其中当链表的长度大于等于 8 时，链表会转化成红黑树，当红黑树的大小小于等于 6 时，红黑树会转化成链表。</p>
+<p><img src="https://i.loli.net/2020/03/16/aguyM8eO4cqZ9Qt.png" alt="HashMap整体架构.png"></p>
+<p>图中左边竖着的是 HashMap 的数组结构，数组的元素可能是单个 Node，也可能是个链表，也可能是个红黑树，比如数组下标索引为 2 的位置就是一个链表，下标索引为 9 的位置对应的就是红黑树</p>
+<h3 id="类注释中的信息"><a href="#类注释中的信息" class="headerlink" title="类注释中的信息"></a>类注释中的信息</h3><p>从下面这些信息可以大体把握HashMap的重点。</p>
+<ul>
+<li>允许 null 值，不同于 HashTable ，是线程不安全的；</li>
+<li>load factor（影响因子） 默认值是 0.75， 是均衡了时间和空间损耗算出来的值，较高的值会减少空间开销（扩容减少，数组大小增长速度变慢），但增加了查找成本（hash 冲突增加，链表长度变长），不扩容的条件：数组容量 &gt; 需要的数组大小 /load factor；</li>
+<li>如果有很多数据需要储存到 HashMap 中，建议 HashMap 的容量一开始就设置成足够的大小，这样可以防止在其过程中不断的扩容，影响性能；</li>
+<li>HashMap 是非线程安全的，我们可以自己在外部加锁，或者通过 Collections#synchronizedMap 来实现线程安全，Collections#synchronizedMap 的实现是在每个方法上加上了 synchronized 锁；</li>
+<li>在迭代过程中，如果 HashMap 的结构被修改，会快速失败。</li>
+</ul>
 <h1 id="Treemap源码解析与架构-未完"><a href="#Treemap源码解析与架构-未完" class="headerlink" title="Treemap源码解析与架构(未完)"></a>Treemap源码解析与架构(未完)</h1><h1 id="Map接口常问问题"><a href="#Map接口常问问题" class="headerlink" title="Map接口常问问题"></a>Map接口常问问题</h1><h2 id="1-Map整体数据结构问题"><a href="#1-Map整体数据结构问题" class="headerlink" title="1. Map整体数据结构问题"></a>1. Map整体数据结构问题</h2><h3 id="1-1-HashMap的底层数据结构"><a href="#1-1-HashMap的底层数据结构" class="headerlink" title="1.1 HashMap的底层数据结构"></a>1.1 HashMap的底层数据结构</h3><p>答：HashMap 底层是数组 + 链表 + 红黑树的数据结构，数组的主要作用是方便快速查找，时间复杂度是 O(1)，默认大小是 16，数组的下标索引是通过 key 的 hashcode 计算出来的，数组元素叫做 Node，当多个 key 的 hashcode 一致，但 key 值不同时，单个 Node 就会转化成链表，链表的查询复杂度是 O(n)，当链表的长度大于等于 8 并且数组的大小超过 64 时，链表就会转化成红黑树，红黑树的查询复杂度是 O(log(n))，简单来说，最坏的查询次数相当于红黑树的最大深度。</p>
 <h3 id="1-2-HashMap、TreeMap、LinkedHashMap-三者有啥相同点，有啥不同点？"><a href="#1-2-HashMap、TreeMap、LinkedHashMap-三者有啥相同点，有啥不同点？" class="headerlink" title="1.2 HashMap、TreeMap、LinkedHashMap 三者有啥相同点，有啥不同点？"></a>1.2 HashMap、TreeMap、LinkedHashMap 三者有啥相同点，有啥不同点？</h3><p>答：相同点：</p>
 <ol>
