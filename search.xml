@@ -445,19 +445,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java GC Interview I</title>
-    <url>/2020/03/05/Java-GC-Interview-I/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Interview Note</category>
-      </categories>
-      <tags>
-        <tag>Interview</tag>
-        <tag>Java</tag>
-        <tag>GC</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java GC Study I</title>
     <url>/2020/03/05/Java-GC-Study-I/</url>
     <content><![CDATA[<blockquote>
@@ -1598,7 +1585,7 @@ Double d = Double.parseDouble( s );
       </tags>
   </entry>
   <entry>
-    <title>Java JVM Interview I</title>
+    <title>Java JVM+GC Interview I</title>
     <url>/2020/02/25/Java-JVM-Interview-I/</url>
     <content><![CDATA[<blockquote>
 <p>知识犹如人体的血液一样宝贵。——高士其</p>
@@ -1607,7 +1594,20 @@ Double d = Double.parseDouble( s );
 
 <p>JVM面试相关知识汇总：</p>
 <p><img src="https://s2.ax1x.com/2020/03/04/35Lr90.png" alt="35Lr90.png"></p>
-]]></content>
+<p>上图中，内存模型、类加载机制、GC垃圾回收是比较重点的内容。</p>
+<h1 id="1-简单描述JVM的内存模型"><a href="#1-简单描述JVM的内存模型" class="headerlink" title="1. 简单描述JVM的内存模型"></a>1. 简单描述JVM的内存模型</h1><p>回答这个问题，要答出两个要点：一个是各部分的功能，另一个是哪些线程共享，哪些线程独占。</p>
+<p><img src="https://i.loli.net/2020/03/16/CcQiorLdHl4w9EK.png" alt="Java内存模型.png"></p>
+<ul>
+<li>栈，也叫方法栈，是线程私有的，线程在执行每个方法时都会同时创建一个栈帧，用来存储局部变量表、操作栈、动态链接、方法出口等信息。调用方法时执行入栈，方法返回时执行出栈。</li>
+<li>本地方法栈与栈类似，也是用来保存线程执行方法时的信息，不同的是，执行 Java 方法使用栈，而执行 native 方法使用本地方法栈。</li>
+<li>程序计数器保存着当前线程所执行的字节码位置，每个线程工作时都有一个独立的计数器。程序计数器为执行 Java 方法服务，执行 native 方法时，程序计数器为空。</li>
+</ul>
+<p>以上三个部分：栈、本地方法栈、程序计数器，都是线程独占的。</p>
+<ul>
+<li>堆是JVM管理的内存中最大的一块，堆被所有线程共享，目的是为了存放对象实例，几乎所有的对象实例都在这里分配。当堆内存没有可用的空间时，会抛出OOM异常。根据对象存活的周期不同，JVM把堆内存进行分代管理，由垃圾回收器来进行对象的回收管理。</li>
+<li>方法区也是各个线程共享的内存区域，又叫非堆区。用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据，JDK1.7中的永久代和JDK1.8中的Metaspace都是方法区的一种实现。</li>
+</ul>
+<h1 id="2-Java类加载器有几种，关系是怎样的？"><a href="#2-Java类加载器有几种，关系是怎样的？" class="headerlink" title="2.Java类加载器有几种，关系是怎样的？"></a>2.Java类加载器有几种，关系是怎样的？</h1><h1 id="3-双亲委派机制的加载流程是怎样的，有什么好处？"><a href="#3-双亲委派机制的加载流程是怎样的，有什么好处？" class="headerlink" title="3.双亲委派机制的加载流程是怎样的，有什么好处？"></a>3.双亲委派机制的加载流程是怎样的，有什么好处？</h1><h1 id="4-简单描述一下GC的分代回收"><a href="#4-简单描述一下GC的分代回收" class="headerlink" title="4.简单描述一下GC的分代回收"></a>4.简单描述一下GC的分代回收</h1><h1 id="5-G1垃圾回收算法与CMS的区别有哪些？"><a href="#5-G1垃圾回收算法与CMS的区别有哪些？" class="headerlink" title="5.G1垃圾回收算法与CMS的区别有哪些？"></a>5.G1垃圾回收算法与CMS的区别有哪些？</h1><h1 id="6-对象引用有哪几种方式，有什么特点？"><a href="#6-对象引用有哪几种方式，有什么特点？" class="headerlink" title="6.对象引用有哪几种方式，有什么特点？"></a>6.对象引用有哪几种方式，有什么特点？</h1><h1 id="7-使用过哪些JVM调试工具，主要分析哪些内容？"><a href="#7-使用过哪些JVM调试工具，主要分析哪些内容？" class="headerlink" title="7.使用过哪些JVM调试工具，主要分析哪些内容？"></a>7.使用过哪些JVM调试工具，主要分析哪些内容？</h1>]]></content>
       <categories>
         <category>Interview Note</category>
       </categories>
