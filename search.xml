@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>SSL-and-TLS</title>
+    <url>/2020/03/16/SSL-and-TLS/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Study Note</category>
+        <category>Interview Note</category>
+      </categories>
+      <tags>
+        <tag>HTTPS</tag>
+        <tag>SSL</tag>
+        <tag>TLS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>What is RESTful?</title>
     <url>/2020/03/13/what-is-restful/</url>
     <content><![CDATA[<blockquote>
@@ -10,18 +24,54 @@
 <a id="more"></a>
 
 <p>本文参考阮一峰老师博客系列文章<a href="http://www.ruanyifeng.com/blog/" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/</a></p>
-<h1 id="什么是RESTful架构"><a href="#什么是RESTful架构" class="headerlink" title="什么是RESTful架构"></a>什么是RESTful架构</h1><p>互联网发展到了现在，我们需要把网站看做是一个软件。它是一种”客户端-服务器”模式的软件，建立在分布式体系上，通过互联网通信，具有高延时和高并发的特性。</p>
+<h1 id="理解RESTful架构"><a href="#理解RESTful架构" class="headerlink" title="理解RESTful架构"></a>理解RESTful架构</h1><h2 id="什么是RESTful架构"><a href="#什么是RESTful架构" class="headerlink" title="什么是RESTful架构"></a>什么是RESTful架构</h2><p>互联网发展到了现在，我们需要把网站看做是一个软件。它是一种”客户端-服务器”模式的软件，建立在分布式体系上，通过互联网通信，具有高延时和高并发的特性。</p>
 <p>(NOTE：高延时：high latency，指一个数据包从客户端发送到网站服务器，然后再立即从网站服务器返回用户计算机的来回时间，简单来说就是数据从用户这边发送到服务器那边所用的时间。网络延时越高，意味着网速越慢。网络延时1数值，代表1毫秒，通常使用网络管理工具<code>PING</code>来测量网络延时，典型数值为几十到几百毫秒。)</p>
 <p>但是在以前，软件开发和网络是不同的领域，而且少有交集。因为软件开发主要针对单机环境，网络则主要研究系统之间通信，而互联网的兴起，使得这两个领域开始融合。</p>
 <p>RESTful架构是什么，是一个比较不容易说清楚的问题，这里给出比较简单的解释。</p>
+<p>“REST”源自于Roy Thomas Fielding在他的2000年的博士论文。(此人同时也是HTTP协议1.0和1.1版本的主要设计者)</p>
+<p>他说他写这篇文章的目的：”我这篇文章的写作目的，就是想在符合架构原理的前提下，理解和评估以网络为基础的应用软件的架构设计，得到一个功能强、性能好、适宜通信的架构。”</p>
+<h2 id="名称"><a href="#名称" class="headerlink" title="名称"></a>名称</h2><p>REST，即Representational State Transfer的缩写。中文翻译：”表现层状态转化”。</p>
+<p>顺理成章，一个符合REST原则的架构，就称之为RESTful架构。</p>
+<p>要理解RESTful架构，最好的方法就是去理解Representational State Transfer这个词组到底是什么意思，它的每一个词代表了什么涵义。</p>
+<h2 id="资源-Resources"><a href="#资源-Resources" class="headerlink" title="资源(Resources)"></a>资源(Resources)</h2><p>所谓”状态转移”,省略了主语。”表现层”其实指的是”资源”（Resources）的”表现层”。</p>
+<p>所谓”资源”，就是网络上的一个实体，或者说是网络上的一个具体信息。它可以是一段文本、一张图片、一首歌曲、一种服务，总之就是一个具体的实在。你可以用一个URL（统一资源定位符）指向它，每种资源对应一个特定的URI。要获取这个资源，访问它的URL就可以，因此URL就成了每一个资源的地址或独一无二的识别符。</p>
+<p>所谓”上网”，就是与互联网上一系列的”资源”互动，调用它的URL。</p>
+<h2 id="表现层-Representation"><a href="#表现层-Representation" class="headerlink" title="表现层(Representation)"></a>表现层(Representation)</h2><p>“资源”是一种信息实体，它可以有多种外在表现形式。我们把”资源”具体呈现出来的形式，叫做它的”表现层”（Representation）。</p>
+<p>比如，文本可以用txt格式表现，也可以用HTML格式、XML格式、JSON格式表现，甚至可以采用二进制格式；图片可以用JPG格式表现，也可以用PNG格式表现。</p>
+<p>URL只代表资源的实体，不代表它的形式。严格地说，有些网址最后的”.html”后缀名是不必要的，因为这个后缀名表示格式，属于”表现层”范畴，而URL应该只代表”资源”的位置。它的具体表现形式，应该在HTTP请求的头信息中用Accept和Content-Type字段指定，这两个字段才是对”表现层”的描述。</p>
+<h2 id="状态转化-State-Transfer"><a href="#状态转化-State-Transfer" class="headerlink" title="状态转化(State Transfer)"></a>状态转化(State Transfer)</h2><p>访问一个网站，就代表了客户端和服务器的一个互动过程。在这个过程中，势必涉及到数据和状态的变化。</p>
+<p>互联网通信协议HTTP协议，是一个<strong>无状态协议</strong>。这意味着，所有的状态都保存在服务器端(不考虑Cookie的话)。因此，如果客户端想要操作服务器，必须通过某种手段，让服务器端发生”状态转化”（State Transfer）。而这种转化是建立在表现层之上的，所以就是”表现层状态转化”。</p>
+<p>客户端用到的手段，只能是HTTP协议。具体来说，就是HTTP协议里面，四个表示操作方式的动词：GET、POST、PUT、DELETE。它们分别对应四种基本操作：GET用来获取资源，POST用来新建资源（也可以用于更新资源），PUT用来更新资源，DELETE用来删除资源。</p>
+<h2 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h2><p>综合上面的解释，我们总结一下什么是RESTful架构：</p>
+<p>（1）每一个URL代表一种资源；</p>
+<p>（2）客户端和服务器之间，传递这种资源的某种表现层；</p>
+<p>（3）客户端通过四个HTTP动词，对服务器端资源进行操作，实现”表现层状态转化”。</p>
+<h2 id="设计的误区"><a href="#设计的误区" class="headerlink" title="设计的误区"></a>设计的误区</h2><p>RESTful架构有一些典型的设计误区。</p>
+<p>最常见的一种设计错误，就是URL包含动词。因为”资源”表示一种实体，所以应该是名词，URI不应该有动词，动词应该放在HTTP协议中。</p>
+<p>举例来说，某个URI是/posts/show/1，其中show是动词，这个URL就设计错了，正确的写法应该是/posts/1，然后用GET方法表示show。</p>
+<p>如果某些动作是HTTP动词表示不了的，你就应该把动作做成一种资源。比如网上汇款，从账户1向账户2汇款500元，错误的URL是：</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">POST /accounts/<span class="number">1</span>/transfer/<span class="number">500</span>/to/<span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p>正确的写法是把动词transfer改成名词transaction，资源不能是动词，但是可以是一种服务：</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">POST /transaction HTTP/<span class="number">1.1</span></span><br><span class="line">Host: <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">　　</span><br><span class="line"><span class="keyword">from</span>=<span class="number">1</span>&amp;to=<span class="number">2</span>&amp;amount=<span class="number">500.00</span></span><br></pre></td></tr></table></figure>
+
+<p>另一个设计误区，就是在URI中加入版本号：</p>
+<figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/www.example.com/app</span><span class="regexp">/1.0/foo</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">http:</span>/<span class="regexp">/www.example.com/app</span><span class="regexp">/1.1/foo</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">http:</span>/<span class="regexp">/www.example.com/app</span><span class="regexp">/2.0/foo</span></span><br></pre></td></tr></table></figure>
+
+<p>因为不同的版本，可以理解成同一种资源的不同表现形式，所以应该采用同一个URL。版本号可以在HTTP请求头信息的Accept字段中进行区分（参见<a href="https://www.informit.com/articles/article.aspx?p=1566460" target="_blank" rel="noopener">Versioning REST Services</a>）：</p>
+<figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Accept:</span> vnd.example-<span class="keyword">com</span>.foo+json<span class="comment">; version=1.0</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">Accept:</span> vnd.example-<span class="keyword">com</span>.foo+json<span class="comment">; version=1.1</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">Accept:</span> vnd.example-<span class="keyword">com</span>.foo+json<span class="comment">; version=2.0</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="RESTful-API设计指南"><a href="#RESTful-API设计指南" class="headerlink" title="RESTful API设计指南"></a>RESTful API设计指南</h1><h2 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h2><p>API与用户的通信协议，很多时候使用HTTPS协议。</p>
+<p>HTTPS协议和HTTP协议的区别就是在于SSL/TLS证书，可以参考</p>
 ]]></content>
       <categories>
         <category>Study Note</category>
         <category>Interview Note</category>
       </categories>
       <tags>
-        <tag>LeetCode</tag>
-        <tag>Algorithms</tag>
+        <tag>HTTPS</tag>
+        <tag>RESTful</tag>
+        <tag>API</tag>
       </tags>
   </entry>
   <entry>
