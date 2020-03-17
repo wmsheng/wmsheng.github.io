@@ -64,7 +64,7 @@
 <meta property="og:image" content="https://s2.ax1x.com/2020/02/26/3UostH.png">
 <meta property="og:image" content="https://s2.ax1x.com/2020/02/26/3ay5IP.png">
 <meta property="article:published_time" content="2020-02-24T16:28:07.000Z">
-<meta property="article:modified_time" content="2020-02-26T16:19:34.687Z">
+<meta property="article:modified_time" content="2020-03-17T10:16:20.906Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="Interview">
 <meta property="article:tag" content="operating system">
@@ -228,7 +228,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-27 00:19:34" itemprop="dateModified" datetime="2020-02-27T00:19:34+08:00">2020-02-27</time>
+                <time title="Modified: 2020-03-17 18:16:20" itemprop="dateModified" datetime="2020-03-17T18:16:20+08:00">2020-03-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -409,25 +409,14 @@
 <li><p><strong>中断的流程</strong>：改变工作模式至中断模式 -&gt; 保存现场 -&gt; 分析中断原因，跳到中断起始地址处理中断 -&gt; 返回到原来模式 -&gt; 恢复现场继续执行原来的程序。</p>
 </li>
 </ul>
-<h1 id="操作系统问题集合"><a href="#操作系统问题集合" class="headerlink" title="操作系统问题集合"></a>操作系统问题集合</h1><ul>
-<li>进程和线程的区别和相同点？</li>
-</ul>
-<p>-可以结合上面的内容。线程是进程的一部分，进程是程序的一部分。线程和进程之间的相同点：进程和线程都有ID/寄存器组、状态和优先权、信息块，创建后都可更改自己的属性，都可与父进程共享资源、都不能直接访问其他无关进程或线程的资源。</p>
-<ul>
-<li>简单说说寻址的过程？</li>
-</ul>
-<p>-可以结合上述内容。</p>
-<ul>
-<li>32位操作系统和64位操作系统区别是什么？</li>
-</ul>
-<p>-32位和64位是它们的寻址空间大小的区别，这和系统物理内存大小无关。</p>
-<ul>
-<li>说出你知道的进程间通信机制？</li>
-</ul>
-<p>-参考上述七种方法，最重要的是socket，最容易忽略的是“读写文件”（读文件和写文件）。</p>
-<ul>
-<li>说一下中断的概念和流程？<br>参考上面内容。</li>
-</ul>
+<h1 id="操作系统问题集合"><a href="#操作系统问题集合" class="headerlink" title="操作系统问题集合"></a>操作系统问题集合</h1><h2 id="进程和线程的区别和联系？-1"><a href="#进程和线程的区别和联系？-1" class="headerlink" title="进程和线程的区别和联系？"></a>进程和线程的区别和联系？</h2><p>（1）<strong>粒度性分析</strong>：线程的粒度小于进程。</p>
+<p>（2）<strong>调度性分析</strong>：进程是资源拥有的基本单位，线程是独立调度与独立运行的基本单位，出了寄存器，程序计数器等必要的资源外基本不拥有其他资源。</p>
+<p>（3）<strong>系统开销分析</strong>：由于线程基本不拥有系统资源，所以在进行切换时，线程切换的开销远远小于进程。</p>
+<p>两者联系：进程和线程都是操作系统所运行的程序运行的基本单元。</p>
+<h2 id="简单说说寻址的过程？"><a href="#简单说说寻址的过程？" class="headerlink" title="简单说说寻址的过程？"></a>简单说说寻址的过程？</h2><p>-可以结合上述内容。</p>
+<h2 id="32位操作系统和64位操作系统区别是什么？"><a href="#32位操作系统和64位操作系统区别是什么？" class="headerlink" title="32位操作系统和64位操作系统区别是什么？"></a>32位操作系统和64位操作系统区别是什么？</h2><p>-32位和64位是它们的寻址空间大小的区别，这和系统物理内存大小无关。</p>
+<h2 id="说出你知道的进程间通信机制？"><a href="#说出你知道的进程间通信机制？" class="headerlink" title="说出你知道的进程间通信机制？"></a>说出你知道的进程间通信机制？</h2><p>-参考上述七种方法，最重要的是socket，最容易忽略的是“读写文件”（读文件和写文件）。</p>
+<h2 id="说一下中断的概念和流程？"><a href="#说一下中断的概念和流程？" class="headerlink" title="说一下中断的概念和流程？"></a>说一下中断的概念和流程？</h2><p>参考上面内容。</p>
 
     </div>
 
@@ -519,7 +508,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程和线程"><span class="nav-text">进程和线程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程"><span class="nav-text">进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程"><span class="nav-text">线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程和线程的区别和联系？"><span class="nav-text">进程和线程的区别和联系？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程间通信-IPC"><span class="nav-text">进程间通信(IPC)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-写一个文件：最简单的方法，一个进程写一个文件，另一个进程去访问这个文件，由此两个进程之间可以交换信息，得以通信。"><span class="nav-text">1.写一个文件：最简单的方法，一个进程写一个文件，另一个进程去访问这个文件，由此两个进程之间可以交换信息，得以通信。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-管道：两个进程之间建立消息通信的通道。不命名的管道一般是单向的，一方可以向另一方从管道里发送数据；命名管道可以单向也可以双向。"><span class="nav-text">2.管道：两个进程之间建立消息通信的通道。不命名的管道一般是单向的，一方可以向另一方从管道里发送数据；命名管道可以单向也可以双向。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Signal：linux系统中最常用。一个进程给另一个进程发送信号，一般是一串数字，这个数字有自己特定的含义。比如”kill”可以-send-a-signal-to-a-process-强行”kill”掉。"><span class="nav-text">3.Signal：linux系统中最常用。一个进程给另一个进程发送信号，一般是一串数字，这个数字有自己特定的含义。比如”kill”可以 send a signal to a process,强行”kill”掉。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-共享内存：虽然进程之间是彼此独立的，但是操作系统可以提供一个机制，两个进程可以约定好，打开一个文件，这个文件映射到内存中，也就是多个进程使用同一块内存。"><span class="nav-text">4.共享内存：虽然进程之间是彼此独立的，但是操作系统可以提供一个机制，两个进程可以约定好，打开一个文件，这个文件映射到内存中，也就是多个进程使用同一块内存。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-消息队列：一个进程可以向另一个进程发消息。"><span class="nav-text">5.消息队列：一个进程可以向另一个进程发消息。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-同步机制，信号量。"><span class="nav-text">6.同步机制，信号量。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-Socket：最后一种，而且没回答出来这个其实整个答案都不算好。因为前面6种只能作为同一个机器的进程之间的通信，而Socket可以是不同机器的进程之间的通信。"><span class="nav-text">7.Socket：最后一种，而且没回答出来这个其实整个答案都不算好。因为前面6种只能作为同一个机器的进程之间的通信，而Socket可以是不同机器的进程之间的通信。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程调度"><span class="nav-text">线程调度</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#存储和寻址"><span class="nav-text">存储和寻址</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#寻址过程"><span class="nav-text">寻址过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#中断"><span class="nav-text">中断</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#操作系统问题集合"><span class="nav-text">操作系统问题集合</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程和线程"><span class="nav-text">进程和线程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程"><span class="nav-text">进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程"><span class="nav-text">线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程和线程的区别和联系？"><span class="nav-text">进程和线程的区别和联系？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程间通信-IPC"><span class="nav-text">进程间通信(IPC)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-写一个文件：最简单的方法，一个进程写一个文件，另一个进程去访问这个文件，由此两个进程之间可以交换信息，得以通信。"><span class="nav-text">1.写一个文件：最简单的方法，一个进程写一个文件，另一个进程去访问这个文件，由此两个进程之间可以交换信息，得以通信。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-管道：两个进程之间建立消息通信的通道。不命名的管道一般是单向的，一方可以向另一方从管道里发送数据；命名管道可以单向也可以双向。"><span class="nav-text">2.管道：两个进程之间建立消息通信的通道。不命名的管道一般是单向的，一方可以向另一方从管道里发送数据；命名管道可以单向也可以双向。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Signal：linux系统中最常用。一个进程给另一个进程发送信号，一般是一串数字，这个数字有自己特定的含义。比如”kill”可以-send-a-signal-to-a-process-强行”kill”掉。"><span class="nav-text">3.Signal：linux系统中最常用。一个进程给另一个进程发送信号，一般是一串数字，这个数字有自己特定的含义。比如”kill”可以 send a signal to a process,强行”kill”掉。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-共享内存：虽然进程之间是彼此独立的，但是操作系统可以提供一个机制，两个进程可以约定好，打开一个文件，这个文件映射到内存中，也就是多个进程使用同一块内存。"><span class="nav-text">4.共享内存：虽然进程之间是彼此独立的，但是操作系统可以提供一个机制，两个进程可以约定好，打开一个文件，这个文件映射到内存中，也就是多个进程使用同一块内存。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-消息队列：一个进程可以向另一个进程发消息。"><span class="nav-text">5.消息队列：一个进程可以向另一个进程发消息。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-同步机制，信号量。"><span class="nav-text">6.同步机制，信号量。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-Socket：最后一种，而且没回答出来这个其实整个答案都不算好。因为前面6种只能作为同一个机器的进程之间的通信，而Socket可以是不同机器的进程之间的通信。"><span class="nav-text">7.Socket：最后一种，而且没回答出来这个其实整个答案都不算好。因为前面6种只能作为同一个机器的进程之间的通信，而Socket可以是不同机器的进程之间的通信。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程调度"><span class="nav-text">线程调度</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#存储和寻址"><span class="nav-text">存储和寻址</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#寻址过程"><span class="nav-text">寻址过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#中断"><span class="nav-text">中断</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#操作系统问题集合"><span class="nav-text">操作系统问题集合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程和线程的区别和联系？-1"><span class="nav-text">进程和线程的区别和联系？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单说说寻址的过程？"><span class="nav-text">简单说说寻址的过程？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#32位操作系统和64位操作系统区别是什么？"><span class="nav-text">32位操作系统和64位操作系统区别是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#说出你知道的进程间通信机制？"><span class="nav-text">说出你知道的进程间通信机制？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#说一下中断的概念和流程？"><span class="nav-text">说一下中断的概念和流程？</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -604,7 +593,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">267k</span>
+    <span title="Symbols count total">271k</span>
 </div>
 
 
@@ -621,7 +610,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共126k字</span>
+  <span class="post-count">博客全站共127.4k字</span>
 </div>
 
         
