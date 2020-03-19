@@ -59,7 +59,7 @@
 <meta property="og:image" content="https://s2.ax1x.com/2020/03/04/35Lr90.png">
 <meta property="og:image" content="https://i.loli.net/2020/03/16/CcQiorLdHl4w9EK.png">
 <meta property="article:published_time" content="2020-02-24T16:24:45.000Z">
-<meta property="article:modified_time" content="2020-03-16T11:22:03.247Z">
+<meta property="article:modified_time" content="2020-03-19T14:50:07.971Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="Interview">
 <meta property="article:tag" content="JVM">
@@ -153,7 +153,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">21</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">19</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -163,7 +163,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">30</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">29</span></a>
 
   </li>
   </ul>
@@ -223,7 +223,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-16 19:22:03" itemprop="dateModified" datetime="2020-03-16T19:22:03+08:00">2020-03-16</time>
+                <time title="Modified: 2020-03-19 22:50:07" itemprop="dateModified" datetime="2020-03-19T22:50:07+08:00">2020-03-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -251,7 +251,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>715</span>
+              <span>1.9k</span>
             </span>
 
         </div>
@@ -283,7 +283,20 @@
 <li>堆是JVM管理的内存中最大的一块，堆被所有线程共享，目的是为了存放对象实例，几乎所有的对象实例都在这里分配。当堆内存没有可用的空间时，会抛出OOM异常。根据对象存活的周期不同，JVM把堆内存进行分代管理，由垃圾回收器来进行对象的回收管理。</li>
 <li>方法区也是各个线程共享的内存区域，又叫非堆区。用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据，JDK1.7中的永久代和JDK1.8中的Metaspace都是方法区的一种实现。</li>
 </ul>
-<h1 id="2-Java类加载器有几种，关系是怎样的？"><a href="#2-Java类加载器有几种，关系是怎样的？" class="headerlink" title="2.Java类加载器有几种，关系是怎样的？"></a>2.Java类加载器有几种，关系是怎样的？</h1><h1 id="3-双亲委派机制的加载流程是怎样的，有什么好处？"><a href="#3-双亲委派机制的加载流程是怎样的，有什么好处？" class="headerlink" title="3.双亲委派机制的加载流程是怎样的，有什么好处？"></a>3.双亲委派机制的加载流程是怎样的，有什么好处？</h1><h1 id="4-简单描述一下GC的分代回收"><a href="#4-简单描述一下GC的分代回收" class="headerlink" title="4.简单描述一下GC的分代回收"></a>4.简单描述一下GC的分代回收</h1><h1 id="5-G1垃圾回收算法与CMS的区别有哪些？"><a href="#5-G1垃圾回收算法与CMS的区别有哪些？" class="headerlink" title="5.G1垃圾回收算法与CMS的区别有哪些？"></a>5.G1垃圾回收算法与CMS的区别有哪些？</h1><h1 id="6-对象引用有哪几种方式，有什么特点？"><a href="#6-对象引用有哪几种方式，有什么特点？" class="headerlink" title="6.对象引用有哪几种方式，有什么特点？"></a>6.对象引用有哪几种方式，有什么特点？</h1><h1 id="7-使用过哪些JVM调试工具，主要分析哪些内容？"><a href="#7-使用过哪些JVM调试工具，主要分析哪些内容？" class="headerlink" title="7.使用过哪些JVM调试工具，主要分析哪些内容？"></a>7.使用过哪些JVM调试工具，主要分析哪些内容？</h1>
+<h1 id="2-什么情况会触发FullGC？"><a href="#2-什么情况会触发FullGC？" class="headerlink" title="2.什么情况会触发FullGC？"></a>2.什么情况会触发FullGC？</h1><ul>
+<li>老年代空间不足——如果创建的对象很大，Eden区域放不下这个对象，会放入到老年代中。如果老年代空间也不足，就会触发Full GC。为了避免这种情况，最好就是不要创建太大的对象。</li>
+<li>永久代空间不足——这主要是针对JDK7以及以前的版本。当系统中需要加载和调用的类很多，而同时持久代当中没有足够的空间去存放类的信息和方法信息的时候，就会触发出一次Full GC。而JDK8以后由于取消了永久代，就不存在”永久代空间不足”这种情况了。(这也是JDK8后面用元空间替代永久代的原因之一，为了降低Full GC的频率，减少GC的负担，提升其效率)</li>
+<li>CMS GC时出现promotion failed, concurrent mode failure。对于采用CMS 进行老年代GC的程序而言，如果GC日志中出现了这两个字段。如果出现了，可能会触发Full GC。</li>
+<li>Minor GC晋升到老年代的平均大小大于老年代的剩余空间</li>
+<li>调用System.gc()——这个是我们在程序里面手动调用的，触发Full GC。需要注意这个方法只是提醒虚拟机，程序员希望你在这里回收一下对象。但是具体怎么做还是要看虚拟机自己，程序员没有控制权</li>
+<li>使用RMI来进行RPC或管理的JDK应用，每小时执行1次Full GC</li>
+</ul>
+<p>这些点很多，面试的时候只要能够提到3点，基本可以点到为止了，可以答到老年代空间不足，程序手动调用System.gc()，然后如果用的JDK版本比较老，在JDK8之前的版本，会有永久代空间不足的情况。当然其他的能说出来更好。</p>
+<p>需要注意：</p>
+<p>1.promotion failed是在进行Minor GC的时候Survivor放不下了，对象只能放入老年代，而此时恰好老年代也放不下，这时候就会造成promotion failed。</p>
+<p>2.concurrent mode failure是在执行CMS GC的过程中同时有对象要放入老年代中，而此时老年代空间不足，就会造成这个failure。</p>
+<p>而对于Minor GC晋升的这第四点，是比较复杂的触发情况。HotSpot为了避免由于新生代对象晋升到老年代而导致老年代空间不足的现象，在进行Minor GC的时候做了一个判断：如果之前统计所得到的Minor GC晋升到老年代的平均大小大于老年代的剩余空间，就直接触发Full GC。例如，程序第一次触发GC后有6M的对象晋升到老年代，当下一次Minor GC发生的时候，首先先检查老年代的剩余空间是否大于6M，如果小于6M，则执行Full GC。</p>
+<h1 id="3-Java类加载器有几种，关系是怎样的？"><a href="#3-Java类加载器有几种，关系是怎样的？" class="headerlink" title="3.Java类加载器有几种，关系是怎样的？"></a>3.Java类加载器有几种，关系是怎样的？</h1><h1 id="3-双亲委派机制的加载流程是怎样的，有什么好处？"><a href="#3-双亲委派机制的加载流程是怎样的，有什么好处？" class="headerlink" title="3.双亲委派机制的加载流程是怎样的，有什么好处？"></a>3.双亲委派机制的加载流程是怎样的，有什么好处？</h1><h1 id="5-JDK1-8为什么用Metaspace替换掉PermGen？Metaspace保存在哪里？"><a href="#5-JDK1-8为什么用Metaspace替换掉PermGen？Metaspace保存在哪里？" class="headerlink" title="5.JDK1.8为什么用Metaspace替换掉PermGen？Metaspace保存在哪里？"></a>5.JDK1.8为什么用Metaspace替换掉PermGen？Metaspace保存在哪里？</h1><h1 id="6-编译器会对指令做哪些优化？-简单描述编译器的指令重排"><a href="#6-编译器会对指令做哪些优化？-简单描述编译器的指令重排" class="headerlink" title="6.编译器会对指令做哪些优化？(简单描述编译器的指令重排)"></a>6.编译器会对指令做哪些优化？(简单描述编译器的指令重排)</h1><h1 id="7-简单描述volatile可以解决什么问题？如何做到的？"><a href="#7-简单描述volatile可以解决什么问题？如何做到的？" class="headerlink" title="7.简单描述volatile可以解决什么问题？如何做到的？"></a>7.简单描述volatile可以解决什么问题？如何做到的？</h1><h1 id="8-简单描述一下GC的分代回收"><a href="#8-简单描述一下GC的分代回收" class="headerlink" title="8.简单描述一下GC的分代回收"></a>8.简单描述一下GC的分代回收</h1><h1 id="9-G1垃圾回收算法与CMS的区别有哪些？"><a href="#9-G1垃圾回收算法与CMS的区别有哪些？" class="headerlink" title="9.G1垃圾回收算法与CMS的区别有哪些？"></a>9.G1垃圾回收算法与CMS的区别有哪些？</h1><h1 id="10-对象引用有哪几种方式，有什么特点？"><a href="#10-对象引用有哪几种方式，有什么特点？" class="headerlink" title="10.对象引用有哪几种方式，有什么特点？"></a>10.对象引用有哪几种方式，有什么特点？</h1><h1 id="11-使用过哪些JVM调试工具，主要分析哪些内容？"><a href="#11-使用过哪些JVM调试工具，主要分析哪些内容？" class="headerlink" title="11.使用过哪些JVM调试工具，主要分析哪些内容？"></a>11.使用过哪些JVM调试工具，主要分析哪些内容？</h1>
     </div>
 
 
@@ -374,7 +387,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-简单描述JVM的内存模型"><span class="nav-text">1. 简单描述JVM的内存模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Java类加载器有几种，关系是怎样的？"><span class="nav-text">2.Java类加载器有几种，关系是怎样的？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-双亲委派机制的加载流程是怎样的，有什么好处？"><span class="nav-text">3.双亲委派机制的加载流程是怎样的，有什么好处？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-简单描述一下GC的分代回收"><span class="nav-text">4.简单描述一下GC的分代回收</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-G1垃圾回收算法与CMS的区别有哪些？"><span class="nav-text">5.G1垃圾回收算法与CMS的区别有哪些？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-对象引用有哪几种方式，有什么特点？"><span class="nav-text">6.对象引用有哪几种方式，有什么特点？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-使用过哪些JVM调试工具，主要分析哪些内容？"><span class="nav-text">7.使用过哪些JVM调试工具，主要分析哪些内容？</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-简单描述JVM的内存模型"><span class="nav-text">1. 简单描述JVM的内存模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-什么情况会触发FullGC？"><span class="nav-text">2.什么情况会触发FullGC？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Java类加载器有几种，关系是怎样的？"><span class="nav-text">3.Java类加载器有几种，关系是怎样的？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-双亲委派机制的加载流程是怎样的，有什么好处？"><span class="nav-text">3.双亲委派机制的加载流程是怎样的，有什么好处？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-JDK1-8为什么用Metaspace替换掉PermGen？Metaspace保存在哪里？"><span class="nav-text">5.JDK1.8为什么用Metaspace替换掉PermGen？Metaspace保存在哪里？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-编译器会对指令做哪些优化？-简单描述编译器的指令重排"><span class="nav-text">6.编译器会对指令做哪些优化？(简单描述编译器的指令重排)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-简单描述volatile可以解决什么问题？如何做到的？"><span class="nav-text">7.简单描述volatile可以解决什么问题？如何做到的？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-简单描述一下GC的分代回收"><span class="nav-text">8.简单描述一下GC的分代回收</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-G1垃圾回收算法与CMS的区别有哪些？"><span class="nav-text">9.G1垃圾回收算法与CMS的区别有哪些？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-对象引用有哪几种方式，有什么特点？"><span class="nav-text">10.对象引用有哪几种方式，有什么特点？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-使用过哪些JVM调试工具，主要分析哪些内容？"><span class="nav-text">11.使用过哪些JVM调试工具，主要分析哪些内容？</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -390,7 +403,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -403,7 +416,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -459,7 +472,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">271k</span>
+    <span title="Symbols count total">266k</span>
 </div>
 
 
@@ -476,7 +489,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共127.4k字</span>
+  <span class="post-count">博客全站共123.3k字</span>
 </div>
 
         
