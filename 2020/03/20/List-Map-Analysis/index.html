@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/siyecao.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/siyecao.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false,"b2t":true,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="世上无难事，只要肯攀登——毛泽东">
+<meta property="og:type" content="article">
+<meta property="og:title" content="List-Map-Analysis">
+<meta property="og:url" content="http://yoursite.com/2020/03/20/List-Map-Analysis/index.html">
+<meta property="og:site_name" content="Hi, This is Bennett">
+<meta property="og:description" content="世上无难事，只要肯攀登——毛泽东">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/03/16/6qckhNGguBS95KQ.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/16/oIRDHnTqAy2dcsB.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/16/RykLXdcBrnDTUJl.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/16/aguyM8eO4cqZ9Qt.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/18/fsNkZXdAE1ytaJ7.png">
+<meta property="article:published_time" content="2020-03-20T04:36:04.000Z">
+<meta property="article:modified_time" content="2020-03-20T04:40:30.855Z">
+<meta property="article:author" content="Wang Mingsheng">
+<meta property="article:tag" content="List">
+<meta property="article:tag" content="Map">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/16/6qckhNGguBS95KQ.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/20/List-Map-Analysis/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>List-Map-Analysis | Hi, This is Bennett</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hi, This is Bennett</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">22</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">31</span></a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/20/List-Map-Analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/faceimage.jpg">
+      <meta itemprop="name" content="Wang Mingsheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hi, This is Bennett">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          List-Map-Analysis
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-03-20 12:36:04 / Modified: 12:40:30" itemprop="dateCreated datePublished" datetime="2020-03-20T12:36:04+08:00">2020-03-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Study-Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Study Note</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Study-Note/Interview-Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Interview Note</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              
+              <span>22k</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>世上无难事，只要肯攀登——毛泽东</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="ArrayList源码解析及设计思路"><a href="#ArrayList源码解析及设计思路" class="headerlink" title="ArrayList源码解析及设计思路"></a>ArrayList源码解析及设计思路</h1><p>提纲挈领地说，主要从ArrayList整体架构出发，考虑到新增、扩容、删除、迭代等内容。</p>
+<p>ArrayList其实就是围绕底层数组，各个API都是对数组的操作进行封装，使用者使用的时候对底层无需感知，只要关注如何使用即可。</p>
+<p><strong>ArrayList是线程不安全的</strong>，多线程情况下更推荐使用线程安全的类：Collections#synchronizedList。</p>
+<p>如果我们不指定位置直接添加元素时(add(E element))，元素会默认会添加在最后，不会触发底层数组的复制，不考虑底层数组自动扩容的话，时间复杂度为O(1) ，在指定位置添加元素(add(int index, E element))，需要复制底层数组，根据最坏打算，时间复杂度是O(n)。</p>
+<h2 id="ArrayList整体架构"><a href="#ArrayList整体架构" class="headerlink" title="ArrayList整体架构"></a>ArrayList整体架构</h2><p>ArrayList底层就是一个数组，如图：</p>
+<p><img src="https://i.loli.net/2020/03/16/6qckhNGguBS95KQ.png" alt="ArrayList底层结构.png"></p>
+<p>和数组一样，index下标从0开始，然后上图数组的名字是<code>elementData</code>。</p>
+<p>除了上面这两个概念，源码中还有下面三个基础概念：</p>
+<ul>
+<li>DEFAULT_CAPACITY 表示数组的初始大小，默认是 10，这个数字要记住；</li>
+<li>size 表示当前数组的大小，类型 int，因为没有使用 volatile 修饰，所以是非线程安全的；</li>
+<li>modCount 统计当前数组被修改的版本次数，每当这个结构发生结构变动的时候，会 +1。</li>
+</ul>
+<p>然后，在ArrayList的类注释中有下面比较重要的四点：</p>
+<ol>
+<li>ArrayList允许put null值，而且会自动扩容;</li>
+<li>size()、isEmpty()、get()、set()、add()等方法的时间复杂度都是O(1);</li>
+<li>ArrayList不是线程安全的，多线程情况下更推荐使用线程安全的类：Collections#synchronizedList;</li>
+<li>增强 for 循环，或者使用迭代器迭代过程中，如果数组大小被改变，会快速失败，抛出异常。</li>
+</ol>
+<h2 id="源码解析-未完成"><a href="#源码解析-未完成" class="headerlink" title="源码解析(未完成)"></a>源码解析(未完成)</h2><p>源码解析主要集中在ArrayList的初始化、新增与扩容、删除元素、迭代器等方面</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>初始化有三种方法：无参数直接初始化、指定大小初始化、指定初始数据初始化</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> static final Object<span class="literal">[]</span> DEFAULTCAPACITY_EMPTY_ELEMENTDATA = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//无参数直接初始化，数组大小为空</span></span><br><span class="line">public <span class="constructor">ArrayList()</span> &#123;</span><br><span class="line">    this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//指定初始数据初始化</span></span><br><span class="line">public <span class="constructor">ArrayList(Collection&lt;? <span class="params">extends</span> E&gt; <span class="params">c</span>)</span> &#123;</span><br><span class="line">    <span class="comment">//elementData 是保存数组的容器，默认为 null</span></span><br><span class="line">    elementData = c.<span class="keyword">to</span><span class="constructor">Array()</span>;</span><br><span class="line">    <span class="comment">//如果给定的集合（c）数据有值</span></span><br><span class="line">    <span class="keyword">if</span> ((size = elementData.length) != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// c.toArray might (incorrectly) not return Object[] (see 6260652)</span></span><br><span class="line">        <span class="comment">//如果集合元素类型不是 Object 类型，我们会转成 Object</span></span><br><span class="line">        <span class="keyword">if</span> (elementData.get<span class="constructor">Class()</span> != Object<span class="literal">[]</span>.<span class="keyword">class</span>) &#123;</span><br><span class="line">            elementData = <span class="module-access"><span class="module"><span class="identifier">Arrays</span>.</span></span>copy<span class="constructor">Of(<span class="params">elementData</span>, <span class="params">size</span>, Object[].<span class="params">class</span>)</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 给定集合（c）无值，则默认空数组</span></span><br><span class="line">        this.elementData = EMPTY_ELEMENTDATA;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要补充：</p>
+<ol>
+<li>ArrayList无参构造器初始化的时候，默认大小是空数组，并不是大家常说的 10，10 是在第一次 add 的时候扩容的数组值。</li>
+<li>指定初始数据初始化时，我们发现一个这样子的注释 see 6260652，这是 Java 的一个 bug，意思是当给定集合内的元素不是 Object 类型时，我们会转化成 Object 的类型。这个BUG在JDK9中被解决。</li>
+</ol>
+<h3 id="新增和扩容实现"><a href="#新增和扩容实现" class="headerlink" title="新增和扩容实现"></a>新增和扩容实现</h3><p>新增就是往数组中添加元素，主要分成两步：</p>
+<ol>
+<li>判断是否需要扩容，如果需要执行扩容操作；</li>
+<li>直接赋值。</li>
+</ol>
+<p>两步的源码如下：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">  <span class="comment">//确保数组大小是否足够，不够执行扩容，size 为当前数组的大小</span></span><br><span class="line">  ensureCapacityInternal(<span class="built_in">size</span> + <span class="number">1</span>);  <span class="comment">// Increments modCount!!</span></span><br><span class="line">  <span class="comment">//直接赋值，线程不安全的</span></span><br><span class="line">  elementData[<span class="built_in">size</span>++] = e;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>扩容(ensureCapacityInternal)的源码：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> void ensure<span class="constructor">CapacityInternal(<span class="params">int</span> <span class="params">minCapacity</span>)</span> &#123;</span><br><span class="line">  <span class="comment">//如果初始化数组大小时，有给定初始值，以给定的大小为准，不走 if 逻辑</span></span><br><span class="line">  <span class="keyword">if</span> (elementData<span class="operator"> == </span>DEFAULTCAPACITY_EMPTY_ELEMENTDATA) &#123;</span><br><span class="line">    minCapacity = <span class="module-access"><span class="module"><span class="identifier">Math</span>.</span></span>max(DEFAULT_CAPACITY, minCapacity);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//确保容积足够</span></span><br><span class="line">  ensure<span class="constructor">ExplicitCapacity(<span class="params">minCapacity</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> void ensure<span class="constructor">ExplicitCapacity(<span class="params">int</span> <span class="params">minCapacity</span>)</span> &#123;</span><br><span class="line">  <span class="comment">//记录数组被修改</span></span><br><span class="line">  modCount++;</span><br><span class="line">  <span class="comment">// 如果我们期望的最小容量大于目前数组的长度，那么就扩容</span></span><br><span class="line">  <span class="keyword">if</span> (minCapacity - elementData.length &gt; <span class="number">0</span>)</span><br><span class="line">    grow(minCapacity);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//扩容，并把现有数据拷贝到新的数组里面去</span></span><br><span class="line"><span class="keyword">private</span> void grow(<span class="built_in">int</span> minCapacity) &#123;</span><br><span class="line">  <span class="built_in">int</span> oldCapacity = elementData.length;</span><br><span class="line">  <span class="comment">// oldCapacity &gt;&gt; 1 是把 oldCapacity 除以 2 的意思</span></span><br><span class="line">  <span class="built_in">int</span> newCapacity = oldCapacity + (oldCapacity &gt;&gt; <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 如果扩容后的值 &lt; 我们的期望值，扩容后的值就等于我们的期望值</span></span><br><span class="line">  <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">    newCapacity = minCapacity;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 如果扩容后的值 &gt; jvm 所能分配的数组的最大值，那么就用 Integer 的最大值</span></span><br><span class="line">  <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">    newCapacity = huge<span class="constructor">Capacity(<span class="params">minCapacity</span>)</span>;</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 通过复制进行扩容</span></span><br><span class="line">  elementData = <span class="module-access"><span class="module"><span class="identifier">Arrays</span>.</span></span>copy<span class="constructor">Of(<span class="params">elementData</span>, <span class="params">newCapacity</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>除了注释内容，需要额外注意四点：</p>
+<ul>
+<li><p>扩容的规则并不是翻倍，是原来容量大小 + 容量大小的一半，直白来说，扩容后的大小是原来容量的 1.5 倍；</p>
+</li>
+<li><p>ArrayList 中的数组的最大值是 Integer.MAX_VALUE，超过这个值，JVM 就不会给数组分配内存空间了。</p>
+</li>
+<li><p>新增时，并没有对值进行严格的校验，所以 ArrayList 是允许 null 值的。</p>
+</li>
+<li><p>源码在扩容的时候，有数组大小溢出意识，就是说扩容后数组的大小下界不能小于 0，上界不能大于 Integer 的最大值，这种意识我们可以学习。</p>
+</li>
+</ul>
+<p>扩容完成之后，赋值是非常简单的，直接往数组上添加元素即可：elementData [size++] = e。也正是通过这种简单赋值，没有任何锁控制，所以这里的操作是线程不安全的。</p>
+<h2 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><p>对ArrayList的新增或者删除操作本质都是对数组元素的操作，只需要根据数组索引，直接新增和删除数据，所以时间复杂度是O(1)</p>
+<h2 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h2><p>需要强调的是，<font color=#FF0000>只有当 ArrayList 作为共享变量时，才会有线程安全问题，当 ArrayList 是方法内的局部变量时，是没有线程安全的问题的</font>。</p>
+<p>ArrayList 有线程安全问题的本质，是因为 ArrayList 自身的 elementData、size、modConut 在进行各种操作时，都没有加锁，而且这些变量的类型并非是可见（volatile）的，所以如果多个线程对这些变量进行操作时，可能会有值被覆盖的情况。</p>
+<p>类注释中推荐我们使用 Collections#synchronizedList 来保证线程安全，SynchronizedList 是通过在每个方法上面加上锁来实现，虽然实现了线程安全，但是性能大大降低，具体实现源码：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (mutex) &#123;<span class="comment">// synchronized 是一种轻量锁，mutex 表示一个当前 SynchronizedList</span></span><br><span class="line">        <span class="function"><span class="keyword">return</span> c.<span class="title">add</span><span class="params">(e)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="LinkedList源码解析及设计思路"><a href="#LinkedList源码解析及设计思路" class="headerlink" title="LinkedList源码解析及设计思路"></a>LinkedList源码解析及设计思路</h1><p>LinkedList可以用于先入先出，也可以用于先入后出，因为它本质是一个链表，而且是双向链表。</p>
+<h2 id="LinkedList整体架构"><a href="#LinkedList整体架构" class="headerlink" title="LinkedList整体架构"></a>LinkedList整体架构</h2><p>LinkedList本质是双向链表，整体结构如下图：</p>
+<p><img src="https://i.loli.net/2020/03/16/oIRDHnTqAy2dcsB.png" alt="LinkedList底层架构.png"></p>
+<h2 id="源码解析-未完"><a href="#源码解析-未完" class="headerlink" title="源码解析(未完)"></a>源码解析(未完)</h2><h3 id="新增元素"><a href="#新增元素" class="headerlink" title="新增元素"></a>新增元素</h3><p>追加节点时，我们可以选择追加到链表头部，还是追加到链表尾部，add 方法默认是从尾部开始追加，addFirst 方法是从头部开始追加。</p>
+<h4 id="从尾部追加-add"><a href="#从尾部追加-add" class="headerlink" title="从尾部追加(add)"></a>从尾部追加(add)</h4><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 从尾部开始追加节点</span></span><br><span class="line">void linkLast(E e) &#123;</span><br><span class="line">    <span class="comment">// 把尾节点数据暂存</span></span><br><span class="line">    final Node&lt;E&gt; l = last;</span><br><span class="line">    <span class="comment">// 新建新的节点，初始化入参含义：</span></span><br><span class="line">    <span class="comment">// l 是新节点的前一个节点，当前值是尾节点值</span></span><br><span class="line">    <span class="comment">// e 表示当前新增节点，当前新增节点后一个节点是 null</span></span><br><span class="line">    final Node&lt;E&gt; <span class="keyword">new</span><span class="type">Node</span> = <span class="keyword">new</span> <span class="type">Node</span>&lt;&gt;(l, e, <span class="literal">null</span>);</span><br><span class="line">    <span class="comment">// 新建节点追加到尾部</span></span><br><span class="line">    last = <span class="keyword">new</span><span class="type">Node</span>;</span><br><span class="line">    <span class="comment">//如果链表为空（l 是尾节点，尾节点为空，链表即空），头部和尾部是同一个节点，都是新建的节点</span></span><br><span class="line">    <span class="keyword">if</span> (l == <span class="literal">null</span>)</span><br><span class="line">        first = <span class="keyword">new</span><span class="type">Node</span>;![图片描述](<span class="comment">//img1.sycdn.imooc.com/5d5fc69600013e4803600240.gif)</span></span><br><span class="line">    <span class="comment">//否则把前尾节点的下一个节点，指向当前尾节点。</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        l.next = <span class="keyword">new</span><span class="type">Node</span>;</span><br><span class="line">    <span class="comment">//大小和版本更改</span></span><br><span class="line">    size++;</span><br><span class="line">    modCount++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从源码上来看，尾部追加节点比较简单，只需要简单地把指向位置修改下即可</p>
+<h4 id="从头部追加-addFirst"><a href="#从头部追加-addFirst" class="headerlink" title="从头部追加(addFirst)"></a>从头部追加(addFirst)</h4><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 从头部追加</span></span><br><span class="line"><span class="keyword">private</span> void linkFirst(E e) &#123;</span><br><span class="line">    <span class="comment">// 头节点赋值给临时变量</span></span><br><span class="line">    final Node&lt;E&gt; f = first;</span><br><span class="line">    <span class="comment">// 新建节点，前一个节点指向null，e 是新建节点，f 是新建节点的下一个节点，目前值是头节点的值</span></span><br><span class="line">    final Node&lt;E&gt; <span class="keyword">new</span><span class="type">Node</span> = <span class="keyword">new</span> <span class="type">Node</span>&lt;&gt;(<span class="literal">null</span>, e, f);</span><br><span class="line">    <span class="comment">// 新建节点成为头节点</span></span><br><span class="line">    first = <span class="keyword">new</span><span class="type">Node</span>;</span><br><span class="line">    <span class="comment">// 头节点为空，就是链表为空，头尾节点是一个节点</span></span><br><span class="line">    <span class="keyword">if</span> (f == <span class="literal">null</span>)</span><br><span class="line">        last = <span class="keyword">new</span><span class="type">Node</span>;</span><br><span class="line">    <span class="comment">//上一个头节点的前一个节点指向当前节点</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        f.prev = <span class="keyword">new</span><span class="type">Node</span>;</span><br><span class="line">    size++;</span><br><span class="line">    modCount++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>头部追加节点和尾部追加节点非常类似，只是前者是移动头节点的 prev 指向，后者是移动尾节点的 next 指向。</p>
+<h3 id="节点删除"><a href="#节点删除" class="headerlink" title="节点删除"></a>节点删除</h3><p>节点删除的方式和追加类似，我们可以选择从头部删除，也可以选择从尾部删除，删除操作会把节点的值，前后指向节点都置为 null，帮助 GC 进行回收。</p>
+<p>从头部删除：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//从头删除节点 f 是链表头节点</span></span><br><span class="line"><span class="keyword">private</span> E unlinkFirst(Node&lt;E&gt; f) &#123;</span><br><span class="line">    <span class="comment">// 拿出头节点的值，作为方法的返回值</span></span><br><span class="line">    <span class="keyword">final</span> E element = f.item;</span><br><span class="line">    <span class="comment">// 拿出头节点的下一个节点</span></span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; <span class="keyword">next</span> = f.<span class="keyword">next</span>;</span><br><span class="line">    <span class="comment">//帮助 GC 回收头节点</span></span><br><span class="line">    f.item = <span class="keyword">null</span>;</span><br><span class="line">    f.<span class="keyword">next</span> = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">// 头节点的下一个节点成为头节点</span></span><br><span class="line">    first = <span class="keyword">next</span>;</span><br><span class="line">    <span class="comment">//如果 next 为空，表明链表为空</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">next</span> == <span class="keyword">null</span>)</span><br><span class="line">        last = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//链表不为空，头节点的前一个节点指向 null</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">next</span>.prev = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//修改链表大小和版本</span></span><br><span class="line">    <span class="keyword">size</span>--;</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="keyword">return</span> element;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从尾部删除差不多，不重复贴了。</p>
+<p>链表结构的节点新增、删除都非常简单，仅仅把前后节点的指向修改下就好了，所以 LinkedList 新增和删除速度很快。</p>
+<h3 id="访问元素-节点"><a href="#访问元素-节点" class="headerlink" title="访问元素(节点)"></a>访问元素(节点)</h3><p>这是LinkedList的缺陷了，需要循环挨个查找才行。但是LinkedList其实也是用了二分法来加快查找的。</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 根据链表索引位置查询节点</span><br><span class="line"><span class="keyword">Node</span><span class="title">&lt;E</span>&gt; <span class="keyword">node</span><span class="title">(int</span> index) &#123;</span><br><span class="line">    // 如果 index 处于队列的前半部分，从头开始找，size &gt;&gt; <span class="number">1</span> 是 size 除以 <span class="number">2</span> 的意思。</span><br><span class="line">    if (index <span class="tag">&lt; (size &gt;</span>&gt; <span class="number">1</span>)) &#123;</span><br><span class="line">        <span class="keyword">Node</span><span class="title">&lt;E</span>&gt; x = first;</span><br><span class="line">        // 直到 for 循环到 index 的前一个 <span class="keyword">node</span> <span class="title">停止</span></span><br><span class="line"><span class="title">        for</span> (int i = <span class="number">0</span>; i <span class="tag">&lt; index; i++)</span></span><br><span class="line"><span class="tag">            x = x.next;</span></span><br><span class="line"><span class="tag">        return x;</span></span><br><span class="line"><span class="tag">    &#125; else &#123;// 如果 index 处于队列的后半部分，从尾开始找</span></span><br><span class="line"><span class="tag">        Node&lt;E&gt;</span> x = last;</span><br><span class="line">        // 直到 for 循环到 index 的后一个 <span class="keyword">node</span> <span class="title">停止</span></span><br><span class="line"><span class="title">        for</span> (int i = size - <span class="number">1</span>; i &gt; index; i--)</span><br><span class="line">            x = x.prev;</span><br><span class="line">        return x;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>LinkedList 并没有采用从头循环到尾的做法，而是采取了简单二分法，首先看看 index 是在链表的前半部分，还是后半部分。如果是前半部分，就从头开始寻找，反之亦然。通过这种方式，使循环的次数至少降低了一半，提高了查找的性能，这种思想值得我们借鉴。</p>
+<h3 id="LinkedList和其他结构对比"><a href="#LinkedList和其他结构对比" class="headerlink" title="LinkedList和其他结构对比"></a>LinkedList和其他结构对比</h3><p>首先，LinkedList实现了Queue接口，也就是实例化Queue的时候，需要这么写：<code>Queue&lt;E&gt; queue = new LinkedList&lt;&gt;()</code>，在新增、删除、查询等方面增加了很多新的方法，这些方法在平时特别容易混淆，在链表为空的情况下，返回值也不太一样</p>
+<p><img src="https://i.loli.net/2020/03/16/RykLXdcBrnDTUJl.png" alt="LinkedList方法对比表格.png"></p>
+<h1 id="List接口常见问题"><a href="#List接口常见问题" class="headerlink" title="List接口常见问题"></a>List接口常见问题</h1><h2 id="1-说说对ArrayList的理解？"><a href="#1-说说对ArrayList的理解？" class="headerlink" title="1.说说对ArrayList的理解？"></a>1.说说对ArrayList的理解？</h2><p>建议先回答总体架构，再从某个细节出发作为突破口，比如这样：</p>
+<p>ArrayList 底层数据结构是个数组，其 API 都做了一层对数组底层访问的封装，比如说 add 方法的过程是……（这里可以引用我们在 ArrayList 源码解析中 add 的过程）。</p>
+<p>谈谈对LinkedList的理解？——一样的套路。</p>
+<h2 id="2-扩容类问题"><a href="#2-扩容类问题" class="headerlink" title="2.扩容类问题"></a>2.扩容类问题</h2><h3 id="2-1-ArrayList-无参数构造器构造，现在-add-一个值进去，此时数组的大小是多少，下一次扩容前最大可用大小是多少？"><a href="#2-1-ArrayList-无参数构造器构造，现在-add-一个值进去，此时数组的大小是多少，下一次扩容前最大可用大小是多少？" class="headerlink" title="2.1 ArrayList 无参数构造器构造，现在 add 一个值进去，此时数组的大小是多少，下一次扩容前最大可用大小是多少？"></a>2.1 ArrayList 无参数构造器构造，现在 add 一个值进去，此时数组的大小是多少，下一次扩容前最大可用大小是多少？</h3><p>答：此处数组的大小是 1，下一次扩容前最大可用大小是 10，因为 ArrayList 第一次扩容时，是有默认值的，默认值是 10，在第一次 add 一个值进去时，数组的可用大小被扩容到 10 了。</p>
+<h3 id="2-2-如果我连续往-list-里面新增值，增加到第-11-个的时候，数组的大小是多少？"><a href="#2-2-如果我连续往-list-里面新增值，增加到第-11-个的时候，数组的大小是多少？" class="headerlink" title="2.2 如果我连续往 list 里面新增值，增加到第 11 个的时候，数组的大小是多少？"></a>2.2 如果我连续往 list 里面新增值，增加到第 11 个的时候，数组的大小是多少？</h3><p>扩容一次，从10扩容1.5倍，到15</p>
+<h3 id="2-3-数组初始化，被加入一个值后，如果我使用-addAll-方法，一下子加入-15-个值，那么最终数组的大小是多少？"><a href="#2-3-数组初始化，被加入一个值后，如果我使用-addAll-方法，一下子加入-15-个值，那么最终数组的大小是多少？" class="headerlink" title="2.3 数组初始化，被加入一个值后，如果我使用 addAll 方法，一下子加入 15 个值，那么最终数组的大小是多少？"></a>2.3 数组初始化，被加入一个值后，如果我使用 addAll 方法，一下子加入 15 个值，那么最终数组的大小是多少？</h3><p>扩容一次不够，根据ArrayList源码的扩容原则，当期望值(这里是16)大于一次扩容之后的量，那么我们这次扩容的值为期望值，即扩容之后容量为16</p>
+<h3 id="2-4-现在我有一个很大的数组需要拷贝，原数组大小是-5k，请问如何快速拷贝？"><a href="#2-4-现在我有一个很大的数组需要拷贝，原数组大小是-5k，请问如何快速拷贝？" class="headerlink" title="2.4 现在我有一个很大的数组需要拷贝，原数组大小是 5k，请问如何快速拷贝？"></a>2.4 现在我有一个很大的数组需要拷贝，原数组大小是 5k，请问如何快速拷贝？</h3><p>答：因为原数组比较大，不能频繁扩容，否则有大量拷贝的工作，造成拷贝的性能低下，所以回答说新建数组时，指定新数组的大小为 5k 即可。</p>
+<h3 id="2-5-为什么说扩容会消耗性能？"><a href="#2-5-为什么说扩容会消耗性能？" class="headerlink" title="2.5 为什么说扩容会消耗性能？"></a>2.5 为什么说扩容会消耗性能？</h3><p>答：扩容底层使用的是 System.arraycopy 方法，会把原数组的数据全部拷贝到新数组上，所以性能消耗比较严重。</p>
+<h3 id="2-6-源码扩容过程有什么值得借鉴的地方？"><a href="#2-6-源码扩容过程有什么值得借鉴的地方？" class="headerlink" title="2.6 源码扩容过程有什么值得借鉴的地方？"></a>2.6 源码扩容过程有什么值得借鉴的地方？</h3><p>主要两点：</p>
+<ol>
+<li>扩容的思想。每次扩容1.5倍，也是比较合理的设置，前期慢慢增加，后期增加速度更快</li>
+<li>扩容过程中，有数组大小溢出的意识，比如要求扩容后的数组大小，不能小于 0，不能大于 Integer 的最大值。</li>
+</ol>
+<h2 id="3-对比问题"><a href="#3-对比问题" class="headerlink" title="3.对比问题"></a>3.对比问题</h2><h3 id="3-1-ArrayList和LinkedList有何不同？"><a href="#3-1-ArrayList和LinkedList有何不同？" class="headerlink" title="3.1 ArrayList和LinkedList有何不同？"></a>3.1 ArrayList和LinkedList有何不同？</h3><p>最大的不同是两者底层的数据结构不同，ArrayList 底层是数组，LinkedList 底层是双向链表，两者的数据结构不同也导致了操作的 API 实现有所差异，拿新增实现来说，ArrayList 会先计算并决定是否扩容，然后把新增的数据直接赋值到数组上，而 LinkedList 仅仅只需要改变插入节点和其前后节点的指向位置关系即可。</p>
+<h3 id="3-2-ArrayList-和-LinkedList-应用场景有何不同"><a href="#3-2-ArrayList-和-LinkedList-应用场景有何不同" class="headerlink" title="3.2 ArrayList 和 LinkedList 应用场景有何不同"></a>3.2 ArrayList 和 LinkedList 应用场景有何不同</h3><p>答：ArrayList 更适合于快速的查找匹配，不适合频繁新增删除，像工作中经常会对元素进行匹配查询的场景比较合适，LinkedList 更适合于经常新增和删除，对查询反而很少的场景。</p>
+<h3 id="3-3-ArrayList-和-LinkedList-两者有没有最大容量"><a href="#3-3-ArrayList-和-LinkedList-两者有没有最大容量" class="headerlink" title="3.3 ArrayList 和 LinkedList 两者有没有最大容量"></a>3.3 ArrayList 和 LinkedList 两者有没有最大容量</h3><p>答：ArrayList 有最大容量的，为 Integer 的最大值，大于这个值 JVM 是不会为数组分配内存空间的，LinkedList 底层是双向链表，理论上可以无限大。但源码中，LinkedList 实际大小用的是 int 类型，这也说明了 LinkedList 不能超过 Integer 的最大值，不然会溢出。</p>
+<h3 id="3-4-ArrayList-和-LinkedList-是如何对-null-值进行处理的"><a href="#3-4-ArrayList-和-LinkedList-是如何对-null-值进行处理的" class="headerlink" title="3.4 ArrayList 和 LinkedList 是如何对 null 值进行处理的"></a>3.4 ArrayList 和 LinkedList 是如何对 null 值进行处理的</h3><p>答：ArrayList 允许 null 值新增，也允许 null 值删除。删除 null 值时，是从头开始，找到第一值是 null 的元素删除；LinkedList 新增删除时对 null 值没有特殊校验，是允许新增和删除的。</p>
+<h3 id="3-5-ArrayList-和-LinedList-是线程安全的么，为什么？"><a href="#3-5-ArrayList-和-LinedList-是线程安全的么，为什么？" class="headerlink" title="3.5 ArrayList 和 LinedList 是线程安全的么，为什么？"></a>3.5 ArrayList 和 LinedList 是线程安全的么，为什么？</h3><p>答：当两者作为非共享变量时，比如说仅仅是在方法里面的局部变量时，是没有线程安全问题的，只有当两者是共享变量时，才会有线程安全问题。主要的问题点在于多线程环境下，所有线程任何时刻都可对数组和链表进行操作，这会导致值被覆盖，甚至混乱的情况。</p>
+<p>如果有线程安全问题，在迭代的过程中，会频繁报 ConcurrentModificationException 的错误，意思是在我当前循环的过程中，数组或链表的结构被其它线程修改了。</p>
+<h3 id="3-6-如何解决线程安全问题？"><a href="#3-6-如何解决线程安全问题？" class="headerlink" title="3.6 如何解决线程安全问题？"></a>3.6 如何解决线程安全问题？</h3><p>Java 源码中推荐使用 Collections#synchronizedList 进行解决，Collections#synchronizedList 的返回值是 List 的每个方法都加了 synchronized 锁，保证了在同一时刻，数组和链表只会被一个线程所修改，或者采用CopyOnWriteArrayList 并发 List 来解决。</p>
+<h2 id="4-其他"><a href="#4-其他" class="headerlink" title="4.其他"></a>4.其他</h2><h3 id="4-1-描述下双向链表的新增和删除"><a href="#4-1-描述下双向链表的新增和删除" class="headerlink" title="4.1 描述下双向链表的新增和删除"></a>4.1 描述下双向链表的新增和删除</h3><p>如果条件允许，可以画图说明，参考前面LinkedList的图。</p>
+<p>如果远程电话面试，可以这样描述：双向链表中双向的意思是说前后节点之间互相有引用，链表的节点我们称为 Node。Node 有三个属性组成：其前一个节点，本身节点的值，其下一个节点，假设 A、B 节点相邻，A 节点的下一个节点就是 B，B 节点的上一个节点就是 A，两者互相引用，在链表的头部节点，我们称为头节点。头节点的前一个节点是 null，尾部称为尾节点，尾节点的后一个节点是 null，如果链表数据为空的话，头尾节点是同一个节点，本身是 null，指向前后节点的值也是 null。</p>
+<h3 id="4-2-描述下双向链表的新增和删除"><a href="#4-2-描述下双向链表的新增和删除" class="headerlink" title="4.2 描述下双向链表的新增和删除"></a>4.2 描述下双向链表的新增和删除</h3><p>答：如果是面对面沟通，最好可以直接画图，如果是电话面试，可以这么描述：</p>
+<p>新增：我们可以选择从链表头新增，也可以选择从链表尾新增，如果是从链表尾新增的话，直接把当前节点追加到尾节点之后，本身节点自动变为尾节点。</p>
+<p>删除：把删除节点的后一个节点的 prev 指向其前一个节点，把删除节点的前一个节点的 next 指向其后一个节点，最后把删除的节点置为 null 即可。</p>
+<h1 id="Hashmap源码解析与架构-未完"><a href="#Hashmap源码解析与架构-未完" class="headerlink" title="Hashmap源码解析与架构(未完)"></a>Hashmap源码解析与架构(未完)</h1><p>首先HashMap的源码很长，面试题也很多，最好能弄清楚底层。</p>
+<h2 id="1-整体架构"><a href="#1-整体架构" class="headerlink" title="1.整体架构"></a>1.整体架构</h2><p>HashMap 底层的数据结构主要是：数组 + 链表 + 红黑树。其中当链表的长度大于等于 8 时，链表会转化成红黑树，当红黑树的大小小于等于 6 时，红黑树会转化成链表。</p>
+<p><img src="https://i.loli.net/2020/03/16/aguyM8eO4cqZ9Qt.png" alt="HashMap整体架构.png"></p>
+<p>图中左边竖着的是 HashMap 的数组结构，数组的元素可能是单个 Node，也可能是个链表，也可能是个红黑树，比如数组下标索引为 2 的位置就是一个链表，下标索引为 9 的位置对应的就是红黑树</p>
+<h3 id="1-1类注释中的信息"><a href="#1-1类注释中的信息" class="headerlink" title="1.1类注释中的信息"></a>1.1类注释中的信息</h3><p>从下面这些信息可以大体把握HashMap的重点。</p>
+<ul>
+<li>允许 null 值，不同于 HashTable ，是线程不安全的；</li>
+<li>load factor（影响因子） 默认值是 0.75， 是均衡了时间和空间损耗算出来的值，较高的值会减少空间开销（扩容减少，数组大小增长速度变慢），但增加了查找成本（hash 冲突增加，链表长度变长），不扩容的条件：数组容量 &gt; 需要的数组大小 /load factor；</li>
+<li>如果有很多数据需要储存到 HashMap 中，建议 HashMap 的容量一开始就设置成足够的大小，这样可以防止在其过程中不断的扩容，影响性能；</li>
+<li>HashMap 是非线程安全的，我们可以自己在外部加锁，或者通过 Collections#synchronizedMap 来实现线程安全，Collections#synchronizedMap 的实现是在每个方法上加上了 synchronized 锁；</li>
+<li>在迭代过程中，如果 HashMap 的结构被修改，会快速失败。</li>
+</ul>
+<h3 id="1-2-常见的属性"><a href="#1-2-常见的属性" class="headerlink" title="1.2 常见的属性"></a>1.2 常见的属性</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始容量为 16</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//最大容量</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAXIMUM_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//负载因子默认值</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75</span>f;</span><br><span class="line"></span><br><span class="line"><span class="comment">//桶上的链表长度大于等于8时，链表转化成红黑树</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TREEIFY_THRESHOLD = <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//桶上的红黑树大小小于等于6时，红黑树转化成链表</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> UNTREEIFY_THRESHOLD = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//当数组容量大于 64 时，链表才会转化成红黑树</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MIN_TREEIFY_CAPACITY = <span class="number">64</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//记录迭代过程中 HashMap 结构是否发生变化，如果有变化，迭代时会 fail-fast</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> modCount;</span><br><span class="line"></span><br><span class="line"><span class="comment">//HashMap 的实际大小，可能不准(因为当你拿到这个值的时候，可能又发生了变化)</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> size;</span><br><span class="line"></span><br><span class="line"><span class="comment">//存放数据的数组</span></span><br><span class="line"><span class="keyword">transient</span> Node&lt;K,V&gt;[] table;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 扩容的门槛，有两种情况</span></span><br><span class="line"><span class="comment">// 如果初始化时，给定数组大小的话，通过 tableSizeFor 方法计算，数组大小永远接近于 2 的幂次方，比如你给定初始化大小 19，实际上初始化大小为 32，为 2 的 5 次方。</span></span><br><span class="line"><span class="comment">// 如果是通过 resize 方法进行扩容，大小 = 数组容量 * 0.75</span></span><br><span class="line"><span class="keyword">int</span> threshold;</span><br><span class="line"></span><br><span class="line"><span class="comment">//链表的节点</span></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; &#123;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//红黑树的节点</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">LinkedHashMap</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; &#123;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-新增节点"><a href="#2-新增节点" class="headerlink" title="2.新增节点"></a>2.新增节点</h2><p>新增 key，value 大概的步骤如下：</p>
+<ol>
+<li>空数组有无初始化，没有的话初始化；</li>
+<li>如果通过 key 的 hash 能够直接找到值，跳转到 6，否则到 3；</li>
+<li>如果 hash 冲突，两种解决方案：链表 or 红黑树；</li>
+<li>如果是链表，递归循环，把新元素追加到队尾；</li>
+<li>如果是红黑树，调用红黑树新增的方法；</li>
+<li>通过 2、4、5 将新元素追加成功，再根据 onlyIfAbsent 判断是否需要覆盖；</li>
+<li>判断是否需要扩容，需要扩容进行扩容，结束。</li>
+</ol>
+<h3 id="2-1链表的新增"><a href="#2-1链表的新增" class="headerlink" title="2.1链表的新增"></a>2.1链表的新增</h3><p>链表的新增比较简单，就是把当前节点追加到链表的尾部，和 LinkedList 的追加实现一样的。</p>
+<p>当链表长度大于等于 8 时，此时的链表就会转化成红黑树，转化的方法是：treeifyBin，此方法有一个判断，当链表长度大于等于 8，并且整个数组大小大于 64 时，才会转成红黑树，当数组大小小于 64 时，只会触发扩容，不会转化成红黑树。</p>
+<p>可能面试的时候，有人问你为什么是 8，这个答案在源码中注释有说，中文翻译过来大概的意思是：</p>
+<p>链表查询的时间复杂度是 O (n)，红黑树的查询复杂度是 O (log (n))。在链表数据不多的时候，使用链表进行遍历也比较快，只有当链表数据比较多的时候，才会转化成红黑树，但红黑树需要的占用空间是链表的 2 倍，考虑到转化时间和空间损耗，所以我们需要定义出转化的边界值。</p>
+<p>在考虑设计 8 这个值的时候，我们参考了泊松分布概率函数，由泊松分布中得出结论，链表各个长度的命中概率为：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">* <span class="number">0</span>:    <span class="number">0.60653066</span></span><br><span class="line">* <span class="number">1</span>:    <span class="number">0.30326533</span></span><br><span class="line">* <span class="number">2</span>:    <span class="number">0.07581633</span></span><br><span class="line">* <span class="number">3</span>:    <span class="number">0.01263606</span></span><br><span class="line">* <span class="number">4</span>:    <span class="number">0.00157952</span></span><br><span class="line">* <span class="number">5</span>:    <span class="number">0.00015795</span></span><br><span class="line">* <span class="number">6</span>:    <span class="number">0.00001316</span></span><br><span class="line">* <span class="number">7</span>:    <span class="number">0.00000094</span></span><br><span class="line">* <span class="number">8</span>:    <span class="number">0.00000006</span></span><br></pre></td></tr></table></figure>
+
+<p>意思是，当链表的长度是 8 的时候，出现的概率是 0.00000006，不到千万分之一，所以说正常情况下，链表的长度不可能到达 8 ，而一旦到达 8 时，肯定是 hash 算法出了问题，所以在这种情况下，为了让 HashMap 仍然有较高的查询性能，所以让链表转化成红黑树，我们正常写代码，使用 HashMap 时，几乎不会碰到链表转化成红黑树的情况，毕竟概念只有千万分之一。</p>
+<h3 id="2-2红黑树新增节点过程"><a href="#2-2红黑树新增节点过程" class="headerlink" title="2.2红黑树新增节点过程"></a>2.2红黑树新增节点过程</h3><ol start="2">
+<li><p>首先判断新增的节点在红黑树上是不是已经存在，判断手段有如下两种：</p>
+<p> 1.1. 如果节点没有实现 Comparable 接口，使用 equals 进行判断；</p>
+<p> 1.2. 如果节点自己实现了 Comparable 接口，使用 compareTo 进行判断。</p>
+</li>
+<li><p>新增的节点如果已经在红黑树上，直接返回；不在的话，判断新增节点是在当前节点的左边还是右边，左边值小，右边值大；</p>
+</li>
+<li><p>自旋递归 1 和 2 步，直到当前节点的左边或者右边的节点为空时，停止自旋，当前节点即为我们新增节点的父节点；</p>
+</li>
+<li><p>把新增节点放到当前节点的左边或右边为空的地方，并于当前节点建立父子节点关系；</p>
+</li>
+<li><p>进行着色和旋转，结束。</p>
+</li>
+</ol>
+<p>红黑树的新增，要求大家对红黑树的数据结构有一定的了解。面试的时候，一般只会问到新增节点到红黑树上大概是什么样的一个过程，着色和旋转的细节不会问，因为很难说清楚，但我们要清楚着色指的是给红黑树的节点着上红色或黑色，旋转是为了让红黑树更加平衡，提高查询的效率，总的来说都是为了满足红黑树的 5 个原则：</p>
+<ol>
+<li>节点是红色或黑色</li>
+<li>根是黑色</li>
+<li>所有叶子都是黑色</li>
+<li>从任一节点到其每个叶子的所有简单路径都包含相同数目的黑色节点</li>
+<li>从每个叶子到根的所有路径上不能有两个连续的红色节点</li>
+</ol>
+<h2 id="3-查找"><a href="#3-查找" class="headerlink" title="3.查找"></a>3.查找</h2><p>HashMap 的查找主要分为以下三步：</p>
+<ol>
+<li>根据 hash 算法定位数组的索引位置，equals 判断当前节点是否是我们需要寻找的 key，是的话直接返回，不是的话往下。</li>
+<li>判断当前节点有无 next 节点，有的话判断是链表类型，还是红黑树类型。</li>
+<li>分别走链表和红黑树不同类型的查找方法。</li>
+</ol>
+<h1 id="Treemap和LinkedHashMap源码解析与架构-未完"><a href="#Treemap和LinkedHashMap源码解析与架构-未完" class="headerlink" title="Treemap和LinkedHashMap源码解析与架构(未完)"></a>Treemap和LinkedHashMap源码解析与架构(未完)</h1><p>首先可以明确分析源码的目的：TreeMap 是如何根据 key 进行排序的 和 LinkedHashMap 是如何用两种策略进行访问的。</p>
+<h2 id="1-Treemap解析"><a href="#1-Treemap解析" class="headerlink" title="1. Treemap解析"></a>1. Treemap解析</h2><h3 id="1-1-Treemap排序方式解析"><a href="#1-1-Treemap排序方式解析" class="headerlink" title="1.1 Treemap排序方式解析"></a>1.1 Treemap排序方式解析</h3><p>了解 TreeMap 之前，我们来看下日常工作中排序的两种方式，作为我们学习的基础储备，两种方式的代码如下：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">public <span class="keyword">class</span> TreeMapDemo &#123;</span><br><span class="line"></span><br><span class="line">  @Data</span><br><span class="line">  <span class="comment">// DTO 为我们排序的对象</span></span><br><span class="line">  <span class="keyword">class</span> DTO implements Comparable&lt;DTO&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    public <span class="constructor">DTO(Integer <span class="params">id</span>)</span> &#123;</span><br><span class="line">      this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public <span class="built_in">int</span> compare<span class="constructor">To(DTO <span class="params">o</span>)</span> &#123;</span><br><span class="line">      <span class="comment">//默认从小到大排序</span></span><br><span class="line">      return id - o.get<span class="constructor">Id()</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Test</span><br><span class="line">  public void test<span class="constructor">TwoComparable()</span> &#123;</span><br><span class="line">    <span class="comment">// 第一种排序，从小到大排序，实现 Comparable 的 compareTo 方法进行排序</span></span><br><span class="line">    List&lt;DTO&gt; <span class="built_in">list</span> = <span class="keyword">new</span> ArrayList&lt;&gt;<span class="literal">()</span>;</span><br><span class="line">    for (<span class="built_in">int</span> i = <span class="number">5</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">      <span class="built_in">list</span>.add(<span class="keyword">new</span> <span class="constructor">DTO(<span class="params">i</span>)</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="module-access"><span class="module"><span class="identifier">Collections</span>.</span></span>sort(<span class="built_in">list</span>);</span><br><span class="line">    log.info(<span class="module-access"><span class="module"><span class="identifier">JSON</span>.</span></span><span class="keyword">to</span><span class="constructor">JSONString(<span class="params">list</span>)</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 第二种排序，从大到小排序，利用外部排序器 Comparator 进行排序</span></span><br><span class="line">    Comparator comparator = (Comparator&lt;DTO&gt;) (o1, o2) -&gt; o2.get<span class="constructor">Id()</span> - o1.get<span class="constructor">Id()</span>;</span><br><span class="line">    List&lt;DTO&gt; list2 = <span class="keyword">new</span> ArrayList&lt;&gt;<span class="literal">()</span>;</span><br><span class="line">    for (<span class="built_in">int</span> i = <span class="number">5</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">      list2.add(<span class="keyword">new</span> <span class="constructor">DTO(<span class="params">i</span>)</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="module-access"><span class="module"><span class="identifier">Collections</span>.</span></span>sort(<span class="built_in">list</span>,comparator);</span><br><span class="line">    log.info(<span class="module-access"><span class="module"><span class="identifier">JSON</span>.</span></span><span class="keyword">to</span><span class="constructor">JSONString(<span class="params">list2</span>)</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一种排序输出的结果从小到大，结果是：[{“id”:1},{“id”:2},{“id”:3},{“id”:4},{“id”:5}]；</p>
+<p>第二种输出的结果恰好相反，结果是：[{“id”:5},{“id”:4},{“id”:3},{“id”:2},{“id”:1}]。</p>
+<p>以上两种就是分别通过 Comparable 和 Comparator 两者进行排序的方式，而 TreeMap 利用的也是此原理，从而实现了对 key 的排序，我们一起来看下。</p>
+<h3 id="1-2-TreeMap整体架构"><a href="#1-2-TreeMap整体架构" class="headerlink" title="1.2 TreeMap整体架构"></a>1.2 TreeMap整体架构</h3><p>TreeMap 底层的数据结构就是红黑树，和 HashMap 的红黑树结构一样。</p>
+<p>不同的是，TreeMap 利用了红黑树左节点小，右节点大的性质，根据 key 进行排序，使每个元素能够插入到红黑树大小适当的位置，维护了 key 的大小关系，适用于 key 需要排序的场景。</p>
+<p>因为底层使用的是平衡红黑树的结构，所以 containsKey、get、put、remove 等方法的时间复杂度都是 log(n)。</p>
+<h3 id="1-3-TreeMap常见属性"><a href="#1-3-TreeMap常见属性" class="headerlink" title="1.3 TreeMap常见属性"></a>1.3 TreeMap常见属性</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//比较器，如果外部有传进来 Comparator 比较器，首先用外部的</span></span><br><span class="line"><span class="comment">//如果外部比较器为空，则使用 key 自己实现的 Comparable#compareTo 方法</span></span><br><span class="line"><span class="comment">//比较手段和上面日常工作中的比较 demo 是一致的</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Comparator&lt;? <span class="keyword">super</span> K&gt; comparator;</span><br><span class="line"></span><br><span class="line"><span class="comment">//红黑树的根节点</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> Entry&lt;K,V&gt; root;</span><br><span class="line"></span><br><span class="line"><span class="comment">//红黑树的已有元素大小</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">int</span> size = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//树结构变化的版本号，用于迭代过程中的快速失败场景</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">int</span> modCount = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//红黑树的节点</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4新增节点过程"><a href="#1-4新增节点过程" class="headerlink" title="1.4新增节点过程"></a>1.4新增节点过程</h3><p>看下 TreeMap 新增节点的步骤：</p>
+<ol>
+<li>判断红黑树的节点是否为空，为空的话，新增的节点直接作为根节点</li>
+<li>根据红黑树左小右大的特性，进行判断，找到应该新增节点的父节点</li>
+<li>在父节点的左边或右边插入新增节点</li>
+<li>着色旋转，达到平衡，结束。</li>
+</ol>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">这里省略掉了这四步的代码</span>)</span><br></pre></td></tr></table></figure>
+
+<p>从源码中，我们可以看到：</p>
+<ol>
+<li>新增节点时，就是利用了红黑树左小右大的特性，从根节点不断往下查找，直到找到节点是 null 为止，节点为 null 说明到达了叶子结点；</li>
+<li>查找过程中，发现 key 值已经存在，直接覆盖；</li>
+<li>TreeMap 是禁止 key 是 null 值的。</li>
+</ol>
+<h3 id="1-5-TreeMap小结"><a href="#1-5-TreeMap小结" class="headerlink" title="1.5 TreeMap小结"></a>1.5 TreeMap小结</h3><p>TreeMap 相对来说比较简单，红黑树和 HashMap 比较类似，比较关键的是通过 compare 来比较 key 的大小，然后利用红黑树左小右大的特性，为每个 key 找到自己的位置，从而维护了 key 的大小排序顺序。</p>
+<h2 id="2-LinkedHashMap整体结构解析-未完"><a href="#2-LinkedHashMap整体结构解析-未完" class="headerlink" title="2. LinkedHashMap整体结构解析(未完)"></a>2. LinkedHashMap整体结构解析(未完)</h2><p>LinkedHashMap最主要的就是维护了插入的顺序。其本身继承了HashMap,再此基础上，还提供了两大特性：</p>
+<ol>
+<li>按照插入顺序进行访问；</li>
+<li>实现了访问最少最先删除功能，其目的是把很久都没有访问的 key 自动删除。</li>
+</ol>
+<h3 id="2-1-LinkedHashMap按照插入顺序访问"><a href="#2-1-LinkedHashMap按照插入顺序访问" class="headerlink" title="2.1 LinkedHashMap按照插入顺序访问"></a>2.1 LinkedHashMap按照插入顺序访问</h3><h4 id="2-1-1-LinkedHashMap的链表结构"><a href="#2-1-1-LinkedHashMap的链表结构" class="headerlink" title="2.1.1 LinkedHashMap的链表结构"></a>2.1.1 LinkedHashMap的链表结构</h4><p>LinkedHashMap 的数据结构很像是把 LinkedList 的每个元素换成了 HashMap 的 Node，像是两者的结合体，也正是因为增加了这些结构，从而能把 Map 的元素都串联起来，形成一个链表，而链表就可以保证顺序了，就可以维护元素插入进来的顺序。</p>
+<h4 id="2-1-2-LinkedHashMap如何按照顺序新增"><a href="#2-1-2-LinkedHashMap如何按照顺序新增" class="headerlink" title="2.1.2 LinkedHashMap如何按照顺序新增"></a>2.1.2 LinkedHashMap如何按照顺序新增</h4><p>LinkedHashMap 初始化时，默认 accessOrder 为 false，就是会按照插入顺序提供访问，插入方法使用的是父类 HashMap 的 put 方法，不过覆写了 put 方法执行中调用的 newNode/newTreeNode 和 afterNodeAccess 方法。</p>
+<p>newNode/newTreeNode 方法，控制新增节点追加到链表的尾部，这样每次新节点都追加到尾部，即可保证插入顺序了。</p>
+<p>(略去源码)</p>
+<p>LinkedHashMap 通过新增头节点、尾节点，给每个节点增加 before、after 属性，每次新增时，都把节点追加到尾节点等手段，在新增的时候，就已经维护了按照插入顺序的链表结构了。</p>
+<p>换句话说，LinkedHashMap底层其实是双向链表+哈希Map的组合。</p>
+<h4 id="2-1-3-LinkedHashMap如何按照顺序访问"><a href="#2-1-3-LinkedHashMap如何按照顺序访问" class="headerlink" title="2.1.3 LinkedHashMap如何按照顺序访问"></a>2.1.3 LinkedHashMap如何按照顺序访问</h4><p>LinkedHashMap 只提供了单向访问，即按照插入的顺序从头到尾进行访问，不能像 LinkedList 那样可以从头和从尾两个方向双向访问。</p>
+<p>我们主要通过迭代器进行访问，迭代器初始化的时候，默认从头节点开始访问，在迭代的过程中，不断访问当前节点的 after 节点即可。</p>
+<p>Map 对 key、value 和 entity（节点） 都提供出了迭代的方法，假设我们需要迭代 entity，就可使用 <code>LinkedHashMap.entrySet().iterator()</code> 这种写法直接返回 LinkedHashIterator ，LinkedHashIterator 是迭代器，我们调用迭代器的 nextNode 方法就可以得到下一个节点。</p>
+<p>(源码略)</p>
+<p>在新增节点时，我们就已经维护了元素之间的插入顺序了，所以迭代访问时非常简单，只需要不断的访问当前节点的下一个节点即可。</p>
+<h3 id="2-2-访问最少删除策略-LRU-cahce"><a href="#2-2-访问最少删除策略-LRU-cahce" class="headerlink" title="2.2 访问最少删除策略(LRU cahce)"></a>2.2 访问最少删除策略(LRU cahce)</h3><p>非常经典的LRU（Least recently used,最近最少使用）了，大概的意思就是经常访问的元素会被追加到队尾，这样不经常访问的数据自然就靠近队头，然后每次删除都会把最尾部，也就是最不常用的元素，删除掉。(注意源码这里想表示的是删除队头的元素，所以常用的元素其实是会被追加到队尾的，这和我们自己实现的LRU cache是相反的，但是原理是相同的。我们自己写的LRU可以命名为moveToHead,但是我们写的就是head了，不是队尾)</p>
+<p>删除策略的方法：<code>removeEldestEntry</code></p>
+<p>比如我们设定节点个数大于3个开始删除：</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> boolean removeEldestEntry(Map.<span class="built_in">Entry</span>&lt;<span class="keyword">Integer</span>, <span class="keyword">Integer</span>&gt; eldest) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">size</span>() &gt; <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再次强调，LinkedHashMap的源码中经常使用的元素会被移动到队尾。</p>
+<p>把元素移动到队尾的方法：<code>afterNodeAccess</code>。其实不仅仅是 get 方法，执行 getOrDefault、compute、computeIfAbsent、computeIfPresent、merge 方法时，也会这么做，通过不断的把经常访问的节点移动到队尾，那么靠近队头的节点，自然就是很少被访问的元素了。</p>
+<h4 id="2-2-1具体删除策略"><a href="#2-2-1具体删除策略" class="headerlink" title="2.2.1具体删除策略"></a>2.2.1具体删除策略</h4><p>我们在执行 put 方法时，发现队头元素被删除了，LinkedHashMap 本身是没有 put 方法实现的，调用的是 HashMap 的 put 方法，但 LinkedHashMap 实现了 put 方法中的调用 <code>afterNodeInsertion</code> 方法，这个方式实现了删除。</p>
+<h3 id="2-3-LinkedHashMap小结"><a href="#2-3-LinkedHashMap小结" class="headerlink" title="2.3 LinkedHashMap小结"></a>2.3 LinkedHashMap小结</h3><p>LinkedHashMap 提供了两个很有意思的功能：<strong>按照插入顺序访问和删除最少访问元素策略(LRU cache)</strong>，简单地通过链表的结构就实现了，设计得非常巧妙。</p>
+<h1 id="Map接口常问问题"><a href="#Map接口常问问题" class="headerlink" title="Map接口常问问题"></a>Map接口常问问题</h1><h2 id="1-Map整体数据结构问题"><a href="#1-Map整体数据结构问题" class="headerlink" title="1. Map整体数据结构问题"></a>1. Map整体数据结构问题</h2><h3 id="1-1-HashMap的底层数据结构"><a href="#1-1-HashMap的底层数据结构" class="headerlink" title="1.1 HashMap的底层数据结构"></a>1.1 HashMap的底层数据结构</h3><p>答：HashMap 底层是数组 + 链表 + 红黑树的数据结构，数组的主要作用是方便快速查找，时间复杂度是 O(1)，默认大小是 16，数组的下标索引是通过 key 的 hashcode 计算出来的，数组元素叫做 Node，当多个 key 的 hashcode 一致，但 key 值不同时，单个 Node 就会转化成链表，链表的查询复杂度是 O(n)，当链表的长度大于等于 8 并且数组的大小超过 64 时，链表就会转化成红黑树，红黑树的查询复杂度是 O(log(n))，简单来说，最坏的查询次数相当于红黑树的最大深度。</p>
+<h3 id="1-2-HashMap、TreeMap、LinkedHashMap-三者有啥相同点，有啥不同点？"><a href="#1-2-HashMap、TreeMap、LinkedHashMap-三者有啥相同点，有啥不同点？" class="headerlink" title="1.2 HashMap、TreeMap、LinkedHashMap 三者有啥相同点，有啥不同点？"></a>1.2 HashMap、TreeMap、LinkedHashMap 三者有啥相同点，有啥不同点？</h3><p>答：相同点：</p>
+<ol>
+<li>三者在特定的情况下，都会使用红黑树；</li>
+<li>底层的 hash 算法相同；</li>
+<li>在迭代的过程中，如果 Map 的数据结构被改动，都会报 ConcurrentModificationException 的错误。</li>
+</ol>
+<p>不同点：</p>
+<ol>
+<li>Map 数据结构以数组为主，查询非常快，TreeMap 数据结构以红黑树为主，利用了红黑树左小右大的特点，可以实现 key 的排序，LinkedHashMap 在 HashMap 的基础上增加了链表的结构，实现了插入顺序访问和最少访问删除两种策略;</li>
+<li>由于三种 Map 底层数据结构的差别，导致了三者的使用场景的不同，TreeMap 适合需要根据 key 进行排序的场景，LinkedHashMap 适合按照插入顺序访问，或需要删除最少访问元素的场景，剩余场景我们使用 HashMap 即可，我们工作中大部分场景基本都在使用 HashMap；</li>
+<li>由于三种 map 的底层数据结构的不同，导致上层包装的 api 略有差别。</li>
+</ol>
+<h3 id="1-3-说一下-Map-的-hash-算法"><a href="#1-3-说一下-Map-的-hash-算法" class="headerlink" title="1.3 说一下 Map 的 hash 算法"></a>1.3 说一下 Map 的 hash 算法</h3><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="built_in">int</span> hash(<span class="keyword">Object</span> <span class="built_in">key</span>) &#123;</span><br><span class="line">    <span class="built_in">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (<span class="built_in">key</span> == <span class="keyword">null</span>) ? <span class="number">0</span> : (h = <span class="built_in">key</span>.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">key</span> 在数组中的位置公式：tab[(n - <span class="number">1</span>) &amp; hash]</span><br></pre></td></tr></table></figure>
+
+<p>这段代码是HashMap的hash算法。</p>
+<p>这其实是一个数学问题，源码中就是通过以上代码来计算 hash 的，首先计算出 key 的 hashcode，因为 key 是 Object，所以会根据 key 的不同类型进行 hashcode 的计算，接着计算 h ^ (h &gt;&gt;&gt; 16) ，这么做的好处是使大多数场景下，算出来的 hash 值比较分散。</p>
+<p>一般来说，hash 值算出来之后，要计算当前 key 在数组中的索引下标位置时，可以采用取模的方式，就是索引下标位置 = hash 值 % 数组大小，这样做的好处，就是可以保证计算出来的索引下标值可以均匀的分布在数组的各个索引位置上，但取模操作对于处理器的计算是比较慢的，数学上有个公式，当 b 是 2 的幂次方时，a % b = a &amp;（b-1），所以此处索引位置的计算公式我们可以更换为： (n-1) &amp; hash。</p>
+<p>此问题可以延伸出三个小问题：</p>
+<ol>
+<li>为什么不用 key % 数组大小，而是需要用 key 的 hash 值 % 数组大小。</li>
+</ol>
+<p>答：如果 key 是数字，直接用 key % 数组大小是完全没有问题的，但我们的 key 还有可能是字符串，是复杂对象，这时候用 字符串或复杂对象 % 数组大小是不行的，所以需要先计算出 key 的 hash 值。</p>
+<ol start="2">
+<li>计算 hash 值时，为什么需要右移 16 位？</li>
+</ol>
+<p>答：hash 算法是 h ^ (h &gt;&gt;&gt; 16)，为了使计算出的 hash 值更分散，所以选择先将 h 无符号右移 16 位，然后再于 h 异或时，就能达到 h 的高 16 位和低 16 位都能参与计算，减少了碰撞的可能性。</p>
+<ol start="3">
+<li>为什么把取模操作换成了 &amp; 操作？</li>
+</ol>
+<p>答：key.hashCode() 算出来的 hash 值还不是数组的索引下标，为了随机的计算出索引的下表位置，我们还会用 hash 值和数组大小进行取模，这样子计算出来的索引下标比较均匀分布。</p>
+<p>取模操作处理器计算比较慢，处理器对 &amp; 操作就比较擅长，换成了 &amp; 操作，是有数学上证明的支撑，为了提高了处理器处理的速度。</p>
+<ol start="4">
+<li>为什么提倡数组大小是 2 的幂次方？</li>
+</ol>
+<p>答：因为只有大小是 2 的幂次方时，才能使 hash 值 % n(数组大小) == (n-1) &amp; hash 公式成立。</p>
+<h3 id="1-4-为解决-hash-冲突，大概有哪些办法。"><a href="#1-4-为解决-hash-冲突，大概有哪些办法。" class="headerlink" title="1.4 为解决 hash 冲突，大概有哪些办法。"></a>1.4 为解决 hash 冲突，大概有哪些办法。</h3><p>答：1：好的 hash 算法，细问的话复述一下上题的 hash 算法;</p>
+<p>2：自动扩容，当数组大小快满的时候，采取自动扩容，可以减少 hash 冲突;</p>
+<p>3：hash 冲突发生时，采用链表来解决;</p>
+<p>4：hash 冲突严重时，链表会自动转化成红黑树，提高遍历速度。</p>
+<p>其他不熟悉的方法不要说了。</p>
+<h2 id="2-HashMap源码细节类问题"><a href="#2-HashMap源码细节类问题" class="headerlink" title="2. HashMap源码细节类问题"></a>2. HashMap源码细节类问题</h2><h3 id="2-1-HashMap-是如何扩容的？"><a href="#2-1-HashMap-是如何扩容的？" class="headerlink" title="2.1 HashMap 是如何扩容的？"></a>2.1 HashMap 是如何扩容的？</h3><p>答：扩容的时机：</p>
+<ol>
+<li>put 时，发现数组为空，进行初始化扩容，默认扩容大小为 16;</li>
+<li>put 成功后，发现现有数组大小大于扩容的门阀值时，进行扩容，扩容为老数组大小的 2 倍;</li>
+</ol>
+<p>扩容的门阀是 threshold，每次扩容时 threshold 都会被重新计算，门阀值等于数组的大小 * 影响因子（0.75）。</p>
+<p>新数组初始化之后，需要将老数组的值拷贝到新数组上，链表和红黑树都有自己拷贝的方法。</p>
+<h3 id="2-1-HashMap-是如何扩容的？-1"><a href="#2-1-HashMap-是如何扩容的？-1" class="headerlink" title="2.1 HashMap 是如何扩容的？"></a>2.1 HashMap 是如何扩容的？</h3><h3 id="2-2-HashMap-是如何扩容的？"><a href="#2-2-HashMap-是如何扩容的？" class="headerlink" title="2.2 HashMap 是如何扩容的？"></a>2.2 HashMap 是如何扩容的？</h3><p>答：hash 冲突指的是 key 值的 hashcode 计算相同，但 key 值不同的情况。</p>
+<p>如果桶中元素原本只有一个或已经是链表了，新增元素直接追加到链表尾部；</p>
+<p>如果桶中元素已经是链表，并且链表个数大于等于 8 时，此时有两种情况：</p>
+<ol>
+<li>如果此时数组大小小于 64，数组再次扩容，链表不会转化成红黑树;</li>
+<li>如果数组大小大于 64 时，链表就会转化成红黑树。</li>
+</ol>
+<p>这里不仅仅判断链表个数大于等于 8，还判断了数组大小，数组容量小于 64 没有立即转化的原因，猜测主要是因为红黑树占用的空间比链表大很多，转化也比较耗时，所以数组容量小的情况下冲突严重，我们可以先尝试扩容，看看能否通过扩容来解决冲突的问题。</p>
+<h3 id="2-3-为什么链表个数大于等于-8-时，链表要转化成红黑树了？"><a href="#2-3-为什么链表个数大于等于-8-时，链表要转化成红黑树了？" class="headerlink" title="2.3 为什么链表个数大于等于 8 时，链表要转化成红黑树了？"></a>2.3 为什么链表个数大于等于 8 时，链表要转化成红黑树了？</h3><p>答：当链表个数太多了，遍历可能比较耗时，转化成红黑树，可以使遍历的时间复杂度降低，但转化成红黑树，有空间和转化耗时的成本，我们通过泊松分布公式计算，正常情况下，链表个数出现 8 的概念不到千万分之一，所以说正常情况下，链表都不会转化成红黑树，这样设计的目的，是为了防止非正常情况下，比如 hash 算法出了问题时，导致链表个数轻易大于等于 8 时，仍然能够快速遍历。</p>
+<p>延伸问题：红黑树什么时候转变成链表。</p>
+<p>答：当节点的个数小于等于 6 时，红黑树会自动转化成链表，主要还是考虑红黑树的空间成本问题，当节点个数小于等于 6 时，遍历链表也很快，所以红黑树会重新变成链表。</p>
+<h3 id="2-4-HashMap-在-put-时，如果数组中已经有了这个-key，我不想把-value-覆盖怎么办？取值时，如果得到的-value-是空时，想返回默认值怎么办？"><a href="#2-4-HashMap-在-put-时，如果数组中已经有了这个-key，我不想把-value-覆盖怎么办？取值时，如果得到的-value-是空时，想返回默认值怎么办？" class="headerlink" title="2.4 HashMap 在 put 时，如果数组中已经有了这个 key，我不想把 value 覆盖怎么办？取值时，如果得到的 value 是空时，想返回默认值怎么办？"></a>2.4 HashMap 在 put 时，如果数组中已经有了这个 key，我不想把 value 覆盖怎么办？取值时，如果得到的 value 是空时，想返回默认值怎么办？</h3><p>答：如果数组有了 key，但不想覆盖 value ，可以选择 putIfAbsent 方法，这个方法有个内置变量 onlyIfAbsent，内置是 true ，就不会覆盖，我们平时使用的 put 方法，内置 onlyIfAbsent 为 false，是允许覆盖的。</p>
+<p>取值时，如果为空，想返回默认值，可以使用 getOrDefault 方法，方法第一参数为 key，第二个参数为你想返回的默认值，如 map.getOrDefault(“2”,“0”)，当 map 中没有 key 为 2 的值时，会默认返回 0，而不是空。</p>
+<h3 id="2-5-通过以下代码进行删除，是否可行？"><a href="#2-5-通过以下代码进行删除，是否可行？" class="headerlink" title="2.5 通过以下代码进行删除，是否可行？"></a>2.5 通过以下代码进行删除，是否可行？</h3><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HashMap&lt;<span class="keyword">String</span>,<span class="keyword">String</span> &gt; <span class="built_in">map</span> = Maps.newHashMap();</span><br><span class="line"><span class="built_in">map</span>.<span class="built_in">put</span>(<span class="string">"1"</span>,<span class="string">"1"</span>);</span><br><span class="line"><span class="built_in">map</span>.<span class="built_in">put</span>(<span class="string">"2"</span>,<span class="string">"2"</span>);</span><br><span class="line"><span class="built_in">map</span>.forEach((s, s2) -&gt; <span class="built_in">map</span>.<span class="built_in">remove</span>(<span class="string">"1"</span>));</span><br></pre></td></tr></table></figure>
+
+<p>答：不行，会报错误 ConcurrentModificationException</p>
+<h3 id="2-6-描述一下-HashMap-get、put-的过程"><a href="#2-6-描述一下-HashMap-get、put-的过程" class="headerlink" title="2.6 描述一下 HashMap get、put 的过程"></a>2.6 描述一下 HashMap get、put 的过程</h3><p>答：参考源码分析部分</p>
+<h2 id="3-其他Map面试题"><a href="#3-其他Map面试题" class="headerlink" title="3.其他Map面试题"></a>3.其他Map面试题</h2><h3 id="3-1-DTO-作为-Map-的-key-时，有无需要注意的点？"><a href="#3-1-DTO-作为-Map-的-key-时，有无需要注意的点？" class="headerlink" title="3.1 DTO 作为 Map 的 key 时，有无需要注意的点？"></a>3.1 DTO 作为 Map 的 key 时，有无需要注意的点？</h3><p>答：DTO 就是一个数据载体，可以看做拥有很多属性的 Java 类，我们可以对这些属性进行 get、set 操作。</p>
+<p>看是什么类型的 Map，如果是 HashMap 的话，一定需要覆写 equals 和 hashCode 方法，因为在 get 和 put 的时候，需要通过 equals 方法进行相等的判断；如果是 TreeMap 的话，DTO 需要实现 Comparable 接口，因为 TreeMap 会使用 Comparable 接口进行判断 key 的大小；如果是 LinkedHashMap 的话，和 HashMap 一样的。</p>
+<h3 id="3-2-为什么推荐-TreeMap-的元素最好都实现-Comparable-接口？但-key-是-String-的时候，我们却没有额外的工作呢？"><a href="#3-2-为什么推荐-TreeMap-的元素最好都实现-Comparable-接口？但-key-是-String-的时候，我们却没有额外的工作呢？" class="headerlink" title="3.2 为什么推荐 TreeMap 的元素最好都实现 Comparable 接口？但 key 是 String 的时候，我们却没有额外的工作呢？"></a>3.2 为什么推荐 TreeMap 的元素最好都实现 Comparable 接口？但 key 是 String 的时候，我们却没有额外的工作呢？</h3><p>答：因为 TreeMap 的底层就是通过排序来比较两个 key 的大小的，所以推荐 key 实现 Comparable 接口，是为了往你希望的排序顺序上发展， 而 String 本身已经实现了 Comparable 接口，所以使用 String 时，我们不需要额外的工作，不仅仅是 String ，其他包装类型也都实现了 Comparable 接口，如 Long、Double、Short 等等。</p>
+<h1 id="集合在JDK7和JDK8有什么区别"><a href="#集合在JDK7和JDK8有什么区别" class="headerlink" title="集合在JDK7和JDK8有什么区别"></a>集合在JDK7和JDK8有什么区别</h1><h2 id="1-通用区别"><a href="#1-通用区别" class="headerlink" title="1.通用区别"></a>1.通用区别</h2><h3 id="所有集合都新增了forEach方法"><a href="#所有集合都新增了forEach方法" class="headerlink" title="所有集合都新增了forEach方法"></a>所有集合都新增了forEach方法</h3><p>List、Set、Map 在 Java 8 版本中都增加了 forEach 的方法，方法的入参是 Consumer，Consumer 是一个函数式接口，可以简单理解成允许一个入参，但没有返回值的函数式接口</p>
+<h2 id="2-List区别"><a href="#2-List区别" class="headerlink" title="2 List区别"></a>2 List区别</h2><p>ArrayList 无参初始化时，Java 7 是直接初始化 10 的大小，Java 8 去掉了这个逻辑，初始化时是空数组，在第一次 add 时才开始按照 10 进行扩容。</p>
+<p>需要注意，<strong>List在其他方面，Java7和Java8没有改动</strong>。</p>
+<h2 id="3-Map区别"><a href="#3-Map区别" class="headerlink" title="3 Map区别"></a>3 Map区别</h2><h3 id="3-1-HashMap"><a href="#3-1-HashMap" class="headerlink" title="3.1 HashMap"></a>3.1 HashMap</h3><ol>
+<li>和 ArrayList 一样，Java 8 中 HashMap 在无参构造器中，丢弃了 Java 7 中直接把数组初始化 16 的做法，而是采用在第一次新增的时候，才开始扩容数组大小；</li>
+<li>hash 算法计算公式不同，Java 8 的 hash 算法更加简单，代码更加简洁；</li>
+<li>Java 8 的 HashMap 增加了红黑树的数据结构，这个是 Java 7 中没有的，Java 7 只有数组 + 链表的结构，Java 8 中提出了数组 + 链表 + 红黑树的结构，一般 key 是 Java 的 API 时，比如说 String 这些 hashcode 实现很好的 API，很少出现链表转化成红黑树的情况，因为 String 这些 API 的 hash 算法够好了，只有当 key 是我们自定义的类，而且我们覆写的 hashcode 算法非常糟糕时，才会真正使用到红黑树，提高我们的检索速度。</li>
+</ol>
+<p>也是因为 Java 8 新增了红黑树，所以几乎所有操作数组的方法的实现，都发生了变动，比如说 put、remove 等操作，可以说 Java 8 的 HashMap 几乎重写了一遍，所以 Java 7 的很多问题都被 Java 8 解决了，比如扩容时极小概率死锁，丢失数据等等。</p>
+<ol start="4">
+<li>新增了一些好用的方法，比如 getOrDefault</li>
+<li>新增了putIfAbsent(K key, V value) 方法，意思是，如果 map 中存在 key 了，那么 value 就不会覆盖，如果不存在 key ，新增成功。</li>
+<li>新增了compute 方法，意思是允许我们把 key 和 value 的值进行计算后，再 put 到 map 中，为防止 key 值不存在造成未知错误，map 还提供了 computeIfPresent 方法，表示只有在 key 存在的时候</li>
+</ol>
+<p>上述 Java 8 新增的几种方法非常好用，在实际工作中，可以大大减少我们的代码量</p>
+<h3 id="3-2-LinkedHashMap"><a href="#3-2-LinkedHashMap" class="headerlink" title="3.2 LinkedHashMap"></a>3.2 LinkedHashMap</h3><p>由于 Java 8 的底层数据有变动，导致 HashMap 操作数据的方法几乎重写，也使 LinkedHashMap 的实现名称上有所差异。</p>
+<h2 id="4-其他区别"><a href="#4-其他区别" class="headerlink" title="4 其他区别"></a>4 其他区别</h2><p><strong>Arrays 提供了很多 parallel 开头的方法。</strong></p>
+<p>Java 8 的 Arrays 提供了一些 parallel 开头的方法，这些方法支持并行的计算，在数据量大的时候，会充分利用 CPU ，提高计算效率，比如说 parallelSort 方法，方法底层有判断，只有数据量大于 8192 时，才会真正走并行的实现，在实际的实验中，并行计算的确能够快速的提高计算速度。</p>
+<h2 id="5-面试题"><a href="#5-面试题" class="headerlink" title="5.面试题"></a>5.面试题</h2><ol>
+<li><p>Java 8 在 List、Map 接口上新增了很多方法，为什么 Java 7 中这些接口的实现者不需要强制实现这些方法呢？<br>答：主要是因为这些新增的方法被 default 关键字修饰了，default 一旦修饰接口上的方法，我们需要在接口的方法中写默认实现，并且子类无需强制实现这些方法，所以 Java 7 接口的实现者无需感知。</p>
+</li>
+<li><p>Java 8 中有新增很多实用的方法，你在平时工作中有使用过么？</p>
+</li>
+</ol>
+<p>答：有的，比如说 getOrDefault、putIfAbsent、computeIfPresent 方法等等，具体使用细节参考上文。</p>
+<ol start="3">
+<li>说说 computeIfPresent 方法的使用姿势？</li>
+</ol>
+<p>答：computeIfPresent 是可以对 key 和 value 进行计算后，把计算的结果重新赋值给 key，并且如果 key 不存在时，不会报空指针，会返回 null 值。</p>
+<ol start="4">
+<li>Java 8 集合新增了 forEach 方法，和普通的 for 循环有啥不同？</li>
+</ol>
+<p>答：新增的 forEach 方法的入参是函数式的接口，比如说 Consumer 和 BiConsumer，这样子做的好处就是封装了 for 循环的代码，让使用者只需关注实现每次循环的业务逻辑，简化了重复的 for 循环代码，使代码更加简洁，普通的 for 循环，每次都需要写重复的 for 循环代码，forEach 把这种重复的计算逻辑吃掉了，使用起来更加方便。</p>
+<ol start="5">
+<li>HashMap 8 和 7 有啥区别？</li>
+</ol>
+<p>答：HashMap 8 和 7 的差别太大了，新增了红黑树，修改了底层数据逻辑，修改了 hash 算法，几乎所有底层数组变动的方法都重写了一遍，可以说 Java 8 的 HashMap 几乎重新了一遍。</p>
+<h2 id="6-小结"><a href="#6-小结" class="headerlink" title="6.小结"></a>6.小结</h2><p>总体来说，List 方面是小改动，HashMap 几乎重写了一套，所有的集合都新增了函数式的方法，比如说 forEach，也新增了很多好用的函数，比如说 getOrDefault，这些函数可以大大减少我们的代码量，让我们把关注点聚焦在业务逻辑的实现上，这其实是一种思想，把繁琐重复的计算逻辑抽取出来，从计算逻辑中扩展出业务逻辑的口子，让使用者只专心关注业务逻辑的实现即可。</p>
+<h1 id="ConcurrentHashMap-源码解析和设计思路-未完"><a href="#ConcurrentHashMap-源码解析和设计思路-未完" class="headerlink" title="ConcurrentHashMap 源码解析和设计思路(未完)"></a>ConcurrentHashMap 源码解析和设计思路(未完)</h1><p>当我们碰到线程不安全场景下，需要使用 Map 的时候，我们第一个想到的 API 估计就是 ConcurrentHashMap，ConcurrentHashMap 内部封装了锁和各种数据结构来保证访问 Map 是线程安全的。</p>
+<h2 id="1-类注释"><a href="#1-类注释" class="headerlink" title="1. 类注释"></a>1. 类注释</h2><p>我们从类注释上大概可以得到如下信息：</p>
+<ol>
+<li>所有的操作都是线程安全的，我们在使用时，无需再加锁；</li>
+<li>多个线程同时进行 put、remove 等操作时并不会阻塞，可以同时进行，和 HashTable 不同，HashTable 在操作时，会锁住整个 Map；</li>
+<li>迭代过程中，即使 Map 结构被修改，也不会抛 ConcurrentModificationException 异常；</li>
+<li>除了数组 + 链表 + 红黑树的基本结构外，新增了转移节点，是为了保证扩容时的线程安全的节点；</li>
+<li>提供了很多 Stream 流式方法，比如说：forEach、search、reduce 等等。</li>
+</ol>
+<h2 id="2-结构"><a href="#2-结构" class="headerlink" title="2.结构"></a>2.结构</h2><p>虽然 ConcurrentHashMap 的底层数据结构，和方法的实现细节和 HashMap 大体一致，但两者在类结构上却没有任何关联</p>
+<p>如下图：</p>
+<p><img src="https://i.loli.net/2020/03/18/fsNkZXdAE1ytaJ7.png" alt="ConcurrentHashMap类继承关系图.png"></p>
+<p>有的同学可能会问，为什么不继承 HashMap 呢？继承的确是个好办法，但尴尬的是，ConcurrentHashMap 都是在方法中间进行一些加锁操作，也就是说加锁把方法切割了，继承就很难解决这个问题。</p>
+<p>ConcurrentHashMap 和 HashMap 两者的相同之处：</p>
+<ol>
+<li>数组、链表结构几乎相同，所以底层对数据结构的操作思路是相同的（只是思路相同，底层实现不同）；</li>
+<li>都实现了 Map 接口，继承了 AbstractMap 抽象类，所以大多数的方法也都是相同的，HashMap 有的方法，ConcurrentHashMap 几乎都有，所以当我们需要从 HashMap 切换到 ConcurrentHashMap 时，无需关心两者之间的兼容问题。</li>
+</ol>
+<p>不同之处：</p>
+<ol>
+<li>红黑树结构略有不同，HashMap 的红黑树中的节点叫做 TreeNode，TreeNode 不仅仅有属性，还维护着红黑树的结构，比如说查找，新增等等；ConcurrentHashMap 中红黑树被拆分成两块，TreeNode 仅仅维护的属性和查找功能，新增了 TreeBin，来维护红黑树结构，并负责根节点的加锁和解锁；</li>
+<li>新增 ForwardingNode （转移）节点，扩容的时候会使用到，通过使用该节点，来保证扩容时的线程安全。</li>
+</ol>
+
+    </div>
+
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/List/" rel="tag"><i class="fa fa-tag"></i># List</a>
+              <a href="/tags/Map/" rel="tag"><i class="fa fa-tag"></i># Map</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/16/SSL-and-TLS/" rel="prev" title="Overview of SSL and TLS protocol operration mechanism">
+      <i class="fa fa-chevron-left"></i> Overview of SSL and TLS protocol operration mechanism
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/20/Computer-fundamental-Interview-I/" rel="next" title="Computer fundamental Intergrated Interview-I">
+      Computer fundamental Intergrated Interview-I <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODAxMC8yNDUwNw=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ArrayList源码解析及设计思路"><span class="nav-text">ArrayList源码解析及设计思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ArrayList整体架构"><span class="nav-text">ArrayList整体架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码解析-未完成"><span class="nav-text">源码解析(未完成)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化"><span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新增和扩容实现"><span class="nav-text">新增和扩容实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#时间复杂度"><span class="nav-text">时间复杂度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程安全"><span class="nav-text">线程安全</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LinkedList源码解析及设计思路"><span class="nav-text">LinkedList源码解析及设计思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LinkedList整体架构"><span class="nav-text">LinkedList整体架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码解析-未完"><span class="nav-text">源码解析(未完)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新增元素"><span class="nav-text">新增元素</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#从尾部追加-add"><span class="nav-text">从尾部追加(add)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从头部追加-addFirst"><span class="nav-text">从头部追加(addFirst)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#节点删除"><span class="nav-text">节点删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问元素-节点"><span class="nav-text">访问元素(节点)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LinkedList和其他结构对比"><span class="nav-text">LinkedList和其他结构对比</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#List接口常见问题"><span class="nav-text">List接口常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-说说对ArrayList的理解？"><span class="nav-text">1.说说对ArrayList的理解？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-扩容类问题"><span class="nav-text">2.扩容类问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-ArrayList-无参数构造器构造，现在-add-一个值进去，此时数组的大小是多少，下一次扩容前最大可用大小是多少？"><span class="nav-text">2.1 ArrayList 无参数构造器构造，现在 add 一个值进去，此时数组的大小是多少，下一次扩容前最大可用大小是多少？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-如果我连续往-list-里面新增值，增加到第-11-个的时候，数组的大小是多少？"><span class="nav-text">2.2 如果我连续往 list 里面新增值，增加到第 11 个的时候，数组的大小是多少？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-数组初始化，被加入一个值后，如果我使用-addAll-方法，一下子加入-15-个值，那么最终数组的大小是多少？"><span class="nav-text">2.3 数组初始化，被加入一个值后，如果我使用 addAll 方法，一下子加入 15 个值，那么最终数组的大小是多少？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-现在我有一个很大的数组需要拷贝，原数组大小是-5k，请问如何快速拷贝？"><span class="nav-text">2.4 现在我有一个很大的数组需要拷贝，原数组大小是 5k，请问如何快速拷贝？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-为什么说扩容会消耗性能？"><span class="nav-text">2.5 为什么说扩容会消耗性能？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-源码扩容过程有什么值得借鉴的地方？"><span class="nav-text">2.6 源码扩容过程有什么值得借鉴的地方？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-对比问题"><span class="nav-text">3.对比问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-ArrayList和LinkedList有何不同？"><span class="nav-text">3.1 ArrayList和LinkedList有何不同？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-ArrayList-和-LinkedList-应用场景有何不同"><span class="nav-text">3.2 ArrayList 和 LinkedList 应用场景有何不同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-ArrayList-和-LinkedList-两者有没有最大容量"><span class="nav-text">3.3 ArrayList 和 LinkedList 两者有没有最大容量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-ArrayList-和-LinkedList-是如何对-null-值进行处理的"><span class="nav-text">3.4 ArrayList 和 LinkedList 是如何对 null 值进行处理的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-ArrayList-和-LinedList-是线程安全的么，为什么？"><span class="nav-text">3.5 ArrayList 和 LinedList 是线程安全的么，为什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-如何解决线程安全问题？"><span class="nav-text">3.6 如何解决线程安全问题？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-其他"><span class="nav-text">4.其他</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-描述下双向链表的新增和删除"><span class="nav-text">4.1 描述下双向链表的新增和删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-描述下双向链表的新增和删除"><span class="nav-text">4.2 描述下双向链表的新增和删除</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hashmap源码解析与架构-未完"><span class="nav-text">Hashmap源码解析与架构(未完)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-整体架构"><span class="nav-text">1.整体架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1类注释中的信息"><span class="nav-text">1.1类注释中的信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-常见的属性"><span class="nav-text">1.2 常见的属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-新增节点"><span class="nav-text">2.新增节点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1链表的新增"><span class="nav-text">2.1链表的新增</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2红黑树新增节点过程"><span class="nav-text">2.2红黑树新增节点过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-查找"><span class="nav-text">3.查找</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Treemap和LinkedHashMap源码解析与架构-未完"><span class="nav-text">Treemap和LinkedHashMap源码解析与架构(未完)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Treemap解析"><span class="nav-text">1. Treemap解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Treemap排序方式解析"><span class="nav-text">1.1 Treemap排序方式解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-TreeMap整体架构"><span class="nav-text">1.2 TreeMap整体架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-TreeMap常见属性"><span class="nav-text">1.3 TreeMap常见属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4新增节点过程"><span class="nav-text">1.4新增节点过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-TreeMap小结"><span class="nav-text">1.5 TreeMap小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-LinkedHashMap整体结构解析-未完"><span class="nav-text">2. LinkedHashMap整体结构解析(未完)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-LinkedHashMap按照插入顺序访问"><span class="nav-text">2.1 LinkedHashMap按照插入顺序访问</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-LinkedHashMap的链表结构"><span class="nav-text">2.1.1 LinkedHashMap的链表结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-2-LinkedHashMap如何按照顺序新增"><span class="nav-text">2.1.2 LinkedHashMap如何按照顺序新增</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-3-LinkedHashMap如何按照顺序访问"><span class="nav-text">2.1.3 LinkedHashMap如何按照顺序访问</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-访问最少删除策略-LRU-cahce"><span class="nav-text">2.2 访问最少删除策略(LRU cahce)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1具体删除策略"><span class="nav-text">2.2.1具体删除策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-LinkedHashMap小结"><span class="nav-text">2.3 LinkedHashMap小结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Map接口常问问题"><span class="nav-text">Map接口常问问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Map整体数据结构问题"><span class="nav-text">1. Map整体数据结构问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-HashMap的底层数据结构"><span class="nav-text">1.1 HashMap的底层数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-HashMap、TreeMap、LinkedHashMap-三者有啥相同点，有啥不同点？"><span class="nav-text">1.2 HashMap、TreeMap、LinkedHashMap 三者有啥相同点，有啥不同点？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-说一下-Map-的-hash-算法"><span class="nav-text">1.3 说一下 Map 的 hash 算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-为解决-hash-冲突，大概有哪些办法。"><span class="nav-text">1.4 为解决 hash 冲突，大概有哪些办法。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-HashMap源码细节类问题"><span class="nav-text">2. HashMap源码细节类问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-HashMap-是如何扩容的？"><span class="nav-text">2.1 HashMap 是如何扩容的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-HashMap-是如何扩容的？-1"><span class="nav-text">2.1 HashMap 是如何扩容的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-HashMap-是如何扩容的？"><span class="nav-text">2.2 HashMap 是如何扩容的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-为什么链表个数大于等于-8-时，链表要转化成红黑树了？"><span class="nav-text">2.3 为什么链表个数大于等于 8 时，链表要转化成红黑树了？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-HashMap-在-put-时，如果数组中已经有了这个-key，我不想把-value-覆盖怎么办？取值时，如果得到的-value-是空时，想返回默认值怎么办？"><span class="nav-text">2.4 HashMap 在 put 时，如果数组中已经有了这个 key，我不想把 value 覆盖怎么办？取值时，如果得到的 value 是空时，想返回默认值怎么办？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-通过以下代码进行删除，是否可行？"><span class="nav-text">2.5 通过以下代码进行删除，是否可行？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-描述一下-HashMap-get、put-的过程"><span class="nav-text">2.6 描述一下 HashMap get、put 的过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-其他Map面试题"><span class="nav-text">3.其他Map面试题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-DTO-作为-Map-的-key-时，有无需要注意的点？"><span class="nav-text">3.1 DTO 作为 Map 的 key 时，有无需要注意的点？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-为什么推荐-TreeMap-的元素最好都实现-Comparable-接口？但-key-是-String-的时候，我们却没有额外的工作呢？"><span class="nav-text">3.2 为什么推荐 TreeMap 的元素最好都实现 Comparable 接口？但 key 是 String 的时候，我们却没有额外的工作呢？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集合在JDK7和JDK8有什么区别"><span class="nav-text">集合在JDK7和JDK8有什么区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-通用区别"><span class="nav-text">1.通用区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#所有集合都新增了forEach方法"><span class="nav-text">所有集合都新增了forEach方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-List区别"><span class="nav-text">2 List区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Map区别"><span class="nav-text">3 Map区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-HashMap"><span class="nav-text">3.1 HashMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-LinkedHashMap"><span class="nav-text">3.2 LinkedHashMap</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-其他区别"><span class="nav-text">4 其他区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-面试题"><span class="nav-text">5.面试题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-小结"><span class="nav-text">6.小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ConcurrentHashMap-源码解析和设计思路-未完"><span class="nav-text">ConcurrentHashMap 源码解析和设计思路(未完)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-类注释"><span class="nav-text">1. 类注释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-结构"><span class="nav-text">2.结构</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wang Mingsheng"
+      src="/images/faceimage.jpg">
+  <p class="site-author-name" itemprop="name">Wang Mingsheng</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wmsheng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wmsheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wangmingshenghku@163.com" title="E-Mail → mailto:wangmingshenghku@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/my/m/music/playlist?id=372605964" title="Music → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;my&#x2F;m&#x2F;music&#x2F;playlist?id&#x3D;372605964" rel="noopener" target="_blank"><i class="fa fa-fw fa-youtube"></i>Music</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+
+    </div>
+    
+    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=3314336&auto=1&height=66">
+    </iframe>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wang Mingsheng</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">315k</span>
+</div>
+
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_uv">
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_pv">
+    本站访问量<span id="busuanzi_value_site_pv"></span>
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共156.7k字</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
