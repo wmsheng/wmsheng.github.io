@@ -60,6 +60,10 @@
 <p>TLS 在根本上使用对称加密和 非对称加密 两种形式。</p>
 <p>HTTPS在使用SSL/TLS传输的过程中，先会用非对称加密，然后用对称加密，也就是所谓的<strong>混合加密</strong>。</p>
 <p>实际上混合加密在上面，优化非对称加密传输的过程中已经有详细介绍了。因为非对称加密算法(比如RSA)计算非常慢，而对称加密算法(比如AES)计算相对非对称快上一百倍，所以先用非对称加密算法，先用非对称加密解决<strong>秘钥交换</strong>的问题，然后用随机数产生对称算法使用的<code>会话密钥（session key）</code>，再用<code>公钥加密</code>。对方拿到密文后用<code>私钥解密</code>，取出会话密钥。这样，双方就实现了对称密钥的安全交换。</p>
+<h3 id="HTTP状态码？-1开头到5开头的各种典型状态码"><a href="#HTTP状态码？-1开头到5开头的各种典型状态码" class="headerlink" title="HTTP状态码？(1开头到5开头的各种典型状态码)"></a>HTTP状态码？(1开头到5开头的各种典型状态码)</h3><p>客户端的每一次请求，服务器都必须给出回应。回应包括 HTTP 状态码和数据两部分。</p>
+<p>HTTP 状态码就是一个三位数，分成五个类别。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>xx：相关信息</span><br><span class="line"><span class="number">2</span>xx：操作成功</span><br><span class="line"><span class="number">3</span>xx：重定向</span><br><span class="line"><span class="number">4</span>xx：客户端错误</span><br><span class="line"><span class="number">5</span>xx：服务器错误</span><br></pre></td></tr></table></figure>
+
 <h3 id="一些可能有用的与HTTP有关的协议"><a href="#一些可能有用的与HTTP有关的协议" class="headerlink" title="一些可能有用的与HTTP有关的协议"></a>一些可能有用的与HTTP有关的协议</h3><p>在互联网中，任何协议都不会单独的完成信息交换，HTTP 也一样。虽然 HTTP 属于应用层的协议，但是它仍然需要其他层次协议的配合完成信息的交换，那么在完成一次 HTTP 请求和响应的过程中，需要哪些协议的配合呢？一起来看一下</p>
 <h4 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h4><p>CDN的全称是<code>Content Delivery Network</code>，即<code>内容分发网络</code>，它应用了 HTTP 协议里的缓存和代理技术，代替源站响应客户端的请求。CDN 是构建在现有网络基础之上的网络，它依靠部署在各地的边缘服务器，通过中心平台的负载均衡、内容分发、调度等功能模块，使用户就近获取所需内容，降低网络拥塞，提高用户访问响应速度和命中率。CDN的关键技术主要有<code>内容存储</code>和<code>分发技术</code>。</p>
 <p>打比方说你要去亚马逊上买书，之前你只能通过购物网站购买后从美国发货过海关等重重关卡送到你的家里，现在在中国建立一个亚马逊分基地，你就不用通过美国进行邮寄，从中国就能把书尽快给你送到。</p>
@@ -336,6 +340,29 @@
 <p>session不支持跨域名访问。</p>
 </blockquote>
 <p>另外：现在正在淘汰cookie了，谷歌日前就在官方博客上说，将在未来两年淘汰cookie,即chrome逐步淘汰第三方cookie，但是由于市场占比的原因，这件事还有待进一步发展。</p>
+<h2 id="HTTP、TCP、UDP、IP、ICMP、DNS、FTP等协议分别处于哪层？"><a href="#HTTP、TCP、UDP、IP、ICMP、DNS、FTP等协议分别处于哪层？" class="headerlink" title="HTTP、TCP、UDP、IP、ICMP、DNS、FTP等协议分别处于哪层？"></a>HTTP、TCP、UDP、IP、ICMP、DNS、FTP等协议分别处于哪层？</h2><p>以OSI七层模型来说：</p>
+<ul>
+<li>应用层：<strong>HTTP、FTP、DNS、</strong>Telnet、SMTP、</li>
+<li>传输层：<strong>TCP、UDP</strong></li>
+<li>网络层：<strong>IP、ICMP、</strong>RIP、OSPF、</li>
+<li>数据链路层：<strong>ARP</strong>、PPP、RARP、MTU</li>
+<li>物理层：ISO2110、IEEEE802、IEEEE802.2</li>
+</ul>
+<h2 id="Ping指令用的什么协议？在哪一层？"><a href="#Ping指令用的什么协议？在哪一层？" class="headerlink" title="Ping指令用的什么协议？在哪一层？"></a>Ping指令用的什么协议？在哪一层？</h2><p>Ping命令本身处于应用层，相当于一个应用程序，它直接使用网络层的ICMP回应报文来监听返回情况。(所以如果直接问ping在哪一层，答案是应用层)</p>
+<h2 id="ARP协议的作用？"><a href="#ARP协议的作用？" class="headerlink" title="ARP协议的作用？"></a>ARP协议的作用？</h2><h3 id="什么是ARP协议？"><a href="#什么是ARP协议？" class="headerlink" title="什么是ARP协议？"></a>什么是ARP协议？</h3><p>ARP (Address Resolution Protocol) 是个地址解析协议。最直白的说法是：在IP以太网中，当一个上层协议要发包时，有了该节点的IP地址，ARP就能提供该节点的MAC地址。</p>
+<h3 id="为什么要有ARP协议？"><a href="#为什么要有ARP协议？" class="headerlink" title="为什么要有ARP协议？"></a>为什么要有ARP协议？</h3><p>OSI 模式把网络工作分为七层，彼此不直接打交道，只通过接口(layre interface). IP地址在第三层, MAC地址在第二层。协议在发生数据包时，首先要封装第三层 （IP地址）和第二层 （MAC地址）的报头, 但协议只知道目的节点的IP地址，不知道其物理地址，又不能跨第二、三层，所以得用ARP的服务。</p>
+<h2 id="路由器和交换机的区别？"><a href="#路由器和交换机的区别？" class="headerlink" title="路由器和交换机的区别？"></a>路由器和交换机的区别？</h2><p>交换机是一根网线上网，但是大家上网是分别拨号，各自使用自己的宽带，大家上网没有影响。而路由器比交换机多了一个虚拟拨号功能，通过同一台路由器上网的电脑是共用一个宽带账号，大家上网要相互影响。</p>
+<p>交换机工作在中继层，交换机根据MAC地址寻址。路由器工作在网络层，根据IP地址寻址，路由器可以处理TCP/IP协议，而交换机不可以。</p>
+<p>路由器工作于网络层，用来隔离广播域（子网），连接的设备分属不同子网，工作范围是多个子网之间，负责网络与网络之间通信。</p>
+<p><strong>工作层次不同</strong></p>
+<p>交换机主要工作在数据链路层（第二层）</p>
+<p>路由器工作在网络层（第三层）。</p>
+<p><strong>转发依据不同</strong></p>
+<p>交换机转发所依据的对象时：MAC地址。（物理地址）</p>
+<p>路由转发所依据的对象是：IP地址。（网络地址）</p>
+<p><strong>主要功能不同</strong></p>
+<p>交换机主要用于组建局域网，而路由主要功能是将由交换机组好的局域网相互连接起来，或者接入Internet。<br>交换机能做的，路由都能做。<br>交换机不能分割广播域，路由可以。<br>路由还可以提供防火墙的功能。<br>路由配置比交换机复杂。</p>
+<p>其他有关路由器和交换机的知识：<a href="https://www.cnblogs.com/Lynn-Zhang/articles/5754336.html" target="_blank" rel="noopener">可以参考文章</a></p>
 <h1 id="2-操作系统"><a href="#2-操作系统" class="headerlink" title="2.操作系统"></a>2.操作系统</h1><h2 id="进程与线程的区别"><a href="#进程与线程的区别" class="headerlink" title="进程与线程的区别"></a>进程与线程的区别</h2><p>从宏观上来回答：</p>
 <p>a.进程是系统资源分配的最小单位，线程是程序执行的最小单位</p>
 <p>b.进程使用独立的数据空间，而线程共享进程的数据空间</p>
@@ -3548,6 +3575,11 @@ Double d = Double.parseDouble( s );
 <li>时间复杂度：对于<code>put</code>和<code>get</code>都是O(1)</li>
 <li>空间复杂度：O(capacity),因为哈希表和双向链表最多存储<code>capacity + 1</code>个元素</li>
 </ul>
+<h2 id="寻找K数"><a href="#寻找K数" class="headerlink" title="寻找K数"></a>寻找K数</h2><p>K数是指一个数组中，它前面的数都比它小，它后面的数都比它大。找出一个数组中所有的K数</p>
+<hr>
+<p>解：题目描述很简单，但是实际考虑起来需要注意，首先K数在一个数组里面很可能不止1个，然后数组的第一个的左边和数组最后一个的右边，该怎么处理？</p>
+<p>把数组最左边设置为负无穷(Integer.MIN_VALUE),最右边设置成正无穷(Integer.MAX_VALUE),新开一个大小为原来大小+2的数组，把最左边和最右边处理完之后，依次遍历每个元素，然后以每个元素为轴，分别比较其左边和右边的每一个元素，满足左边都比它小同时右边都比它大的，这个数就是K树。</p>
+<figure class="highlight haxe"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Integer&gt; findK(int[] array) &#123;</span><br><span class="line">    int len = array.length;</span><br><span class="line">    List&lt;Integer&gt; result = <span class="keyword">new</span> <span class="type">LinkedList</span>&lt;&gt;();</span><br><span class="line">    <span class="comment">// 为了存放正无穷和负无穷的数组</span></span><br><span class="line">    int[] <span class="keyword">new</span><span class="type">Array</span> = <span class="keyword">new</span> <span class="type">int</span>[len + <span class="number">2</span>];</span><br><span class="line">    <span class="comment">// 初始化newArray,赋值array进去，同时设置0和len-1位置</span></span><br><span class="line">    <span class="keyword">for</span>(int i = <span class="number">1</span>; i &lt;= len; i++) &#123;</span><br><span class="line">        <span class="keyword">new</span><span class="type">Array</span>[i] = array[i<span class="number">-1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">new</span><span class="type">Array</span>[<span class="number">0</span>] = Integer.MIN_VALUE;</span><br><span class="line">    <span class="keyword">new</span><span class="type">Array</span>[len+<span class="number">1</span>] = Integer.MAX_VALUE;</span><br><span class="line">    <span class="comment">// 标记当前 i 数是否是K数，只要不满足要求就设置为false</span></span><br><span class="line">    boolean flag = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span>(int i = <span class="number">1</span>; i &lt;= len; i++) &#123;</span><br><span class="line">        <span class="comment">// 第一次判断，i左边的所有数是否都比它小</span></span><br><span class="line">        <span class="keyword">for</span>(int j = <span class="number">0</span>; j &lt;= i<span class="number">-1</span>; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">new</span><span class="type">Array</span>[j] &gt;= <span class="keyword">new</span><span class="type">Array</span>[i]) &#123;</span><br><span class="line">                flag = <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 第二次判断，i右边的所有数是否都比它大</span></span><br><span class="line">        <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">            <span class="keyword">for</span>(int j = i+<span class="number">1</span>; j &lt;= len+<span class="number">1</span>; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="keyword">new</span><span class="type">Array</span>[j] &lt;= <span class="keyword">new</span><span class="type">Array</span>[i]) &#123;</span><br><span class="line">                    flag = <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 两次判断都成功，则i就是K数</span></span><br><span class="line">        <span class="keyword">if</span>(flag) &#123;</span><br><span class="line">            result.add(<span class="keyword">new</span><span class="type">Array</span>[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Algorithms Note</category>
@@ -4089,6 +4121,9 @@ Double d = Double.parseDouble( s );
 </ol>
 <hr>
 <p>解：动态规划的思路解决，预先将所有的相加可能的结果计算出来并存储起来，然后调用它来找到即可。注意下标问题。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">NumArray</span> &#123;</span><br><span class="line">    <span class="built_in">int</span> sums[];</span><br><span class="line">    <span class="keyword">public</span> NumArray(<span class="built_in">int</span>[] nums) &#123;</span><br><span class="line">        sums = new <span class="built_in">int</span>[nums.length + <span class="number">1</span>];</span><br><span class="line">        sums[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i &lt; nums.length; i++) &#123;</span><br><span class="line">            sums[i+<span class="number">1</span>]  = sums[i] + nums[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> sumRange(<span class="built_in">int</span> i, <span class="built_in">int</span> j) &#123;</span><br><span class="line">        <span class="keyword">return</span> sums[j+<span class="number">1</span>] - sums[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your NumArray object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * NumArray obj = new NumArray(nums);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj.sumRange(i,j);</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<p>注意，先把所有计算结果保存起来，每次访问的话只需要O(1)，否则每次访问再计算，会导致时间复杂度太高。</p>
 ]]></content>
       <categories>
         <category>Algorithms Note</category>
@@ -4297,6 +4332,20 @@ Double d = Double.parseDouble( s );
 <li>时间复杂度：O(logN),但是在特例下(比如所有元素都相等的情况)，会退化到O(N)</li>
 <li>空间复杂度：O(1),left,right,mid指针都是常数大小的空间</li>
 </ul>
+<h2 id="79-Word-Search-单词搜索-Mid"><a href="#79-Word-Search-单词搜索-Mid" class="headerlink" title="79. Word Search (单词搜索)(Mid)"></a><a href="https://leetcode-cn.com/problems/word-search/" target="_blank" rel="noopener">79. Word Search (单词搜索)(Mid)</a></h2><p>Given a 2D board and a word, find if the word exists in the grid.</p>
+<p>The word can be constructed from letters of sequentially adjacent cell, where “adjacent” cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once.</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line">board =</span><br><span class="line">[</span><br><span class="line">  [<span class="string">'A'</span>,<span class="string">'B'</span>,<span class="string">'C'</span>,<span class="string">'E'</span>],</span><br><span class="line">  [<span class="string">'S'</span>,<span class="string">'F'</span>,<span class="string">'C'</span>,<span class="string">'S'</span>],</span><br><span class="line">  [<span class="string">'A'</span>,<span class="string">'D'</span>,<span class="string">'E'</span>,<span class="string">'E'</span>]</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">Given <span class="keyword">word</span> = <span class="string">"ABCCED"</span>, <span class="keyword">return</span> <span class="literal">true</span>.</span><br><span class="line">Given <span class="keyword">word</span> = <span class="string">"SEE"</span>, <span class="keyword">return</span> <span class="literal">true</span>.</span><br><span class="line">Given <span class="keyword">word</span> = <span class="string">"ABCB"</span>, <span class="keyword">return</span> <span class="literal">false</span>.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>board</code> and <code>word</code> consists only of lowercase and uppercase English letters.</li>
+<li><code>1 &lt;= board.length &lt;= 200</code></li>
+<li><code>1 &lt;= board[i].length &lt;= 200</code></li>
+<li><code>1 &lt;= word.length &lt;= 10^3</code></li>
+</ul>
+<hr>
+<p>解：</p>
 <h2 id="17-Letter-Combinations-of-a-Phone-Number-电话号码的字母组合-Mid"><a href="#17-Letter-Combinations-of-a-Phone-Number-电话号码的字母组合-Mid" class="headerlink" title="17. Letter Combinations of a Phone Number(电话号码的字母组合)(Mid)"></a><a href="https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/" target="_blank" rel="noopener">17. Letter Combinations of a Phone Number(电话号码的字母组合)(Mid)</a></h2><p>Given a string containing digits from <code>2-9</code> inclusive, return all possible letter combinations that the number could represent.</p>
 <p>A mapping of digit to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.</p>
 <p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/original_images/17_telephone_keypad.png" alt=""></p>
@@ -4551,6 +4600,26 @@ Double d = Double.parseDouble( s );
 <li>时间复杂度 : O(N)。每个结点访问一次。</li>
 <li>空间复杂度 : O(N)。我们跟进了整棵树。</li>
 </ul>
+<h2 id="验证二叉搜索树-2019快手秋招工程A卷"><a href="#验证二叉搜索树-2019快手秋招工程A卷" class="headerlink" title="验证二叉搜索树(2019快手秋招工程A卷)"></a>验证二叉搜索树(2019快手秋招工程A卷)</h2><p>给定一棵满二叉树，判定该树是否为二叉搜索树，是的话打印True，不是的话打印False</p>
+<p>说明：<br>a. 二叉搜索树（Binary Search Tree），它或者是一棵空树，或者是具有下列性质的二叉树： 若它的左子树不空，则左子树上所有结点的值均小于它的根结点的值； 若它的右子树不空，则右子树上所有结点的值均大于它的根结点的值； 它的左、右子树也分别为二叉搜索树。<br>b. 满二叉树，除最后一层无任何子节点外，每一层上的所有结点都有两个子结点二叉树<br>c. 树内节点数不超过 10000，非空节点值为大于0小于65536的整数，空树或空节点输入为None</p>
+<p><strong>输入描述：</strong></p>
+<blockquote>
+<p>从根节点开始，逐层输入每个节点的值，空树或空节点输入为None</p>
+<p>比如：10,5,15,3,7,13,18</p>
+</blockquote>
+<p><strong>输出描述：</strong></p>
+<blockquote>
+<p>是二叉搜索树的话打印True，不是的话打印False</p>
+</blockquote>
+<p><strong>示例1</strong></p>
+<p>输入：10,5,15,3,7,13,18</p>
+<p>输出：True</p>
+<hr>
+<p>解：这道题虽然目的和LeetCode98相同，但是不能直接用中序遍历，需要自己构建一颗树，或者直接用二叉树层次结构父节点和子节点的index关系来做。(所有企业笔试都需要自己构建输入输出，这点需要比较注意。但是其实也不难，写几次就知道了。)</p>
+<p>这道题问题在于处理输入，如果只是单纯判断某一棵树是不是为二叉搜素树，判断其中序遍历结果是否为递增的即可。但是这里输入不是一棵树，而且输入可能会有空(用None)表示。</p>
+<p>但是好消息是，题目已经明确说给定的会是一颗满二叉树或者干脆为None值，方便我们处理。</p>
+<p>所以这里需要利用树的父节点和子节点的下标关系来进行比较(和一开始我们讨论的堆建树过程差不多)。重点是父节点下标和子节点下标之间的关系：第i个节点，它的左孩子为 tree[2 * i]、右孩子为tree[2*i+1]</p>
+<p>也可以自己建立树，通过输入的结果进行层序遍历，依次赋值</p>
 <h2 id="114-Flatten-Binary-Tree-to-Linked-List-二叉树展开为链表-Mid"><a href="#114-Flatten-Binary-Tree-to-Linked-List-二叉树展开为链表-Mid" class="headerlink" title="114. Flatten Binary Tree to Linked List(二叉树展开为链表)(Mid)"></a><a href="https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/" target="_blank" rel="noopener">114. Flatten Binary Tree to Linked List(二叉树展开为链表)(Mid)</a></h2><p>Given a binary tree, flatten it to a linked list in-place.</p>
 <p>For example, given the following tree:</p>
 <figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">    <span class="number">1</span></span><br><span class="line">   / \</span><br><span class="line">  <span class="number">2</span>   <span class="number">5</span></span><br><span class="line"> / \   \</span><br><span class="line"><span class="number">3</span>   <span class="number">4</span>   <span class="number">6</span></span><br></pre></td></tr></table></figure>

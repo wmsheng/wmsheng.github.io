@@ -59,7 +59,7 @@
 <meta property="og:image" content="https://pic.leetcode-cn.com/815038bb44b7f15f1f32f31d40e75c250cec3c5c42b95175ec012c00a0243833-146-1.png">
 <meta property="og:image" content="https://pic.leetcode-cn.com/48292c190e50537087ea8c60ed44062675d55a73d1a59035d26e277a36b7b8e2-146-2.png">
 <meta property="article:published_time" content="2020-01-13T04:51:23.000Z">
-<meta property="article:modified_time" content="2020-03-18T03:45:58.478Z">
+<meta property="article:modified_time" content="2020-03-21T02:14:07.362Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -223,7 +223,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-18 11:45:58" itemprop="dateModified" datetime="2020-03-18T11:45:58+08:00">2020-03-18</time>
+                <time title="Modified: 2020-03-21 10:14:07" itemprop="dateModified" datetime="2020-03-21T10:14:07+08:00">2020-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -251,7 +251,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>12k</span>
+              <span>13k</span>
             </span>
 
         </div>
@@ -443,6 +443,11 @@
 <li>时间复杂度：对于<code>put</code>和<code>get</code>都是O(1)</li>
 <li>空间复杂度：O(capacity),因为哈希表和双向链表最多存储<code>capacity + 1</code>个元素</li>
 </ul>
+<h2 id="寻找K数"><a href="#寻找K数" class="headerlink" title="寻找K数"></a>寻找K数</h2><p>K数是指一个数组中，它前面的数都比它小，它后面的数都比它大。找出一个数组中所有的K数</p>
+<hr>
+<p>解：题目描述很简单，但是实际考虑起来需要注意，首先K数在一个数组里面很可能不止1个，然后数组的第一个的左边和数组最后一个的右边，该怎么处理？</p>
+<p>把数组最左边设置为负无穷(Integer.MIN_VALUE),最右边设置成正无穷(Integer.MAX_VALUE),新开一个大小为原来大小+2的数组，把最左边和最右边处理完之后，依次遍历每个元素，然后以每个元素为轴，分别比较其左边和右边的每一个元素，满足左边都比它小同时右边都比它大的，这个数就是K树。</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Integer&gt; findK(int[] array) &#123;</span><br><span class="line">    int len = array.length;</span><br><span class="line">    List&lt;Integer&gt; result = <span class="keyword">new</span> <span class="type">LinkedList</span>&lt;&gt;();</span><br><span class="line">    <span class="comment">// 为了存放正无穷和负无穷的数组</span></span><br><span class="line">    int[] <span class="keyword">new</span><span class="type">Array</span> = <span class="keyword">new</span> <span class="type">int</span>[len + <span class="number">2</span>];</span><br><span class="line">    <span class="comment">// 初始化newArray,赋值array进去，同时设置0和len-1位置</span></span><br><span class="line">    <span class="keyword">for</span>(int i = <span class="number">1</span>; i &lt;= len; i++) &#123;</span><br><span class="line">        <span class="keyword">new</span><span class="type">Array</span>[i] = array[i<span class="number">-1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">new</span><span class="type">Array</span>[<span class="number">0</span>] = Integer.MIN_VALUE;</span><br><span class="line">    <span class="keyword">new</span><span class="type">Array</span>[len+<span class="number">1</span>] = Integer.MAX_VALUE;</span><br><span class="line">    <span class="comment">// 标记当前 i 数是否是K数，只要不满足要求就设置为false</span></span><br><span class="line">    boolean flag = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span>(int i = <span class="number">1</span>; i &lt;= len; i++) &#123;</span><br><span class="line">        <span class="comment">// 第一次判断，i左边的所有数是否都比它小</span></span><br><span class="line">        <span class="keyword">for</span>(int j = <span class="number">0</span>; j &lt;= i<span class="number">-1</span>; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">new</span><span class="type">Array</span>[j] &gt;= <span class="keyword">new</span><span class="type">Array</span>[i]) &#123;</span><br><span class="line">                flag = <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 第二次判断，i右边的所有数是否都比它大</span></span><br><span class="line">        <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">            <span class="keyword">for</span>(int j = i+<span class="number">1</span>; j &lt;= len+<span class="number">1</span>; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="keyword">new</span><span class="type">Array</span>[j] &lt;= <span class="keyword">new</span><span class="type">Array</span>[i]) &#123;</span><br><span class="line">                    flag = <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 两次判断都成功，则i就是K数</span></span><br><span class="line">        <span class="keyword">if</span>(flag) &#123;</span><br><span class="line">            result.add(<span class="keyword">new</span><span class="type">Array</span>[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -534,7 +539,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#169-Majority-Element-多数元素-Easy"><span class="nav-text">169. Majority Element(多数元素)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Reverse-Integer-整数反转-Mid"><span class="nav-text">7. Reverse Integer(整数反转)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-Palindrome-Number-回文数-Mid"><span class="nav-text">9. Palindrome Number(回文数)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1109-Corporate-Flight-Bookings-航班预订统计-Mid"><span class="nav-text">1109. Corporate Flight Bookings(航班预订统计)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#135-Candy-分发糖果-Hard"><span class="nav-text">135. Candy(分发糖果)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#剑指offer-面试题03-数组中重复的数字-Easy"><span class="nav-text">剑指offer 面试题03 数组中重复的数字(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#146-LRU-Cache-LRU缓存机制-Mid"><span class="nav-text">146. LRU Cache(LRU缓存机制)(Mid)</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#169-Majority-Element-多数元素-Easy"><span class="nav-text">169. Majority Element(多数元素)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Reverse-Integer-整数反转-Mid"><span class="nav-text">7. Reverse Integer(整数反转)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-Palindrome-Number-回文数-Mid"><span class="nav-text">9. Palindrome Number(回文数)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1109-Corporate-Flight-Bookings-航班预订统计-Mid"><span class="nav-text">1109. Corporate Flight Bookings(航班预订统计)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#135-Candy-分发糖果-Hard"><span class="nav-text">135. Candy(分发糖果)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#剑指offer-面试题03-数组中重复的数字-Easy"><span class="nav-text">剑指offer 面试题03 数组中重复的数字(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#146-LRU-Cache-LRU缓存机制-Mid"><span class="nav-text">146. LRU Cache(LRU缓存机制)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#寻找K数"><span class="nav-text">寻找K数</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -619,7 +624,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">316k</span>
+    <span title="Symbols count total">320k</span>
 </div>
 
 
@@ -636,7 +641,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共157.5k字</span>
+  <span class="post-count">博客全站共159.6k字</span>
 </div>
 
         
