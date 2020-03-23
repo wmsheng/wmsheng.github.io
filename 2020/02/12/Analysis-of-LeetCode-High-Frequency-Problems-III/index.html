@@ -57,7 +57,7 @@
 <meta property="og:description" content="详细讲解LeetCode考察较多的3道题目：10、84、28。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-02-12T08:38:51.000Z">
-<meta property="article:modified_time" content="2020-02-20T05:54:27.944Z">
+<meta property="article:modified_time" content="2020-03-23T12:39:51.453Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -220,7 +220,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-20 13:54:27" itemprop="dateModified" datetime="2020-02-20T13:54:27+08:00">2020-02-20</time>
+                <time title="Modified: 2020-03-23 20:39:51" itemprop="dateModified" datetime="2020-03-23T20:39:51+08:00">2020-03-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,7 +248,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>160</span>
+              <span>2.4k</span>
             </span>
 
         </div>
@@ -263,7 +263,44 @@
         <p>详细讲解LeetCode考察较多的3道题目：10、84、28。</p>
 <a id="more"></a>
 
-<h2 id="10-regular-expression-matching-正则表达式匹配-Hard"><a href="#10-regular-expression-matching-正则表达式匹配-Hard" class="headerlink" title="10.regular-expression-matching(正则表达式匹配)(Hard)"></a><a href="https://leetcode-cn.com/problems/regular-expression-matching/" target="_blank" rel="noopener">10.regular-expression-matching(正则表达式匹配)(Hard)</a></h2><h2 id="84-Largest-Rectangle-in-Histogram-柱状图中最大的矩形-Hard"><a href="#84-Largest-Rectangle-in-Histogram-柱状图中最大的矩形-Hard" class="headerlink" title="84.Largest Rectangle in Histogram(柱状图中最大的矩形)(Hard)"></a><a href="https://leetcode-cn.com/problems/largest-rectangle-in-histogram/" target="_blank" rel="noopener">84.Largest Rectangle in Histogram(柱状图中最大的矩形)(Hard)</a></h2><h2 id="28-implement-strstr-实现strStr-Easy"><a href="#28-implement-strstr-实现strStr-Easy" class="headerlink" title="28.implement-strstr(实现strStr())(Easy)"></a><a href="https://leetcode-cn.com/problems/implement-strstr/" target="_blank" rel="noopener">28.implement-strstr(实现strStr())(Easy)</a></h2>
+<h2 id="10-Regular-Expression-Matching-正则表达式匹配-Hard"><a href="#10-Regular-Expression-Matching-正则表达式匹配-Hard" class="headerlink" title="10.Regular Expression Matching(正则表达式匹配)(Hard)"></a><a href="https://leetcode-cn.com/problems/regular-expression-matching/" target="_blank" rel="noopener">10.Regular Expression Matching(正则表达式匹配)(Hard)</a></h2><p>Given an input string (<code>s</code>) and a pattern (<code>p</code>), implement regular expression matching with support for <code>&#39;.&#39;</code> and <code>&#39;*&#39;</code>.</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'.'</span> Matches <span class="keyword">any</span> single <span class="keyword">character</span>.</span><br><span class="line"><span class="string">'*'</span> Matches <span class="literal">zero</span> <span class="keyword">or</span> more <span class="keyword">of</span> <span class="keyword">the</span> preceding <span class="keyword">element</span>.</span><br></pre></td></tr></table></figure>
+
+<p>The matching should cover the <strong>entire</strong> input string (not partial).</p>
+<p><strong>Note:</strong></p>
+<ul>
+<li><code>s</code> could be empty and contains only lowercase letters <code>a-z</code>.</li>
+<li><code>p</code> could be empty and contains only lowercase letters <code>a-z</code>, and characters like <code>.</code> or <code>*</code>.</li>
+</ul>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">Input:</span></span><br><span class="line">s = <span class="string">"aa"</span></span><br><span class="line">p = <span class="string">"a"</span></span><br><span class="line"><span class="string">Output:</span> <span class="literal">false</span></span><br><span class="line"><span class="string">Explanation:</span> <span class="string">"a"</span> does not match the entire string <span class="string">"aa"</span>.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Input:</span><br><span class="line">s = <span class="string">"aa"</span></span><br><span class="line">p = <span class="string">"a*"</span></span><br><span class="line">Output: <span class="literal">true</span></span><br><span class="line">Explanation: <span class="string">'*'</span> means <span class="literal">zero</span> <span class="keyword">or</span> more <span class="keyword">of</span> <span class="keyword">the</span> preceding <span class="keyword">element</span>, <span class="string">'a'</span>. Therefore, <span class="keyword">by</span> repeating <span class="string">'a'</span> once, <span class="keyword">it</span> becomes <span class="string">"aa"</span>.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 3:</strong></p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">Input:</span></span><br><span class="line">s = <span class="string">"ab"</span></span><br><span class="line">p = <span class="string">".*"</span></span><br><span class="line"><span class="string">Output:</span> <span class="literal">true</span></span><br><span class="line"><span class="string">Explanation:</span> <span class="string">".*"</span> means <span class="string">"zero or more (*) of any character (.)"</span>.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 4:</strong></p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Input:</span><br><span class="line">s = <span class="string">"aab"</span></span><br><span class="line">p = <span class="string">"c*a*b"</span></span><br><span class="line">Output: <span class="literal">true</span></span><br><span class="line">Explanation: c can be repeated <span class="number">0</span> <span class="keyword">times</span>, a can be repeated <span class="number">1</span> <span class="built_in">time</span>. Therefore, <span class="keyword">it</span> matches <span class="string">"aab"</span>.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 5:</strong></p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">Input:</span></span><br><span class="line">s = <span class="string">"mississippi"</span></span><br><span class="line">p = <span class="string">"mis*is*p*."</span></span><br><span class="line"><span class="section">Output: false</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>解：如果可以调库，可以利用String的<code>matches</code>方法来判断即可：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isMatch</span><span class="params">(<span class="keyword">String</span> s, <span class="keyword">String</span> p)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> s.matches(p);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是上面的操作其实更像是一个玩笑(^_^)</p>
+<p>这道题是可以用动态规划解决的经典问题，用动态规划自底向上地解决这道题，可以避免在过程中产生的重复的计算过程。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span>ean isMatch(String s, String p) &#123;</span><br><span class="line">        <span class="keyword">if</span>(s == <span class="literal">null</span> || p == <span class="literal">null</span>) <span class="keyword">return</span> s.equals(p);</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">int</span> m = s.length(), n = p.length();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 状态dp[i][j]表示s的前i个能否被p的前j个匹配</span></span><br><span class="line">        <span class="built_in">bool</span>ean[][] dp = new <span class="built_in">bool</span>ean[m+<span class="number">1</span>][n+<span class="number">1</span>];</span><br><span class="line">        <span class="comment">//初始化dp[0][0]等于true,表示当两字符串长度都为0，也就是空</span></span><br><span class="line">        <span class="comment">// 字符串时，他们互相匹配</span></span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="literal">true</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 最重要的步骤之一</span></span><br><span class="line">        <span class="comment">// 初始化二维矩阵第一列所有值：</span></span><br><span class="line">        <span class="comment">// 当s为空字符串时，对p字符串的任一位置，要使得这个位置的子串能和空字符串匹配，</span></span><br><span class="line">        <span class="comment">// 要求，这个子串都是由一系列的型号组合构成</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> j = <span class="number">1</span>; j &lt;= n; j++) &#123;</span><br><span class="line">            <span class="comment">// 注意因为申请boolean数组是长度+1，所以p的charAt位置和j的位置相差1，即j-1位置是p.charAt的位置</span></span><br><span class="line">            dp[<span class="number">0</span>][j] = j &gt; <span class="number">1</span> &amp;&amp; p.charAt(j<span class="number">-1</span>) == <span class="string">'*'</span> &amp;&amp; dp[<span class="number">0</span>][j<span class="number">-2</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 接下来就是给这个二维矩阵填表了,逻辑和递归一模一样</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">1</span>; i &lt;= m; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">int</span> j = <span class="number">1</span>; j &lt;= n; j++) &#123;</span><br><span class="line">                <span class="comment">// p的当前字符不是星号(*)时，判断当前两字符是否相等，如果相等，则看看dp[i-1][j-1]的值，</span></span><br><span class="line">                <span class="comment">// 因为它保存了前一个匹配的结果</span></span><br><span class="line">                <span class="keyword">if</span>(p.charAt(j - <span class="number">1</span>) != <span class="string">'*'</span>) &#123;</span><br><span class="line">                    dp[i][j] = dp[i<span class="number">-1</span>][j<span class="number">-1</span>] &amp;&amp; isMatch(s.charAt(i - <span class="number">1</span>), p.charAt(j<span class="number">-1</span>));</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 当p当前字符是星号(*)时,进行两种尝试：</span></span><br><span class="line">                    <span class="comment">// -用星号组合表示空字符串，看看是否能匹配，即dp[i][j-2]</span></span><br><span class="line">                    <span class="comment">// -用星号组合表示一个字符，看看是否能匹配，即dp[i-1][j]</span></span><br><span class="line">                    dp[i][j] = dp[i][j<span class="number">-2</span>] || dp[i<span class="number">-1</span>][j] &amp;&amp; isMatch(s.charAt(i<span class="number">-1</span>),p.charAt(j<span class="number">-2</span>));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[m][n];</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="built_in">bool</span>ean isMatch(char a, char b) &#123;</span><br><span class="line">        <span class="keyword">return</span> a == b || b == <span class="string">'.'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>动态规划方法的复杂度：</p>
+<ul>
+<li>时间复杂度：O(n^2)</li>
+<li>空间复杂度：O(n^2)</li>
+</ul>
+<h2 id="84-Largest-Rectangle-in-Histogram-柱状图中最大的矩形-Hard"><a href="#84-Largest-Rectangle-in-Histogram-柱状图中最大的矩形-Hard" class="headerlink" title="84.Largest Rectangle in Histogram(柱状图中最大的矩形)(Hard)"></a><a href="https://leetcode-cn.com/problems/largest-rectangle-in-histogram/" target="_blank" rel="noopener">84.Largest Rectangle in Histogram(柱状图中最大的矩形)(Hard)</a></h2><h2 id="28-implement-strstr-实现strStr-Easy"><a href="#28-implement-strstr-实现strStr-Easy" class="headerlink" title="28.implement-strstr(实现strStr())(Easy)"></a><a href="https://leetcode-cn.com/problems/implement-strstr/" target="_blank" rel="noopener">28.implement-strstr(实现strStr())(Easy)</a></h2>
     </div>
 
 
@@ -354,7 +391,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#10-regular-expression-matching-正则表达式匹配-Hard"><span class="nav-text">10.regular-expression-matching(正则表达式匹配)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#84-Largest-Rectangle-in-Histogram-柱状图中最大的矩形-Hard"><span class="nav-text">84.Largest Rectangle in Histogram(柱状图中最大的矩形)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#28-implement-strstr-实现strStr-Easy"><span class="nav-text">28.implement-strstr(实现strStr())(Easy)</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#10-Regular-Expression-Matching-正则表达式匹配-Hard"><span class="nav-text">10.Regular Expression Matching(正则表达式匹配)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#84-Largest-Rectangle-in-Histogram-柱状图中最大的矩形-Hard"><span class="nav-text">84.Largest Rectangle in Histogram(柱状图中最大的矩形)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#28-implement-strstr-实现strStr-Easy"><span class="nav-text">28.implement-strstr(实现strStr())(Easy)</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -439,7 +476,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">320k</span>
+    <span title="Symbols count total">329k</span>
 </div>
 
 
@@ -456,7 +493,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共159.6k字</span>
+  <span class="post-count">博客全站共163.1k字</span>
 </div>
 
         
