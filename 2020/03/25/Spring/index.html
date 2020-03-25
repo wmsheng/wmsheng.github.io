@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/siyecao.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/siyecao.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false,"b2t":true,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="成功的奥秘在于目标的坚定。——迪斯雷利">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring">
+<meta property="og:url" content="http://yoursite.com/2020/03/25/Spring/index.html">
+<meta property="og:site_name" content="Hi, This is Bennett">
+<meta property="og:description" content="成功的奥秘在于目标的坚定。——迪斯雷利">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/03/25/nEIgC9TfwFkYr1s.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/25/PWQAFcpv4hqM9Ze.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/25/HypdfUSJNYqAEzG.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/25/NU6EPjKc7n2To1L.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/25/iJZPArWfomIY9M6.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/25/YNAar5mMChU2Dzc.png">
+<meta property="article:published_time" content="2020-03-24T23:40:10.000Z">
+<meta property="article:modified_time" content="2020-03-25T15:55:12.292Z">
+<meta property="article:author" content="Wang Mingsheng">
+<meta property="article:tag" content="Interview">
+<meta property="article:tag" content="Spring">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/25/nEIgC9TfwFkYr1s.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/25/Spring/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Spring | Hi, This is Bennett</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hi, This is Bennett</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">23</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">32</span></a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/25/Spring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/faceimage.jpg">
+      <meta itemprop="name" content="Wang Mingsheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hi, This is Bennett">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-03-25 07:40:10 / Modified: 23:55:12" itemprop="dateCreated datePublished" datetime="2020-03-25T07:40:10+08:00">2020-03-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Interview-Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Interview Note</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              
+              <span>10k</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>成功的奥秘在于目标的坚定。——迪斯雷利</p>
+</blockquote>
+<a id="more"></a>
+
+<p>参考文章：<a href="https://wiki.jikexueyuan.com/project/spring/ioc-containers.html" target="_blank" rel="noopener">极客学院Spring教程</a></p>
+<p><a href="https://blog.csdn.net/weixin_43277643/article/details/84253237" target="_blank" rel="noopener">Spring Bean详细讲解 什么是Bean?</a></p>
+<h1 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h1><h1 id="Spring框架是什么"><a href="#Spring框架是什么" class="headerlink" title="Spring框架是什么"></a>Spring框架是什么</h1><p>Spring 是个java企业级应用的开源开发框架。Spring主要用来开发Java应用，但是有些扩展是针对构建J2EE平台的web应用。Spring 框架目标是简化Java企业级应用开发，并通过POJO为基础的编程模型促进良好的编程习惯。</p>
+<h2 id="Spring框架的好处"><a href="#Spring框架的好处" class="headerlink" title="Spring框架的好处"></a>Spring框架的好处</h2><p>可以说是Spring框架的精髓：</p>
+<ul>
+<li>轻量，基本版本大约2MB</li>
+<li>控制反转(IOC)：实现了松散耦合。对象们给出它们的依赖，而不是创建或查找依赖的对象们。</li>
+<li>面向切面的编程(AOP)：Spring支持面向切面的编程，并且把应用业务逻辑和系统服务分开。</li>
+<li>容器：Spring 包含并管理应用中对象的生命周期和配置。</li>
+<li>MVC框架：Spring的WEB框架是个精心设计的框架，是Web框架的一个很好的替代品。</li>
+<li>事务管理：Spring 提供一个持续的事务管理接口，可以扩展到上至本地事务下至全局事务（JTA）。</li>
+<li>异常处理：Spring 提供方便的API把具体技术相关的异常（比如由JDBC，Hibernate or JDO抛出的）转化为一致的unchecked 异常。</li>
+</ul>
+<h2 id="Spring的两种IOC容器——BeanFactory和ApplicationContext"><a href="#Spring的两种IOC容器——BeanFactory和ApplicationContext" class="headerlink" title="Spring的两种IOC容器——BeanFactory和ApplicationContext"></a>Spring的两种IOC容器——BeanFactory和ApplicationContext</h2><p>Spring 容器是 Spring 框架的核心。容器将创建对象，把它们连接在一起，配置它们，并管理他们的整个生命周期从创建到销毁。Spring 容器使用依赖注入（DI）来管理组成一个应用程序的组件。这些对象被称为 Spring Beans.</p>
+<p>通过阅读配置元数据提供的指令，容器知道对哪些对象进行实例化，配置和组装。配置元数据可以通过 XML，Java 注释或 Java 代码来表示。下图是 Spring 如何工作的高级视图。 </p>
+<p><img src="https://i.loli.net/2020/03/25/nEIgC9TfwFkYr1s.png" alt="Spring如何工作的高级视图.png"></p>
+<p>Spring IoC 容器利用 Java 的 POJO 类和配置元数据来生成完全配置和可执行的系统或应用程序。</p>
+<p>Spring提供了两种不同类型的容器：</p>
+<ul>
+<li>Spring BeanFactory容器，最简单的容器(太简单了，功能实现比较少，不推荐了)，给DI提供了基本支持。</li>
+<li>Spring ApplicationContext容器，该容器添加了更多的企业特定的功能，例如从一个属性文件中解析文本信息的能力，发布应用程序事件给感兴趣的事件监听器的能力。该容器是由 org.springframework.context.ApplicationContext 接口定义。</li>
+</ul>
+<p><strong>ApplicationContext 容器包括 BeanFactory 容器的所有功能，所以通常建议使用 ApplicationContext。BeanFactory 仍然可以用于轻量级的应用程序，如移动设备或基于 applet 的应用程序，其中它的数据量和速度是显著。</strong></p>
+<h3 id="Spring的基本模块——BeanFactory-BeanFactory容器"><a href="#Spring的基本模块——BeanFactory-BeanFactory容器" class="headerlink" title="Spring的基本模块——BeanFactory(BeanFactory容器)"></a>Spring的基本模块——BeanFactory(BeanFactory容器)</h3><p>BeanFactory是基本的Spring模块，提供spring 框架的基础功能，BeanFactory 是 任何以spring为基础的应用的核心。Spring 框架建立在此模块之上，它使Spring成为一个容器。</p>
+<p>Bean 工厂是工厂模式的一个实现，提供了控制反转功能，用来把应用的配置和依赖从真正的应用代码中分离。</p>
+<p>最常用的BeanFactory 实现是<strong>XmlBeanFactory</strong> 类。即org.springframework.beans.factory.xml.XmlBeanFactory ，它根据XML文件中的定义加载beans。这个容器从一个 XML 文件中读取配置元数据，由这些元数据来生成一个被配置化的系统或者应用。</p>
+<p>需要注意，在资源宝贵的移动设备或者基于 applet 的应用当中， BeanFactory 会被优先选择。否则，一般使用的是 ApplicationContext，除非你有更好的理由选择 BeanFactory。</p>
+<h3 id="ApplicationContext是什么？通常的实现是什么"><a href="#ApplicationContext是什么？通常的实现是什么" class="headerlink" title="ApplicationContext是什么？通常的实现是什么?"></a>ApplicationContext是什么？通常的实现是什么?</h3><p><em>Application Context</em> 是 spring 中较高级的容器。和 BeanFactory 类似，它可以加载配置文件中定义的 bean，将所有的 bean 集中在一起，当有请求的时候分配 bean。 另外，它增加了企业所需要的功能，比如，从属性文件从解析文本信息和将事件传递给所指定的监听器。这个容器在 <em>org.springframework.context.ApplicationContext interface</em> 接口中定义。</p>
+<ul>
+<li><strong>FileSystemXmlApplicationContext</strong> ：此容器从一个<strong>XML文件</strong>中加载已被定义的bean。在这里，你<font color=#FF0000>需要提供给构造器 XML 文件的完整路径</font></li>
+<li><strong>ClassPathXmlApplicationContext</strong>：该容器从 XML 文件中加载已被定义的 bean。在这里，你<font color=#FF0000>不需要提供 XML 文件的完整路径</font>，只需正确配置 CLASSPATH 环境变量即可，因为，容器会从 CLASSPATH 中搜索 bean 配置文件。</li>
+<li><strong>WebXmlApplicationContext</strong>：此容器加载一个XML文件，此文件定义了一个WEB应用的所有bean。</li>
+</ul>
+<h3 id="BeanFactory和ApplicationContext有什么区别？"><a href="#BeanFactory和ApplicationContext有什么区别？" class="headerlink" title="BeanFactory和ApplicationContext有什么区别？"></a>BeanFactory和ApplicationContext有什么区别？</h3><p>ApplicationContext 包含 BeanFactory 所有的功能，一般情况下，相对于 BeanFactory，ApplicationContext 会被推荐使用。BeanFactory 仍然可以在轻量级应用中使用，比如移动设备或者基于 applet 的应用程序。</p>
+<h2 id="解释对象-关系映射集成模块"><a href="#解释对象-关系映射集成模块" class="headerlink" title="解释对象/关系映射集成模块"></a>解释对象/关系映射集成模块</h2><p>Spring 通过提供ORM模块，支持我们在直接JDBC之上使用一个对象/关系映射映射(ORM)工具，Spring 支持集成主流的ORM框架，如Hiberate,JDO和 iBATIS SQL Maps。Spring的事务管理同样支持以上所有ORM框架及JDBC</p>
+<h1 id="Spring-Bean"><a href="#Spring-Bean" class="headerlink" title="Spring Bean"></a>Spring Bean</h1><h2 id="Spring-Bean是什么"><a href="#Spring-Bean是什么" class="headerlink" title="Spring Bean是什么"></a>Spring Bean是什么</h2><p>被称作 bean 的对象是构成应用程序的支柱也是由 Spring IoC 容器管理的。<strong>bean 是一个被实例化，组装，并通过 Spring IoC 容器所管理的对象</strong>。这些 bean 是由用容器提供的配置元数据创建。</p>
+<h2 id="一个Spring-Bean定义包含什么"><a href="#一个Spring-Bean定义包含什么" class="headerlink" title="一个Spring Bean定义包含什么"></a>一个Spring Bean定义包含什么</h2><p>bean 定义包含称为<strong>配置元数据</strong>的信息。</p>
+<p>Spring IOC容器管理Bean时，需要了解Bean的类名、名称、依赖项、属性、生命周期及作用域等信息。为此，Spring IOC提供了一系列配置项，用于Bean在IOC容器中的定义。已创建的Bean类需要在Spring配置文件中进行定义，Spring IOC容器才能对Bean进行组配和管理。</p>
+<p>一些配置项如下表所示：</p>
+<p><img src="https://i.loli.net/2020/03/25/PWQAFcpv4hqM9Ze.png" alt="bean的一些配置项.png"></p>
+<h2 id="Spring-Bean加载机制"><a href="#Spring-Bean加载机制" class="headerlink" title="Spring Bean加载机制"></a>Spring Bean加载机制</h2><p>将Bean类添加到Spring IOC容器有三种方式</p>
+<ul>
+<li>一种方式是基于XML的配置文件；(现在很不推荐用，太久远了)</li>
+<li>一种方式是基于注解的配置(Annotation-based configuration，从Spring2.5开始)；</li>
+<li>一种方式是基于Java的配置(java-based configuration, 从Spring3.0开始)</li>
+</ul>
+<h2 id="Spring-Bean的生命周期-重要"><a href="#Spring-Bean的生命周期-重要" class="headerlink" title="Spring Bean的生命周期(重要)"></a>Spring Bean的生命周期(重要)</h2><p>理解 Spring bean 的生命周期很容易。当一个 bean 被实例化时，它可能需要执行一些初始化使它转换成可用状态。同样，当 bean 不再需要，并且从容器中移除时，可能需要做一些清除工作。</p>
+<p>尽管还有一些在 Bean 实例化和销毁之间发生的活动，但是本章将只讨论两个重要的生命周期回调方法，它们在 bean 的初始化和销毁的时候是必需的。</p>
+<p>为了定义安装和拆卸一个 bean，我们只要声明带有 init-method 和/或 destroy-method 参数的 。init-method 属性指定一个方法，在实例化 bean 时，立即调用该方法。同样，destroy-method 指定一个方法，只有从容器中移除 bean 之后，才能调用该方法。</p>
+<p>简而言之，Spring Bean的生命周期可以分为九步：</p>
+<p><a href="https://blog.csdn.net/w_linux/article/details/80086950?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task" target="_blank" rel="noopener">参考文章：Spring了解Bean的一生(生命周期)</a></p>
+<p><a href="https://www.jianshu.com/p/3944792a5fff" target="_blank" rel="noopener">Spring Bean的生命周期</a> **,这篇文章也包含案例</p>
+<h3 id="ApplicationContext-Bean的生命周期"><a href="#ApplicationContext-Bean的生命周期" class="headerlink" title="ApplicationContext Bean的生命周期"></a>ApplicationContext Bean的生命周期</h3><p><img src="https://i.loli.net/2020/03/25/HypdfUSJNYqAEzG.png" alt="ApplicationContextBean的生命周期.png"></p>
+<p>ApplicationContext容器中，Bean的生命周期流程如上图所示，流程大致如下：</p>
+<p>1.首先容器启动后，会对scope为singleton且非懒加载的bean进行实例化，</p>
+<p>2.按照Bean定义信息配置信息，注入所有的属性，</p>
+<p>3.如果Bean实现了BeanNameAware接口，会回调该接口的setBeanName()方法，传入该Bean的id，此时该Bean就获得了自己在配置文件中的id，</p>
+<p>4.如果Bean实现了BeanFactoryAware接口,会回调该接口的setBeanFactory()方法，传入该Bean的BeanFactory，这样该Bean就获得了自己所在的BeanFactory，</p>
+<p>5.如果Bean实现了ApplicationContextAware接口,会回调该接口的setApplicationContext()方法，传入该Bean的ApplicationContext，这样该Bean就获得了自己所在的ApplicationContext，</p>
+<p>6.如果有Bean实现了BeanPostProcessor接口，则会回调该接口的postProcessBeforeInitialzation()方法，</p>
+<p>7.如果Bean实现了InitializingBean接口，则会回调该接口的afterPropertiesSet()方法，</p>
+<p>8.如果Bean配置了init-method方法，则会执行init-method配置的方法，</p>
+<p>9.如果有Bean实现了BeanPostProcessor接口，则会回调该接口的postProcessAfterInitialization()方法，</p>
+<p>10.经过流程9之后，就可以正式使用该Bean了,对于scope为singleton的Bean,Spring的ioc容器中会缓存一份该bean的实例，而对于scope为prototype的Bean,每次被调用都会new一个新的对象，期生命周期就交给调用方管理了，不再是Spring容器进行管理了</p>
+<p>11.容器关闭后，如果Bean实现了DisposableBean接口，则会回调该接口的destroy()方法，</p>
+<p>12.如果Bean配置了destroy-method方法，则会执行destroy-method配置的方法，至此，整个Bean的生命周期结束</p>
+<h3 id="BeanFactory-Bean的生命周期"><a href="#BeanFactory-Bean的生命周期" class="headerlink" title="BeanFactory Bean的生命周期"></a>BeanFactory Bean的生命周期</h3><p><img src="https://i.loli.net/2020/03/25/NU6EPjKc7n2To1L.png" alt="BeanFactory Bean生命周期.png"></p>
+<p>BeanFactoty容器中, Bean的生命周期如上图所示，与ApplicationContext相比，有如下几点不同:</p>
+<p>1.BeanFactory容器中，不会调用ApplicationContextAware接口的setApplicationContext()方法，</p>
+<p>2.BeanPostProcessor接口的postProcessBeforeInitialzation()方法和postProcessAfterInitialization()方法不会自动调用，必须自己通过代码手动注册</p>
+<p>3.BeanFactory容器启动的时候，不会去实例化所有Bean,包括所有scope为singleton且非懒加载的Bean也是一样，而是在调用的时候去实例化。</p>
+<h2 id="哪些是重要的bean生命周期方法？-你能重载它们吗？-setup和teardown"><a href="#哪些是重要的bean生命周期方法？-你能重载它们吗？-setup和teardown" class="headerlink" title="哪些是重要的bean生命周期方法？ 你能重载它们吗？(setup和teardown)"></a>哪些是重要的bean生命周期方法？ 你能重载它们吗？(setup和teardown)</h2><p>有两个重要的bean 生命周期方法，第一个是setup ， 它是在容器加载bean的时候被调用。第二个方法是 teardown  它是在容器卸载类的时候被调用。</p>
+<p>bean 标签有两个重要的属性（init-method和destroy-method）。用它们你可以自己定制初始化和注销方法。它们也有相应的注解（@PostConstruct和@PreDestroy）。</p>
+<p>换句话说：为了定义安装和拆卸一个 bean，我们只要声明带有 init-method 和/或 destroy-method 参数的 。init-method 属性指定一个方法(setup)，在实例化 bean 时，立即调用该方法。同样，destroy-method 指定一个方法(teardown)，只有从容器中移除 bean 之后，才能调用该方法。</p>
+<h2 id="Bean的作用域"><a href="#Bean的作用域" class="headerlink" title="Bean的作用域"></a>Bean的作用域</h2><p>在IoC容器启动之后，并不会马上就实例化相应的bean，此时容器仅仅拥有所有对象的BeanDefinition(BeanDefinition：是容器依赖某些工具加载的XML配置信息进行解析和分析，并将分析后的信息编组为相应的BeanDefinition)。只有当getBean()调用时才是有可能触发Bean实例化阶段的活动。</p>
+<p>当在 Spring 中定义一个 时，你必须声明该 bean 的作用域的选项。例如，为了强制 Spring 在每次需要时都产生一个新的 bean 实例，你应该声明 bean 的作用域的属性为 prototype。同理，如果你想让 Spring 在每次需要时都返回同一个bean实例，你应该声明 bean 的作用域的属性为 singleton。</p>
+<p>Spring 框架支持以下五个作用域，如果你使用 web-aware ApplicationContext 时，其中三个是可用的。</p>
+<p>如下表：</p>
+<p><img src="https://i.loli.net/2020/03/25/iJZPArWfomIY9M6.png" alt="Bean的作用域.png"></p>
+<h2 id="Spring框架中的单例bean是线程安全的么？"><a href="#Spring框架中的单例bean是线程安全的么？" class="headerlink" title="Spring框架中的单例bean是线程安全的么？"></a>Spring框架中的单例bean是线程安全的么？</h2><p>不是，Spring框架中的单例bean不是线程安全的。</p>
+<h2 id="Spring-Bean小结"><a href="#Spring-Bean小结" class="headerlink" title="Spring Bean小结"></a>Spring Bean小结</h2><p>项目中的<strong>事务处理组件</strong>和<strong>实体类</strong>（POJO）可以作为Bean类，Bean类需要在Spring配置文件中进行定义，才能被IOC容器管理和组配。Spring IOC容器管理Bean时，需要了解Bean的<strong>类名、名称、依赖项、属性、生命周期及作用域等</strong>信息。为此，Spring IOC提供了一系列配置项，用于Bean在IOC容器中的定义。</p>
+<h1 id="Spring-IOC-也称为依赖注入-DI"><a href="#Spring-IOC-也称为依赖注入-DI" class="headerlink" title="Spring IOC(也称为依赖注入(DI))"></a>Spring IOC(也称为依赖注入(DI))</h1><h2 id="Spring-IOC原理"><a href="#Spring-IOC原理" class="headerlink" title="Spring IOC原理"></a>Spring IOC原理</h2><p>IOC:控制反转也叫依赖注入。利用了<strong>工厂模式</strong></p>
+<p>将对象交给容器管理，你只需要在spring配置文件总配置相应的bean，以及设置相关的属性，让spring容器来生成类的实例对象以及管理对象。在spring容器启动的时候，spring会把你在配置文件中配置的bean都初始化好，然后在你需要调用的时候，就把它已经初始化好的那些bean分配给你需要调用这些bean的类（假设这个类名是A），分配的方法就是调用A的setter方法来注入，而不需要你在A里面new这些bean了。</p>
+<h2 id="什么是Spring的依赖注入？"><a href="#什么是Spring的依赖注入？" class="headerlink" title="什么是Spring的依赖注入？"></a>什么是Spring的依赖注入？</h2><p>依赖注入，是IOC的一个方面，是个通常的概念，它有多种解释。这概念是说你不用创建对象，而只需要描述它如何被创建。你不在代码里直接组装你的组件和服务，但是要在配置文件里描述哪些组件需要哪些服务，之后一个容器（IOC容器）负责把他们组装起来。</p>
+<p>拿公司招聘岗位来举例。假设一个公司有产品、研发、测试等岗位。如果是公司根据岗位要求，逐个安排人选，如图中向下的箭头，这是正向流程。如果反过来，不用公司来安排候选人，而是由第三方猎头来匹配岗位和候选人，然后进行推荐，这就是控制反转。</p>
+<h2 id="Spring-IOC容器是什么？"><a href="#Spring-IOC容器是什么？" class="headerlink" title="Spring IOC容器是什么？"></a>Spring IOC容器是什么？</h2><p>Spring IOC 负责创建对象，管理对象（通过依赖注入（DI），装配对象，配置对象，并且管理这些对象的整个生命周期。</p>
+<p>简而言之：“把某些业务对象的的控制权交给一个平台或者框架来统一管理，这个统一管理的平台可以称为IoC容器。”</p>
+<p>举个例子：看下面这段代码：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ApplicationContext appContext = <span class="keyword">new</span> <span class="constructor">ClassPathXmlApplicationContext(<span class="string">"cjj/models/beans.xml"</span>)</span>;</span><br><span class="line">Person p = (Person)appContext.get<span class="constructor">Bean(<span class="string">"person"</span>)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，在创建ApplicationContext实例对象过程中会创建一个spring容器，该容器会读取配置文件”cjj/models/beans.xml”,并统一管理由该文件中定义好的所有bean实例对象，如果要获取某个bean实例，使用getBean方法就行了。例如我们只需要将Person提前配置在beans.xml文件中（可以理解为注入），之后我们可以不需使用new Person()的方式创建实例，而是通过容器来获取Person实例，这就相当于将Person的控制权交由spring容器了，差不多这就是控制反转的概念。</p>
+<h2 id="Spring-IOC的优点？"><a href="#Spring-IOC的优点？" class="headerlink" title="Spring IOC的优点？"></a>Spring IOC的优点？</h2><p>IOC 或 依赖注入把应用的代码量降到最低。它使应用容易测试，单元测试不再需要单例和JNDI查找机制。最小的代价和最小的侵入性使松散耦合得以实现。IOC容器支持加载服务时的饿汉式初始化和懒加载。</p>
+<h2 id="SpringIOC初始化过程-重要"><a href="#SpringIOC初始化过程-重要" class="headerlink" title="SpringIOC初始化过程(重要)"></a>SpringIOC初始化过程(重要)</h2><p>详细来说，其实Spring IOC初始化过程就是容器的初始化过程。</p>
+<p>之前介绍Spring Bean的时候已经提到了，Spring Bean都是由Spring容器去管理的，而Spring主要有两个容器系列：</p>
+<ol>
+<li>实现BeanFactory接口的简单容器；</li>
+<li>实现ApplicationContext接口的高级容器。</li>
+</ol>
+<p>ApplicationContext比较复杂，它不但继承了BeanFactory的大部分属性，还继承其它可扩展接口，扩展的了许多高级的属性，其接口定义如下：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="symbol">ApplicationContext</span> <span class="symbol">extends</span> <span class="symbol">EnvironmentCapable</span>, </span><br><span class="line">　　　　　　　　　　　　　　　　　　<span class="symbol">ListableBeanFactory</span>,    //继承于<span class="symbol">BeanFactory</span></span><br><span class="line">　　　　　　　　　　　　　　　　　　<span class="symbol">HierarchicalBeanFactory</span>,//继承于<span class="symbol">BeanFactory</span></span><br><span class="line">　　　　　　　　　　　　　　　　　　<span class="symbol">MessageSource</span>,            //</span><br><span class="line">　　　　　　　　　　　　　　　　　　<span class="symbol">ApplicationEventPublisher</span>,//</span><br><span class="line">　　　　　　　　　　　　　　　　　　<span class="symbol">ResourcePatternResolver</span>   //继承<span class="symbol">ResourceLoader</span>，用于获取<span class="symbol">resource</span>对象</span><br></pre></td></tr></table></figure>
+
+<p>在BeanFactory子类中有一个DefaultListableBeanFactory类，它包含了基本Spirng IoC容器所具有的重要功能，开发时不论是使用BeanFactory系列还是ApplicationContext系列来创建容器基本都会使用到DefaultListableBeanFactory类，可以这么说，在spring中实际上把它当成默认的IoC容器来使用。</p>
+<p>关于Spirng IoC容器的初始化过程在《Spirng技术内幕：深入解析Spring架构与设计原理》一书中有明确的指出，IoC容器的初始化过程可以分为三步：</p>
+<ol>
+<li><font color=#FF0000>Resource定位（Bean的定义文件定位）</font></li>
+<li><font color=#FF0000>将Resource定位好的资源载入到BeanDefinition </font></li>
+<li><font color=#FF0000>将BeanDefiniton注册到容器中 </font></li>
+</ol>
+<p>如下图：</p>
+<p><img src="https://i.loli.net/2020/03/25/YNAar5mMChU2Dzc.png" alt="SpringIOC初始化过程.png"></p>
+<p><a href="https://www.cnblogs.com/chenjunjie12321/p/6124649.html" target="_blank" rel="noopener">详细内容可以参考这篇博客</a></p>
+<p><a href="https://www.javadoop.com/post/spring-ioc" target="_blank" rel="noopener">Spring IOC详细源码分析推荐这篇文章**</a></p>
+<h2 id="Spring实现IOC的三种方式"><a href="#Spring实现IOC的三种方式" class="headerlink" title="Spring实现IOC的三种方式"></a>Spring实现IOC的三种方式</h2><h3 id="属性注入"><a href="#属性注入" class="headerlink" title="属性注入"></a>属性注入</h3><p>通过setXXX()方法注入Bean的属性值或者依赖对象，最常用。</p>
+<ul>
+<li>Spring首先会调用bean的默认构造函数实例化bean对象，然后再通过反射的方法来调用set方法来注入属性值。</li>
+<li>属性注入要求bean提供一个默认的构造函数,并且得为需要注入的属性提供set方法</li>
+</ul>
+<h3 id="构造函数注入-构造器依赖注入"><a href="#构造函数注入-构造器依赖注入" class="headerlink" title="构造函数注入(构造器依赖注入)"></a>构造函数注入(构造器依赖注入)</h3><p>使用构造函数注入的前提是：bean必须提供带参的构造函数。</p>
+<p>构造器依赖注入通过容器触发一个类的构造器来实现的，该类有一系列参数，每个参数代表一个对其他类的依赖。</p>
+<h3 id="工厂方法注入"><a href="#工厂方法注入" class="headerlink" title="工厂方法注入"></a>工厂方法注入</h3><p>注解的方式注入 @Autowired,@Resource,@Required。</p>
+<h4 id="Autowired和-Resource的区别-重要"><a href="#Autowired和-Resource的区别-重要" class="headerlink" title="@Autowired和@Resource的区别(重要)"></a>@Autowired和@Resource的区别(重要)</h4><p>简而言之：@Autowired按<code>byType</code>(类型)自动注入，而@Resource则默认按<code>byName</code>(名字)自动注入。</p>
+<p>@Autowired是在Spring2.5后引入的，它可以对类成员变量、方法及构造函数进行标注，完成自动装配的工作。 可以通过 @Autowired的使用来消除 set ，get方法。</p>
+<p>@Resource有两个属性是比较重要的，分别是<code>name</code>和<code>type</code>，Spring 将@Resource注解的<code>name</code>属性解析为bean的名字，而<code>type</code>属性则解析为bean的类型。因此，如果使用<code>name</code>属性，则使用<code>byName</code>的自动注入策略，而使用<code>type</code>属性时则使用byType自动注入策略。如果既不指定<code>name</code>也不指定<code>type</code>属性，这时将通过反射机制使用<code>byName</code>自动注入策略。</p>
+<h1 id="Spring-AOP"><a href="#Spring-AOP" class="headerlink" title="Spring AOP"></a>Spring AOP</h1><p>AOP是一个编程目标，”面向切面编程”的目标。实现这个目标，有哪些手段？——其中一个手段是Spring AOP,还有一个手段是AspectJ。Spring在2.5之后借用了AspectJ的语法，借鉴了其编程风格</p>
+<h2 id="为什么需要AOP？"><a href="#为什么需要AOP？" class="headerlink" title="为什么需要AOP？"></a>为什么需要AOP？</h2><p>AOP可以说是对OOP的补充和完善。OOP引入封装、继承和多态性等概念来建立一种对象层次结构，用以模拟公共行为的一个集合。当我们需要为分散的对象引入公共行为的时候，OOP则显得无能为力。也就是说，OOP允许你定义从上到下的关系，但并不适合定义从左到右的关系。</p>
+<p>例如日志功能。日志代码往往水平地散布在所有对象层次中，而与它所散布到的对象的核心功能毫无关系。在OOP设计中，它导致了大量代码的重复，而不利于各个模块的重用。</p>
+<blockquote>
+<p>将程序中的交叉业务逻辑（比如安全检查，日志，事务管理、缓存、对象池等），封装成一个切面，然后注入到目标对象（具体业务逻辑）中去。</p>
+</blockquote>
+<h2 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h2><p>之所以这里单独列出来代理模式，主要因为AOP就是通过代理模式实现的(静态代理、动态代理)</p>
+<p>代理模式是23种设计模式的一种，他是指一个对象A通过持有另一个对象B，可以具有B同样的行为的模式。为了对外开放协议，B往往实现了一个接口，A也会去实现接口。但是B是“真正”实现类，A则比较“虚”，他借用了B的方法去实现接口的方法。A虽然是“伪军”，但它可以增强B，在调用B的方法前后都做些其他的事情。Spring AOP就是使用了动态代理完成了代码的动态“织入”。</p>
+<p>使用代理好处还不止这些，一个工程如果依赖另一个工程给的接口，但是另一个工程的接口不稳定，经常变更协议，就可以使用一个代理，接口变更时，只需要修改代理，不需要一一修改业务代码。从这个意义上说，所有调外界的接口，我们都可以这么做，不让外界的代码对我们的代码有侵入，这叫防御式编程。代理其他的应用可能还有很多。</p>
+<p>上述例子中，类A写死持有B，就是B的静态代理。如果A代理的对象是不确定的，就是动态代理。动态代理目前有两种常见的实现，jdk动态代理和cglib动态代理。</p>
+<h2 id="AOP实现原理"><a href="#AOP实现原理" class="headerlink" title="AOP实现原理"></a>AOP实现原理</h2><blockquote>
+<p>AOP 实现的关键就在于 AOP 框架自动创建的 AOP 代理，AOP 代理则可分为静态代理和动态代理两大类，其中静态代理是指使用 AOP 框架提供的命令进行编译，从而在编译阶段就可生成 AOP 代理类，因此也称为编译时增强；而动态代理则在运行时借助于 JDK 动态代理、CGLIB 等在内存中“临时”生成 AOP 动态代理类，因此也被称为运行时增强。</p>
+</blockquote>
+<p>实现AOP(不是Spring AOP，而是AOP技术，即Spring AOP和AspectJ)的技术，主要分为两大类：</p>
+<ul>
+<li>一是采用<strong>动态代理技术</strong>(Spring AOP)，利用截取消息的方式，对该消息进行装饰，以取代原有对象行为的执行；</li>
+<li>二是采用<strong>静态织入(静态代理)</strong>的方式(AspectJ)，引入特定的语法创建“切面”，从而使得编译器可以在编译期间织入有关“切面”的代码.</li>
+</ul>
+<p><a href="https://www.jianshu.com/p/fe8d1e8bd63e" target="_blank" rel="noopener">https://www.jianshu.com/p/fe8d1e8bd63e</a></p>
+<p><a href="https://www.cnblogs.com/puyangsky/p/6218925.html" target="_blank" rel="noopener">https://www.cnblogs.com/puyangsky/p/6218925.html</a></p>
+<p><a href="https://juejin.im/post/5a55af9e518825734d14813f" target="_blank" rel="noopener">https://juejin.im/post/5a55af9e518825734d14813f</a></p>
+<h1 id="JDK和CGLib动态代理性能对比"><a href="#JDK和CGLib动态代理性能对比" class="headerlink" title="JDK和CGLib动态代理性能对比"></a>JDK和CGLib动态代理性能对比</h1><p>关于两者之间的性能的话，JDK动态代理所创建的代理对象，在以前的JDK版本中，性能并不是很高，虽然在高版本中JDK动态代理对象的性能得到了很大的提升，但是他也并不是适用于所有的场景。主要体现在如下的两个指标中：</p>
+<p>1、CGLib所创建的动态代理对象在实际运行时候的性能要比JDK动态代理高不少，有研究表明，大概要高10倍；</p>
+<p>2、但是CGLib在创建对象的时候所花费的时间却比JDK动态代理要多很多，有研究表明，大概有8倍的差距；</p>
+<p>3、因此，对于singleton的代理对象或者具有实例池的代理，因为无需频繁的创建代理对象，所以比较适合采用CGLib动态代理，反之，则比较适用JDK动态代理。</p>
+<p><a href="https://blog.csdn.net/xlgen157387/article/details/82497594" target="_blank" rel="noopener">Spring AOP中的JDK和CGLib动态代理哪个效率更高？</a></p>
+<p><a href="https://blog.csdn.net/flyfeifei66/article/details/81481222" target="_blank" rel="noopener">Java两种动态代理JDK动态代理和CGLIB动态代理</a></p>
+<h1 id="Spring-MVC"><a href="#Spring-MVC" class="headerlink" title="Spring MVC"></a>Spring MVC</h1><h1 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h1>
+    </div>
+
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Interview/" rel="tag"><i class="fa fa-tag"></i># Interview</a>
+              <a href="/tags/Spring/" rel="tag"><i class="fa fa-tag"></i># Spring</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/20/Computer-fundamental-Interview-I/" rel="prev" title="Computer fundamental Intergrated Interview-I">
+      <i class="fa fa-chevron-left"></i> Computer fundamental Intergrated Interview-I
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODAxMC8yNDUwNw=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring"><span class="nav-text">Spring</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring框架是什么"><span class="nav-text">Spring框架是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring框架的好处"><span class="nav-text">Spring框架的好处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring的两种IOC容器——BeanFactory和ApplicationContext"><span class="nav-text">Spring的两种IOC容器——BeanFactory和ApplicationContext</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring的基本模块——BeanFactory-BeanFactory容器"><span class="nav-text">Spring的基本模块——BeanFactory(BeanFactory容器)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ApplicationContext是什么？通常的实现是什么"><span class="nav-text">ApplicationContext是什么？通常的实现是什么?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BeanFactory和ApplicationContext有什么区别？"><span class="nav-text">BeanFactory和ApplicationContext有什么区别？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解释对象-关系映射集成模块"><span class="nav-text">解释对象&#x2F;关系映射集成模块</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Bean"><span class="nav-text">Spring Bean</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Bean是什么"><span class="nav-text">Spring Bean是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一个Spring-Bean定义包含什么"><span class="nav-text">一个Spring Bean定义包含什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Bean加载机制"><span class="nav-text">Spring Bean加载机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Bean的生命周期-重要"><span class="nav-text">Spring Bean的生命周期(重要)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ApplicationContext-Bean的生命周期"><span class="nav-text">ApplicationContext Bean的生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BeanFactory-Bean的生命周期"><span class="nav-text">BeanFactory Bean的生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#哪些是重要的bean生命周期方法？-你能重载它们吗？-setup和teardown"><span class="nav-text">哪些是重要的bean生命周期方法？ 你能重载它们吗？(setup和teardown)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bean的作用域"><span class="nav-text">Bean的作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring框架中的单例bean是线程安全的么？"><span class="nav-text">Spring框架中的单例bean是线程安全的么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Bean小结"><span class="nav-text">Spring Bean小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-IOC-也称为依赖注入-DI"><span class="nav-text">Spring IOC(也称为依赖注入(DI))</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-IOC原理"><span class="nav-text">Spring IOC原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Spring的依赖注入？"><span class="nav-text">什么是Spring的依赖注入？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-IOC容器是什么？"><span class="nav-text">Spring IOC容器是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-IOC的优点？"><span class="nav-text">Spring IOC的优点？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringIOC初始化过程-重要"><span class="nav-text">SpringIOC初始化过程(重要)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring实现IOC的三种方式"><span class="nav-text">Spring实现IOC的三种方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#属性注入"><span class="nav-text">属性注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构造函数注入-构造器依赖注入"><span class="nav-text">构造函数注入(构造器依赖注入)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工厂方法注入"><span class="nav-text">工厂方法注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Autowired和-Resource的区别-重要"><span class="nav-text">@Autowired和@Resource的区别(重要)</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-AOP"><span class="nav-text">Spring AOP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要AOP？"><span class="nav-text">为什么需要AOP？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代理模式"><span class="nav-text">代理模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP实现原理"><span class="nav-text">AOP实现原理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JDK和CGLib动态代理性能对比"><span class="nav-text">JDK和CGLib动态代理性能对比</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-MVC"><span class="nav-text">Spring MVC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Boot"><span class="nav-text">Spring Boot</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wang Mingsheng"
+      src="/images/faceimage.jpg">
+  <p class="site-author-name" itemprop="name">Wang Mingsheng</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wmsheng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wmsheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wangmingshenghku@163.com" title="E-Mail → mailto:wangmingshenghku@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/my/m/music/playlist?id=372605964" title="Music → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;my&#x2F;m&#x2F;music&#x2F;playlist?id&#x3D;372605964" rel="noopener" target="_blank"><i class="fa fa-fw fa-youtube"></i>Music</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+
+    </div>
+    
+    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=3314336&auto=1&height=66">
+    </iframe>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wang Mingsheng</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">339k</span>
+</div>
+
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_uv">
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_pv">
+    本站访问量<span id="busuanzi_value_site_pv"></span>
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共168.8k字</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
