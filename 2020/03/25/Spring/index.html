@@ -63,7 +63,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/03/25/iJZPArWfomIY9M6.png">
 <meta property="og:image" content="https://i.loli.net/2020/03/25/YNAar5mMChU2Dzc.png">
 <meta property="article:published_time" content="2020-03-24T23:40:10.000Z">
-<meta property="article:modified_time" content="2020-03-25T15:55:12.292Z">
+<meta property="article:modified_time" content="2020-03-26T06:27:19.601Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="Interview">
 <meta property="article:tag" content="Spring">
@@ -219,10 +219,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-03-25 07:40:10 / Modified: 23:55:12" itemprop="dateCreated datePublished" datetime="2020-03-25T07:40:10+08:00">2020-03-25</time>
+              <time title="Created: 2020-03-25 07:40:10" itemprop="dateCreated datePublished" datetime="2020-03-25T07:40:10+08:00">2020-03-25</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-26 14:27:19" itemprop="dateModified" datetime="2020-03-26T14:27:19+08:00">2020-03-26</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -249,7 +255,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>10k</span>
+              <span>11k</span>
             </span>
 
         </div>
@@ -416,6 +422,44 @@
 <p>3、因此，对于singleton的代理对象或者具有实例池的代理，因为无需频繁的创建代理对象，所以比较适合采用CGLib动态代理，反之，则比较适用JDK动态代理。</p>
 <p><a href="https://blog.csdn.net/xlgen157387/article/details/82497594" target="_blank" rel="noopener">Spring AOP中的JDK和CGLib动态代理哪个效率更高？</a></p>
 <p><a href="https://blog.csdn.net/flyfeifei66/article/details/81481222" target="_blank" rel="noopener">Java两种动态代理JDK动态代理和CGLIB动态代理</a></p>
+<h1 id="Spring事务"><a href="#Spring事务" class="headerlink" title="Spring事务"></a>Spring事务</h1><p>这是Spring针对JDBC来设计的，事务和数据库的事务定义相同。</p>
+<p>关于事务，老生常谈的就是ACID，然后三种事务并发可能的问题：脏读、不可重复读、幻读。针对这三种问题，设计了四种解决的隔离级别：READ-UNCOMMITTED、READ-COMMITTED、REPEATABLE-READ、SERIALIZABLE。</p>
+<h2 id="Spring-事务中的隔离级别"><a href="#Spring-事务中的隔离级别" class="headerlink" title="Spring 事务中的隔离级别"></a>Spring 事务中的隔离级别</h2><p>而Spring的事务隔离级别就是根据上面四种隔离级别而设置的。加上”默认”的级别，一共有五种级别。具体说，TransactionDeﬁnition 接口中定义了五个表示隔离级别的常量： </p>
+<ul>
+<li><p><strong>TransactionDeﬁnition.ISOLATION_DEFAULT</strong>: 使用后端数据库默认的隔离级别，Mysql 默认采用的 REPEATABLE_READ隔离级别 Oracle 默认采用的 READ_COMMITTED隔离级别. </p>
+<ul>
+<li><strong>TransactionDeﬁnition.ISOLATION_READ_UNCOMMITTED</strong>: 低的隔离级别，允许读取尚未提交的数据变 更，可能会导致脏读、幻读或不可重复读</li>
+</ul>
+</li>
+<li><p><strong>TransactionDeﬁnition.ISOLATION_READ_COMMITTED</strong>: 允许读取并发事务已经提交的数据，可以阻止脏 读，但是幻读或不可重复读仍有可能发生</p>
+</li>
+<li><p><strong>TransactionDeﬁnition.ISOLATION_REPEATABLE_READ</strong>: 对同一字段的多次读取结果都是一致的，除非数据 是被本身事务自己所修改，可以阻止脏读和不可重复读，但幻读仍有可能发生。 </p>
+</li>
+<li><p><strong>TransactionDeﬁnition.ISOLATION_SERIALIZABLE</strong>: 高的隔离级别，完全服从ACID的隔离级别。所有的事 务依次逐个执行，这样事务之间就完全不可能产生干扰，也就是说，该级别可以防止脏读、不可重复读以及幻 读。但是这将严重影响程序的性能。通常情况下也不会用到该级别。 </p>
+</li>
+</ul>
+<h2 id="Spring事务中的事务传播行为"><a href="#Spring事务中的事务传播行为" class="headerlink" title="Spring事务中的事务传播行为"></a>Spring事务中的事务传播行为</h2><p><strong>支持当前事务的情况</strong>：</p>
+<ul>
+<li><p>TransactionDeﬁnition.PROPAGATION_REQUIRED： 如果当前存在事务，则加入该事务；如果当前没有事 务，则创建一个新的事务。 </p>
+</li>
+<li><p>TransactionDeﬁnition.PROPAGATION_SUPPORTS： 如果当前存在事务，则加入该事务；如果当前没有事 务，则以非事务的方式继续运行。 </p>
+</li>
+<li><p>TransactionDeﬁnition.PROPAGATION_MANDATORY： 如果当前存在事务，则加入该事务；如果当前没有 事务，则抛出异常。（mandatory：强制性）</p>
+</li>
+</ul>
+<p><strong>不支持当前事务的情况：</strong></p>
+<ul>
+<li><p>TransactionDeﬁnition.PROPAGATION_REQUIRES_NEW： 创建一个新的事务，如果当前存在事务，则把当 前事务挂起。 </p>
+</li>
+<li><p>TransactionDeﬁnition.PROPAGATION_NOT_SUPPORTED： 以非事务方式运行，如果当前存在事务，则把 当前事务挂起。 </p>
+</li>
+<li><p>TransactionDeﬁnition.PROPAGATION_NEVER： 以非事务方式运行，如果当前存在事务，则抛出异常。</p>
+</li>
+</ul>
+<p><strong>其他情况：</strong></p>
+<ul>
+<li>TransactionDeﬁnition.PROPAGATION_NESTED： 如果当前存在事务，则创建一个事务作为当前事务的嵌套 事务来运行；如果当前没有事务，则该取值等价于TransactionDeﬁnition.PROPAGATION_REQUIRED。 </li>
+</ul>
 <h1 id="Spring-MVC"><a href="#Spring-MVC" class="headerlink" title="Spring MVC"></a>Spring MVC</h1><h1 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h1>
     </div>
 
@@ -504,7 +548,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring"><span class="nav-text">Spring</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring框架是什么"><span class="nav-text">Spring框架是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring框架的好处"><span class="nav-text">Spring框架的好处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring的两种IOC容器——BeanFactory和ApplicationContext"><span class="nav-text">Spring的两种IOC容器——BeanFactory和ApplicationContext</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring的基本模块——BeanFactory-BeanFactory容器"><span class="nav-text">Spring的基本模块——BeanFactory(BeanFactory容器)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ApplicationContext是什么？通常的实现是什么"><span class="nav-text">ApplicationContext是什么？通常的实现是什么?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BeanFactory和ApplicationContext有什么区别？"><span class="nav-text">BeanFactory和ApplicationContext有什么区别？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解释对象-关系映射集成模块"><span class="nav-text">解释对象&#x2F;关系映射集成模块</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Bean"><span class="nav-text">Spring Bean</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Bean是什么"><span class="nav-text">Spring Bean是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一个Spring-Bean定义包含什么"><span class="nav-text">一个Spring Bean定义包含什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Bean加载机制"><span class="nav-text">Spring Bean加载机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Bean的生命周期-重要"><span class="nav-text">Spring Bean的生命周期(重要)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ApplicationContext-Bean的生命周期"><span class="nav-text">ApplicationContext Bean的生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BeanFactory-Bean的生命周期"><span class="nav-text">BeanFactory Bean的生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#哪些是重要的bean生命周期方法？-你能重载它们吗？-setup和teardown"><span class="nav-text">哪些是重要的bean生命周期方法？ 你能重载它们吗？(setup和teardown)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bean的作用域"><span class="nav-text">Bean的作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring框架中的单例bean是线程安全的么？"><span class="nav-text">Spring框架中的单例bean是线程安全的么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Bean小结"><span class="nav-text">Spring Bean小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-IOC-也称为依赖注入-DI"><span class="nav-text">Spring IOC(也称为依赖注入(DI))</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-IOC原理"><span class="nav-text">Spring IOC原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Spring的依赖注入？"><span class="nav-text">什么是Spring的依赖注入？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-IOC容器是什么？"><span class="nav-text">Spring IOC容器是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-IOC的优点？"><span class="nav-text">Spring IOC的优点？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringIOC初始化过程-重要"><span class="nav-text">SpringIOC初始化过程(重要)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring实现IOC的三种方式"><span class="nav-text">Spring实现IOC的三种方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#属性注入"><span class="nav-text">属性注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构造函数注入-构造器依赖注入"><span class="nav-text">构造函数注入(构造器依赖注入)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工厂方法注入"><span class="nav-text">工厂方法注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Autowired和-Resource的区别-重要"><span class="nav-text">@Autowired和@Resource的区别(重要)</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-AOP"><span class="nav-text">Spring AOP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要AOP？"><span class="nav-text">为什么需要AOP？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代理模式"><span class="nav-text">代理模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP实现原理"><span class="nav-text">AOP实现原理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JDK和CGLib动态代理性能对比"><span class="nav-text">JDK和CGLib动态代理性能对比</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-MVC"><span class="nav-text">Spring MVC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Boot"><span class="nav-text">Spring Boot</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring"><span class="nav-text">Spring</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring框架是什么"><span class="nav-text">Spring框架是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring框架的好处"><span class="nav-text">Spring框架的好处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring的两种IOC容器——BeanFactory和ApplicationContext"><span class="nav-text">Spring的两种IOC容器——BeanFactory和ApplicationContext</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring的基本模块——BeanFactory-BeanFactory容器"><span class="nav-text">Spring的基本模块——BeanFactory(BeanFactory容器)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ApplicationContext是什么？通常的实现是什么"><span class="nav-text">ApplicationContext是什么？通常的实现是什么?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BeanFactory和ApplicationContext有什么区别？"><span class="nav-text">BeanFactory和ApplicationContext有什么区别？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解释对象-关系映射集成模块"><span class="nav-text">解释对象&#x2F;关系映射集成模块</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Bean"><span class="nav-text">Spring Bean</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Bean是什么"><span class="nav-text">Spring Bean是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一个Spring-Bean定义包含什么"><span class="nav-text">一个Spring Bean定义包含什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Bean加载机制"><span class="nav-text">Spring Bean加载机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Bean的生命周期-重要"><span class="nav-text">Spring Bean的生命周期(重要)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ApplicationContext-Bean的生命周期"><span class="nav-text">ApplicationContext Bean的生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BeanFactory-Bean的生命周期"><span class="nav-text">BeanFactory Bean的生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#哪些是重要的bean生命周期方法？-你能重载它们吗？-setup和teardown"><span class="nav-text">哪些是重要的bean生命周期方法？ 你能重载它们吗？(setup和teardown)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bean的作用域"><span class="nav-text">Bean的作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring框架中的单例bean是线程安全的么？"><span class="nav-text">Spring框架中的单例bean是线程安全的么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Bean小结"><span class="nav-text">Spring Bean小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-IOC-也称为依赖注入-DI"><span class="nav-text">Spring IOC(也称为依赖注入(DI))</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-IOC原理"><span class="nav-text">Spring IOC原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Spring的依赖注入？"><span class="nav-text">什么是Spring的依赖注入？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-IOC容器是什么？"><span class="nav-text">Spring IOC容器是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-IOC的优点？"><span class="nav-text">Spring IOC的优点？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringIOC初始化过程-重要"><span class="nav-text">SpringIOC初始化过程(重要)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring实现IOC的三种方式"><span class="nav-text">Spring实现IOC的三种方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#属性注入"><span class="nav-text">属性注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构造函数注入-构造器依赖注入"><span class="nav-text">构造函数注入(构造器依赖注入)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工厂方法注入"><span class="nav-text">工厂方法注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Autowired和-Resource的区别-重要"><span class="nav-text">@Autowired和@Resource的区别(重要)</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-AOP"><span class="nav-text">Spring AOP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要AOP？"><span class="nav-text">为什么需要AOP？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代理模式"><span class="nav-text">代理模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP实现原理"><span class="nav-text">AOP实现原理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JDK和CGLib动态代理性能对比"><span class="nav-text">JDK和CGLib动态代理性能对比</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring事务"><span class="nav-text">Spring事务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-事务中的隔离级别"><span class="nav-text">Spring 事务中的隔离级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring事务中的事务传播行为"><span class="nav-text">Spring事务中的事务传播行为</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-MVC"><span class="nav-text">Spring MVC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Boot"><span class="nav-text">Spring Boot</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -589,7 +633,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">339k</span>
+    <span title="Symbols count total">348k</span>
 </div>
 
 
@@ -606,7 +650,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共168.8k字</span>
+  <span class="post-count">博客全站共174.2k字</span>
 </div>
 
         

@@ -158,6 +158,44 @@
 <p>3、因此，对于singleton的代理对象或者具有实例池的代理，因为无需频繁的创建代理对象，所以比较适合采用CGLib动态代理，反之，则比较适用JDK动态代理。</p>
 <p><a href="https://blog.csdn.net/xlgen157387/article/details/82497594" target="_blank" rel="noopener">Spring AOP中的JDK和CGLib动态代理哪个效率更高？</a></p>
 <p><a href="https://blog.csdn.net/flyfeifei66/article/details/81481222" target="_blank" rel="noopener">Java两种动态代理JDK动态代理和CGLIB动态代理</a></p>
+<h1 id="Spring事务"><a href="#Spring事务" class="headerlink" title="Spring事务"></a>Spring事务</h1><p>这是Spring针对JDBC来设计的，事务和数据库的事务定义相同。</p>
+<p>关于事务，老生常谈的就是ACID，然后三种事务并发可能的问题：脏读、不可重复读、幻读。针对这三种问题，设计了四种解决的隔离级别：READ-UNCOMMITTED、READ-COMMITTED、REPEATABLE-READ、SERIALIZABLE。</p>
+<h2 id="Spring-事务中的隔离级别"><a href="#Spring-事务中的隔离级别" class="headerlink" title="Spring 事务中的隔离级别"></a>Spring 事务中的隔离级别</h2><p>而Spring的事务隔离级别就是根据上面四种隔离级别而设置的。加上”默认”的级别，一共有五种级别。具体说，TransactionDeﬁnition 接口中定义了五个表示隔离级别的常量： </p>
+<ul>
+<li><p><strong>TransactionDeﬁnition.ISOLATION_DEFAULT</strong>: 使用后端数据库默认的隔离级别，Mysql 默认采用的 REPEATABLE_READ隔离级别 Oracle 默认采用的 READ_COMMITTED隔离级别. </p>
+<ul>
+<li><strong>TransactionDeﬁnition.ISOLATION_READ_UNCOMMITTED</strong>: 低的隔离级别，允许读取尚未提交的数据变 更，可能会导致脏读、幻读或不可重复读</li>
+</ul>
+</li>
+<li><p><strong>TransactionDeﬁnition.ISOLATION_READ_COMMITTED</strong>: 允许读取并发事务已经提交的数据，可以阻止脏 读，但是幻读或不可重复读仍有可能发生</p>
+</li>
+<li><p><strong>TransactionDeﬁnition.ISOLATION_REPEATABLE_READ</strong>: 对同一字段的多次读取结果都是一致的，除非数据 是被本身事务自己所修改，可以阻止脏读和不可重复读，但幻读仍有可能发生。 </p>
+</li>
+<li><p><strong>TransactionDeﬁnition.ISOLATION_SERIALIZABLE</strong>: 高的隔离级别，完全服从ACID的隔离级别。所有的事 务依次逐个执行，这样事务之间就完全不可能产生干扰，也就是说，该级别可以防止脏读、不可重复读以及幻 读。但是这将严重影响程序的性能。通常情况下也不会用到该级别。 </p>
+</li>
+</ul>
+<h2 id="Spring事务中的事务传播行为"><a href="#Spring事务中的事务传播行为" class="headerlink" title="Spring事务中的事务传播行为"></a>Spring事务中的事务传播行为</h2><p><strong>支持当前事务的情况</strong>：</p>
+<ul>
+<li><p>TransactionDeﬁnition.PROPAGATION_REQUIRED： 如果当前存在事务，则加入该事务；如果当前没有事 务，则创建一个新的事务。 </p>
+</li>
+<li><p>TransactionDeﬁnition.PROPAGATION_SUPPORTS： 如果当前存在事务，则加入该事务；如果当前没有事 务，则以非事务的方式继续运行。 </p>
+</li>
+<li><p>TransactionDeﬁnition.PROPAGATION_MANDATORY： 如果当前存在事务，则加入该事务；如果当前没有 事务，则抛出异常。（mandatory：强制性）</p>
+</li>
+</ul>
+<p><strong>不支持当前事务的情况：</strong></p>
+<ul>
+<li><p>TransactionDeﬁnition.PROPAGATION_REQUIRES_NEW： 创建一个新的事务，如果当前存在事务，则把当 前事务挂起。 </p>
+</li>
+<li><p>TransactionDeﬁnition.PROPAGATION_NOT_SUPPORTED： 以非事务方式运行，如果当前存在事务，则把 当前事务挂起。 </p>
+</li>
+<li><p>TransactionDeﬁnition.PROPAGATION_NEVER： 以非事务方式运行，如果当前存在事务，则抛出异常。</p>
+</li>
+</ul>
+<p><strong>其他情况：</strong></p>
+<ul>
+<li>TransactionDeﬁnition.PROPAGATION_NESTED： 如果当前存在事务，则创建一个事务作为当前事务的嵌套 事务来运行；如果当前没有事务，则该取值等价于TransactionDeﬁnition.PROPAGATION_REQUIRED。 </li>
+</ul>
 <h1 id="Spring-MVC"><a href="#Spring-MVC" class="headerlink" title="Spring MVC"></a>Spring MVC</h1><h1 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h1>]]></content>
       <categories>
         <category>Interview Note</category>
@@ -699,7 +737,7 @@
 <h2 id="什么是数据库的脏读、不可重复读和幻读"><a href="#什么是数据库的脏读、不可重复读和幻读" class="headerlink" title="什么是数据库的脏读、不可重复读和幻读"></a>什么是数据库的脏读、不可重复读和幻读</h2><p>事务的隔离性上，从低到高可能产生的读现象分别是：脏读、不可重复读、幻读。</p>
 <p>脏读指读到了未提交的数据。</p>
 <p>不可重复读指一次事务内的多次相同查询，读取到了不同的结果。</p>
-<p>幻读师不可重复读的特殊场景。一次事务内的多次范围查询得到了不同的结果。</p>
+<p>幻读是不可重复读的特殊场景。一次事务内的多次范围查询得到了不同的结果。</p>
 <p>通过在写的时候加锁，可以解决脏读。</p>
 <p>通过在读的时候加锁，可以解决不可重复读。</p>
 <p>通过串行化，可以解决幻读。</p>
@@ -742,16 +780,69 @@
 <p>但是如果插入的是 ID = 350 的一行数据，由于 B+ 树是有序的，那么需要将下面的叶子节点进行移动，腾出位置来插入 ID = 350 的数据，这样就会比较消耗时间，如果刚好 R4 所在的数据页已经满了，需要进行页分裂操作，这样会更加糟糕。</p>
 <p>但是，如果我们的主键是自增的，每次插入的 ID 都会比前面的大，那么我们每次只需要在后面插入就行， 不需要移动位置、分裂等操作，这样可以提高性能。也就是为什么建议使用主键自增的索引。</p>
 <h2 id="MyISAM与InnoDB的区别"><a href="#MyISAM与InnoDB的区别" class="headerlink" title="MyISAM与InnoDB的区别"></a>MyISAM与InnoDB的区别</h2><h3 id="1-两者对比"><a href="#1-两者对比" class="headerlink" title="1.两者对比"></a>1.两者对比</h3><ol>
-<li><p>count运算上的区别： 因为MyISAM缓存有表meta-data（行数等），因此在做COUNT(*)时对于一个结构很好 的查询是不需要消耗多少资源的。而对于InnoDB来说，则没有这种缓存 </p>
+<li><p><strong>count运算上的区别</strong>： 因为MyISAM缓存有表meta-data（行数等），因此在做COUNT(*)时对于一个结构很好 的查询是不需要消耗多少资源的。而对于InnoDB来说，则没有这种缓存 </p>
 </li>
-<li><p>是否支持事务和崩溃后的安全恢复： MyISAM 强调的是性能，每次查询具有原子性,其执行数度比InnoDB类型 更快，但是不提供事务支持。但是InnoDB 提供事务支持事务，外部键等高级数据库功能。 具有事务 (commit)、回滚(rollback)和崩溃修复能力(crash recovery capabilities)的事务安全(transaction-safe (ACID compliant))型表。 </p>
+<li><p><strong>是否支持事务和崩溃后的安全恢复</strong>： MyISAM 强调的是性能，每次查询具有原子性,其执行数度比InnoDB类型 更快，但是不提供事务支持。但是InnoDB 提供事务支持事务，外部键等高级数据库功能。 具有事务 (commit)、回滚(rollback)和崩溃修复能力(crash recovery capabilities)的事务安全(transaction-safe (ACID compliant))型表。 </p>
 </li>
-<li><p>是否支持外键： MyISAM不支持，而InnoDB支持。 </p>
+<li><p><strong>是否支持外键</strong>： MyISAM不支持，而InnoDB支持。 </p>
 </li>
 </ol>
 <h3 id="2-两者总结"><a href="#2-两者总结" class="headerlink" title="2.两者总结"></a>2.两者总结</h3><p>MyISAM更适合读密集的表，而InnoDB更适合写密集的的表。 在数据库做主从分离的情况下，经常选择MyISAM作 为主库的存储引擎。</p>
 <p>一般来说，如果需要事务支持，并且有较高的并发读取频率(MyISAM的表锁的粒度太大，所以当该表写并发量较高 时，要等待的查询就会很多了)，InnoDB是不错的选择。如果你的数据量很大（MyISAM支持压缩特性可以减少磁盘 的空间占用），而且不需要支持事务时，MyISAM是好的选择。 </p>
-<h1 id="6-Java相关"><a href="#6-Java相关" class="headerlink" title="6.Java相关"></a>6.Java相关</h1><h2 id="volatile的作用"><a href="#volatile的作用" class="headerlink" title="volatile的作用"></a>volatile的作用</h2><p>两个：保证可见性（这里指主内存与工作内存间的可见性），防止指令重排（指令重排也会导致可见性问题）</p>
+<h1 id="6-Java相关"><a href="#6-Java相关" class="headerlink" title="6.Java相关"></a>6.Java相关</h1><h2 id="Java的线程状态有哪些？它是如何工作的？-重要"><a href="#Java的线程状态有哪些？它是如何工作的？-重要" class="headerlink" title="Java的线程状态有哪些？它是如何工作的？(重要**)"></a>Java的线程状态有哪些？它是如何工作的？(重要**)</h2><p>线程(Thread)是并发编程的基础，它是程序执行的最小单元。一个进程可以包含多个线程，多线程可以共享一块内存空间和一组系统资源，因此线程之间的切换更节省资源，也因为如此，线程常被成为轻量级的进程。</p>
+<p>对线程的掌握，可以有效地提高程序整体运行效率。</p>
+<h3 id="Java线程状态在JDK1-5后一共有六个"><a href="#Java线程状态在JDK1-5后一共有六个" class="headerlink" title="Java线程状态在JDK1.5后一共有六个"></a>Java线程状态在JDK1.5后一共有六个</h3><p>Java线程状态在JDK1.5后以枚举的方式定义在Thread的源码中，一共有六个状态</p>
+<ul>
+<li>NEW新建状态，线程被创建出来，但尚未启动时的线程状态；</li>
+<li>RUNNABLE,就绪状态，表示可以运行的线程状态，它可能正在运行，或者是在排队等待操作系统给它分配 CPU 资源；</li>
+<li>BLOCKED，阻塞等待锁的线程状态，表示处于阻塞状态的线程正在等待监视器锁，比如等待执行 synchronized 代码块或者使用 synchronized 标记的方法； </li>
+<li>WAITING，等待状态，一个处于等待状态的线程正在等待另一个线程执行某个特定的动作，比如，一个线程调用了Object.wait()方法，那它就在等待另一个线程调用Object.notify()或Objec.botifyAll()方法;</li>
+<li>TIMED_WAITING,计时等待状态，和等待状态(WAITING)类似，它只是多了超时时间，比如调用了有超时时间设置的方法 Object.wait(long timeout) 和 Thread.join(long timeout) 等这些方法时，它才会进入此状态；</li>
+<li>TERMINATED,终止状态，表示线程已经执行完成</li>
+</ul>
+<h4 id="线程如何工作的？——线程工作模式"><a href="#线程如何工作的？——线程工作模式" class="headerlink" title="线程如何工作的？——线程工作模式"></a>线程如何工作的？——线程工作模式</h4><p>线程的工作模式是，首先先要创建线程并指定线程需要执行的业务方法，然后再调用线程的start()方法，此时线程就从NEW（新建）状态变成了RUNNABLE（就绪）状态，此时线程会判断要执行的方法中有没有 synchronized 同步代码块，如果有并且其他线程也在使用此锁，那么线程就会变为 BLOCKED（阻塞等待）状态，当其他线程使用完此锁之后，线程会继续执行剩余的方法。</p>
+<p>当遇到Object.wait()或Thread.join()方法时，线程会变为WAITING（等待状态）状态，如果是带了超时时间的等待方法，那么线程会进入TIMED_WAITING（计时等待）状态，当有其他线程执行了 notify() 或 notifyAll() 方法之后，线程被唤醒继续执行剩余的业务方法，直到方法执行完成为止，此时整个线程的流程就执行完了，执行流程如下图所示：</p>
+<p><img src="https://i.loli.net/2020/03/26/a7vAHYK6h23Xf5L.png" alt="Java多线程工作流程.png"></p>
+<h2 id="Java创建新线程有几种方式？"><a href="#Java创建新线程有几种方式？" class="headerlink" title="Java创建新线程有几种方式？"></a>Java创建新线程有几种方式？</h2><p>一般来说有四种方式：</p>
+<ol>
+<li>继承Thread类(真正意义上的线程类)，这个类是Runnable接口的实现，继承之后重写run()方法，在这个方法里写出来该线程具体要完成的任务。</li>
+<li>自己实现Runnable接口，重写里面的run方法，创建线程类</li>
+<li>使用Executor框架创建线程池(<strong>需要注意，阿里巴巴的《Java开发手册》不允许用Executors区创建线程池，而要用ThreadPoolExecutor的方式，这样可以更加明确线程池的运行规则，规避资源耗尽的风险</strong>)。Executor框架是JUC里提供的线程池实现的。</li>
+<li>通过Callable和Future创建线程</li>
+</ol>
+<p>虽然最常用的是四种，但是继承Thread类和实现Runnable接口是最常用的。而且更加提倡的是使用实现Runnable接口的方式。实现Runnable接口的优势：</p>
+<p>①避免点继承的局限，一个类可以继承多个接口。</p>
+<p>②适合于资源的共享</p>
+<h2 id="BLOCKED-阻塞等待-和WAITING-等待-有什么区别？"><a href="#BLOCKED-阻塞等待-和WAITING-等待-有什么区别？" class="headerlink" title="BLOCKED(阻塞等待)和WAITING(等待)有什么区别？"></a>BLOCKED(阻塞等待)和WAITING(等待)有什么区别？</h2><p>虽然BLOCKED和WAITING都有等待的含义，但二者有着本质的区别，首先它们状态形成的调用方法不同，其次BLOCKED可以理解为当前线程还处于活跃状态，只是在阻塞等待其他线程使用完某个锁资源；而WAITING则是因为自身调用了Object.wait()或着是Thread.join()又或者是LockSupport.park()而进入等待状态，只能等待其他线程执行某个特定的动作才能被继续唤醒，比如当线程因为调用了 Object.wait() 而进入 WAITING 状态之后，则需要等待另一个线程执行Object.notify() 或 Object.notifyAll() 才能被唤醒。</p>
+<h2 id="start-方法和run-方法有什么区别？"><a href="#start-方法和run-方法有什么区别？" class="headerlink" title="start()方法和run()方法有什么区别？"></a>start()方法和run()方法有什么区别？</h2><p>首先从 Thread 源码来看，start() 方法属于 Thread 自身的方法，并且使用了 synchronized 来保证线程安全。</p>
+<p>run() 方法为 Runnable 的抽象方法，必须由调用类重写此方法，重写的 run() 方法其实就是此线程要执行的业务方法，源码如下：</p>
+<p>从执行的效果来说，start() 方法可以开启多线程，让线程从 NEW 状态转换成 RUNNABLE 状态，而 run() 方法只是一个普通的方法。</p>
+<p>其次，它们可调用的次数不同，start()方法不能被多次调用，否则会抛出java.lang.IllegalStateException；而run()方法可以进行多次调用，因为它只是一个普通的方法而已。</p>
+<h2 id="线程的优先级有什么用？如何设置优先级？"><a href="#线程的优先级有什么用？如何设置优先级？" class="headerlink" title="线程的优先级有什么用？如何设置优先级？"></a>线程的优先级有什么用？如何设置优先级？</h2><p>Thread源码中与线程优先级相关的属性有3个：</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//线程可以拥有的最小优先级</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> static <span class="built_in">int</span> MIN_PRIORITY =<span class="number">1</span> ;</span><br><span class="line"></span><br><span class="line"><span class="comment">//线程默认优先级</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> static <span class="built_in">int</span> NORM_PNORM_PRIORITY = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 线程可以拥有的最大优先级</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> static <span class="built_in">int</span> MAX_PRIORITY = <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<p>线程的优先级可以理解为线程抢占 CPU 时间片的概率，优先级越高的线程优先执行的概率就越大，但并不能保证优先级高的线程一定先执行。</p>
+<p>在程序中我们可以通过Thread.setPriority()来设置优先级。</p>
+<h2 id="线程常用方法有哪些？"><a href="#线程常用方法有哪些？" class="headerlink" title="线程常用方法有哪些？"></a>线程常用方法有哪些？</h2><h3 id="join"><a href="#join" class="headerlink" title="join()"></a>join()</h3><p>在一个线程中调用join()，会让当前线程交出执行权给other线程，直到other线程执行完或者过了超时时间之后再继续执行当前线程。</p>
+<p>在源码中可以看到，join()方法底层是通过wait()方法实现的。</p>
+<p>举个例子：</p>
+<figure class="highlight livescript"><table><tr><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">Test</span> &#123;</span></span><br><span class="line">    public static <span class="literal">void</span> main(String[] args) throws InterruptedException &#123;</span><br><span class="line">        Thread thread = <span class="keyword">new</span> Thread<span class="function"><span class="params">(() -&gt; &#123;</span></span></span><br><span class="line"><span class="function"><span class="params">           <span class="keyword">for</span>(int i = <span class="number">1</span>; i &lt;= <span class="number">6</span>; i++) &#123;</span></span></span><br><span class="line"><span class="function"><span class="params">               <span class="keyword">try</span> &#123;</span></span></span><br><span class="line"><span class="function"><span class="params">                   Thread.sleep(<span class="number">1000</span>);</span></span></span><br><span class="line"><span class="function"><span class="params">               &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span></span></span><br><span class="line"><span class="function"><span class="params">                   e.printStackTrace();</span></span></span><br><span class="line"><span class="function"><span class="params">               &#125;</span></span></span><br><span class="line"><span class="function"><span class="params">               System.out.println(<span class="string">"子线程睡眠："</span> + i + <span class="string">"秒"</span>);</span></span></span><br><span class="line"><span class="function"><span class="params">           &#125;</span></span></span><br><span class="line"><span class="function"><span class="params">        &#125;)</span>;</span></span><br><span class="line"><span class="function">        <span class="title">thread</span>.<span class="title">start</span><span class="params">()</span>;</span></span><br><span class="line"><span class="function">        <span class="title">for</span> <span class="params">(int i = <span class="number">1</span>; i &lt; <span class="number">4</span>; i++)</span> &#123;</span></span><br><span class="line"><span class="function">            <span class="title">Thread</span>.<span class="title">sleep</span><span class="params">(<span class="number">1000</span>)</span>;</span></span><br><span class="line"><span class="function">            <span class="title">System</span>.<span class="title">out</span>.<span class="title">println</span><span class="params">(<span class="string">"主线程睡眠："</span> + i + <span class="string">"秒"</span>)</span>;</span></span><br><span class="line"><span class="function">        &#125;</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    &#125;</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>这段代码的执行结果：</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">主线程睡眠：<span class="number">1</span>秒</span><br><span class="line">子线程睡眠：<span class="number">1</span>秒</span><br><span class="line">主线程睡眠：<span class="number">2</span>秒</span><br><span class="line">子线程睡眠：<span class="number">2</span>秒</span><br><span class="line">主线程睡眠：<span class="number">3</span>秒</span><br><span class="line">子线程睡眠：<span class="number">3</span>秒</span><br><span class="line">子线程睡眠：<span class="number">4</span>秒</span><br><span class="line">子线程睡眠：<span class="number">5</span>秒</span><br><span class="line">子线程睡眠：<span class="number">6</span>秒</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，不使用join()的时候，主线程和子线程会交替执行。</p>
+<p>然后加入join()方法：</p>
+<figure class="highlight livescript"><table><tr><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">Test</span> &#123;</span></span><br><span class="line">    public static <span class="literal">void</span> main(String[] args) throws InterruptedException &#123;</span><br><span class="line">        Thread thread = <span class="keyword">new</span> Thread<span class="function"><span class="params">(() -&gt; &#123;</span></span></span><br><span class="line"><span class="function"><span class="params">           <span class="keyword">for</span>(int i = <span class="number">1</span>; i &lt;= <span class="number">6</span>; i++) &#123;</span></span></span><br><span class="line"><span class="function"><span class="params">               <span class="keyword">try</span> &#123;</span></span></span><br><span class="line"><span class="function"><span class="params">                   Thread.sleep(<span class="number">1000</span>);</span></span></span><br><span class="line"><span class="function"><span class="params">               &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span></span></span><br><span class="line"><span class="function"><span class="params">                   e.printStackTrace();</span></span></span><br><span class="line"><span class="function"><span class="params">               &#125;</span></span></span><br><span class="line"><span class="function"><span class="params">               System.out.println(<span class="string">"子线程睡眠："</span> + i + <span class="string">"秒"</span>);</span></span></span><br><span class="line"><span class="function"><span class="params">           &#125;</span></span></span><br><span class="line"><span class="function"><span class="params">        &#125;)</span>;</span></span><br><span class="line"><span class="function">        <span class="title">thread</span>.<span class="title">start</span><span class="params">()</span>;</span></span><br><span class="line"><span class="function">        <span class="title">thread</span>.<span class="title">join</span><span class="params">(<span class="number">4000</span>)</span>;</span></span><br><span class="line"><span class="function">        <span class="title">for</span> <span class="params">(int i = <span class="number">1</span>; i &lt; <span class="number">4</span>; i++)</span> &#123;</span></span><br><span class="line"><span class="function">            <span class="title">Thread</span>.<span class="title">sleep</span><span class="params">(<span class="number">1000</span>)</span>;</span></span><br><span class="line"><span class="function">            <span class="title">System</span>.<span class="title">out</span>.<span class="title">println</span><span class="params">(<span class="string">"主线程睡眠："</span> + i + <span class="string">"秒"</span>)</span>;</span></span><br><span class="line"><span class="function">        &#125;</span></span><br><span class="line"><span class="function">    &#125;</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>执行结果：</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">子线程睡眠：<span class="number">1</span>秒</span><br><span class="line">子线程睡眠：<span class="number">2</span>秒</span><br><span class="line">子线程睡眠：<span class="number">3</span>秒</span><br><span class="line">子线程睡眠：<span class="number">4</span>秒</span><br><span class="line">主线程睡眠：<span class="number">1</span>秒</span><br><span class="line">子线程睡眠：<span class="number">5</span>秒</span><br><span class="line">主线程睡眠：<span class="number">2</span>秒</span><br><span class="line">子线程睡眠：<span class="number">6</span>秒</span><br><span class="line">主线程睡眠：<span class="number">3</span>秒</span><br></pre></td></tr></table></figure>
+
+<p>可以看到用了join()方法之后，子线程会先<code>join</code>进来执行4秒，之后才会执行主线程。</p>
+<h3 id="yield"><a href="#yield" class="headerlink" title="yield()"></a>yield()</h3><p>通过Thread()源码可以知道yield()为本地方法，也就是说yield()是由C/C++实现的。</p>
+<p>yield() 方法表示给线程调度器一个当前线程愿意出让 CPU 使用权的暗示，但是线程调度器可能会忽略这个暗示。</p>
+<p>执行一段包含yield()方法的代码之后会发现，每次执行的结果都不相同，这是因为yield()执行非常不稳定，线程调度器不一定会采纳yield()出让CPU使用权的建议，从而导致了这样的结果。</p>
+<h2 id="volatile的作用"><a href="#volatile的作用" class="headerlink" title="volatile的作用"></a>volatile的作用</h2><p>两个：保证可见性（这里指主内存与工作内存间的可见性），防止指令重排（指令重排也会导致可见性问题）</p>
 <h3 id="什么是可见性？"><a href="#什么是可见性？" class="headerlink" title="什么是可见性？"></a>什么是可见性？</h3><p>意思就是说，在多线程环境下，某个共享变量如果被其中一个线程给修改了，其他线程能够立即知道这个共享变量已经被修改了，当其他线程要读取这个变量的时候，最终会去内存中读取，而不是从自己的工作空间中读取.</p>
 <h3 id="如何保证内存可见性？"><a href="#如何保证内存可见性？" class="headerlink" title="如何保证内存可见性？"></a>如何保证内存可见性？</h3><p>答：volatile修饰的变量保证其每个写操作后都更新到主内存，每个读操作都到主内存中更新，具体的话是在JVM层面，在修饰的变量前后加关键字。</p>
 <blockquote>
@@ -790,6 +881,37 @@
 <li><p>变量不需要与其他状态变量共同参与不变约束。</p>
 </li>
 </ol>
+<h2 id="ThreadPoolExecutor介绍"><a href="#ThreadPoolExecutor介绍" class="headerlink" title="ThreadPoolExecutor介绍"></a>ThreadPoolExecutor介绍</h2><p>线程池的使用必须要通过ThreadPoolExecutor的方式来创建，这样才可以更加明确线程池的运行规则，规避资源耗尽的风险。</p>
+<p>ThreadPoolExecutor有七大核心参数,包括核心线程数和最大线程数之间的区别，当线程池的任务队列没有可用空间且线程池的线程数量已经达到了最大线程数时，则会执行拒绝策略，Java 自动的拒绝策略有 4 种，用户也可以通过重写rejectedExecution()来自定义拒绝策略，我们还可以通过重写beforeExecute()和afterExecute()来实现ThreadPoolExecutor的扩展功能。</p>
+<h2 id="线程池——ThreadPoolExecutor参数含义及源码执行流程？"><a href="#线程池——ThreadPoolExecutor参数含义及源码执行流程？" class="headerlink" title="线程池——ThreadPoolExecutor参数含义及源码执行流程？"></a>线程池——ThreadPoolExecutor参数含义及源码执行流程？</h2><p>线程池是为了避免线程频繁的创建和销毁带来的性能消耗，而建立的一种池化技术，它是把已创建的线程放入“池”中，当有任务来临时就可以重用已有的线程，无需等待创建的过程，这样就可以有效提高程序的响应速度。</p>
+<p>而说到线程池，现在一定离不开<code>ThreadPoolExecutor</code>，现在不推荐用<code>Executors</code>去创建线程池了。阿里巴巴的《Java开发手册》中这样规定创建线程池的方式：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">线程池不允许使用 Executors 去创建，而是通过 ThreadPoolExecutor 的方式，这样的处理方式让写的读者更加明确线程池的运行规则，规避资源耗尽的风险。</span><br></pre></td></tr></table></figure>
+
+<h3 id="ThreadPoolExecutor一共有七个核心参数"><a href="#ThreadPoolExecutor一共有七个核心参数" class="headerlink" title="ThreadPoolExecutor一共有七个核心参数"></a>ThreadPoolExecutor一共有七个核心参数</h3><p>第1个参数：corePoolSize表示线程池的常驻核心线程数。如果设置为0，则表示在没有任何任务时，销毁线程池；如果大于0，即使没有任务时也会保证线程池的线程数量等于此值。但需要注意，此值如果设置的比较小，则会频繁的创建和销毁线程；如果设置的比较大，则会浪费系统资源，所以开发者需要根据自己的实际业务来调整此值。</p>
+<p>第2个参数：maximumPoolSize表示线程池在任务最多时，最大可以创建的线程数。官方规定此值必须大于0，也必须大于等于corePoolSize，此值只有在任务比较多，且不能存放在任务队列时，才会用到。</p>
+<p>第3个参数：keepAliveTime表示线程的存活时间，当线程池空闲时并且超过了此时间，多余的线程就会销毁，直到线程池中的线程数量销毁的等于corePoolSize为止，如果 maximumPoolSize 等于 corePoolSize，那么线程池在空闲的时候也不会销毁任何线程。</p>
+<p>第 4 个参数：unit 表示存活时间的单位，它是配合 keepAliveTime 参数共同使用的。</p>
+<p>第 5 个参数：workQueue 表示线程池执行的任务队列，当线程池的所有线程都在处理任务时，如果来了新任务就会缓存到此任务队列中排队等待执行。</p>
+<p>第 6 个参数：threadFactory 表示线程的创建工厂，此参数一般用的比较少，我们通常在创建线程池时不指定此参数，它会使用默认的线程创建工厂的方法来创建线程。</p>
+<p>第7个参数：RejectedExecutionHandler表示指定线程池的拒绝策略，当线程池的任务已经在缓存队列workQueue中存储满了之后，并且不能创建新的线程来执行此任务时，就会用到此拒绝策略，它属于一种限流保护的机制。</p>
+<h3 id="线程池-ThreadPoolExecutor-执行流程"><a href="#线程池-ThreadPoolExecutor-执行流程" class="headerlink" title="线程池(ThreadPoolExecutor)执行流程"></a>线程池(ThreadPoolExecutor)执行流程</h3><p>通过<code>executor()</code>方法开始执行，如果当前工作线程数(workerCount)小于核心线程数，会创建新的线程执行这个任务。</p>
+<p>然后检查线程池是否处于运行状态，是的话把任务添加到队列。如果线程池处于非运行状态，而且处于爆满，并且尝试新启动一个线程失败了，那么执行拒绝策略。</p>
+<p>重点方法：<code>addWorker(Runnable firstTask, boolean core)</code>两个方法参数如下：</p>
+<ul>
+<li><p>firstTask，线程应首先运行的任务，如果没有则可以设置为 null；</p>
+</li>
+<li><p>core，判断是否可以创建线程的阀值（最大值），如果等于 true 则表示使用 corePoolSize 作为阀值，false 则表示使用 maximumPoolSize 作为阀值。</p>
+</li>
+</ul>
+<p>具体流程可以参考这张图：</p>
+<p><img src="https://i.loli.net/2020/03/27/z48VkDrqOcN9Yug.png" alt="ThreadPoolExecutor执行流程.png"></p>
+<h3 id="使用Executors返回线程池对象的弊端"><a href="#使用Executors返回线程池对象的弊端" class="headerlink" title="使用Executors返回线程池对象的弊端"></a>使用Executors返回线程池对象的弊端</h3><p>主要两点：</p>
+<ol>
+<li><p>FixedThreadPool 和 SingleThreadPool：允许的请求队列长度为 Integer.MAX_VALUE，可能会堆积大量的请求，从而导致 OOM。</p>
+</li>
+<li><p>CachedThreadPool 和 ScheduledThreadPool：允许的创建线程数量为 Integer.MAX_VALUE，可能会创建大量的线程，从而导致 OOM。</p>
+</li>
+</ol>
 <h2 id="搞懂synchronized-从偏量锁到重量级锁"><a href="#搞懂synchronized-从偏量锁到重量级锁" class="headerlink" title="搞懂synchronized(从偏量锁到重量级锁)"></a>搞懂synchronized(从偏量锁到重量级锁)</h2><p><a href="https://mp.weixin.qq.com/s?__biz=Mzg2NzA4MTkxNQ==&mid=2247485257&idx=1&sn=0ab85e4cd8b575fe5c01b269dda007f5&source=41&scene=21#wechat_redirect" target="_blank" rel="noopener">本部分参考这篇文章</a></p>
 <p>接触过线程安全的同学想必都使用过synchronized这个关键字，在java同步代码快中，synchronized的使用方式无非有两个:</p>
 <ol>
@@ -803,7 +925,9 @@
 
 <p>但这里需要指出的是，无论是对一个对象进行加锁还是对一个方法进行加锁，实际上，都是对<strong>对象进行加锁</strong>。</p>
 <p>也就是说，对于方式2，实际上虚拟机会根据synchronized修饰的是实例方法还是类方法，去取对应的实例对象或者Class对象来进行加锁。</p>
-<p>对于synchronized这个关键字，可能之前大家有听过，他是一个重量级锁，开销很大，建议大家少用点。但大家可能也听说过，但到了jdk1.6之后，该关键字被进行了很多的优化，已经不像以前那样不给力了，建议大家多使用。</p>
+<p>对于synchronized这个关键字，可能之前大家有听过，他是一个重量级锁，开销很大，建议大家少用点。但大家可能也听说过，但到了jdk1.6之后，该关键字被进行了很多的优化，已经不像以前那样不给力了，建议大家多使用。synchronized 刚开始为偏向锁，随着锁竞争越来越激烈，会升级为轻量级锁和重量级锁。如果大多数锁被不同的线程所争抢就不建议使用偏向锁了。</p>
+<h2 id="synchronized和ReentrantLock-两者的实现原理？两者的区别？"><a href="#synchronized和ReentrantLock-两者的实现原理？两者的区别？" class="headerlink" title="synchronized和ReentrantLock,两者的实现原理？两者的区别？"></a>synchronized和ReentrantLock,两者的实现原理？两者的区别？</h2><p>在JDK1.5之前共享对象的协调机制只有synchronized和volatile，在JDK1.5中增加了新的机制ReentrantLock，该机制的诞生并不是为了替代synchronized而是在 synchronized 不适用的情况下，提供一种可以选择的高级功能。</p>
+<p>###</p>
 <h2 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h2><h3 id="从synchronized引入"><a href="#从synchronized引入" class="headerlink" title="从synchronized引入"></a>从synchronized引入</h3><p>大家可能都听说说 Java 中的并发包，如果想要读懂 Java 中的并发包，其核心就是要先读懂 CAS 机制，因为 CAS 可以说是并发包的底层实现原理。</p>
 <p>CAS能够保证操作的原子性，JDK8也对CAS进行了一些优化。</p>
 <p>首先来看synchronized，它很多时候有些大材小用了。</p>
@@ -1090,6 +1214,8 @@
 <h4 id="2-2-1具体删除策略"><a href="#2-2-1具体删除策略" class="headerlink" title="2.2.1具体删除策略"></a>2.2.1具体删除策略</h4><p>我们在执行 put 方法时，发现队头元素被删除了，LinkedHashMap 本身是没有 put 方法实现的，调用的是 HashMap 的 put 方法，但 LinkedHashMap 实现了 put 方法中的调用 <code>afterNodeInsertion</code> 方法，这个方式实现了删除。</p>
 <h3 id="2-3-LinkedHashMap小结"><a href="#2-3-LinkedHashMap小结" class="headerlink" title="2.3 LinkedHashMap小结"></a>2.3 LinkedHashMap小结</h3><p>LinkedHashMap 提供了两个很有意思的功能：<strong>按照插入顺序访问和删除最少访问元素策略(LRU cache)</strong>，简单地通过链表的结构就实现了，设计得非常巧妙。</p>
 <h1 id="Map接口常问问题"><a href="#Map接口常问问题" class="headerlink" title="Map接口常问问题"></a>Map接口常问问题</h1><h2 id="1-Map整体数据结构问题"><a href="#1-Map整体数据结构问题" class="headerlink" title="1. Map整体数据结构问题"></a>1. Map整体数据结构问题</h2><h3 id="1-1-HashMap的底层数据结构"><a href="#1-1-HashMap的底层数据结构" class="headerlink" title="1.1 HashMap的底层数据结构"></a>1.1 HashMap的底层数据结构</h3><p>答：HashMap 底层是数组 + 链表 + 红黑树的数据结构，数组的主要作用是方便快速查找，时间复杂度是 O(1)，默认大小是 16，数组的下标索引是通过 key 的 hashcode 计算出来的，数组元素叫做 Node，当多个 key 的 hashcode 一致，但 key 值不同时，单个 Node 就会转化成链表，链表的查询复杂度是 O(n)，当链表的长度大于等于 8 并且数组的大小超过 64 时，链表就会转化成红黑树，红黑树的查询复杂度是 O(log(n))，简单来说，最坏的查询次数相当于红黑树的最大深度。</p>
+<p>具体来说，数组中的每个元素都是一个<strong><font color=#FF000>哈希桶</font></strong>，每个哈希桶里面包含四个字段：hash、key、value、next。其中next表示链表的下一个节点。</p>
+<p>JDK 1.8 之所以添加红黑树是因为一旦链表过长，会严重影响 HashMap 的性能，而红黑树具有快速增删改查的特点，这样就可以有效的解决链表过长时操作比较慢的问题。</p>
 <h3 id="1-2-HashMap、TreeMap、LinkedHashMap-三者有啥相同点，有啥不同点？"><a href="#1-2-HashMap、TreeMap、LinkedHashMap-三者有啥相同点，有啥不同点？" class="headerlink" title="1.2 HashMap、TreeMap、LinkedHashMap 三者有啥相同点，有啥不同点？"></a>1.2 HashMap、TreeMap、LinkedHashMap 三者有啥相同点，有啥不同点？</h3><p>答：相同点：</p>
 <ol>
 <li>三者在特定的情况下，都会使用红黑树；</li>
@@ -1137,7 +1263,7 @@
 </ol>
 <p>扩容的门阀是 threshold，每次扩容时 threshold 都会被重新计算，门阀值等于数组的大小 * 影响因子（0.75）。</p>
 <p>新数组初始化之后，需要将老数组的值拷贝到新数组上，链表和红黑树都有自己拷贝的方法。</p>
-<h3 id="2-1-HashMap-是如何扩容的？-1"><a href="#2-1-HashMap-是如何扩容的？-1" class="headerlink" title="2.1 HashMap 是如何扩容的？"></a>2.1 HashMap 是如何扩容的？</h3><h3 id="2-2-HashMap-是如何扩容的？"><a href="#2-2-HashMap-是如何扩容的？" class="headerlink" title="2.2 HashMap 是如何扩容的？"></a>2.2 HashMap 是如何扩容的？</h3><p>答：hash 冲突指的是 key 值的 hashcode 计算相同，但 key 值不同的情况。</p>
+<h3 id="2-2-HashMap-是如何解决哈希冲突的？"><a href="#2-2-HashMap-是如何解决哈希冲突的？" class="headerlink" title="2.2 HashMap 是如何解决哈希冲突的？"></a>2.2 HashMap 是如何解决哈希冲突的？</h3><p>答：hash 冲突指的是 key 值的 hashcode 计算相同，但 key 值不同的情况。</p>
 <p>如果桶中元素原本只有一个或已经是链表了，新增元素直接追加到链表尾部；</p>
 <p>如果桶中元素已经是链表，并且链表个数大于等于 8 时，此时有两种情况：</p>
 <ol>
@@ -1145,6 +1271,9 @@
 <li>如果数组大小大于 64 时，链表就会转化成红黑树。</li>
 </ol>
 <p>这里不仅仅判断链表个数大于等于 8，还判断了数组大小，数组容量小于 64 没有立即转化的原因，猜测主要是因为红黑树占用的空间比链表大很多，转化也比较耗时，所以数组容量小的情况下冲突严重，我们可以先尝试扩容，看看能否通过扩容来解决冲突的问题。</p>
+<ul>
+<li>在 JDK 1.7 时 HashMap 是由数组和链表组成的，而 JDK 1.8 则新增了红黑树结构，当链表的长度大于 8 并且容量大于 64 时会转换为红黑树存储，以提升元素的操作性能。结合源码来具体说：当链表长度到8需要转化红黑树是还有一个判断table的length大于MIN_TREEIFY_CAPACITY，也就是64才会转化红黑树</li>
+</ul>
 <h3 id="2-3-为什么链表个数大于等于-8-时，链表要转化成红黑树了？"><a href="#2-3-为什么链表个数大于等于-8-时，链表要转化成红黑树了？" class="headerlink" title="2.3 为什么链表个数大于等于 8 时，链表要转化成红黑树了？"></a>2.3 为什么链表个数大于等于 8 时，链表要转化成红黑树了？</h3><p>答：当链表个数太多了，遍历可能比较耗时，转化成红黑树，可以使遍历的时间复杂度降低，但转化成红黑树，有空间和转化耗时的成本，我们通过泊松分布公式计算，正常情况下，链表个数出现 8 的概念不到千万分之一，所以说正常情况下，链表都不会转化成红黑树，这样设计的目的，是为了防止非正常情况下，比如 hash 算法出了问题时，导致链表个数轻易大于等于 8 时，仍然能够快速遍历。</p>
 <p>延伸问题：红黑树什么时候转变成链表。</p>
 <p>答：当节点的个数小于等于 6 时，红黑树会自动转化成链表，主要还是考虑红黑树的空间成本问题，当节点个数小于等于 6 时，遍历链表也很快，所以红黑树会重新变成链表。</p>
@@ -1153,7 +1282,43 @@
 <h3 id="2-5-通过以下代码进行删除，是否可行？"><a href="#2-5-通过以下代码进行删除，是否可行？" class="headerlink" title="2.5 通过以下代码进行删除，是否可行？"></a>2.5 通过以下代码进行删除，是否可行？</h3><figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line">HashMap&lt;<span class="keyword">String</span>,<span class="keyword">String</span> &gt; <span class="built_in">map</span> = Maps.newHashMap();</span><br><span class="line"><span class="built_in">map</span>.<span class="built_in">put</span>(<span class="string">"1"</span>,<span class="string">"1"</span>);</span><br><span class="line"><span class="built_in">map</span>.<span class="built_in">put</span>(<span class="string">"2"</span>,<span class="string">"2"</span>);</span><br><span class="line"><span class="built_in">map</span>.forEach((s, s2) -&gt; <span class="built_in">map</span>.<span class="built_in">remove</span>(<span class="string">"1"</span>));</span><br></pre></td></tr></table></figure>
 
 <p>答：不行，会报错误 ConcurrentModificationException</p>
-<h3 id="2-6-描述一下-HashMap-get、put-的过程"><a href="#2-6-描述一下-HashMap-get、put-的过程" class="headerlink" title="2.6 描述一下 HashMap get、put 的过程"></a>2.6 描述一下 HashMap get、put 的过程</h3><p>答：参考源码分析部分</p>
+<h3 id="2-6-描述一下-HashMap-get-查询-、put-新增-、resize-数据扩容-的过程"><a href="#2-6-描述一下-HashMap-get-查询-、put-新增-、resize-数据扩容-的过程" class="headerlink" title="2.6 描述一下 HashMap get(查询)、put(新增)、resize(数据扩容) 的过程"></a>2.6 描述一下 HashMap get(查询)、put(新增)、resize(数据扩容) 的过程</h3><h4 id="get-查询"><a href="#get-查询" class="headerlink" title="get(查询)"></a>get(查询)</h4><p>通过源码分析：如果没有哈希冲突，可以直接查询到。如果有哈希冲突，需要判断key的值是否相等，才能确认此元素是不是我们想要的元素。</p>
+<h4 id="add-新增"><a href="#add-新增" class="headerlink" title="add(新增)"></a>add(新增)</h4><p>直接来看流程图：</p>
+<p><img src="https://i.loli.net/2020/03/26/LCVBDpeqgGdQJa7.png" alt="哈希表新增方法.png"></p>
+<p>注意，如果根据key计算的哈希值冲突了，会比较复杂。首先如果之前key已经存在了，会直接覆盖value</p>
+<h4 id="resize-扩容"><a href="#resize-扩容" class="headerlink" title="resize(扩容)"></a>resize(扩容)</h4><p>从源码可以看出，JDK 1.8 在扩容时并没有像 JDK 1.7 那样，重新计算每个元素的哈希值，而是通过高位运算（e.hash &amp; oldCap）来确定元素是否需要移动，比如 key1 的信息如下：</p>
+<ul>
+<li><p>key1.hash = 10 (0000 1010)</p>
+</li>
+<li><p>oldCap = 16 (0001 0000)</p>
+</li>
+</ul>
+<p>使用 e.hash &amp; oldCap 得到的结果，高一位为 0，当结果为 0 时表示元素在扩容时位置不会发生任何变化.</p>
+<p>再举个例子，key2:</p>
+<ul>
+<li><p>key2.hash = 10 0001 0001</p>
+</li>
+<li><p>oldCap = 16 0001 0000</p>
+</li>
+</ul>
+<p>这时候得到的结果，高一位为 1，当结果为 1 时，表示元素在扩容时位置发生了变化，新的下标位置等于原下标位置 + 原数组长度，如下图所示：</p>
+<p><img src="https://i.loli.net/2020/03/26/zbRju1JL4oZArNh.png" alt="哈希表扩容.png"></p>
+<p>其中红色的虚线图代表了扩容时元素移动的位置。</p>
+<h3 id="2-7-什么是加载因子？加载因子为什么是0-75？"><a href="#2-7-什么是加载因子？加载因子为什么是0-75？" class="headerlink" title="2.7 什么是加载因子？加载因子为什么是0.75？"></a>2.7 什么是加载因子？加载因子为什么是0.75？</h3><p>加载因子也叫扩容因子或负载因子，用来判断什么时候进行扩容的，假如加载因子是0.5，HashMap的初始化容量是16，那么当HashMap中有16*0.5=8个元素时，HashMap就会进行扩容。</p>
+<p>那加载因子为什么是 0.75 而不是 0.5 或者 1.0 呢？</p>
+<p>这其实是出于容量和性能之间平衡的结果：</p>
+<ul>
+<li>当加载因子设置比较大的时候，扩容的门槛就被提高了，扩容发生的频率比较低，占用的空间会比较小，但此时发生Hash冲突的几率就会提升，因此需要更复杂的数据结构来存储元素，这样对元素的操作时间就会增加，运行效率也会因此降低；而当加载因子值比较小的时候，扩容的门槛会比较低，因此会占用更多的空间，此时元素的存储就比较稀疏，发生哈希冲突的可能性就比较小，因此操作性能会比较高。</li>
+<li><strong>为了提升扩容效果，HashMap的容量(capacity)有一个固定的要求，那就是一定要是2的幂。所以，如果负载因子是3/4的话，那么和capacity的乘积结果就可以是一个整数。</strong></li>
+</ul>
+<p>所以综合了以上情况就取了一个 0.5 到 1.0 的平均数 0.75 作为加载因子。</p>
+<h3 id="2-8-HashMap死循环分析"><a href="#2-8-HashMap死循环分析" class="headerlink" title="2.8 HashMap死循环分析"></a>2.8 HashMap死循环分析</h3><p>以JDK1.7为例，假设HashMap默认大小为2，原本HashMap中有一个元素key(5)，我们再使用两个线程：t1添加元素key(3)，t2添加元素key(7)，当元素key(3) 和 key(7) 都添加到 HashMap 中之后，线程 t1 在执行到 Entry&lt;K,V&gt; next = e.next; 时，交出了 CPU 的使用权，源码如下：</p>
+<p><img src="https://i.loli.net/2020/03/26/dyLhi4eBJU3I1Cp.png" alt="哈希死循环代码.png"></p>
+<p>那么此时线程t1中的e指向了key(3)，而next指向了key(7)；之后线程t2重新rehash之后链表的顺序被反转，链表的位置变成了key(5)→key(7)→key(3)，其中 “→” 用来表示下一个元素。</p>
+<p>当t1重新获得执行权之后，先执行newTalbe[i]=e把key(3)的next设置为key(7)，而下次循环时查询到key(7)的next元素为key(3)，于是就形成了 key(3) 和 key(7) 的循环引用，因此就导致了死循环的发生，如下图所示：</p>
+<p><img src="https://i.loli.net/2020/03/26/BeLuptASOiDR5PW.png" alt="哈希表死循环.png"></p>
+<p>当然发生死循环的原因是 JDK 1.7 链表插入方式为首部倒序插入，这个问题在 JDK 1.8 得到了改善，变成了尾部正序插入。</p>
+<p>有人曾经把这个问题反馈给了Sun公司，但Sun公司认为这不是一个问题，<font color=#FF0000>因为HashMap本身就是非线程安全的，如果要在多线程下，建议使用ConcurrentHashMap替代</font>，但这个问题在面试中被问到的几率依然很大，所以在这里需要特别说明一下。</p>
 <h2 id="3-其他Map面试题"><a href="#3-其他Map面试题" class="headerlink" title="3.其他Map面试题"></a>3.其他Map面试题</h2><h3 id="3-1-DTO-作为-Map-的-key-时，有无需要注意的点？"><a href="#3-1-DTO-作为-Map-的-key-时，有无需要注意的点？" class="headerlink" title="3.1 DTO 作为 Map 的 key 时，有无需要注意的点？"></a>3.1 DTO 作为 Map 的 key 时，有无需要注意的点？</h3><p>答：DTO 就是一个数据载体，可以看做拥有很多属性的 Java 类，我们可以对这些属性进行 get、set 操作。</p>
 <p>看是什么类型的 Map，如果是 HashMap 的话，一定需要覆写 equals 和 hashCode 方法，因为在 get 和 put 的时候，需要通过 equals 方法进行相等的判断；如果是 TreeMap 的话，DTO 需要实现 Comparable 接口，因为 TreeMap 会使用 Comparable 接口进行判断 key 的大小；如果是 LinkedHashMap 的话，和 HashMap 一样的。</p>
 <h3 id="3-2-为什么推荐-TreeMap-的元素最好都实现-Comparable-接口？但-key-是-String-的时候，我们却没有额外的工作呢？"><a href="#3-2-为什么推荐-TreeMap-的元素最好都实现-Comparable-接口？但-key-是-String-的时候，我们却没有额外的工作呢？" class="headerlink" title="3.2 为什么推荐 TreeMap 的元素最好都实现 Comparable 接口？但 key 是 String 的时候，我们却没有额外的工作呢？"></a>3.2 为什么推荐 TreeMap 的元素最好都实现 Comparable 接口？但 key 是 String 的时候，我们却没有额外的工作呢？</h3><p>答：因为 TreeMap 的底层就是通过排序来比较两个 key 的大小的，所以推荐 key 实现 Comparable 接口，是为了往你希望的排序顺序上发展， 而 String 本身已经实现了 Comparable 接口，所以使用 String 时，我们不需要额外的工作，不仅仅是 String ，其他包装类型也都实现了 Comparable 接口，如 Long、Double、Short 等等。</p>
