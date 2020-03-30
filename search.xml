@@ -567,6 +567,22 @@
 <p>路由转发所依据的对象是：IP地址。（网络地址）</p>
 <p><strong>主要功能不同</strong></p>
 <p>交换机主要用于组建局域网，而路由主要功能是将由交换机组好的局域网相互连接起来，或者接入Internet。<br>交换机能做的，路由都能做。<br>交换机不能分割广播域，路由可以。<br>路由还可以提供防火墙的功能。<br>路由配置比交换机复杂。</p>
+<h2 id="TCP粘包为什么会发生？怎么处理？"><a href="#TCP粘包为什么会发生？怎么处理？" class="headerlink" title="TCP粘包为什么会发生？怎么处理？"></a>TCP粘包为什么会发生？怎么处理？</h2><p>只有TCP会产生粘包问题，因为TCP是基于数据流的协议，而UDP是基于数据报的协议。也就是说，TCP认为消息不是一条一条的，而是”流”式的，是没有消息边界的。而UDP则是有消息边界的，接收方一次只接收一条独立的信息，所以不存在粘包问题。</p>
+<p>TCP粘包指的是发送方发送的若干包数据到达接收方时粘成了一个很大的包，从接收方来看，是一个数据包的头紧接着另一个数据包的尾。</p>
+<h3 id="发生TCP粘包主要是两个原因："><a href="#发生TCP粘包主要是两个原因：" class="headerlink" title="发生TCP粘包主要是两个原因："></a>发生TCP粘包主要是两个原因：</h3><ul>
+<li><strong>发送方的原因</strong>：发送方默认开启Nagle算法(主要作用是减少网络中报文段的数量)，而Nagle算法主要做两件事：1.只在上一个分组得到确认之后才发送下一个分组；2.收集多个小分组，在一个确认到来之后一起发送。Nagle这两个功能造成了发送方可能会产生粘包问题。</li>
+<li><strong>接收方原因</strong>：接收方接收到TCP包之后不会马上处理，而是会先放在缓存中，然后应用程序会从缓存里面读取到数据分组。但是这样一来如果TCP接收数据包到缓存的速度大于应用程序从缓存中读取数据包的速度，多个包就会被缓存，应用程序就有可能读取到多个首尾相接粘到一起的包。</li>
+</ul>
+<h3 id="解决粘包问题的两个方法："><a href="#解决粘包问题的两个方法：" class="headerlink" title="解决粘包问题的两个方法："></a>解决粘包问题的两个方法：</h3><p>经过上面原因的分析我们可以知道，可以在发送方和应用层两个层面解决TCP粘包问题，但是接收方没办法解决，从接受方的角度来看只能交给应用层处理。</p>
+<ul>
+<li>发送方可以选择关闭Nagle算法，使用TCP_NODELAY选项关闭</li>
+<li>从应用层来解决可以有两种方法，主要目的都是从缓存中循环地一条一条地读数据，直到所有数据被处理完成。这里重点是如何判断每条数据的长度，重点解决方法有两个：</li>
+</ul>
+<ol>
+<li><strong>格式化数据</strong>：给每条数据设置固有的格式(开始符、结束符，比叡设置每条数据的结尾都统一是”/0”)，</li>
+<li><strong>统一发送长度</strong>：每次发送数据时都统一长度，然后将数据按照统一的长度发送。比如规定数据的前4位是数据的长度，之后应用层在处理时可以根据长度来判断每个分组的开始和结束位置。</li>
+</ol>
+<hr>
 <p>其他有关路由器和交换机的知识：<a href="https://www.cnblogs.com/Lynn-Zhang/articles/5754336.html" target="_blank" rel="noopener">可以参考文章</a></p>
 <h1 id="2-操作系统"><a href="#2-操作系统" class="headerlink" title="2.操作系统"></a>2.操作系统</h1><h2 id="进程与线程的区别"><a href="#进程与线程的区别" class="headerlink" title="进程与线程的区别"></a>进程与线程的区别</h2><p>从宏观上来回答：</p>
 <p>a.进程是系统资源分配的最小单位，线程是程序执行的最小单位</p>
@@ -693,7 +709,7 @@
 <p>你看，多方便，第一次进入需要CAS机制来设置，以后进出就啥也不用干了，直接进入退出。</p>
 <p>然而，现实总是残酷的，毕竟实际情况还是多线程，所以万一有其他线程来进入这个方法呢？如果真的出现这种情况，其他线程一看这个方法的ID不是自己，这个时候说明，至少有两个线程要来执行这个方法论，这意味着<strong>偏向锁已经不适用了</strong>，这个时候就会从偏向锁升级为轻量级锁。</p>
 <p>所以呢，偏向锁适用于那种，始终只有一个线程在执行一个方法的情况。</p>
-<h3 id="乐观锁和悲观锁"><a href="#乐观锁和悲观锁" class="headerlink" title="乐观锁和悲观锁"></a>乐观锁和悲观锁</h3><p>最开始我们说的三种锁，重量级锁、自旋锁和自适应自旋锁，进入方法之前，就一定要先加一个锁，这种我们为称之为<strong>悲观锁</strong>。悲观锁总认为，如果不事先加锁的话，就会出事，这种想法确实悲观了点，这估计就是悲观锁的来源了。</p>
+<h3 id="乐观锁和悲观锁"><a href="#乐观锁和悲观锁" class="headerlink" title="乐观锁和悲观锁"></a>乐观锁和悲观锁</h3><p>最开始我们说的三种锁，重量级锁、自旋锁和自适应自旋锁，进入方法之前，就一定要先加一个锁，这种我们为称之为<strong>悲观锁</strong>。悲观锁总认为，如果不事先加锁的话，就会出事，这种想法确实悲观了点。</p>
 <p>而<strong>乐观锁</strong>却相反，认为不加锁也没事，我们可以先不加锁，如果出现了冲突，我们在想办法解决，例如 CAS 机制，上面说的轻量级锁，就是乐观锁的。不会马上加锁，而是等待真的出现了冲突，在想办法解决。</p>
 <blockquote>
 <p>互斥锁(重量级锁)也称为阻塞同步、悲观锁</p>
@@ -1082,7 +1098,7 @@
 <h3 id="2-实现Runnable接口和Callable接口的区别？"><a href="#2-实现Runnable接口和Callable接口的区别？" class="headerlink" title="2.实现Runnable接口和Callable接口的区别？"></a>2.实现Runnable接口和Callable接口的区别？</h3><p>如果想让线程池执行任务的话需要实现的Runnable接口或Callable接口。 Runnable接口或Callable接口实现类都可 以被ThreadPoolExecutor或ScheduledThreadPoolExecutor执行。两者的区别在于 Runnable 接口不会返回结果但 是 Callable 接口可以返回结果。</p>
 <p><strong>备注</strong>：工具类 <code>Executors</code> 可以实现 <code>Runnable</code> 对象和 <code>Callable</code> 对象之间的相互转换。 （ <code>Executors.callable（Runnable task）</code>或 <code>Executors.callable（Runnable task，Object resule）</code>）。 </p>
 <h3 id="3-执行execute-方法和submit-方法的区别是什么呢？"><a href="#3-执行execute-方法和submit-方法的区别是什么呢？" class="headerlink" title="3.执行execute()方法和submit()方法的区别是什么呢？"></a>3.执行execute()方法和submit()方法的区别是什么呢？</h3><ol>
-<li>execute()方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否。；</li>
+<li><strong>execute()方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否。</strong>；</li>
 <li><strong>submit()方法用于提交需要返回值的任务。线程池会返回一个future类型的对象，通过这个future对象可以判断 任务是否执行成功</strong>，并且可以通过future的get()方法来获取返回值，get()方法会阻塞当前线程直到任务完成，而使用 get（long timeout，TimeUnit unit）方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行 完。 </li>
 </ol>
 <p>此外它们俩之间另一个区别是，execute()方法属于Executor接口的方法，而submit()方法则是属于ExecutorService接口的方法，它们之间的继承关系如下图所示：</p>
@@ -1142,16 +1158,82 @@
 
 <p>但是又会有一个问题，就是如果函数的操作返回的就是和原来传入的值相同的值，那线程A可能认为B还没执行完。</p>
 <p>举个例子：当线程A即将要执行第三步的时候，线程 B 把 i 的值加1，之后又马上把 i 的值减 1，然后，线程 A 执行第三步，这个时候线程 A 是认为并没有人修改过 i 的值，因为 i 的值并没有发生改变。而这，就是我们平常说的<strong>ABA问题</strong>。</p>
+<p>CAS只能保障一个变量的原子性，但不能保证整个代码块的原子性。</p>
+<p>CAS可能会造成ABA问题，即：<strong>线程一拿到了某个变量最初的预期原值A，在将要进行CAS的时候被其他线程抢占了执行权，把值从A变成了B，然后其他线程又把这个值从B变回了A。虽然这个时候此变量实际上已经不是原先的A了，但线程一并不知道这个情况，它在执行CAS的时候，对比了A的值没有改变，就按照这个预期工作了，这就造成了ABA问题。</strong></p>
+<p>以警匪剧为例，假如某人把装了100W现金的箱子放在了家里，几分钟之后要拿它去赎人，然而在趁他不注意的时候，进来了一个小偷，用空箱子换走了装满钱的箱子，当某人进来之后看到箱子还是一模一样的，他会以为这就是原来的箱子，就拿着它去赎人了，这种情况肯定有问题，因为箱子已经是空的了，这就是 ABA 的问题。</p>
 <p>对于基本类型的值来说，这种把数字改变了在改回原来的值是没有太大影响的，但如果是对于<strong>引用类型</strong>的话，就会产生很大的影响了。</p>
-<p>解决方法：版本控制。</p>
-<p>例如，每次有线程修改了引用的值，就会进行版本的更新，虽然两个线程持有相同的引用，但他们的版本不同，这样，我们就可以预防 ABA 问题了。Java 中提供了 AtomicStampedReference 这个类，就可以进行版本控制了。</p>
+<p>解决方法：版本控制，或者说<strong>添加版本号</strong>。每次修改之后都更新版本号，拿上面的例子来说，假如每次移动箱子之后，箱子的位置就会发生变化，而这个变化的位置就相当于“版本号”，当某人进来之后发现箱子的位置发生了变化就知道有人动了手脚，就会放弃原有的计划，这样就解决了ABA问题。</p>
+<p>相似的，每次有线程修改了引用的值，就会进行版本的更新，虽然两个线程持有相同的引用，但他们的版本不同，这样，我们就可以预防 ABA 问题了。</p>
+<p>JDK在1.5时提供了 <code>AtomicStampedReference</code> 这个类，维护了”版本号” <code>Stamp</code>,每次，值和版本号，都会比较，这样就解决了ABA的问题。</p>
 <h3 id="JDK8对CAS的优化"><a href="#JDK8对CAS的优化" class="headerlink" title="JDK8对CAS的优化"></a>JDK8对CAS的优化</h3><p>由于采用这种 CAS 机制是没有对方法进行加锁的，所以，所有的线程都可以进入 increment() 这个方法，假如进入这个方法的线程太多，就会出现一个问题：每次有线程要执行第三个步骤的时候，i 的值老是被修改了，所以线程又到回到第一步继续重头再来。</p>
 <p>而这就会导致一个问题：由于线程太密集了，太多人想要修改 i 的值了，进而大部分人都会修改不成功，白白着在那里循环消耗资源。</p>
 <p>为了解决这个问题，Java8 引入了一个 cell[] 数组，它的工作机制是这样的：假如有 5 个线程要对 i  进行自增操作，由于 5 个线程的话，不是很多，起冲突的几率较小，那就让他们按照以往正常的那样，采用 CAS 来自增吧。</p>
 <p>但是，如果有 100 个线程要对 i 进行自增操作的话，这个时候，冲突就会大大增加，系统就会把这些线程分配到不同的 cell 数组元素去，假如 cell[10] 有 10 个元素吧，且元素的初始化值为 0，那么系统就会把 100 个线程分成 10 组，每一组对 cell 数组其中的一个元素做自增操作，这样到最后，cell 数组 10 个元素的值都为 10，系统在把这 10 个元素的值进行汇总，进而得到 100，二这，就等价于 100 个线程对 i 进行了 100 次自增操作。</p>
-<h3 id="正式介绍AQS"><a href="#正式介绍AQS" class="headerlink" title="正式介绍AQS"></a>正式介绍AQS</h3><p>AQS的全称为（AbstractQueuedSynchronizer），这个类在java.util.concurrent.locks包下面。</p>
+<h3 id="正式介绍AQS"><a href="#正式介绍AQS" class="headerlink" title="正式介绍AQS"></a>正式介绍AQS</h3><p><a href="https://www.cnblogs.com/yszzu/p/10198904.html" target="_blank" rel="noopener">CAS、AQS和lock之间的关系</a></p>
+<p><a href="https://www.jianshu.com/p/2a48778871a9" target="_blank" rel="noopener">CAS和AQS</a></p>
+<p>AQS的全称为（AbstractQueuedSynchronizer），这个类在java.util.concurrent.locks包下面。</p>
+<p><font color=#FF0000><strong>AQS是基于CAS的锁同步框架</strong></font>，是一个抽象类，其中有一个状态统计变量stateOffset是使用CAS来操作的。</p>
 <p><img src="https://i.loli.net/2020/03/29/FdK93NT78n5U2lb.png" alt="AQS的位置.png"></p>
-<p>AQS是一个用来构建锁和同步器的框架，使用AQS能简单且高效地构造出应用广泛的大量的同步器，比如我们提到的 ReentrantLock，Semaphore，其他的诸如ReentrantReadWriteLock，SynchronousQueue，FutureTask等等皆是 基于AQS的。当然，我们自己也能利用AQS非常轻松容易地构造出符合我们自己需求的同步器。</p>
+<p>AQS是一个用来构建锁和同步器的框架，使用AQS能简单且高效地构造出应用广泛的大量的同步器，比如我们提到的 ReentrantLock，Semaphore，其他的诸如ReentrantReadWriteLock，SynchronousQueue，FutureTask(一些具体作用见下段)等等皆是 基于AQS的。当然，我们自己也能利用AQS非常轻松容易地构造出符合我们自己需求的同步器。</p>
+<p>参考《Java并发编程实战》的内容：</p>
+<blockquote>
+<p>AQS管理一个关于状态信息的单一整数，状态信息可以通过protected类型的getState()、setState()和compareAndSetState()等方法操作，这可以用于表现任何状态。</p>
+<p>例如，ReentrantLock用它来表现<strong>拥有它的线程已经请求了多少次锁</strong>；Semaphore用它来表现<strong>剩余的许可次数</strong>；FutureTask用它来表现<strong>任务的状态(尚未开始、运行、完成和取消)</strong>。</p>
+</blockquote>
+<h3 id="AQS核心思想"><a href="#AQS核心思想" class="headerlink" title="AQS核心思想"></a>AQS核心思想</h3><p>AQS核心思想是，如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效的工作线程，并且将共享资源设 置为锁定状态。如果被请求的共享资源被占用，那么就需要一套线程阻塞等待以及被唤醒时锁分配的机制，这个机制 AQS是用CLH队列锁实现的，即将暂时获取不到锁的线程加入到队列中。</p>
+<blockquote>
+<p>CLH(Craig,Landin,and Hagersten)队列是一个虚拟的双向队列（虚拟的双向队列即不存在队列实例，仅存在结 点之间的关联关系）。AQS是将每条请求共享资源的线程封装成一个CLH锁队列的一个结点（Node）来实现锁的分配。</p>
+</blockquote>
+<p>AQS原理图如下：</p>
+<p><img src="https://i.loli.net/2020/03/30/PnzieOJcNX8mB24.png" alt="CLH队列.png"></p>
+<p>AQS使用一个int成员变量来表示同步状态，通过内置的FIFO队列来完成获取资源线程的排队工作。AQS使用CAS对该 同步状态进行原子操作实现对其值的修改。</p>
+<h3 id="AQS两种资源共享方式"><a href="#AQS两种资源共享方式" class="headerlink" title="AQS两种资源共享方式"></a>AQS两种资源共享方式</h3><ul>
+<li><strong>Exclusive</strong>(独占)：只有一个线程能执行，比如ReentrantLock。又可以分为公平锁和非公平锁。<ul>
+<li>公平锁：按照线程在队列中的排队顺序，先到者先拿到锁</li>
+<li>非公平锁：当线程要获取锁的时候，无视队列顺序直接去抢锁，谁先抢到就是谁的。</li>
+</ul>
+</li>
+<li><strong>Share</strong>(共享)：：多个线程可同时执行，如Semaphore/CountDownLatch。</li>
+</ul>
+<p>不同的自定义同步器争用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源 state 的获取与释放方 式即可，至于具体线程等待队列的维护（如获取资源失败入队/唤醒出队等），AQS已经在顶层实现好了。</p>
+<h3 id="AQS组件总结"><a href="#AQS组件总结" class="headerlink" title="AQS组件总结"></a>AQS组件总结</h3><ul>
+<li><strong>Semaphore(信号量)-允许多个线程同时访问</strong>： synchronized 和 ReentrantLock 都是一次只允许一个线程访问 某个资源，Semaphore(信号量)可以指定多个线程同时访问某个资源。 </li>
+<li><strong>CountDownLatch （倒计时器）</strong>： CountDownLatch是一个同步工具类，用来协调多个线程之间的同步。这 个工具通常用来控制线程等待，它可以让某一个线程等待直到倒计时结束，再开始执行。 </li>
+<li><strong>CyclicBarrier(循环栅栏)</strong>： CyclicBarrier 和 CountDownLatch 非常类似，它也可以实现线程间的技术等待， 但是它的功能比 CountDownLatch 更加复杂和强大。主要应用场景和 CountDownLatch 类似。CyclicBarrier 的字面意思是可循环使用（Cyclic）的屏障（Barrier）。它要做的事情是，让一组线程到达一个屏障（也可以叫 同步点）时被阻塞，直到后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程才会继续干活。 CyclicBarrier默认的构造方法是 CyclicBarrier(int parties)，其参数表示屏障拦截的线程数量，每个线程调用 await方法告诉 CyclicBarrier 我已经到达了屏障，然后当前线程被阻塞。</li>
+</ul>
+<h2 id="谈谈对多线程的锁的理解？如何手动模拟一个死锁？"><a href="#谈谈对多线程的锁的理解？如何手动模拟一个死锁？" class="headerlink" title="谈谈对多线程的锁的理解？如何手动模拟一个死锁？"></a>谈谈对多线程的锁的理解？如何手动模拟一个死锁？</h2><p>多线程并发编程有两个重要概念：<strong>线程和锁</strong>。虽然多线程可以提高程序性能，但是带来了编码的复杂性，尤其是要解决多线程操作同一组资源的时候保证数据的一致性的问题。引入了锁之后，我们会给某个资源上锁，只有拥有这个资源的锁的线程才能操作此资源，而其他线程只能排队等待使用锁，也就是要等待这个锁被释放才行。</p>
+<p>在并发编程中，当有多个线程同时操作一个资源时，为了保证数据操作的正确性，需要让多线程排队，一个一个地操作资源，而这个过程就是给资源加锁和释放锁的过程，就好像去公共厕所一样，一次只能有一个人占用，剩下的必须排队，而且一个人用的时候为了防止后面人进来，要给门上锁一样。</p>
+<h3 id="什么是死锁？如何手动模拟一个死锁？"><a href="#什么是死锁？如何手动模拟一个死锁？" class="headerlink" title="什么是死锁？如何手动模拟一个死锁？"></a>什么是死锁？如何手动模拟一个死锁？</h3><p>首先，死锁是指两个线程都各自拥有一个资源的锁，但是又都在等待对方释放对方锁拥有的资源的锁。如下图所示：</p>
+<p><img src="https://i.loli.net/2020/03/30/LeThwqHWSBGvtzX.png" alt="死锁.png"></p>
+<p>代码例子如下：</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line">import java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line">public <span class="keyword">class</span> LockExample &#123;</span><br><span class="line">	public static void main(String<span class="literal">[]</span> arg) &#123;</span><br><span class="line">		dead<span class="constructor">Lock()</span>; <span class="comment">// 死锁</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	* 死锁</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	<span class="keyword">private</span> static void dead<span class="constructor">Lock()</span> &#123;</span><br><span class="line">		Object lock1 = <span class="keyword">new</span> <span class="constructor">Object()</span>;</span><br><span class="line">		Object lock2 = <span class="keyword">new</span> <span class="constructor">Object()</span>;</span><br><span class="line">		<span class="comment">// 线程1拥有 lock1 试图获取lock2</span></span><br><span class="line">		<span class="keyword">new</span> <span class="constructor">Thread(()</span> -&gt; &#123;</span><br><span class="line">			synchronized(lock1) &#123;</span><br><span class="line">				<span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(<span class="string">"获取lock1成功"</span>);</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					<span class="module-access"><span class="module"><span class="identifier">TimeUnit</span>.</span><span class="module"><span class="identifier">SECONDS</span>.</span></span>sleep(<span class="number">3</span>);</span><br><span class="line">				&#125; catch (InterruptedException e) &#123;</span><br><span class="line">					e.print<span class="constructor">StackTrace()</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// 试图获取lock2</span></span><br><span class="line">				synchronized(lock2) &#123;</span><br><span class="line">					<span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(<span class="module-access"><span class="module"><span class="identifier">Thread</span>.</span></span>current<span class="constructor">Thread()</span>.get<span class="constructor">Name()</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;).start<span class="literal">()</span>;</span><br><span class="line">		<span class="comment">// 线程二拥有 lock2 试图获取lock1</span></span><br><span class="line">		<span class="keyword">new</span> <span class="constructor">Thread(()</span> -&gt; &#123;</span><br><span class="line">			synchronized(lock2) &#123;</span><br><span class="line">				<span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(<span class="string">"获取lock2成功"</span>);</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					<span class="module-access"><span class="module"><span class="identifier">TimeUnit</span>.</span><span class="module"><span class="identifier">SECONDS</span>.</span></span>sleep(<span class="number">3</span>);</span><br><span class="line">				&#125; catch (InterruptedException e) &#123;</span><br><span class="line">					e.print<span class="constructor">StackTrace()</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// 试图获取lock2</span></span><br><span class="line">				synchronized(lock1) &#123;</span><br><span class="line">					<span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(<span class="module-access"><span class="module"><span class="identifier">Thread</span>.</span></span>current<span class="constructor">Thread()</span>.get<span class="constructor">Name()</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;).start<span class="literal">()</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码执行结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">获取lock1成功</span><br><span class="line">获取lock2成功</span><br></pre></td></tr></table></figure>
+
+<p>在分别获得lock1和lock2成功之后，这两个线程还会试图获得对方的锁，也就是线程一拥有锁lock1之后试图获取lock2，而线程二在拥有lock2之后试图获取lock1,这样就造成了彼此都在等待对方释放资源，于是造成了<strong>死锁</strong>。</p>
+<h2 id="Java的悲观锁和乐观锁、共享锁和独占锁"><a href="#Java的悲观锁和乐观锁、共享锁和独占锁" class="headerlink" title="Java的悲观锁和乐观锁、共享锁和独占锁"></a>Java的悲观锁和乐观锁、共享锁和独占锁</h2><h3 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h3><p>悲观锁是指<strong>数据对外界的修改采取保守策略，它认为线程很容易会把数据修改掉，因此在整个数据被修改的过程中都会采取锁定状态，直到一个线程使用完，其他线程才可以继续使用。</strong>通俗理解，就是在用数据之前要先加上锁，用完之后才能释放锁。</p>
+<p>拿synchronized来说，每次执行被synchronized修饰的代码块在执行之前会先用<code>monitorenter</code>指令加上锁，在执行结束之后再使用<code>monitorexit</code>指令释放锁资源，在整个执行期间这个代码都是锁定的状态，这就是<strong>典型悲观锁的实现流程</strong>。</p>
+<h3 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h3><p>乐观锁肯定与悲观锁相反啦，<strong>乐观锁认为数据之间一般不会发生冲突，所以在数据访问之前不会加锁，只有在提交的时候，才会对数据进行检测和上锁。</strong></p>
+<p>乐观锁大部分都是通过<strong>CAS(Compare And Swap，比较并交换)</strong>操作实现的。CAS之前有过介绍，它是一个多线程同步的原子指令。CAS操作包含三个重要信息：内存位置、预期原值和新值。如果内存位置的值和预期原值相等的话，可以把该位置的值更新为新值，否则不做任何修改。之前讲过的ReentrantLock就是通过CAS实现的，Lock就是乐观锁的典型例子。</p>
+<p>然而，CAS可能造成ABA问题(前面有介绍过，解决方法是用版本号)。</p>
+<h3 id="共享锁和独占锁"><a href="#共享锁和独占锁" class="headerlink" title="共享锁和独占锁"></a>共享锁和独占锁</h3><ul>
+<li><p>可以被多线程持有的称作<strong>共享锁</strong></p>
+</li>
+<li><p>只能被单线程持有的锁称作<strong>独占锁</strong>。独占锁指的是在任何时候最多只能有一个线程持有该锁，比如 ReentrantLock 就是独占锁，而 ReadWriteLock 读写锁允许同一时间内有多个线程进行读操作，它就属于共享锁。</p>
+</li>
+</ul>
+<p><strong>独占锁可以理解为悲观锁</strong>，当每次访问资源时都要加上互斥锁，<strong>而共享锁可以理解为乐观锁</strong>，它放宽了加锁的条件，允许多线程同时访问该资源。</p>
+<h2 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h2><p>可重入锁也叫<strong>递归锁</strong>，指的是同一个线程，如果外层的函数拥有这个锁，内层的函数可以继续获取该锁。</p>
+<p>在Java语言中，ReentrantLock和synchronized都是可重入锁。</p>
+<p>用代码举一个可重入锁的例子，用synchronized来演示：</p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LockExample</span> &#123;</span></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">String</span>[] arg)</span> </span>&#123;</span><br><span class="line">		reentrantA(); <span class="comment">// 可重入锁</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	*	可重入锁A方法</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> synchronized <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">reentrantA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.<span class="built_in">println</span>(Thread.currentThread.getName() + <span class="string">":执行 reentrantA"</span>);</span><br><span class="line">		reentrantB();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	*	可重入锁B方法</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> synchronized <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">reentrantB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.<span class="built_in">println</span>(Thread.currentThread.getName() + <span class="string">":执行 reentrantB"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码执行结果：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">main：执行 reentrantA</span><br><span class="line">main：执行 reentrantB</span><br></pre></td></tr></table></figure>
+
+<p>从结果可以看出reentrantA方法和reentrantB方法的执行线程都是“main”，我们调用了reentrantA方法，它的方法中嵌套了reentrantB，如果synchronized是不可重入的话，那么线程会一直堵塞。</p>
+<p>可重入锁的实现原理，是在锁内部存储了一个线程标识，用于判断当前的锁属于哪个线程，并且锁的内部维护了一个计数器，当锁空闲时此计数器的值为0，当被线程占用和重入时分别加1，当锁被释放时计数器减1，直到减到 0 时表示此锁为空闲状态。</p>
 <h2 id="Java垃圾回收机制"><a href="#Java垃圾回收机制" class="headerlink" title="Java垃圾回收机制"></a>Java垃圾回收机制</h2>]]></content>
       <categories>
         <category>Interview Note</category>
