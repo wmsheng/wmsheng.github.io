@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/siyecao.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/siyecao.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false,"b2t":true,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="古之立大事者，不惟有超世之才，亦必有坚韧不拔之志。——苏轼">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis and Cache">
+<meta property="og:url" content="http://yoursite.com/2020/03/31/Redis-cache/index.html">
+<meta property="og:site_name" content="Hi, This is Bennett">
+<meta property="og:description" content="古之立大事者，不惟有超世之才，亦必有坚韧不拔之志。——苏轼">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/04/02/vIz3cR4LutWBjAP.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/02/3uXVSlacFJ1PRAO.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/02/AtoXb4kK1S36yVQ.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/02/286CfTvWxjnLmws.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/03/mA6Gjp57lD2YWHX.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/03/jXU6ypAv9DRcFrY.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/31/jHm7KrIlEhioawx.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/31/yU4deTfWuItC7NG.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/01/NjiBpV1aJbKZSmW.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/01/VUuqgeOJmDy8Fth.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/01/lAZxWFdKJRI5nLp.png">
+<meta property="article:published_time" content="2020-03-31T00:04:49.000Z">
+<meta property="article:modified_time" content="2020-04-03T15:25:07.149Z">
+<meta property="article:author" content="Wang Mingsheng">
+<meta property="article:tag" content="Interview">
+<meta property="article:tag" content="Redis">
+<meta property="article:tag" content="Cache">
+<meta property="article:tag" content="Study">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/02/vIz3cR4LutWBjAP.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/31/Redis-cache/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Redis and Cache | Hi, This is Bennett</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hi, This is Bennett</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">28</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">34</span></a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/31/Redis-cache/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/faceimage.jpg">
+      <meta itemprop="name" content="Wang Mingsheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hi, This is Bennett">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis and Cache
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-31 08:04:49" itemprop="dateCreated datePublished" datetime="2020-03-31T08:04:49+08:00">2020-03-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-03 23:25:07" itemprop="dateModified" datetime="2020-04-03T23:25:07+08:00">2020-04-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Interview-Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Interview Note</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              
+              <span>17k</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>古之立大事者，不惟有超世之才，亦必有坚韧不拔之志。——苏轼</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h1><p>缓存是<strong>高并发</strong>场景下提高热点数据访问性能的一个有效手段，在开发项目时会经常使用到。缓存的类型分为：<strong>本地缓存、分布式缓存和多级缓存</strong>。</p>
+<p><strong>本地缓存</strong>就是在<strong>进程的内存中进行缓存</strong>，比如我们的JVM堆中，可以用LRUMap来实现，也可以使用Ehcache这样的工具来实现。本地缓存是内存访问，没有远程交互开销，性能最好，但是受限于单机容量，一般缓存较小且无法扩展。</p>
+<p><strong>分布式缓存</strong>可以很好得解决这个问题。分布式缓存一般都具有良好的水平扩展能力，对较大数据量的场景也能应付自如。缺点就是需要进行远程请求，性能不如本地缓存。</p>
+<p>为了平衡这种情况，实际业务中一般采用多级缓存，本地缓存只保存访问频率最高的部分热点数据，其他的热点数据放在分布式缓存中。</p>
+<p>Redis是非关系型数据库，虽然也是数据库，但是它是保存在内存中的，所以读写速度非常快，经常被用于<strong>缓存</strong>。此外Redis也经常被用于<strong>分布式锁</strong>。</p>
+<h2 id="为什么要用缓存"><a href="#为什么要用缓存" class="headerlink" title="为什么要用缓存"></a>为什么要用缓存</h2><p>主要从“高性能”和“高并发”这两点来看待这个问题。</p>
+<h3 id="保证高性能"><a href="#保证高性能" class="headerlink" title="保证高性能"></a>保证高性能</h3><p>假如用户第一次访问数据库中的某些数据。这个过程会比较慢，因为是从硬盘上读取的。将该用户访问的数据存在数据缓存中，这样下一次再访问这些数据的时候就可以直接从缓存中获取了。操作缓存就是直接操作内存，所以速度相当快。如果数据库中的对应数据改变的之后，同步改变缓存中相应的数据即可！</p>
+<p>很常用的一个场景就是电商，一个商品的信息一天之内都不会改变，那么每个用户从数据库中查询都要比如800ms，那么此时如果用缓存，在第一次加载之后把数据放入到缓存中，这样后面其他用户查询的时候直接查缓存即可，性能可以提升非常多。</p>
+<h3 id="保证高并发"><a href="#保证高并发" class="headerlink" title="保证高并发"></a>保证高并发</h3><p>直接操作缓存能够承受的请求是远远大于直接访问数据库的，所以我们可以考虑把数据库中的部分数据转移到缓存中 去，这样用户的一部分请求会直接到缓存这里而不用经过数据库。</p>
+<p>比如某个商品在中午有大量的访问请求，比如100万个，每秒4000个，MySQL是没办法承接这么大并发访问量的。可以分开访问，让3000个走缓存，剩下的1000个直接访问数据库。</p>
+<p>为什么内存可以承受3000个访问量？——内存读写能力很强，别说4000/s，4万/s都可以。但是数据库别超过2000/s。</p>
+<h1 id="怎么保证redis是高并发以及高可用的？"><a href="#怎么保证redis是高并发以及高可用的？" class="headerlink" title="怎么保证redis是高并发以及高可用的？"></a>怎么保证redis是高并发以及高可用的？</h1><p>经典问题是：<strong>如何保证Redis的高并发和高可用？redis的主从复制原理能介绍一下么？redis的哨兵原理能介绍一下么？</strong></p>
+<p>其实问这个问题，主要是考考你，redis单机能承载多高并发？如果单机扛不住如何扩容抗更多的并发？redis会不会挂？既然redis会挂那怎么保证redis是高可用的？</p>
+<p><strong>redis高并发</strong>：主从架构，一主多从，一般来说，很多项目其实就足够了，单主用来写入数据，虽然单机最多只能承载几万QPS(也因此，不能让所有请求一把全都打到单机Redis上)，但是如果用多从用来查询数据，多个从实例可以提供每秒10万+的QPS。所以说，redis不能支持高并发的原因，就两个字：<strong>单机</strong></p>
+<p>redis高并发的同时，还需要容纳大量的数据：一主多从，每个实例都容纳了完整的数据，比如redis主就10G的内存量，其实你就最多只能容纳10g的数据量。如果你的缓存要容纳的数据量很大，达到了几十g，甚至几百g，或者是几t，那你就需要redis集群，而且用redis集群之后，可以提供可能每秒几十万的读写并发。</p>
+<p><strong>redis高可用</strong>：如果你做主从架构部署，其实就是加上哨兵就可以了，就可以实现，任何一个实例宕机，自动会进行主备切换。</p>
+<p>实际上，Redis在使用中经常需要做到读写分离。因为redis缓存读的操作远远比写操作多。多到什么程度？可能写请求也就一秒钟几千，一两千。但是大量的请求都是读，一秒钟二十万次读。</p>
+<p>所以要做读写分离，也就是做主从架构，master redis(主)把数据都复制到slave redis(从)上，从而可以支持10万+读QPS。</p>
+<p>过程如下图所示：</p>
+<p><img src="https://i.loli.net/2020/04/02/vIz3cR4LutWBjAP.png" alt="redis主从实现读写分离支撑10万_的高并发.png"></p>
+<p>所有读的操作都走slave redis，写操作才走master redis。这个就是redis的<code>redis replication基本原理</code>，本质就是<strong>复制</strong>数据的操作。</p>
+<h2 id="redis-replication核心机制"><a href="#redis-replication核心机制" class="headerlink" title="redis replication核心机制"></a>redis replication核心机制</h2><ol>
+<li>redis采用异步方式复制数据到slave节点，不过redis 2.8开始，slave node会周期性地确认自己每次复制的数据量</li>
+<li>一个master node可以配置多个slave node</li>
+<li>slave node也可以连接其他的slave node</li>
+<li>slave node做复制的时候，不会block master node的正常工作</li>
+<li>slave node在做复制的时候，也不会block对自己的查询操作，它会用旧的数据集来提供服务; 但是复制完成的时候，需要删除旧数据集，加载新数据集，这个时候就会暂停对外服务了</li>
+<li>slave node主要用来进行横向扩容，做读写分离，扩容的slave node可以提高读的吞吐量</li>
+</ol>
+<p>需要注意，如果开启了主从架构，那么master必须开启持久化，不建议用slave node作为master node的数据热备，因为那样的话，如果你关掉master的持久化，可能在master宕机重启的时候数据是空的，然后可能一经过复制，salve node数据也丢了。如果master没开持久化，那么重启之后数据拷贝，slave数据也会丢失。</p>
+<p>此外，master的各种备份方案，要不要做，万一说本地的所有文件丢失了; 从备份中挑选一份rdb去恢复master; 这样才能确保master启动的时候，是有数据的。</p>
+<h3 id="redis-replication的完整流运行程和原理的深入剖析"><a href="#redis-replication的完整流运行程和原理的深入剖析" class="headerlink" title="redis replication的完整流运行程和原理的深入剖析"></a>redis replication的完整流运行程和原理的深入剖析</h3><p>主要对redis replication的复制的完整流程、数据同步相关核心机制、全量复制流程、增量复制流程、heartbeat、异步复制进行介绍。</p>
+<h4 id="redis-replication复制完整流程"><a href="#redis-replication复制完整流程" class="headerlink" title="redis replication复制完整流程"></a>redis replication复制完整流程</h4><ol>
+<li>slave node启动，仅仅保存master node的信息，包括master node的host和ip，但是复制流程没开始(master host和ip是从哪儿来的？redis.conf里面的slaveof配置的!)</li>
+<li>slave node内部有个定时任务，每秒检查是否有新的master node要连接和复制，如果发现，就跟master node建立socket网络连接</li>
+<li>slave node发送ping命令给master node</li>
+<li>口令认证，如果master设置了requirepass，那么salve node必须发送masterauth的口令过去进行认证</li>
+<li>master node第一次执行全量复制，将所有数据发给slave node</li>
+<li>master node后续持续将写命令，异步复制给slave node</li>
+</ol>
+<p><img src="https://i.loli.net/2020/04/02/3uXVSlacFJ1PRAO.png" alt="复制的完整的基本流程.png"></p>
+<h4 id="数据同步相关的核心机制"><a href="#数据同步相关的核心机制" class="headerlink" title="数据同步相关的核心机制"></a>数据同步相关的核心机制</h4><p>指的就是第一次slave连接msater的时候，执行的全量复制，那个过程里面你的一些细节的机制</p>
+<ol>
+<li>master和slave都会维护一个offset</li>
+</ol>
+<p>master会在自身不断累加offset，slave也会在自身不断累加offset。</p>
+<p>slave每秒都会上报自己的offset给master，同时master也会保存每个slave的offset。</p>
+<p>这个倒不是说特定就用在全量复制的，主要是master和slave都要知道各自的数据的offset，才能知道互相之间的数据不一致的情况</p>
+<ol start="2">
+<li>backlog</li>
+</ol>
+<p>master node有一个backlog，默认是1MB大小</p>
+<p>master node给slave node复制数据时，也会将数据在backlog中同步写一份</p>
+<p>backlog主要是用来做全量复制中断候的增量复制的</p>
+<ol start="3">
+<li>master run id</li>
+</ol>
+<p>通过<code>info server</code>，可以看到master run id。</p>
+<p>如果根据host+ip定位master node，是不靠谱的，如果master node重启或者数据出现了变化，那么slave node应该根据不同的run id区分，run id不同就做全量复制。</p>
+<p><strong>为什么会不靠谱？</strong></p>
+<p>举个例子：</p>
+<p>一开始master和slave都有100万条数据，我们现在master数据出了问题，我们想切换回之前版本的数据，那么一般用RDB恢复。RDB可能是20个小时之前的数据，那么此时slave中的数据一开始是和master同步的，而且如果slave也用offset等信息来要求数据同步，那么也是有问题的，需要把已经用RDB回复的数据再全量复制到slave中。</p>
+<p>所以，master在使用RDB恢复数据之后，master的run id会变化，此时slave通过检测run id，发现run id变化了，就会触发全量复制，master把数据再复制到slave，这样slave中的数据也是正确的了。</p>
+<p>如下图：</p>
+<p><img src="https://i.loli.net/2020/04/02/AtoXb4kK1S36yVQ.png" alt="maste run id的作用.png"></p>
+<p>如果需要不更改run id重启redis，可以使用redis-cli debug reload命令</p>
+<ol start="4">
+<li>psync</li>
+</ol>
+<p>从节点使用psync从master node进行复制，psync runid offset</p>
+<p>master node会根据自身的情况返回响应信息，可能是FULLRESYNC runid offset触发全量复制，可能是CONTINUE触发增量复制</p>
+<h4 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a>全量复制</h4><p>当master node想要把数据全部复制给slave，那么进行全量复制。</p>
+<ol>
+<li>master执行<code>bgsave</code>，在本地生成一份rdb快照文件</li>
+<li>master node将rdb快照文件发送给salve node，如果rdb复制时间超过60秒（<code>repl-timeout</code>），那么slave node就会认为复制失败，可以适当调节大这个参数</li>
+<li>对于千兆网卡的机器，一般每秒传输100MB，6G文件，很可能超过60s</li>
+<li>master node在生成rdb时，会将所有新的写命令缓存在内存中，在salve node保存了rdb之后，再将新的写命令复制给salve node</li>
+<li><code>client-output-buffer-limit slave</code> 256MB 64MB 60，如果在复制期间，内存缓冲区持续消耗超过64MB，或者一次性超过256MB，那么停止复制，复制失败</li>
+<li>slave node接收到rdb之后，清空自己的旧数据，然后重新加载rdb到自己的内存中，同时基于旧的数据版本对外提供服务</li>
+<li>如果slave node开启了AOF，那么会立即执行BGREWRITEAOF，重写AOF</li>
+</ol>
+<p>rdb生成、rdb通过网络拷贝、slave旧数据的清理、slave aof rewrite，很耗费时间</p>
+<p>如果复制的数据量在4G~6G之间，那么很可能全量复制时间消耗到1分半到2分钟</p>
+<h4 id="增量复制"><a href="#增量复制" class="headerlink" title="增量复制"></a>增量复制</h4><ol>
+<li>如果全量复制过程中，master-slave网络连接断掉，那么salve重新连接master时，会触发增量复制</li>
+<li>master直接从自己的backlog中获取部分丢失的数据，发送给slave node，默认backlog就是1MB</li>
+<li>msater就是根据slave发送的psync中的offset来从backlog中获取数据的</li>
+</ol>
+<h4 id="heartbeat"><a href="#heartbeat" class="headerlink" title="heartbeat"></a>heartbeat</h4><p>主从节点互相都会发送heartbeat信息</p>
+<p>master默认每隔10秒发送一次heartbeat，salve node每隔1秒发送一个heartbeat</p>
+<h4 id="异步复制"><a href="#异步复制" class="headerlink" title="异步复制"></a>异步复制</h4><p>master每次接收到写命令之后，现在内部写入数据，然后异步发送给slave node</p>
+<h2 id="redis主从复制原理、断点续传、无磁盘化复制、过期key处理"><a href="#redis主从复制原理、断点续传、无磁盘化复制、过期key处理" class="headerlink" title="redis主从复制原理、断点续传、无磁盘化复制、过期key处理"></a>redis主从复制原理、断点续传、无磁盘化复制、过期key处理</h2><h3 id="主从复制原理和步骤"><a href="#主从复制原理和步骤" class="headerlink" title="主从复制原理和步骤"></a>主从复制原理和步骤</h3><p>当启动一个slave node的时候，它会发送一个Ping命令给master node看看两者能不能互通。</p>
+<p>如果这是slave node重新连接master node，那么master node仅仅会复制给slave部分缺少的数据; 否则如果是slave node第一次连接master node，那么会触发一次full resynchronization(全量复制)</p>
+<p>开始full resynchronization的时候，master会启动一个后台线程，开始生成一份RDB快照文件，同时还会将从客户端收到的所有写命令缓存在内存中。RDB文件生成完毕之后，master会将这个RDB发送给slave，slave会先写入本地磁盘，然后再从本地磁盘加载到内存中。然后master会将内存中缓存的写命令发送给slave，slave也会同步这些数据。</p>
+<p>slave node如果跟master node有网络故障，断开了连接，会自动重连。master如果发现有多个slave node都来重新连接，仅仅会启动一个rdb save操作，用一份数据服务所有slave node。</p>
+<p>如下图所示：</p>
+<p><img src="https://i.loli.net/2020/04/02/286CfTvWxjnLmws.png" alt="redis主从复制的原理.png"></p>
+<h3 id="主从复制断点续传"><a href="#主从复制断点续传" class="headerlink" title="主从复制断点续传"></a>主从复制断点续传</h3><p>从redis 2.8开始，就支持主从复制的断点续传，如果主从复制过程中，网络连接断掉了，那么可以接着上次复制的地方，继续复制下去，而不是从头开始复制一份</p>
+<p>master node会在内存中常见一个backlog，master和slave都会保存一个replica offset还有一个master id，offset就是保存在backlog中的。如果master和slave网络连接断掉了，slave会让master从上次的replica offset开始继续复制</p>
+<p>但是如果没有找到对应的offset，那么就会执行一次resynchronization。</p>
+<h3 id="无磁盘化复制"><a href="#无磁盘化复制" class="headerlink" title="无磁盘化复制"></a>无磁盘化复制</h3><p>master在内存中直接创建rdb，然后发送给slave，不会在自己本地落地磁盘了</p>
+<p>repl-diskless-sync<br>repl-diskless-sync-delay，等待一定时长再开始复制，因为要等更多slave重新连接过来</p>
+<h3 id="过期key处理"><a href="#过期key处理" class="headerlink" title="过期key处理"></a>过期key处理</h3><p>slave不会过期key，只会等待master过期key。如果master过期了一个key，或者通过LRU淘汰了一个key，那么会模拟一条del命令发送给slave。</p>
+<h2 id="redis主从架构下如何才能做到99-99-的高可用性？"><a href="#redis主从架构下如何才能做到99-99-的高可用性？" class="headerlink" title="redis主从架构下如何才能做到99.99%的高可用性？"></a>redis主从架构下如何才能做到99.99%的高可用性？</h2><h3 id="不可用的系统"><a href="#不可用的系统" class="headerlink" title="不可用的系统"></a>不可用的系统</h3><p>正常情况，用户访问我们的系统(比如是电商系统)，没问题。</p>
+<p>但是可能会出现的情况是：后台系统宕机了、或者JVM进程OOM了、或者CPU打满了，不工作了、系统磁盘塞满了……<strong>总之导致系统挂掉了，不能提供服务了，那么这时候如果只抢修机器，这段时间系统没法访问，会造成巨大损失</strong>。——这是不可用的系统。</p>
+<h3 id="可用系统"><a href="#可用系统" class="headerlink" title="可用系统"></a>可用系统</h3><p>和上面一样，系统崩了，但是如果我们系统设计的比较好，可以做到快速的主从切换。</p>
+<p>一个基于哨兵的高可用性系统如下图所示：</p>
+<p><img src="https://i.loli.net/2020/04/03/mA6Gjp57lD2YWHX.png" alt="redis基于哨兵的高可用性.png"></p>
+<p>注意这里的哨兵sentinal node，监控master有没有挂掉。</p>
+<p>有关哨兵sentinal 到后面详细讲解。</p>
+<p>这样我们的系统不可用的时间能够大大缩短。</p>
+<h3 id="99-99-可用？-高可用"><a href="#99-99-可用？-高可用" class="headerlink" title="99.99%可用？(高可用)"></a>99.99%可用？(高可用)</h3><p>实际上这个道理理解起来很简单，如果我们的系统能够保证全年<strong>99.99%</strong>的时间都是可用的，我们的系统就是有高可用性的。与之对比的是，如果这个时间只有<strong>80%</strong>左右，那么这会是一个低可用的系统。</p>
+<h3 id="不可用系统"><a href="#不可用系统" class="headerlink" title="不可用系统"></a>不可用系统</h3><p>我们已经做了读写分离，读操作都交给了slave节点。当slave挂掉的时候，不会影响整个的可用性，还有其他的slave在提供相同数据下的相同的对外查询服务。</p>
+<p>但是如果master挂掉了，就没法写数据了！或者说，master挂掉了，整个系统就相当于不可用了，缓存不能用了，大量访问会涌入到mysql中。</p>
+<p><img src="https://i.loli.net/2020/04/03/jXU6ypAv9DRcFrY.png" alt="redis的不可用.png"></p>
+<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><p>首先来看Redis相关知识图谱：</p>
+<p><img src="https://i.loli.net/2020/03/31/jHm7KrIlEhioawx.png" alt="Redis相关问题图谱.png"></p>
+<h2 id="为什么要用-redis-而不用-map-guava-做缓存"><a href="#为什么要用-redis-而不用-map-guava-做缓存" class="headerlink" title="为什么要用 redis 而不用 map/guava 做缓存?"></a>为什么要用 redis 而不用 map/guava 做缓存?</h2><p>之前有提到，缓存实际上分为本地缓存和分布式缓存两种。Redis属于分布式缓存，那么本地缓存如果能解决问题，为什么要用分布式缓存呢？——答案很明显，本地缓存不够用。下面分析一下。</p>
+<p>以 Java 为例，使用自带的 LRUMap 或者 guava 实现的是本地缓存，主要的特点是 轻量以及快速，生命周期随着 jvm 的销毁而结束，并且在多实例的情况下，每个实例都需要各自保存一份缓存，缓存不具有一致性。</p>
+<p>使用 redis 或 memcached 之类的称为分布式缓存，在多实例的情况下，各实例共用一份缓存数据，缓存具有一致 性。缺点是需要保持 redis 或 memcached服务的高可用，整个程序架构上较为复杂。 </p>
+<h2 id="Redis的功能总结"><a href="#Redis的功能总结" class="headerlink" title="Redis的功能总结"></a>Redis的功能总结</h2><p>Bitmap位图是支持按bit位来存储信息，可以用来实现BloomFilter；HyperLogLog提供不精确的去重计数功能，比较适合用来做大规模数据的去重统计，例如统计UV；Geospatial 可以用来保存地理位置，并作位置距离计算或者根据半径计算位置等。这三个其实也可以算作一种数据结构。</p>
+<p>pub/sub 功能是订阅发布功能，可以用作简单的消息队列。</p>
+<p>Pipeline可以批量执行一组指令，一次性返回全部结果，可以减少频繁的请求应答。</p>
+<p>Redis 支持提交 Lua 脚本来执行一系列的功能。</p>
+<p>最后一个功能是事务，但 Redis 提供的不是严格的事务，Redis 只保证串行执行命令，并且能保证全部执行，但是执行命令失败时并不会回滚，而是会继续执行下去。</p>
+<h2 id="Redis和memcached的区别"><a href="#Redis和memcached的区别" class="headerlink" title="Redis和memcached的区别"></a>Redis和memcached的区别</h2><p>现在公司一般都用Redis实现缓存，因为Redis的优势更多也更实用。</p>
+<p>主要有四点：</p>
+<ol>
+<li><strong>redis支持更丰富的数据类型（支持更复杂的应用场景）</strong>：Redis不仅仅支持简单的k/v类型的数据，同时还提供 list，set，zset，hash等数据结构的存储。memcache支持简单的数据类型，String。 </li>
+<li><strong>Redis支持数据的持久化，可以将内存中的数据保持在磁盘中，重启的时候可以再次加载进行使用,而 Memecache把数据全部存在内存之中</strong>。所以Redis不仅仅可以用作缓存，也可以用做NoSQL数据库。</li>
+<li><strong>集群模式</strong>：memcached没有原生的集群模式，需要依靠客户端来实现往集群中分片写入数据；但是 redis 目前是原生支持 cluster 模式的. </li>
+<li><strong>Memcached是多线程，非阻塞IO复用的网络模型；Redis使用单线程的多路 IO 复用模型</strong>。这样做的原因有2个：一个是因为采用了异步非阻塞的事件处理机制；另一个是缓存数据都是内存操作，IO时间不会太长，单线程可以避免上下文切换产生的代价。</li>
+</ol>
+<p>其他区别可以参考这张表格：</p>
+<p><img src="https://i.loli.net/2020/03/31/yU4deTfWuItC7NG.png" alt="Redis和memcache区别.png"></p>
+<h2 id="redis常见数据结构以及使用场景分析"><a href="#redis常见数据结构以及使用场景分析" class="headerlink" title="redis常见数据结构以及使用场景分析"></a>redis常见数据结构以及使用场景分析</h2><h3 id="1-String"><a href="#1-String" class="headerlink" title="1.String"></a>1.String</h3><blockquote>
+<p><strong>常用命令</strong>：set,get,decr,incr,mget等</p>
+</blockquote>
+<p>string类型是Redis中最常使用的类型，内部的实现是通过SDS（SimpleDynamicString）来存储的。SDS类似于Java中的ArrayList，可以通过预分配冗余空间的方式来减少内存的频繁分配。</p>
+<p>String数据结构是简单的key-value类型，value其实不仅可以是String，也可以是数字。 常规key-value缓存应用； 常规计数：微博数，粉丝数等。</p>
+<p>String最大可以存储512M，它是线程安全的，所以可以包含任何内容(比如jpg格式图片，序列化对象等)</p>
+<p>Redis有原子性，让我们不用考虑并发。比如记录某网站用户访问次数，web只需要拼接用户id和当前日期，两者一起作为key。每次用户访问它的时候执行incr即可。</p>
+<h3 id="2-Hash"><a href="#2-Hash" class="headerlink" title="2.Hash"></a>2.Hash</h3><blockquote>
+<p>常用命令： hget,hset,hgetall 等。</p>
+</blockquote>
+<p>hash类型在Redis中有ziplist和hashtable两种实现。当Hash表中所有的key和value字符串长度都小于64字节且键值对数量小于512个时，使用压缩表来节省空间；超过时，转为使用hashtable</p>
+<p>Hash 是一个 string 类型的 ﬁeld 和 value 的映射表，<strong>hash 特别适合用于存储对象</strong>，后续操作的时候，你可以直接仅仅修改这个对象中的某个字段的值。 比如我们可以Hash数据结构来存储用户信息，商品信息等等。</p>
+<p>比如下面我就用 hash 类型存放了我本人的一些信息：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">key = JavaUser666666</span><br><span class="line">value = &#123;</span><br><span class="line">	<span class="string">"id"</span> : 1,</span><br><span class="line">	<span class="string">"name"</span> : <span class="string">"Bennett"</span>,</span><br><span class="line">	<span class="string">"age"</span> : 66,</span><br><span class="line">	<span class="string">"location"</span> : <span class="string">"HongKong"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个hash可以存储多个组的键值对。实际中我们常用JSON文件存储用户信息，所以用hash存储JSON文件再合适不过了！</p>
+<h3 id="3-List"><a href="#3-List" class="headerlink" title="3.List"></a>3.List</h3><blockquote>
+<p>常用命令: lpush,rpush,lpop,rpop,lrange等</p>
+</blockquote>
+<p><strong>list 就是链表</strong>，Redis list 的应用场景非常多，也是Redis重要的数据结构之一，比如微博的关注列表，粉丝列表， 消息列表等功能都可以用Redis的 list 结构来实现。 </p>
+<p>Redis list 的实现为一个双向链表，即可以支持反向查找和遍历，更方便操作，不过带来了部分额外的内存开销。有ziplist压缩列表和linkedlist双链表实现。ziplist是存储在一段连续的内存上，存储效率高，但是它不利于修改操作，适用于数据较少的情况；linkedlist在插入节点上复杂度很低，但它的内存开销很大，每个节点的地址不连续，容易产生内存碎片。此外在3.2版本后增加了quicklist，结合了两者的优点，quicklist本身是一个双向无环链表，它的每一个节点都是一个ziplist。</p>
+<p>另外可以通过 lrange 命令，就是从某个元素开始读取多少个元素，可以基于 list 实现分页查询，这个很棒的一个功 能，基于 redis 实现简单的高性能分页，可以做类似微博那种下拉不断分页的东西（一页一页的往下走），性能高。 </p>
+<p>在实践中可以看到，list的插入顺序实际上是类似栈的，后进先出。所以<strong>list可以轻松实现新闻更新、排行更新等功能</strong></p>
+<h3 id="4-Set"><a href="#4-Set" class="headerlink" title="4.Set"></a>4.Set</h3><blockquote>
+<p>常用命令： sadd,spop,smembers,sunion 等</p>
+</blockquote>
+<p>set 类型的内部实现可以是 intset 或者 hashtable，当集合中元素小于 512 且所有的数据都是数值类型时，才会使用 intset，否则会使用 hashtable。</p>
+<p>set 对外提供的功能与list类似是一个列表的功能，特殊之处在于 <strong>set 是可以自动排重的</strong>。</p>
+<p>当你需要存储一个列表数据，又不希望出现重复数据时，set是一个很好的选择，并且set提供了判断某个成员是否在 一个set集合内的重要接口，这个也是list所不能提供的。可以基于 set 轻易实现交集、并集、差集的操作。 </p>
+<p>比如：在微博应用中，可以将一个用户所有的关注人存在一个集合中，将其所有粉丝存在一个集合。Redis可以非常方便的实现如共同关注、共同粉丝、共同喜好等功能。这个过程也就是求交集的过程，具体命令如下：</p>
+<p><code>sinterstore key1 key2 key3     将交集存在key1内</code></p>
+<p>如果向Set中插入重复的元素，会返回0，插入失败。而且插入多个元素之后我们会发现set是无序的。</p>
+<h3 id="5-Sorted-Set"><a href="#5-Sorted-Set" class="headerlink" title="5.Sorted Set"></a>5.Sorted Set</h3><blockquote>
+<p>常用命令： zadd,zrange,zrem,zcard等</p>
+</blockquote>
+<p>sortedset是有序集合，有序集合的实现可以是ziplist或者是skiplist跳表。有序集合的编码转换条件与hash和list有些不同，当有序集合中元素数量小于128个并且所有元素长度都小于 64 字节时会使用 ziplist，否则会转换成 skiplist。</p>
+<p>和set相比，sorted set增加了一个权重参数score，使得集合中的元素能够按score进行有序排列。</p>
+<p><strong>举例</strong>： 在直播系统中，实时排行信息包含直播间在线用户列表，各种礼物排行榜，弹幕消息（可以理解为按消息维 度的消息排行榜）等信息，适合使用 Redis 中的 SortedSet 结构进行存储。 </p>
+<h2 id="redis设置过期时间-redis的过期策略"><a href="#redis设置过期时间-redis的过期策略" class="headerlink" title="redis设置过期时间(redis的过期策略)"></a>redis设置过期时间(redis的过期策略)</h2><p>碰到这个问题，简而言之的回答，就是围绕两点：<strong>定期删除+惰性删除。</strong></p>
+<h3 id="我往Redis里写的数据怎么没了？"><a href="#我往Redis里写的数据怎么没了？" class="headerlink" title="我往Redis里写的数据怎么没了？"></a>我往Redis里写的数据怎么没了？</h3><p>缓存是基于内存的，大小是有限的，如果存储容量太大了，redis会把多余的干掉。类似，redis中可以设置数据的过期时间。</p>
+<h3 id="我的数据明明已经过期了，为什么还占着内存？"><a href="#我的数据明明已经过期了，为什么还占着内存？" class="headerlink" title="我的数据明明已经过期了，为什么还占着内存？"></a>我的数据明明已经过期了，为什么还占着内存？</h3><p>原因：<strong>Redis的过期策略删除方式是定期删除和惰性删除相结合的</strong>，你设置的过期的Redis没有被Redis的过期策略删除掉，只有系统再次扫描的时候才会将其删除。</p>
+<p>Redis中有个设置时间过期的功能，即对存储在 redis 数据库中的值可以设置一个过期时间。作为一个缓存数据库， 这是非常实用的。如我们一般项目中的 token 或者一些登录信息，尤其是短信验证码都是有时间限制的，按照传统 的数据库处理方式，一般都是自己判断过期，这样无疑会严重影响项目性能。<br>我们 set key 的时候，都可以给一个 expire time，就是过期时间，通过过期时间我们可以指定这个 key 可以存活的时间。</p>
+<p>如果假设你设置了一批 key 只能存活1个小时，那么接下来1小时后，redis是怎么对这批key进行删除的？</p>
+<p><strong>定期删除+惰性删除。</strong></p>
+<p>通过名字大概就能猜出这两个删除方式的意思了。</p>
+<ul>
+<li><p><strong>定期删除</strong>：redis默认是每隔 100ms 就<strong>随机抽取</strong>一些设置了过期时间的key，检查其是否过期，如果过期就删 除。注意这里是随机抽取的。为什么要随机呢？你想一想假如 redis 存了几十万个 key ，每隔100ms就遍历所 有的设置过期时间的 key 的话，就会给 CPU 带来很大的负载！</p>
+</li>
+<li><p><strong>惰性删除</strong>：定期删除可能会导致很多过期 key 到了时间并没有被删除掉。所以就有了惰性删除。假如你的过期 key，靠定期删除没有被删除掉，还停留在内存里，除非你的系统去查一下那个 key，才会被redis给删除掉。这是在<strong>访问时触发被动删除</strong>。这就是所谓的惰性删除，也是够懒的哈！</p>
+</li>
+</ul>
+<p>但是仅仅通过设置过期时间还是有问题的。我们想一下：如果定期删除漏掉了很多过期 key，然后你也没及时去查， 也就没走惰性删除，此时会怎么样？如果大量过期key堆积在内存里，导致redis内存块耗尽了。怎么解决这个问题呢？</p>
+<p>使用<strong>redis 内存淘汰机制</strong>。</p>
+<h2 id="redis内存淘汰机制"><a href="#redis内存淘汰机制" class="headerlink" title="redis内存淘汰机制"></a>redis内存淘汰机制</h2><p><strong>如果redis的内存占用过多，那么之后会进行内存淘汰机制来让其他数据可以进入到redis中</strong>。下面介绍一下redis的淘汰机制。</p>
+<p>提示：Redis的内存分配是使用jemalloc进行分配。jemalloc将内存空间划分为小、大、巨大三个范围，并在范围中划分了小的内存块，当存储数据时，选择大小最合适的内存块进行分配，有利于减小内存碎片。</p>
+<p>一个问题：<strong>MySQL里有2000w数据，Redis中只存20w的数据，如何保证Redis中的数据都是热点数据？</strong></p>
+<h3 id="redis-提供-6种数据淘汰策略："><a href="#redis-提供-6种数据淘汰策略：" class="headerlink" title="redis 提供 6种数据淘汰策略："></a>redis 提供 6种数据淘汰策略：</h3><ol>
+<li>volatile-lru：从已设置过期时间的数据集（server.db[i].expires）中挑选近少使用的数据淘汰 </li>
+<li>volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰 </li>
+<li>volatile-random：从已设置过期时间的数据集（server.db[i].expires）中任意选择数据淘汰 </li>
+<li>allkeys-lru：当内存不足以容纳新写入数据时，在键空间中，移除近少使用的key（这个是常用的）. </li>
+<li>allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰 </li>
+<li>no-eviction：禁止驱逐数据，也就是说当内存不足以容纳新写入数据时，新写入操作会报错。这个应该没人使用吧！</li>
+</ol>
+<h2 id="Redis保证高可用的重要组件——哨兵"><a href="#Redis保证高可用的重要组件——哨兵" class="headerlink" title="Redis保证高可用的重要组件——哨兵"></a>Redis保证高可用的重要组件——哨兵</h2><h3 id="哨兵基本概念"><a href="#哨兵基本概念" class="headerlink" title="哨兵基本概念"></a>哨兵基本概念</h3><p>sentinal，即哨兵。</p>
+<p>哨兵是redis集群架构中非常重要的一个组件，主要功能如下</p>
+<ol>
+<li>集群监控，负责监控redis master和slave进程是否正常工作</li>
+<li>消息通知，如果某个redis实例有故障，那么哨兵负责发送消息作为报警通知给管理员</li>
+<li>故障转移，如果master node挂掉了，会自动转移到slave node上</li>
+<li>配置中心，如果故障转移发生了，通知client客户端新的master地址</li>
+</ol>
+<p>哨兵本身也是分布式的，作为<strong>一个哨兵集群</strong>去运行，互相协同工作</p>
+<ol>
+<li>故障转移时，判断一个master node是宕机了，需要大部分的哨兵都同意才行，涉及到了分布式选举的问题</li>
+<li>即使部分哨兵节点挂掉了，哨兵集群还是能正常工作的，因为如果一个作为高可用机制重要组成部分的故障转移系统本身是单点的，那就很坑爹了</li>
+</ol>
+<p>目前采用的是sentinal 2版本，sentinal 2相对于sentinal 1来说，重写了很多代码，主要是让故障转移的机制和算法变得更加健壮和简单</p>
+<h3 id="哨兵核心知识"><a href="#哨兵核心知识" class="headerlink" title="哨兵核心知识"></a>哨兵核心知识</h3><ol>
+<li>哨兵至少需要3个实例，来保证自己的健壮性</li>
+<li>哨兵 + redis主从的部署架构，是不会保证数据零丢失的，只能保证redis集群的高可用性</li>
+<li>对于哨兵 + redis主从这种复杂的部署架构，尽量在测试环境和生产环境，都进行充足的测试和演练</li>
+</ol>
+<h3 id="为什么哨兵集群只有2个节点无法正常工作？"><a href="#为什么哨兵集群只有2个节点无法正常工作？" class="headerlink" title="为什么哨兵集群只有2个节点无法正常工作？"></a>为什么哨兵集群只有2个节点无法正常工作？</h3><p>如题，在实际中，哨兵集群必须部署2个以上的节点才可以。下面进行分析：</p>
+<p>如果哨兵集群仅仅部署了个2个哨兵实例，quorum=1</p>
+<p>+—-+         +—-+<br>| M1 |———| R1 |<br>| S1 |         | S2 |<br>+—-+         +—-+</p>
+<p>Configuration: quorum = 1</p>
+<p>master宕机，s1和s2中只要有1个哨兵认为master宕机就可以进行切换，同时s1和s2中会选举出一个哨兵来执行故障转移</p>
+<p>同时这个时候，需要majority，也就是大多数哨兵都是运行的，2个哨兵的majority就是2（2的majority=2，3的majority=2，5的majority=3，4的majority=2），2个哨兵都运行着，就可以允许执行故障转移</p>
+<p>但是如果整个M1和S1运行的机器宕机了，那么哨兵只有1个了，此时就没有majority来允许执行故障转移，虽然另外一台机器还有一个R1，但是故障转移不会执行</p>
+<p><strong>看一下经典的3节点哨兵集群</strong></p>
+<pre><code>       +----+
+       | M1 |
+       | S1 |
+       +----+
+|+----+   |   +----+
+| R2 |----+----| R3 |
+| S2 |         | S3 |
++----+         +----+</code></pre><p>Configuration: quorum = 2，majority</p>
+<p>如果M1所在机器宕机了，那么三个哨兵还剩下2个，S2和S3可以一致认为master宕机，然后选举出一个来执行故障转移</p>
+<p>同时3个哨兵的majority是2，所以还剩下的2个哨兵运行着，就可以允许执行故障转移</p>
+<h2 id="Redis持久化-怎么保证redis挂掉之后再重启数据可以进行恢复"><a href="#Redis持久化-怎么保证redis挂掉之后再重启数据可以进行恢复" class="headerlink" title="Redis持久化(怎么保证redis挂掉之后再重启数据可以进行恢复)"></a>Redis持久化(怎么保证redis挂掉之后再重启数据可以进行恢复)</h2><p>Redis不同于Memcached的很重一点就是，Redis支持持久化，而且支持两种不同的持久化操作。</p>
+<p><strong>redis持久化的意义，在于故障恢复</strong>。比如你部署了一个redis，作为cache缓存，当然也可以保存一些较为重要的数据。如果没有持久化的话，redis遇到灾难性故障的时候，就会丢失所有的数据。</p>
+<p>如果通过持久化将数据搞一份儿在磁盘上去，然后定期比如说同步和备份到一些云存储服务上去，那么就可以保证数据不丢失全部，还是可以恢复一部分数据回来的。</p>
+<p>Redis的一种持久 化方式叫快照（snapshotting，RDB）,另一种方式是只追加文件（append-only ﬁle,AOF）.这两种方法各有千秋。</p>
+<p>Redis提供了RDB和AOF两种持久化方式，RDB是把<strong>内存中的数据集以快照形式写入磁盘</strong>，实际操作是通过fork子进程执行，采用二进制压缩存储；AOF是以<strong>文本日志</strong>的形式记录Redis处理的每一个<strong>写入或删除操作</strong>。</p>
+<p>RDB和AOF参考图：</p>
+<p><img src="https://i.loli.net/2020/04/01/NjiBpV1aJbKZSmW.png" alt="AOF和RDB读持久化方式.png"></p>
+<h3 id="快照（snapshotting）持久化（RDB）"><a href="#快照（snapshotting）持久化（RDB）" class="headerlink" title="快照（snapshotting）持久化（RDB）"></a>快照（snapshotting）持久化（RDB）</h3><p><strong>RDB：保存某个时间点的全量数据快照</strong>。</p>
+<p><strong>简单来说，RDB模式就是让Redis每隔一段时间(几分钟、几个小时、几天)保存一次当前Redis里面所有的数据</strong>。</p>
+<p>RDB 把整个 Redis 的数据保存在单一文件中，比较适合用来做灾备，但缺点是快照保存完成之前如果宕机，这段时间的数据将会丢失，另外保存快照时可能导致服务短时间不可用。</p>
+<p>Redis可以通过创建快照来获得存储在内存里面的数据在某个时间点上的副本。Redis创建快照之后，可以对快照进行 备份，可以将快照复制到其他服务器从而创建具有相同数据的服务器副本（Redis主从结构，主要用来提高Redis性 能），还可以将快照留在原地以便重启服务器的时候使用。</p>
+<p>快照持久化是Redis默认采用的持久化方式，在redis.conf配置文件中默认有此下配置：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">save <span class="number">900</span> <span class="number">1</span>              #在<span class="number">900</span>秒(<span class="number">15</span>分钟)之后，如果至少有<span class="number">1</span>个<span class="type">key</span>发生变化，Redis就会自动触发BGSAVE命令 创建快照。</span><br><span class="line">save <span class="number">300</span> <span class="number">10</span>            #在<span class="number">300</span>秒(<span class="number">5</span>分钟)之后，如果至少有<span class="number">10</span>个<span class="type">key</span>发生变化，Redis就会自动触发BGSAVE命令创 建快照。</span><br><span class="line">save <span class="number">60</span> <span class="number">10000</span>        #在<span class="number">60</span>秒(<span class="number">1</span>分钟)之后，如果至少有<span class="number">10000</span>个<span class="type">key</span>发生变化，Redis就会自动触发BGSAVE命令创 建快照。</span><br></pre></td></tr></table></figure>
+
+<p>RDB需要手动触发，一般用<code>BGSAVE</code>,可以fork，即派生出一个子进程来创建RDB文件，不阻塞服务器进程。</p>
+<p><strong>RDB优点</strong>：</p>
+<ol>
+<li>RDB会生成多个数据文件，每个数据文件都代表了某一个时刻中redis的数据，这种多个数据文件的方式，非常适合做冷备，可以将这种完整的数据文件发送到一些远程的安全存储上去，比如说Amazon的S3云服务上去，在国内可以是阿里云的ODPS分布式存储上，以预定好的备份策略来定期备份redis中的数据</li>
+<li>RDB对redis对外提供的读写服务，影响非常小，可以让redis保持高性能，因为redis主进程只需要fork一个子进程，让子进程执行磁盘IO操作来进行RDB持久化即可</li>
+<li>相对于AOF持久化机制来说，直接基于RDB数据文件来重启和恢复redis进程，更加快速</li>
+</ol>
+<p><strong>RDB缺点</strong>：</p>
+<ol>
+<li>如果想要在redis故障时，尽可能少的丢失数据，那么RDB没有AOF好。一般来说，RDB数据快照文件，都是每隔5分钟，或者更长时间生成一次，这个时候就得接受一旦redis进程宕机，那么会丢失最近5分钟的数据</li>
+<li>RDB每次在fork子进程来执行RDB快照数据文件生成的时候，如果数据文件特别大，可能会导致对客户端提供的服务暂停数毫秒，或者甚至数秒</li>
+</ol>
+<h3 id="AOF（append-only-ﬁle）持久化"><a href="#AOF（append-only-ﬁle）持久化" class="headerlink" title="AOF（append-only ﬁle）持久化"></a>AOF（append-only ﬁle）持久化</h3><p><strong>简单来说，Redis每次被写入数据的时候，都会写入到磁盘的AOF文件里</strong>。注意这个过程会经过Linux OS Cache，因为现代操作系统中，写文件不是直接写磁盘的，会先写到os cache，然后过一段时间后再从os cache写到disk file.实际中一般每隔一秒，调用一次操作系统fsync操作，强制将os cache中的数据刷入磁盘文件中。</p>
+<p>但是，<strong>因为AOF文件只有一个，所以AOF文件会越写越大</strong>。不能让redis内存中的数据无限增长而让AOF无限增大。解决方法就是定期rewrite，一般用LRU算法。</p>
+<p>AOF 对日志文件的写入操作使用的追加模式，AOF文件里面保存的是写的指令，所以会不断膨胀。<strong>有灵活的同步策略，支持每秒同步、每次修改同步和不同步</strong>，缺点就是<strong>相同规模的数据集，AOF 要大于 RDB，AOF 在运行效率上往往会慢于 RDB</strong>。</p>
+<p>与快照持久化相比，AOF持久化 的实时性更好，因此已成为主流的持久化方案。默认情况下Redis没有开启 AOF（append only ﬁle）方式的持久化，可以通过<code>appendonly</code>参数开启：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">appendonly</span> <span class="literal">yes</span></span><br></pre></td></tr></table></figure>
+
+<p>开启AOF持久化后每执行一条会更改Redis中的数据的命令，Redis就会将该命令写入硬盘中的AOF文件。AOF文件的 保存位置和RDB文件的位置相同，都是通过dir参数设置的，默认的文件名是appendonly.aof。</p>
+<p>在Redis的配置文件中存在三种不同的 AOF 持久化方式，它们分别是：</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">appendfsync always     #每次有数据修改发生时都会写入AOF文件,这样会严重降低Redis的速度 appendfsync everysec  #每秒钟同步一次，显示地将多个写命令同步到硬盘 appendfsync no      #让操作系统决定何时进行同</span><br></pre></td></tr></table></figure>
+
+<p>为了兼顾数据和写入性能，用户可以考虑 appendfsync everysec选项 ，让Redis每秒同步一次AOF文件，Redis性能 几乎没受到任何影响。而且这样即使出现系统崩溃，用户多只会丢失一秒之内产生的数据。当硬盘忙于执行写入操 作的时候，Redis还会优雅的放慢自己的速度以便适应硬盘的大写入速度。 </p>
+<p><strong>AOF优点</strong>：</p>
+<ol>
+<li><strong>AOF可以更好的保护数据不丢失</strong>，一般AOF会每隔1秒，通过一个后台线程执行一次fsync操作，最多丢失1秒钟的数据</li>
+<li><strong>AOF日志文件以append-only模式写入，所以没有任何磁盘寻址的开销，写入性能非常高</strong>，而且文件不容易破损，即使文件尾部破损，也很容易修复</li>
+<li><strong>AOF日志文件即使过大的时候，出现后台重写操作，也不会影响客户端的读写。</strong>因为在rewrite log的时候，会对其中的指导进行压缩，创建出一份需要恢复数据的最小日志出来。再创建新日志文件的时候，老的日志文件还是照常写入。当新的merge后的日志文件ready的时候，再交换新老日志文件即可。</li>
+<li>AOF可读性高(如果打开RDB文件，发现全是乱码，没法读。但AOF保存的数据是可读的)，<strong>适合保存增量数据，数据不易丢失</strong>。也就是说，日志文件的命令通过非常可读的方式进行记录，这个特性非常适合做灾难性的误删除的紧急恢复。比如某人不小心用flushall命令清空了所有数据，只要这个时候后台rewrite还没有发生，那么就可以立即拷贝AOF文件，将最后一条flushall命令给删了，然后再将该AOF文件放回去，就可以通过恢复机制，自动恢复所有数据</li>
+</ol>
+<p><strong>AOF缺点</strong>：</p>
+<ol>
+<li>对于同一份数据来说，<strong>AOF日志文件通常比RDB数据快照文件更大</strong></li>
+<li>AOF开启后，<strong>支持的写QPS会比RDB支持的写QPS低</strong>，因为AOF一般会配置成每秒fsync一次日志文件，当然，每秒一次fsync，性能也还是很高的</li>
+<li>以前AOF发生过bug，就是通过AOF记录的日志，进行数据恢复的时候，没有恢复一模一样的数据出来。所以说，类似AOF这种较为复杂的基于命令日志/merge/回放的方式，比基于RDB每次持久化一份完整的数据快照文件的方式，<strong>更加脆弱一些，容易有bug</strong>。不过AOF就是为了避免rewrite过程导致的bug，因此每次rewrite并不是基于旧的指令日志进行merge的，而是基于当时内存中的数据进行指令的重新构建，这样健壮性会好很多。</li>
+</ol>
+<h4 id="AOF重写-rewrite"><a href="#AOF重写-rewrite" class="headerlink" title="AOF重写(rewrite)"></a>AOF重写(rewrite)</h4><p>AOF重写可以产生一个新的AOF文件，这个新的AOF文件和原有的AOF文件所保存的数据库状态一样，但体积更小。</p>
+<p>AOF重写是一个有歧义的名字，该功能是通过读取数据库中的键值对来实现的，程序无须对现有AOF文件进行任伺读 入、分析或者写入操作。</p>
+<p>在执行 BGREWRITEAOF 命令时，Redis 服务器会维护一个 AOF 重写缓冲区，该缓冲区会在子进程创建新AOF文件期 间，记录服务器执行的所有写命令。当子进程完成创建新AOF文件的工作之后，服务器会将重写缓冲区中的所有内容 追加到新AOF文件的末尾，使得新旧两个AOF文件所保存的数据库状态一致。后，服务器用新的AOF文件替换旧的 AOF文件，以此来完成AOF文件重写操作</p>
+<h4 id="AOF和RDB如何选择"><a href="#AOF和RDB如何选择" class="headerlink" title="AOF和RDB如何选择"></a>AOF和RDB如何选择</h4><ol>
+<li>不要仅仅使用RDB，因为那样会导致你<strong>丢失很多数据</strong></li>
+<li>也不要仅仅使用AOF，因为那样有两个问题，第一，<strong>你通过AOF做冷备，没有RDB做冷备，来的恢复速度更快</strong>; 第二，<strong>RDB每次简单粗暴生成数据快照，更加健壮，可以避免AOF这种复杂的备份和恢复机制的bug</strong></li>
+<li>综合使用AOF和RDB两种持久化机制，用AOF来保证数据不丢失，作为数据恢复的第一选择; 用RDB来做不同程度的冷备，在AOF文件都丢失或损坏不可用的时候，还可以使用RDB来进行快速的数据恢复</li>
+</ol>
+<h3 id="Redis事务"><a href="#Redis事务" class="headerlink" title="Redis事务"></a>Redis事务</h3><p>Redis 通过 MULTI、EXEC、WATCH 等命令来实现事务(transaction)功能。事务提供了一种将多个命令请求打包，然 后一次性、按顺序地执行多个命令的机制，并且在事务执行期间，服务器不会中断事务而改去执行其他客户端的命令 请求，它会将事务中的所有命令都执行完毕，然后才去处理其他客户端的命令请求。</p>
+<p>在传统的关系式数据库中，常常用 ACID 性质来检验事务功能的可靠性和安全性。在 Redis 中，事务总是具有原子性 （Atomicity)、一致性(Consistency)和隔离性（Isolation），并且当 Redis 运行在某种特定的持久化模式下时，事务 也具有持久性（Durability）。 </p>
+<h3 id="Redis4-0对于持久化机制的优化"><a href="#Redis4-0对于持久化机制的优化" class="headerlink" title="Redis4.0对于持久化机制的优化"></a>Redis4.0对于持久化机制的优化</h3><p>Redis 4.0 开始支持 RDB 和 AOF 的混合持久化（默认关闭，可以通过配置项 <code>aof-use-rdb-preamble</code> 开启）。</p>
+<p>如果把混合持久化打开，AOF 重写的时候就直接把 RDB 的内容写到 AOF 文件开头。这样做的好处是可以结合 RDB 和 AOF 的优点, 快速加载同时避免丢失过多的数据。当然缺点也是有的， AOF 里面的 RDB 部分是压缩格式不再是 AOF 格式，可读性较差。 </p>
+<p>如果同时使用RDB和AOF两种持久化机制，那么在redis重启的时候，会使用AOF来重新构建数据，因为AOF中的数据更加完整</p>
+<h2 id="使用Redis的缺陷和可能碰到的问题"><a href="#使用Redis的缺陷和可能碰到的问题" class="headerlink" title="使用Redis的缺陷和可能碰到的问题"></a>使用Redis的缺陷和可能碰到的问题</h2><p>不考虑使用Redis过程中可能碰到的问题是不行的，因为实际中技术都有优劣存在。</p>
+<p><img src="https://i.loli.net/2020/04/01/VUuqgeOJmDy8Fth.png" alt="缓存缺点.png"></p>
+<p>其实这是问到缓存必问的，因为缓存雪崩和穿透，那是缓存最大的两个问题，要么不出现，一旦出现就是致命性的问题。所以面试官一定会问你。</p>
+<h3 id="缓存雪崩及解决方案"><a href="#缓存雪崩及解决方案" class="headerlink" title="缓存雪崩及解决方案"></a>缓存雪崩及解决方案</h3><p>简而言之就是，如果缓存全部宕机，那么大量用户请求一下子全都落在了MySQL数据库上，那么MySQL承受不住，会挂掉。而且一重启就挂，一重启就挂！一个例子，就是曾经用户千万级的互联网公司，缓存全部宕机，从下午持续到凌晨三四点，公司损失几千万。</p>
+<p>解决方案主要分三个部分：事前、事中、事后。</p>
+<ul>
+<li><p>事前：<strong>让redis高可用，可以用主从+哨兵，做成redis cluster形式，即一个master带一些slave，这样master挂了之后可以把slave提上来，避免全盘崩溃</strong>。(当然这样做还是可能出问题的，可能所有redis集群全部崩溃)。<strong>发现机器宕机尽快补上。选择合适的内存淘汰策略</strong>。</p>
+</li>
+<li><p>事中：可以<strong>在本地增加一个ehcache的缓存</strong>(但是面对真正的雪崩，是杯水车薪) <strong>+ hystrix限流&amp;降级</strong>，避免MySQL崩掉。所有的数据必须先经过限流组件，你可以限制每秒只能通过多少数据，比如一共5000个，你限制一次只能通过2000个，那么只能通过2000个。剩下的3000个怎么办？走降级——限流组件发现有3000个请求没法通过自己，会调用降级组件，返回一些默认的值或者空白的值。这样如果缓存挂了，但是数据库可能有限度地处理数据，只要数据库不死，你的系统就不会死，只是处理得慢一些，但是比整个挂掉要强得多。</p>
+</li>
+<li><p>事后：<strong>利用 redis 持久化机制保存的数据尽快恢复缓存</strong></p>
+</li>
+</ul>
+<p>总的来说，事前靠高可用、事中靠本地缓存+限流(确保库不能死)、事后靠redis(Redis一定要开持久化)</p>
+<p>主要就是事前、事中、事后三个方式来解决缓存雪崩的问题。</p>
+<p>如下图：</p>
+<p><img src="https://i.loli.net/2020/04/01/lAZxWFdKJRI5nLp.png" alt="缓存雪崩解决办法.png"></p>
+<h3 id="缓存穿透及解决方案"><a href="#缓存穿透及解决方案" class="headerlink" title="缓存穿透及解决方案"></a>缓存穿透及解决方案</h3><p>一般是黑客故意去请求缓存中不存在的数据，(因为黑客是随意编造的数据来发的请求，数据库中根本没有，而且缓存里面也不会有，那么缓存就帮不了忙，而且每次都是这样，都只会去数据库里面找数据)。这个时候，导致所有的请求都落到数据库上，造成数据库短时间内承受大量 请求而崩掉。</p>
+<p>如下图所示：</p>
+<h3 id="缓存击穿及解决方案"><a href="#缓存击穿及解决方案" class="headerlink" title="缓存击穿及解决方案"></a>缓存击穿及解决方案</h3><h3 id="缓存与数据库双写不一致"><a href="#缓存与数据库双写不一致" class="headerlink" title="缓存与数据库双写不一致"></a>缓存与数据库双写不一致</h3>
+    </div>
+
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Interview/" rel="tag"><i class="fa fa-tag"></i># Interview</a>
+              <a href="/tags/Redis/" rel="tag"><i class="fa fa-tag"></i># Redis</a>
+              <a href="/tags/Cache/" rel="tag"><i class="fa fa-tag"></i># Cache</a>
+              <a href="/tags/Study/" rel="tag"><i class="fa fa-tag"></i># Study</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/25/Spring/" rel="prev" title="Spring">
+      <i class="fa fa-chevron-left"></i> Spring
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/31/IO-JavaIO-Model/" rel="next" title="Java IO and Linux IO">
+      Java IO and Linux IO <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODAxMC8yNDUwNw=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存"><span class="nav-text">缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要用缓存"><span class="nav-text">为什么要用缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#保证高性能"><span class="nav-text">保证高性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#保证高并发"><span class="nav-text">保证高并发</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#怎么保证redis是高并发以及高可用的？"><span class="nav-text">怎么保证redis是高并发以及高可用的？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-replication核心机制"><span class="nav-text">redis replication核心机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-replication的完整流运行程和原理的深入剖析"><span class="nav-text">redis replication的完整流运行程和原理的深入剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#redis-replication复制完整流程"><span class="nav-text">redis replication复制完整流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据同步相关的核心机制"><span class="nav-text">数据同步相关的核心机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全量复制"><span class="nav-text">全量复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#增量复制"><span class="nav-text">增量复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#heartbeat"><span class="nav-text">heartbeat</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异步复制"><span class="nav-text">异步复制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis主从复制原理、断点续传、无磁盘化复制、过期key处理"><span class="nav-text">redis主从复制原理、断点续传、无磁盘化复制、过期key处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主从复制原理和步骤"><span class="nav-text">主从复制原理和步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主从复制断点续传"><span class="nav-text">主从复制断点续传</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无磁盘化复制"><span class="nav-text">无磁盘化复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#过期key处理"><span class="nav-text">过期key处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis主从架构下如何才能做到99-99-的高可用性？"><span class="nav-text">redis主从架构下如何才能做到99.99%的高可用性？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#不可用的系统"><span class="nav-text">不可用的系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可用系统"><span class="nav-text">可用系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#99-99-可用？-高可用"><span class="nav-text">99.99%可用？(高可用)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不可用系统"><span class="nav-text">不可用系统</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis"><span class="nav-text">Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要用-redis-而不用-map-guava-做缓存"><span class="nav-text">为什么要用 redis 而不用 map&#x2F;guava 做缓存?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis的功能总结"><span class="nav-text">Redis的功能总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis和memcached的区别"><span class="nav-text">Redis和memcached的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis常见数据结构以及使用场景分析"><span class="nav-text">redis常见数据结构以及使用场景分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-String"><span class="nav-text">1.String</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Hash"><span class="nav-text">2.Hash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-List"><span class="nav-text">3.List</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Set"><span class="nav-text">4.Set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Sorted-Set"><span class="nav-text">5.Sorted Set</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis设置过期时间-redis的过期策略"><span class="nav-text">redis设置过期时间(redis的过期策略)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#我往Redis里写的数据怎么没了？"><span class="nav-text">我往Redis里写的数据怎么没了？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#我的数据明明已经过期了，为什么还占着内存？"><span class="nav-text">我的数据明明已经过期了，为什么还占着内存？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis内存淘汰机制"><span class="nav-text">redis内存淘汰机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-提供-6种数据淘汰策略："><span class="nav-text">redis 提供 6种数据淘汰策略：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis保证高可用的重要组件——哨兵"><span class="nav-text">Redis保证高可用的重要组件——哨兵</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#哨兵基本概念"><span class="nav-text">哨兵基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哨兵核心知识"><span class="nav-text">哨兵核心知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么哨兵集群只有2个节点无法正常工作？"><span class="nav-text">为什么哨兵集群只有2个节点无法正常工作？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis持久化-怎么保证redis挂掉之后再重启数据可以进行恢复"><span class="nav-text">Redis持久化(怎么保证redis挂掉之后再重启数据可以进行恢复)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#快照（snapshotting）持久化（RDB）"><span class="nav-text">快照（snapshotting）持久化（RDB）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF（append-only-ﬁle）持久化"><span class="nav-text">AOF（append-only ﬁle）持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF重写-rewrite"><span class="nav-text">AOF重写(rewrite)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF和RDB如何选择"><span class="nav-text">AOF和RDB如何选择</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis事务"><span class="nav-text">Redis事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis4-0对于持久化机制的优化"><span class="nav-text">Redis4.0对于持久化机制的优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Redis的缺陷和可能碰到的问题"><span class="nav-text">使用Redis的缺陷和可能碰到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存雪崩及解决方案"><span class="nav-text">缓存雪崩及解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存穿透及解决方案"><span class="nav-text">缓存穿透及解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存击穿及解决方案"><span class="nav-text">缓存击穿及解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存与数据库双写不一致"><span class="nav-text">缓存与数据库双写不一致</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wang Mingsheng"
+      src="/images/faceimage.jpg">
+  <p class="site-author-name" itemprop="name">Wang Mingsheng</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wmsheng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wmsheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wangmingshenghku@163.com" title="E-Mail → mailto:wangmingshenghku@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/my/m/music/playlist?id=372605964" title="Music → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;my&#x2F;m&#x2F;music&#x2F;playlist?id&#x3D;372605964" rel="noopener" target="_blank"><i class="fa fa-fw fa-youtube"></i>Music</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+
+    </div>
+    
+    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=3314336&auto=1&height=66">
+    </iframe>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wang Mingsheng</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">389k</span>
+</div>
+
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_uv">
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_pv">
+    本站访问量<span id="busuanzi_value_site_pv"></span>
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共200.4k字</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>

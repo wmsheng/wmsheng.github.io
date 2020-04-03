@@ -94,7 +94,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/03/30/PnzieOJcNX8mB24.png">
 <meta property="og:image" content="https://i.loli.net/2020/03/30/LeThwqHWSBGvtzX.png">
 <meta property="article:published_time" content="2020-03-20T04:36:36.000Z">
-<meta property="article:modified_time" content="2020-03-30T13:04:49.547Z">
+<meta property="article:modified_time" content="2020-04-02T00:41:33.040Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="Interview">
 <meta property="article:tag" content="Intergrated">
@@ -188,7 +188,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">23</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">28</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -198,7 +198,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">32</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">34</span></a>
 
   </li>
   </ul>
@@ -258,7 +258,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-30 21:04:49" itemprop="dateModified" datetime="2020-03-30T21:04:49+08:00">2020-03-30</time>
+                <time title="Modified: 2020-04-02 08:41:33" itemprop="dateModified" datetime="2020-04-02T08:41:33+08:00">2020-04-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -356,9 +356,22 @@
 <p>HTTPS在使用SSL/TLS传输的过程中，先会用非对称加密，然后用对称加密，也就是所谓的<strong>混合加密</strong>。</p>
 <p>实际上混合加密在上面，优化非对称加密传输的过程中已经有详细介绍了。因为非对称加密算法(比如RSA)计算非常慢，而对称加密算法(比如AES)计算相对非对称快上一百倍，所以先用非对称加密算法，先用非对称加密解决<strong>秘钥交换</strong>的问题，然后用随机数产生对称算法使用的<code>会话密钥（session key）</code>，再用<code>公钥加密</code>。对方拿到密文后用<code>私钥解密</code>，取出会话密钥。这样，双方就实现了对称密钥的安全交换。</p>
 <h3 id="HTTP状态码？-1开头到5开头的各种典型状态码"><a href="#HTTP状态码？-1开头到5开头的各种典型状态码" class="headerlink" title="HTTP状态码？(1开头到5开头的各种典型状态码)"></a>HTTP状态码？(1开头到5开头的各种典型状态码)</h3><p>客户端的每一次请求，服务器都必须给出回应。回应包括 HTTP 状态码和数据两部分。</p>
-<p>HTTP 状态码就是一个三位数，分成五个类别。</p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>xx：相关信息</span><br><span class="line"><span class="number">2</span>xx：操作成功</span><br><span class="line"><span class="number">3</span>xx：重定向</span><br><span class="line"><span class="number">4</span>xx：客户端错误</span><br><span class="line"><span class="number">5</span>xx：服务器错误</span><br></pre></td></tr></table></figure>
-
+<p>HTTP 状态码就是一个三位数，一共有五种取值可能：</p>
+<ul>
+<li>1xx：指示信息——表示请求已经接收，继续处理，<font color=#FF0000>但是整个请求还没成功</font></li>
+<li>2xx：成功——表示请求已被成功接收、理解、接受，已经成功处理了请求的状态代码</li>
+<li>3xx：重定向——要完成请求，但是需要进一步操作(往往要再跳转一步)</li>
+<li>4xx：客户端错误——请求有语法错误或请求无法实现</li>
+<li>5xx：服务器错误——服务器未能实现合法的请求，表示服务器在尝试处理请求时发生内部错误。这些错误可能是服务器本身的错误，而不是请求的错误。</li>
+</ul>
+<p>常见HTTP状态码及其作用：</p>
+<p>200 OK：正常返回信息</p>
+<p>400 Bad Request：客户端请求有语法错误，不能被服务器所理解</p>
+<p>401 Unauthorized：请求未经授权，这个状态代码必须和WWW-Authenticate报头域一起使用</p>
+<p>403 Forbidden：服务器收到请求，但拒绝提供服务(比如IP被禁了)</p>
+<p>404 Note Found：请求资源不存在，eg.输入了错误的URL</p>
+<p>500 Internal Server Error：服务器发生不可预期的错误</p>
+<p>503 Server Unabaliable：服务器当前不能处理客户端的请求，一段时间后可能恢复正常</p>
 <h3 id="一些可能有用的与HTTP有关的协议"><a href="#一些可能有用的与HTTP有关的协议" class="headerlink" title="一些可能有用的与HTTP有关的协议"></a>一些可能有用的与HTTP有关的协议</h3><p>在互联网中，任何协议都不会单独的完成信息交换，HTTP 也一样。虽然 HTTP 属于应用层的协议，但是它仍然需要其他层次协议的配合完成信息的交换，那么在完成一次 HTTP 请求和响应的过程中，需要哪些协议的配合呢？一起来看一下</p>
 <h4 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h4><p>CDN的全称是<code>Content Delivery Network</code>，即<code>内容分发网络</code>，它应用了 HTTP 协议里的缓存和代理技术，代替源站响应客户端的请求。CDN 是构建在现有网络基础之上的网络，它依靠部署在各地的边缘服务器，通过中心平台的负载均衡、内容分发、调度等功能模块，使用户就近获取所需内容，降低网络拥塞，提高用户访问响应速度和命中率。CDN的关键技术主要有<code>内容存储</code>和<code>分发技术</code>。</p>
 <p>打比方说你要去亚马逊上买书，之前你只能通过购物网站购买后从美国发货过海关等重重关卡送到你的家里，现在在中国建立一个亚马逊分基地，你就不用通过美国进行邮寄，从中国就能把书尽快给你送到。</p>
@@ -1431,7 +1444,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1444,7 +1457,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">28</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1500,7 +1513,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">367k</span>
+    <span title="Symbols count total">389k</span>
 </div>
 
 
@@ -1517,7 +1530,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共184.6k字</span>
+  <span class="post-count">博客全站共200.4k字</span>
 </div>
 
         

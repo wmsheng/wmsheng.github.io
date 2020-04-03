@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/siyecao.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/siyecao.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false,"b2t":true,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="知识犹如人体的血液一样宝贵。——高士其">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java IO and Linux IO">
+<meta property="og:url" content="http://yoursite.com/2020/03/31/IO-JavaIO-Model/index.html">
+<meta property="og:site_name" content="Hi, This is Bennett">
+<meta property="og:description" content="知识犹如人体的血液一样宝贵。——高士其">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/04/02/doMyChETgSc1DxQ.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/31/D8sA4qMPuxrbvQy.png">
+<meta property="article:published_time" content="2020-03-31T10:29:04.000Z">
+<meta property="article:modified_time" content="2020-04-01T16:46:41.516Z">
+<meta property="article:author" content="Wang Mingsheng">
+<meta property="article:tag" content="Interview">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="IO">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/02/doMyChETgSc1DxQ.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/31/IO-JavaIO-Model/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Java IO and Linux IO | Hi, This is Bennett</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hi, This is Bennett</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">28</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">34</span></a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/31/IO-JavaIO-Model/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/faceimage.jpg">
+      <meta itemprop="name" content="Wang Mingsheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hi, This is Bennett">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java IO and Linux IO
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-31 18:29:04" itemprop="dateCreated datePublished" datetime="2020-03-31T18:29:04+08:00">2020-03-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-02 00:46:41" itemprop="dateModified" datetime="2020-04-02T00:46:41+08:00">2020-04-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Interview-Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Interview Note</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              
+              <span>3.4k</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>知识犹如人体的血液一样宝贵。——高士其</p>
+</blockquote>
+<a id="more"></a>
+
+<p>参考文章：<a href="https://mp.weixin.qq.com/s?__biz=Mzg3MjA4MTExMw==&mid=2247484746&idx=1&sn=c0a7f9129d780786cabfcac0a8aa6bb7&source=41&scene=21#wechat_redirect" target="_blank" rel="noopener">漫话：如何给女朋友解释什么是Linux的五种IO模型？</a></p>
+<h1 id="Java中的IO"><a href="#Java中的IO" class="headerlink" title="Java中的IO"></a>Java中的IO</h1><p><strong>Java中提供的IO有关的API，在文件处理的时候，其实依赖操作系统层面的IO操作实现的</strong>。比如在Linux 2.6以后，Java中<strong>NIO</strong>和<strong>AIO</strong>都是通过<strong>epoll</strong>来实现的，而在Windows上，AIO是通过IOCP来实现的。</p>
+<p>可以把Java中的<strong>BIO(同步阻塞阻塞IO,Blocking I/O)、NIO(同步非阻塞IO, New I/O)和AIO(异步非阻塞IO,Asynchronous I/O)</strong>理解为是Java语言对操作系统的各种IO模型的封装。程序员在使用这些API的时候，不需要关心操作系统层面的知识，也不需要根据不同操作系统编写不同的代码。只需要使用Java的API就可以了。</p>
+<p>但是在Linux(UNIX)操作系统中，共有五种IO模型，分别是：<strong>阻塞IO模型、非阻塞IO模型、IO复用模型、信号驱动IO模型以及异步IO模型</strong>。</p>
+<h1 id="操作系统的IO"><a href="#操作系统的IO" class="headerlink" title="操作系统的IO"></a>操作系统的IO</h1><h2 id="什么是IO"><a href="#什么是IO" class="headerlink" title="什么是IO"></a>什么是IO</h2><p>我们常说的IO，指的是文件的输入和输出，但是在操作系统层面，可以理解是：<strong>把数据从硬件（硬盘）中读取到用户空间中的过程</strong>。</p>
+<p>用钓鱼做例子，钓鱼的时候，刚开始鱼是在鱼塘里面的，我们的钓鱼动作的最终结束标志是鱼从鱼塘中被我们钓上来，放入鱼篓中。</p>
+<p>这里面的鱼塘就可以映射成磁盘，中间过渡的鱼钩可以映射成内核空间，最终放鱼的鱼篓可以映射成用户空间。一次完整的钓鱼（IO）操作，是鱼（文件）从鱼塘（硬盘）中转移（拷贝）到鱼篓（用户空间）的过程。</p>
+<h2 id="阻塞IO模型"><a href="#阻塞IO模型" class="headerlink" title="阻塞IO模型"></a>阻塞IO模型</h2><p>我们钓鱼的时候，有一种方式比较惬意，比较轻松，那就是我们坐在鱼竿面前，这个过程中我们什么也不做，双手一直把着鱼竿，就静静的等着鱼儿咬钩。一旦手上感受到鱼的力道，就把鱼钓起来放入鱼篓中。然后再钓下一条鱼。</p>
+<p>映射到Linux操作系统中，这就是一种最简单的IO模型，即阻塞IO。 <strong>阻塞 I/O 是最简单的 I/O 模型，一般表现为进程或线程等待某个条件，如果条件不满足，则一直等下去。条件满足，则进行下一步操作</strong>。</p>
+<p>这种钓鱼方式相对来说比较简单，对于钓鱼的人来说，不需要什么特制的鱼竿，拿一根够长的木棍就可以悠闲的开始钓鱼了（实现简单）。缺点就是比较耗费时间，比较适合那种对鱼的需求量小的情况（并发低，时效性要求低）。</p>
+<p>扩展：应用进程通过系统调用 <code>recvfrom</code> 接收数据，但由于内核还未准备好数据报，应用进程就会阻塞住，直到内核准备好数据报，<code>recvfrom</code> 完成数据报复制工作，应用进程才能结束阻塞状态。</p>
+<h2 id="非阻塞IO模型"><a href="#非阻塞IO模型" class="headerlink" title="非阻塞IO模型"></a>非阻塞IO模型</h2><p><strong>应用进程与内核交互，目的未达到之前，不再一味的等着，而是直接返回。然后通过轮询的方式，不停的去问内核数据准备有没有准备好。如果某一次轮询发现数据已经准备好了，那就把数据拷贝到用户空间中</strong>。</p>
+<p>应用进程通过 <code>recvfrom</code> 调用不停的去和内核交互，直到内核准备好数据。如果没有准备好，内核会返回<code>error</code>，应用进程在得到<code>error</code>后，过一段时间再发送<code>recvfrom</code>请求。在两次发送请求的时间段，进程可以先做别的事情。</p>
+<p>这种方式钓鱼，和阻塞IO比，所使用的工具没有什么变化，但是钓鱼的时候可以做些其他事情，增加时间的利用率。</p>
+<h2 id="信号驱动IO模型"><a href="#信号驱动IO模型" class="headerlink" title="信号驱动IO模型"></a>信号驱动IO模型</h2><p>我们钓鱼的时候，为了避免自己一遍一遍的去查看鱼竿，我们可以给鱼竿安装一个报警器。当有鱼儿咬钩的时候立刻报警。然后我们再收到报警后，去把鱼钓起来。</p>
+<p>映射到Linux操作系统中，这就是<strong>信号驱动IO</strong>。<strong>应用进程在读取文件时通知内核，如果某个 socket 的某个事件发生时，请向我发一个信号。在收到信号后，信号对应的处理函数会进行后续处理</strong>。</p>
+<p><strong>应用进程预先向内核注册一个信号处理函数，然后用户进程返回，并且不阻塞，当内核数据准备就绪时会发送一个信号给进程，用户进程便在信号处理函数中开始把数据拷贝到用户空间中</strong>。</p>
+<p>这种方式钓鱼，和前几种相比，所使用的工具有了一些变化，需要有一些定制（实现复杂）。但是钓鱼的人就可以在鱼儿咬钩之前彻底做别的事儿去了。等着报警器响就行了。</p>
+<h2 id="IO复用模型"><a href="#IO复用模型" class="headerlink" title="IO复用模型"></a>IO复用模型</h2><p>我们钓鱼的时候，为了保证可以最短的时间钓到最多的鱼，我们同一时间摆放多个鱼竿，同时钓鱼。然后哪个鱼竿有鱼儿咬钩了，我们就把哪个鱼竿上面的鱼钓起来。</p>
+<p>映射到Linux操作系统中，这就是IO复用模型。<strong>多个进程的IO可以注册到同一个管道上，这个管道会统一和内核进行交互。当管道中的某一个请求需要的数据准备好之后，进程再把对应的数据拷贝到用户空间中</strong>。</p>
+<p>IO多路转接是多了一个<code>select</code>函数，多个进程的IO可以注册到同一个<code>select</code>上，当用户进程调用该<code>select</code>，<code>select</code>会监听所有注册好的IO，如果所有被监听的IO需要的数据都没有准备好时，<code>select</code>调用进程会阻塞。当任意一个IO所需的数据准备好之后，<code>select</code>调用就会返回，然后进程在通过<code>recvfrom</code>来进行数据拷贝。</p>
+<p><strong>这里的IO复用模型，并没有向内核注册信号处理函数，所以，他并不是非阻塞的</strong>。进程在发出<code>select</code>后，要等到<code>select</code>监听的所有IO操作中至少有一个需要的数据准备好，才会有返回，并且也需要再次发送请求去进行文件的拷贝。</p>
+<p>这种方式的钓鱼，通过增加鱼竿的方式，可以有效的提升效率。</p>
+<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><p>现在几乎所有服务器用的都是epoll实现的，属于IO多路复用的内容。</p>
+<p>epoll是一种方案，放弃了多进程、多线程、多协程，而是用单进程和单线程来实现高并发。</p>
+<p>实际开发中，不会要你重写一个epoll服务器和多进程服务器，但是要了解epoll。</p>
+<p>传统的单线程非阻塞IO的性能瓶颈，在于FD(套接字返回的对象)每次都保存在应用程序空间(用户态)中，这样，每次使用的时候都需要从用户态往内核态来回一换一次(而且伴有FD数据的复制过程)，而且随着FD数量增加，服务器返回的FD的列表长度也会越长，导致性能低下。</p>
+<p>但是epoll开创了新的存储方式：</p>
+<ol>
+<li><p><strong>共享内存</strong>，它定义了一块内存空间，这块空间既不属于用户空间，也不属于系统kernel空间，而是应用程序和kenel共享的。</p>
+</li>
+<li><p>在这个内存中所有添加的，判断的数据套接字，对应的数字描述符，我在检测的时候，不用轮询，而是<strong>事件通知</strong>。也就是把时间花在直接<strong>操作修改</strong>FD上，而不是查找。</p>
+</li>
+</ol>
+<p>epoll原理图如下：</p>
+<p><img src="https://i.loli.net/2020/04/02/doMyChETgSc1DxQ.png" alt="epoll原理图.png"></p>
+<p>epoll优势：</p>
+<ol>
+<li><strong>减少了FD对象的用户态与内核态之间的复制过程</strong>。</li>
+<li>采用<strong>事件通知</strong>的方式。FD对象很多，内部list很长的时候，也是个问题。</li>
+</ol>
+<h1 id="同步IO模型"><a href="#同步IO模型" class="headerlink" title="同步IO模型"></a>同步IO模型</h1><p>实际上，上面的四种IO模型：阻塞IO模型、非阻塞IO模型、IO复用模型和信号驱动IO模型，都是同步的IO模型。原因是因为，无论以上那种模型，<strong>真正的数据拷贝过程，都是同步进行的</strong>。</p>
+<p>信号驱动难道不是异步的么？ 信号驱动，内核是在数据准备好之后通知进程，然后进程再通过<code>recvfrom</code>操作进行数据拷贝。我们可以认为数据准备阶段是异步的，但是，数据拷贝操作是同步的。所以，整个IO过程也不能认为是异步的。</p>
+<p>我们把钓鱼过程，可以拆分为两个步骤：1、鱼咬钩（数据准备）。2、把鱼钓起来放进鱼篓里（数据拷贝）。无论以上提到的哪种钓鱼方式，在第二步，都是需要人主动去做的，并不是鱼竿自己完成的。所以，这个钓鱼过程其实还是同步进行的。</p>
+<p>如果拿烧水这个例子和钓鱼来对比着说：</p>
+<p><strong>烧水的报警器一响，整个烧水过程就完成了。水已经是开水了</strong>。 </p>
+<p><strong>钓鱼的报警器一响，只能说明鱼儿已经咬钩了，但是还没有真正的钓上来</strong>。</p>
+<p>所以 ，使用带有报警器的水壶烧水，<strong>烧水过程是异步的</strong>。</p>
+<p>而使用带有报警器的鱼竿钓鱼，<strong>钓鱼的过程还是同步的</strong>。</p>
+<h1 id="异步IO模型"><a href="#异步IO模型" class="headerlink" title="异步IO模型"></a>异步IO模型</h1><p>我们钓鱼的时候，采用一种高科技钓鱼竿，即全自动钓鱼竿。可以自动感应鱼上钩，自动收竿，更厉害的可以自动把鱼放进鱼篓里。然后，通知我们鱼已经钓到了，他就继续去钓下一条鱼去了。</p>
+<p>映射到Linux操作系统中，这就是异步IO模型。<strong>应用进程把IO请求传给内核后，完全由内核去操作文件拷贝。内核完成相关操作后，会发信号告诉应用进程本次IO已经完成</strong>。</p>
+<p>用户进程发起<code>aio_read</code>操作之后，给内核传递描述符、缓冲区指针、缓冲区大小等，告诉内核当整个操作完成时，如何通知进程，然后就立刻去做其他事情了。当内核收到aio_read后，会立刻返回，然后内核开始等待数据准备，数据准备好以后，直接把数据拷贝到用户控件，然后再通知进程本次IO已经完成。</p>
+<p>这种方式的钓鱼，无疑是最省事儿的。啥都不需要管，只需要交给鱼竿就可以了。</p>
+<h1 id="五种IO模型对比"><a href="#五种IO模型对比" class="headerlink" title="五种IO模型对比"></a>五种IO模型对比</h1><p>五种IO模型如下图：</p>
+<p><img src="https://i.loli.net/2020/03/31/D8sA4qMPuxrbvQy.png" alt="五种IO模型对比.png"></p>
+<h1 id="select-和-epoll"><a href="#select-和-epoll" class="headerlink" title="select 和 epoll"></a>select 和 epoll</h1>
+    </div>
+
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Interview/" rel="tag"><i class="fa fa-tag"></i># Interview</a>
+              <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i># Java</a>
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i># Linux</a>
+              <a href="/tags/IO/" rel="tag"><i class="fa fa-tag"></i># IO</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/31/Redis-cache/" rel="prev" title="Redis and Cache">
+      <i class="fa fa-chevron-left"></i> Redis and Cache
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODAxMC8yNDUwNw=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java中的IO"><span class="nav-text">Java中的IO</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#操作系统的IO"><span class="nav-text">操作系统的IO</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是IO"><span class="nav-text">什么是IO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阻塞IO模型"><span class="nav-text">阻塞IO模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非阻塞IO模型"><span class="nav-text">非阻塞IO模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信号驱动IO模型"><span class="nav-text">信号驱动IO模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IO复用模型"><span class="nav-text">IO复用模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll"><span class="nav-text">epoll</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#同步IO模型"><span class="nav-text">同步IO模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#异步IO模型"><span class="nav-text">异步IO模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五种IO模型对比"><span class="nav-text">五种IO模型对比</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#select-和-epoll"><span class="nav-text">select 和 epoll</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wang Mingsheng"
+      src="/images/faceimage.jpg">
+  <p class="site-author-name" itemprop="name">Wang Mingsheng</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wmsheng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wmsheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wangmingshenghku@163.com" title="E-Mail → mailto:wangmingshenghku@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/my/m/music/playlist?id=372605964" title="Music → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;my&#x2F;m&#x2F;music&#x2F;playlist?id&#x3D;372605964" rel="noopener" target="_blank"><i class="fa fa-fw fa-youtube"></i>Music</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+
+    </div>
+    
+    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=3314336&auto=1&height=66">
+    </iframe>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wang Mingsheng</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">389k</span>
+</div>
+
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_uv">
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_pv">
+    本站访问量<span id="busuanzi_value_site_pv"></span>
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共200.4k字</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
