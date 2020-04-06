@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/siyecao.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/siyecao.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false,"b2t":true,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="盼望一件事会发生的人祈祷；相信一件事将发生的人专注；让一件事能发生的人行动">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Distributed system + Dubbo">
+<meta property="og:url" content="http://yoursite.com/2020/04/05/Dubbo-I/index.html">
+<meta property="og:site_name" content="Hi, This is Bennett">
+<meta property="og:description" content="盼望一件事会发生的人祈祷；相信一件事将发生的人专注；让一件事能发生的人行动">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/UPWJya3tTqIekvO.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/tcRXusaTdAn4jKq.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/G3vBUlAbEfc7y1M.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/xQI7YeyRSsTh4JM.png">
+<meta property="article:published_time" content="2020-04-05T00:51:45.000Z">
+<meta property="article:modified_time" content="2020-04-05T10:51:09.198Z">
+<meta property="article:author" content="Wang Mingsheng">
+<meta property="article:tag" content="Interview">
+<meta property="article:tag" content="Study">
+<meta property="article:tag" content="Dubbo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/05/UPWJya3tTqIekvO.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/05/Dubbo-I/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Distributed system + Dubbo | Hi, This is Bennett</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hi, This is Bennett</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">30</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">36</span></a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/05/Dubbo-I/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/faceimage.jpg">
+      <meta itemprop="name" content="Wang Mingsheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hi, This is Bennett">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Distributed system + Dubbo
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-04-05 08:51:45 / Modified: 18:51:09" itemprop="dateCreated datePublished" datetime="2020-04-05T08:51:45+08:00">2020-04-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Interview-Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Interview Note</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              
+              <span>4.3k</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>盼望一件事会发生的人祈祷；相信一件事将发生的人专注；让一件事能发生的人行动</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="分布式系统及相关知识"><a href="#分布式系统及相关知识" class="headerlink" title="分布式系统及相关知识"></a>分布式系统及相关知识</h1><p>分布式业务系统，是把原来用java开发的一个大块系统，给拆分成多个子系统，多个子系统之间互相调用，形成一个大系统的整体。假设原来你做了一个OA系统，里面包含了权限模块、员工模块、请假模块、财务模块，一个工程，里面包含了一堆模块，模块与模块之间会互相去调用，1台机器部署。现在如果你把他这个系统给拆开，权限系统，员工系统，请假系统，财务系统，4个系统，4个工程，分别在4台机器上部署</p>
+<p>一个请求过来，完成这个请求，这个员工系统，调用权限系统，调用请假系统，调用财务系统，4个系统分别完成了一部分的事情，最后4个系统都干完了以后，才认为是这个请求已经完成了。</p>
+<p>一个最简单的分布式系统如下图所示：</p>
+<p><img src="https://i.loli.net/2020/04/05/UPWJya3tTqIekvO.png" alt="最简单分布式系统01.png"></p>
+<p>分布式系统使用较多一款开源RPC框架的是Dubbo，它是一款高性能，轻量级的框架，有三大核心能力：面向接口的远程方法调用、智能容错和负载均衡，以及服务自动注册和发现。</p>
+<p>Dubbo简单入门案例<a href="https://blog.csdn.net/abcwanglinyong/article/details/81906027" target="_blank" rel="noopener">可以参考这篇博客</a>,<a href="https://www.cnblogs.com/lfs2640666960/archive/2019/08/01/11283366.html" target="_blank" rel="noopener">和这篇博客</a></p>
+<p>Dubbo可以把每个子系统抽象成一个服务。</p>
+<p><img src="https://i.loli.net/2020/04/05/tcRXusaTdAn4jKq.png" alt="01_什么是最简单的分布式系统.png"></p>
+<p>分布式系统，一句话给你解释一下，就是原来20万行代码的系统，现在拆分成20个小系统，每个小系统1万行代码。原本代码之间直接就是基于spring调用，现在拆分开来了，20个小系统部署在不同的机器上，得基于dubbo搞一个rpc调用，接口与接口之间通过网络通信来请求和响应。就这个意思。</p>
+<h2 id="CAP-理论"><a href="#CAP-理论" class="headerlink" title="CAP 理论"></a>CAP 理论</h2><p>CAP理论，即CAP Theorem。</p>
+<p>什么是CAP理论？其实是指，对于一个分布式系统，不能同时满足以下三点：</p>
+<ul>
+<li>一致性(Consistency)</li>
+<li>可用性(Avaliability)</li>
+<li>分区容错性(Partition Tolerance)</li>
+</ul>
+<h1 id="Dubbo"><a href="#Dubbo" class="headerlink" title="Dubbo"></a>Dubbo</h1><h2 id="为什么要进行系统拆分？"><a href="#为什么要进行系统拆分？" class="headerlink" title="为什么要进行系统拆分？"></a>为什么要进行系统拆分？</h2><p>提一嘴微服务，微服务是基于分布式系统的，会把系统拆得更散。</p>
+<p>要是不拆分，一个大系统几十万行代码，20个人维护一份代码，简直是悲剧啊。代码经常改着改着就冲突了，各种代码冲突和合并要处理，非常耗费时间；经常我改动了我的代码，你调用了我，导致你的代码也得重新测试，麻烦的要死；然后每次发布都是几十万行代码的系统一起发布，大家得一起提心吊胆准备上线，几十万行代码的上线，可能每次上线都要做很多的检查，很多异常问题的处理，简直是又麻烦又痛苦；而且如果我现在打算把技术升级到最新的spring版本，还不行，因为这可能导致你的代码报错，我不敢随意乱改技术。</p>
+<p>假设一个系统是20万行代码，其中小A在里面改了1000行代码，但是此时发布的时候是这个20万行代码的大系统一起发布。一起发布，就意味着20万上代码在线上就可能出现各种变化，20个人，每个人都要紧张地等在电脑面前，上线之后，检查日志，看自己负责的那一块儿有没有什么问题。</p>
+<p>小A就检查了自己负责的1万行代码对应的功能，确保ok就闪人了；结果不巧的是，小A上线的时候不小心修改了线上机器的某个配置，导致另外小B和小C负责的2万行代码对应的一些功能，出错了</p>
+<p>几十个人负责维护一个几十万行代码的单块应用，每次上线，准备几个礼拜，上线 -&gt; 部署 -&gt; 检查自己负责的功能</p>
+<p>维护单块的应用，在从0到1的环节里，是很合适的，因为那个时候，是系统都没上线，没什么技术挑战，大家有条不紊的开发。ssh + mysql + tomcat，可能会部署几台机器吧。</p>
+<p>结果不行了，后来系统上线了，业务快速发展，10万用户 -&gt; 100万用户 -&gt; 1000万用户 -&gt; 上亿用户了。</p>
+<p><strong>拆分之后，整个世界清爽了</strong>，几十万行代码的系统，拆分成20个服务，平均每个服务就1~2万行代码，每个服务部署到单独的机器上。20个工程，20个git代码仓库里，20个程序员，每个人维护自己的那个服务就可以了，是自己独立的代码，跟别人没关系。再也没有代码冲突了，爽。每次就测试我自己的代码就可以了，爽。每次就发布我自己的一个小服务就可以了，爽。技术上想怎么升级就怎么升级，保持接口不变就可以了，爽。</p>
+<p>所以简单来说，一句话总结，如果是 那种代码量多达几十万行的中大型项目，团队里有几十个人，那么如果不拆分系统，开发效率极其低下，问题很多。但是拆分系统之后，每个人就负责自己的一小部分就好了，可以随便玩儿随便弄。分布式系统拆分之后，可以大幅度提升复杂系统大型团队的开发效率。</p>
+<p>但是同时，也要提醒的一点是，系统拆分成分布式系统之后，大量的分布式系统面临的问题也是接踵而来，所以后面的问题都是在围绕分布式系统带来的复杂技术挑战在说。</p>
+<h2 id="如何进行系统拆分？"><a href="#如何进行系统拆分？" class="headerlink" title="如何进行系统拆分？"></a>如何进行系统拆分？</h2><p>这个问题说大可以很大，可以扯到领域驱动模型设计上去，说小了也很小。</p>
+<p>系统拆分分布式系统，拆成多个服务，拆成微服务的架构，拆很多轮的。上来一个架构师第一轮就给拆好了，第一轮；团队继续扩大，拆好的某个服务，刚开始是1个人维护1万行代码，后来业务系统越来越复杂，这个服务是10万行代码，5个人；第二轮，1个服务 -&gt; 5个服务，每个服务2万行代码，每人负责一个服务。</p>
+<p>如果是多人维护一个服务，&lt;=3个人维护这个服务；最理想的情况下，几十个人，1个人负责1个或2~3个服务；某个服务工作量变大了，代码量越来越多，某个同学，负责一个服务，代码量变成了10万行了，他自己不堪重负，他现在一个人拆开，5个服务，1个人顶着，负责5个人，接着招人，2个人，给那个同学带着，3个人负责5个服务，其中2个人每个人负责2个服务，1个人负责1个服务。</p>
+<p>一个服务的代码不要太多，1万行左右，最多两三万。</p>
+<p>大部分的系统，是要进行多轮拆分的，第一次拆分，可能就是将以前的多个模块该拆分开来了，比如说将电商系统拆分成订单系统、商品系统、采购系统、仓储系统、用户系统，等等吧。</p>
+<p>但是后面可能每个系统又变得越来越复杂了，比如说采购系统里面又分成了供应商管理系统、采购单管理系统，订单系统又拆分成了购物车系统、价格系统、订单管理系统。</p>
+<p>扯深了实在很深，所以这里先给大家举个例子，你自己感受一下，核心意思就是<strong>根据情况，先拆分一轮，后面如果系统更复杂了，可以继续分拆</strong>。根据自己负责系统的例子，来考虑一下就好了。</p>
+<h2 id="拆分后不用dubbo可以吗？"><a href="#拆分后不用dubbo可以吗？" class="headerlink" title="拆分后不用dubbo可以吗？"></a>拆分后不用dubbo可以吗？</h2><p>当然可以了，大不了最次，就是各个系统之间，直接基于spring mvc，就纯http接口互相通信呗，还能咋样。但是这个肯定是有问题的，因为http接口通信维护起来成本很高，你要考虑超时重试、负载均衡等等各种乱七八糟的问题，比如说你的订单系统调用商品系统，商品系统部署了5台机器，你怎么把请求均匀地甩给那5台机器？这不就是负载均衡？你要是都自己搞那是可以的，但是确实很痛苦。</p>
+<p>所以dubbo说白了，是一种rpc框架，就是本地就是进行接口调用，但是dubbo会代理这个调用请求，跟远程机器网络通信，给你处理掉负载均衡了、服务实例上下线自动感知了、超时重试了，等等乱七八糟的问题。那你就不用自己做了，用dubbo就可以了。</p>
+<p><a href="http://www.ccutu.com/243972.html" target="_blank" rel="noopener">不了解RPC框架，可以查看这篇文章</a>、和 <a href="https://www.jianshu.com/p/eb66b0c4113d" target="_blank" rel="noopener">这篇文章</a></p>
+<h2 id="Dubbo的工作原理？"><a href="#Dubbo的工作原理？" class="headerlink" title="Dubbo的工作原理？"></a>Dubbo的工作原理？</h2><p>第一层：service层，接口层，给服务提供者和消费者来实现的。用过Dubbo的话，都是写provider、consumer、api,然后可以简单启动。</p>
+<p>第二层：config层，配置层，主要是对dubbo进行各种配置的</p>
+<p>第三层：proxy层，(服务)代理层，透明生成客户端的stub和服务单的skeleton</p>
+<p>第四层：registry层，(服务)注册层，负责服务的注册与发现</p>
+<p>第五层：cluster层，集群层，封装多个服务提供者的路由以及负载均衡，将多个实例组合成一个服务</p>
+<p>第六层：monitor层，监控层，对rpc接口的调用次数和调用时间进行监控</p>
+<p>第七层：protocol层，远程调用层，封装rpc调用</p>
+<p>第八层：exchange层，信息交换层，封装请求响应模式，同步转异步</p>
+<p>第九层：transport层，网络传输层，抽象mina和netty为统一接口</p>
+<p>第十层：serialize层，数据序列化层</p>
+<p>工作流程：</p>
+<ol>
+<li>第一步，provider向注册中心去注册</li>
+<li>第二步，consumer从注册中心订阅服务，注册中心会通知consumer注册好的服务</li>
+<li>第三步，consumer调用provider。注意，consumer和provider之间通信的时候一定要用到代理的，因为代理可以更方便使用均衡负载等策略来提高系统性能。</li>
+<li>第四步，consumer和provider都异步的通知监控中心</li>
+</ol>
+<p>总的工作原理如下图所示：</p>
+<p><img src="https://i.loli.net/2020/04/05/G3vBUlAbEfc7y1M.png" alt="01_dubbo的工作原理.png"></p>
+<h2 id="注册中心挂了可以继续通信吗？"><a href="#注册中心挂了可以继续通信吗？" class="headerlink" title="注册中心挂了可以继续通信吗？"></a>注册中心挂了可以继续通信吗？</h2><p>可以，因为刚开始初始化的时候，消费者会将提供者的地址等信息拉取到本地缓存，所以注册中心挂了不要紧，可以本地缓存信息继续通信。</p>
+<h2 id="说一说一次RPC请求的流程？"><a href="#说一说一次RPC请求的流程？" class="headerlink" title="说一说一次RPC请求的流程？"></a>说一说一次RPC请求的流程？</h2><p>使用Dubbo的一次通讯请求流程大致如上图。</p>
+<h2 id="Dubbo支持哪些通信协议？支持哪些序列化协议？"><a href="#Dubbo支持哪些通信协议？支持哪些序列化协议？" class="headerlink" title="Dubbo支持哪些通信协议？支持哪些序列化协议？"></a>Dubbo支持哪些通信协议？支持哪些序列化协议？</h2><p>这个问题也不会问得很深，可能就问一下，什么场景下使用什么协议，然后比较各种序列化协议的优缺点。</p>
+<h3 id="dubbo支持不同的通信协议"><a href="#dubbo支持不同的通信协议" class="headerlink" title="dubbo支持不同的通信协议"></a>dubbo支持不同的通信协议</h3><p>1）dubbo协议</p>
+<p>dubbo://192.168.0.1:20188</p>
+<p>默认就是走dubbo协议的，单一长连接，NIO异步通信，<strong>基于hessian作为序列化协议</strong>。</p>
+<p>什么是短连接和长连接？</p>
+<p><strong>短连接</strong>：每次请求都发送和建立一个连接，建立之后用完了就失效。(下图最后一个为短连接)</p>
+<p><strong>长链接</strong>：建立一个长期保存的连接，后续再有请求，继续用这个连接。(下图第一个为长连接)</p>
+<p>适用的场景就是：传输数据量很小（每次请求在100kb以内），但是并发量很高</p>
+<p> 如图：</p>
+<p><img src="https://i.loli.net/2020/04/05/xQI7YeyRSsTh4JM.png" alt="01_dubbo的网络通信协议.png"></p>
+<p>为了要支持高并发场景，一般是服务提供者就几台机器，但是服务消费者有上百台，可能每天调用量达到上亿次！此时用长连接是最合适的，就是跟每个服务消费者维持一个长连接就可以，可能总共就100个连接。然后后面直接基于长连接NIO异步通信，可以支撑高并发请求。</p>
+<p>否则如果上亿次请求每次都是短连接的话，服务提供者会扛不住。</p>
+<p>而且因为走的是单一长连接，所以传输数据量太大的话，会导致并发能力降低。所以一般建议是传输数据量很小，支撑高并发访问。</p>
+<p><strong>hessian使用的最多，剩下四个方法用得比较少</strong>。</p>
+<p>2）rmi协议</p>
+<p>走 <u>java二进制序列化</u>，多个短连接，适合消费者和提供者数量差不多，适用于文件的传输，一般较少用</p>
+<p>3）hessian协议</p>
+<p>走<u>hessian序列化协议</u>，多个短连接，适用于提供者数量比消费者数量还多，适用于文件的传输，一般较少用</p>
+<p>4）http协议</p>
+<p>走json序列化</p>
+<p>5）webservice</p>
+<p>走SOAP文本序列化</p>
+<h3 id="dubbo支持的序列化协议"><a href="#dubbo支持的序列化协议" class="headerlink" title="dubbo支持的序列化协议"></a>dubbo支持的序列化协议</h3><p>序列化：把数据转换成可以在网络上传输的格式(比如二进制)。</p>
+<p>所以dubbo实际基于不同的通信协议，支持hessian、java二进制序列化、json、SOAP文本序列化多种序列化协议。但是hessian是其默认的序列化协议。</p>
+
+    </div>
+
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Interview/" rel="tag"><i class="fa fa-tag"></i># Interview</a>
+              <a href="/tags/Study/" rel="tag"><i class="fa fa-tag"></i># Study</a>
+              <a href="/tags/Dubbo/" rel="tag"><i class="fa fa-tag"></i># Dubbo</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/31/IO-JavaIO-Model/" rel="prev" title="Java IO and Linux IO">
+      <i class="fa fa-chevron-left"></i> Java IO and Linux IO
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/05/zookeeper-study-I/" rel="next" title="zookeeper I">
+      zookeeper I <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODAxMC8yNDUwNw=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式系统及相关知识"><span class="nav-text">分布式系统及相关知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CAP-理论"><span class="nav-text">CAP 理论</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Dubbo"><span class="nav-text">Dubbo</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要进行系统拆分？"><span class="nav-text">为什么要进行系统拆分？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何进行系统拆分？"><span class="nav-text">如何进行系统拆分？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拆分后不用dubbo可以吗？"><span class="nav-text">拆分后不用dubbo可以吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dubbo的工作原理？"><span class="nav-text">Dubbo的工作原理？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注册中心挂了可以继续通信吗？"><span class="nav-text">注册中心挂了可以继续通信吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#说一说一次RPC请求的流程？"><span class="nav-text">说一说一次RPC请求的流程？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dubbo支持哪些通信协议？支持哪些序列化协议？"><span class="nav-text">Dubbo支持哪些通信协议？支持哪些序列化协议？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dubbo支持不同的通信协议"><span class="nav-text">dubbo支持不同的通信协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dubbo支持的序列化协议"><span class="nav-text">dubbo支持的序列化协议</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wang Mingsheng"
+      src="/images/faceimage.jpg">
+  <p class="site-author-name" itemprop="name">Wang Mingsheng</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wmsheng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wmsheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wangmingshenghku@163.com" title="E-Mail → mailto:wangmingshenghku@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/my/m/music/playlist?id=372605964" title="Music → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;my&#x2F;m&#x2F;music&#x2F;playlist?id&#x3D;372605964" rel="noopener" target="_blank"><i class="fa fa-fw fa-youtube"></i>Music</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+
+    </div>
+    
+    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=3314336&auto=1&height=66">
+    </iframe>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wang Mingsheng</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">413k</span>
+</div>
+
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_uv">
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_pv">
+    本站访问量<span id="busuanzi_value_site_pv"></span>
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共217.3k字</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>

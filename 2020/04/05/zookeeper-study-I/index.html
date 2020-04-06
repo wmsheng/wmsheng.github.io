@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/siyecao.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/siyecao.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false,"b2t":true,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="成功的奥秘在于目标的坚定。——迪斯雷利">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zookeeper I">
+<meta property="og:url" content="http://yoursite.com/2020/04/05/zookeeper-study-I/index.html">
+<meta property="og:site_name" content="Hi, This is Bennett">
+<meta property="og:description" content="成功的奥秘在于目标的坚定。——迪斯雷利">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/fcaQClX3VsUiKDj.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/8yYBEMILhCmcqRb.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/FSBk2iP71Zq6gnz.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/bGYwFHIctL1JgqR.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/5ewx9ln2PodcmkE.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/kM13iAvalV8EuC7.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/yEXHev2s7FZrVtL.png">
+<meta property="article:published_time" content="2020-04-05T07:14:33.000Z">
+<meta property="article:modified_time" content="2020-04-05T15:24:54.026Z">
+<meta property="article:author" content="Wang Mingsheng">
+<meta property="article:tag" content="Interview">
+<meta property="article:tag" content="Study">
+<meta property="article:tag" content="zookeeper">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/05/fcaQClX3VsUiKDj.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/05/zookeeper-study-I/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>zookeeper I | Hi, This is Bennett</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hi, This is Bennett</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">30</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">36</span></a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/05/zookeeper-study-I/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/faceimage.jpg">
+      <meta itemprop="name" content="Wang Mingsheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hi, This is Bennett">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          zookeeper I
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-04-05 15:14:33 / Modified: 23:24:54" itemprop="dateCreated datePublished" datetime="2020-04-05T15:14:33+08:00">2020-04-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Interview-Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Interview Note</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              
+              <span>2.7k</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>成功的奥秘在于目标的坚定。——迪斯雷利</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="zookeeper一般的使用场景"><a href="#zookeeper一般的使用场景" class="headerlink" title="zookeeper一般的使用场景"></a>zookeeper一般的使用场景</h1><p>分布式一般都会考虑到分布式锁，而zookeeper是用在分布式锁里很常用的。</p>
+<p>大致来说，zk的使用场景如下：</p>
+<p>（1）<strong>分布式协调</strong>：这个其实是zk很经典的一个用法，简单来说，就好比，你A系统发送个请求到mq，然后B消息消费之后处理了。那A系统如何知道B系统的处理结果？用zk就可以实现分布式系统之间的协调工作。A系统发送请求之后可以在zk上对某个节点的值注册个监听器，一旦B系统处理完了就修改zk那个节点的值，A立马就可以收到通知，完美解决。</p>
+<p>zookeeper一开始的定位就是做分布式协调。让多个系统协调起来，某个系统要感知另一个系统当前的处理结果和状态。</p>
+<p>分布式协调如下图：</p>
+<p><img src="https://i.loli.net/2020/04/05/fcaQClX3VsUiKDj.png" alt="01_zookeeper的分布式协调场景.png"></p>
+<p>（2）<strong>分布式锁</strong>：对某一个数据连续发出两个修改操作，两台机器同时收到了请求，但是只能一台机器先执行另外一个机器再执行。那么此时就可以使用zk分布式锁，一个机器接收到了请求之后先获取zk上的一把分布式锁，就是可以去创建一个znode，接着执行操作；然后另外一个机器也尝试去创建那个znode，结果发现自己创建不了，因为被别人创建了。。。。那只能等到另一个机器执行完，把锁释放掉，后来的机器才能执行。</p>
+<p>分布式锁如下图：</p>
+<p><img src="https://i.loli.net/2020/04/05/8yYBEMILhCmcqRb.png" alt="02_zookeeper的分布式锁场景.png"></p>
+<p>（3）<strong>元数据/配置信息管理</strong>：zk可以用作很多系统的配置信息的管理，比如kafka、storm等等很多分布式系统都会选用zk来做一些元数据、配置信息的管理，包括dubbo注册中心也支持zk</p>
+<p>举例，服务A在三台机器上，这些数据放到了dubbo数据中心，然后dubbo会基于zookeeper的元数据来保存这个配置信息，此后只要数据有了变化，zookeeper会实时监听，并且把更新的数据告诉调用者。</p>
+<p>实际上，消息队列Kafka，流式计算引擎Storm，都基于zookeeper的元数据管理。</p>
+<p><img src="https://i.loli.net/2020/04/05/FSBk2iP71Zq6gnz.png" alt="03_zookeeper的元数据_配置管理场景.png"></p>
+<p>（4）<strong>HA高可用性</strong>：就是实现主备系统。这个应该是很常见的，比如hadoop、hdfs、yarn等很多大数据系统，都选择基于zk来开发HA高可用机制，就是一个重要进程一般会做主备两个，<strong>主进程挂了立马通过zk感知到切换到备用进程</strong>。</p>
+<p><img src="https://i.loli.net/2020/04/05/bGYwFHIctL1JgqR.png" alt="04_zookeeper的HA高可用性场景.png"></p>
+<p>临时节点名字是active，具体可以被设置成active是worker01或者work02。</p>
+<p>一开始设置成了worker01，那么只由worker01工作，但是如果worker01挂掉了，那么这个临时节点会被ZK删除掉，然后重新定义一个新的active节点，并且赋值为worker02。</p>
+<h1 id="Zookeeper内部原理-面试重点"><a href="#Zookeeper内部原理-面试重点" class="headerlink" title="Zookeeper内部原理(面试重点)"></a>Zookeeper内部原理(面试重点)</h1><h2 id="Zookeeper选举机制-详细算法参考paxos"><a href="#Zookeeper选举机制-详细算法参考paxos" class="headerlink" title="Zookeeper选举机制(详细算法参考paxos)"></a>Zookeeper选举机制(详细算法参考paxos)</h2><p>选举机制，即如何选出集群中的Leader(集群中只有一个Leader，其他都是follower)。</p>
+<p>1）<strong>半数机制</strong>：只有集群中半数以上机器存活，集群才能可用。所以<font color=#FF0000>zookeeper适合安装奇数台服务器</font>。</p>
+<p>举个例子，如果你集群中有5台机器，那么挂掉2台还可以工作，挂掉3台就不行了。如果集群有6台机器，那么挂掉3台也不可以工作了，所以一般建议配成奇数台机器。</p>
+<p>2）Zookeeper虽然在配置文件中并没有指定Master和Slave，但是ZK工作时，是有一个节点为Leader，其他则为Follower，Leader是通过内布的选举机制临时产生的。</p>
+<p>3）以一个简单的例子说明选举过程</p>
+<p>假设现在有五台服务器组成的ZK集群，它们的id从1-5，同时它们都是最新启动的，即没有历史数据，而且每台机器存放的数据量也是一样的。假设这些服务器依序启动，会发生什么？如何选举？</p>
+<p>五台机器如下图所示：</p>
+<p><img src="https://i.loli.net/2020/04/05/5ewx9ln2PodcmkE.png" alt="ZK选举.png"></p>
+<p>一开始，第一台机器Server1启动，会自动投自己一票，但是因为此时节点数量未过半，所以节点1处于Looking状态。后面Server2启动，也会投自己，然后Server1会投给2，因为id最大，但是因为未过半所以还是处于Looking状态。后面类似，后面来的，myid大的，就投票给它。</p>
+<p>但是注意，只要Leader选出来了，就是既定事实，不能变了。</p>
+<p>所以，<strong>当每个机器新加入集群的时候，首先会投票给自己，如果票投给自己选不出来Leader，那么会把它这一票投给id号大的。一旦某个机器得到的选票过半，它就是leader，后面再加入机器，也不能是Leader，因为Leader已经定了</strong>。（<font color=#FF0000>注意，ZK启动的时候知道有多少台服务器，因为你已经写了数据到ZK的配置文件里了</font>）</p>
+<h2 id="Zookeeper节点类型"><a href="#Zookeeper节点类型" class="headerlink" title="Zookeeper节点类型"></a>Zookeeper节点类型</h2><p>一共分为两大类，四种。</p>
+<p><strong>持久节点(Persistent)</strong>：客户端和服务端断开连接后，创建的节点不删除。</p>
+<p>持久类节点分为两种：</p>
+<ul>
+<li><strong>持久化目录节点</strong>：客户端与ZK断开连接后，该节点仍然存在</li>
+<li><strong>持久化顺序编号目录节点</strong>：客户端与ZK断开连接后，该节点依旧存在，只是ZK会对该节点名称进行书序编号。</li>
+</ul>
+<p><strong>说明</strong>：创建znode时设置顺序标识，znode名称后会附加一个值，顺序号是一个单调递增的计数器，由父节点维护。而有顺序号的节点有一个用处：<font color=#FF0000>顺序号可以被用于为所有的事件进行全局排序，这样客户端可以通过顺序号推断事件的顺序</font>。</p>
+<p><strong>临时节点(Ephemeral)</strong>：客户端和服务端断开连接后，创建的节点会被自己删除。</p>
+<p>临时节点也分为两类：</p>
+<ul>
+<li><strong>临时目录节点</strong>：客户端与ZK断开连接后，该节点被删除</li>
+<li><strong>临时顺序编号目录节点</strong>：客户端与ZK断开连接后，该节点被删除，只是ZK给该节点名称进行顺序编号。</li>
+</ul>
+<p>为什么有的节点要在断开连接后删除？——有必要，有一些服务器记录的是其他服务器是否在线的数据，所以如果节点断开连接后，删除记录，那么查询的时候查不到数据，说明用户已经下线。</p>
+<p>四种类型的节点如下图所示：</p>
+<p><img src="https://i.loli.net/2020/04/05/kM13iAvalV8EuC7.png" alt="节点类型.png"></p>
+<h2 id="Zookeeper监听器原理-详细参考Raft算法"><a href="#Zookeeper监听器原理-详细参考Raft算法" class="headerlink" title="Zookeeper监听器原理(详细参考Raft算法)"></a>Zookeeper监听器原理(详细参考Raft算法)</h2><p>ZK监听器经常会被用到，因为其用到了观察者模式。</p>
+<p><font color=#FF0000><strong>监听器会按照以下步骤工作</strong></font>：</p>
+<p>1）创建main()线程</p>
+<p>2）在main线程中创建zookeeper客户端对象(主要用于访问server服务器)，这时就会创建两个线程，一个负责正常业务通讯，即网络连接通信（connect），一个负责监听（listener）。</p>
+<p>3）通过connect线程将注册的监听事件发送给zookeeper</p>
+<p>4）在zookeeper注册监听器列表中将注册的监听事件添加到列表中</p>
+<p>5）zookeeper监听到有数据或者路径变化，就会回调main()线程，将这个消息发送给listener线程，告诉客户端现在有事情发生，要处理。</p>
+<p>6）listener线程内部调用process()方法</p>
+<p>如下图所示：</p>
+<p><img src="https://i.loli.net/2020/04/05/yEXHev2s7FZrVtL.png" alt="常见监听方式.png"></p>
+<p><font color=#FF0000><strong>常见监听方式</strong></font>：</p>
+<p>1）监听节点数据的变化：get path [watch]</p>
+<p>2）监听子节点增减的变化：ls path [watch]</p>
+<h1 id="分布式锁是什么？"><a href="#分布式锁是什么？" class="headerlink" title="分布式锁是什么？"></a>分布式锁是什么？</h1><h1 id="对比下redis和zk两种分布式锁的优劣？"><a href="#对比下redis和zk两种分布式锁的优劣？" class="headerlink" title="对比下redis和zk两种分布式锁的优劣？"></a>对比下redis和zk两种分布式锁的优劣？</h1>
+    </div>
+
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Interview/" rel="tag"><i class="fa fa-tag"></i># Interview</a>
+              <a href="/tags/Study/" rel="tag"><i class="fa fa-tag"></i># Study</a>
+              <a href="/tags/zookeeper/" rel="tag"><i class="fa fa-tag"></i># zookeeper</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/05/Dubbo-I/" rel="prev" title="Distributed system + Dubbo">
+      <i class="fa fa-chevron-left"></i> Distributed system + Dubbo
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODAxMC8yNDUwNw=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#zookeeper一般的使用场景"><span class="nav-text">zookeeper一般的使用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Zookeeper内部原理-面试重点"><span class="nav-text">Zookeeper内部原理(面试重点)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper选举机制-详细算法参考paxos"><span class="nav-text">Zookeeper选举机制(详细算法参考paxos)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper节点类型"><span class="nav-text">Zookeeper节点类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper监听器原理-详细参考Raft算法"><span class="nav-text">Zookeeper监听器原理(详细参考Raft算法)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式锁是什么？"><span class="nav-text">分布式锁是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#对比下redis和zk两种分布式锁的优劣？"><span class="nav-text">对比下redis和zk两种分布式锁的优劣？</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wang Mingsheng"
+      src="/images/faceimage.jpg">
+  <p class="site-author-name" itemprop="name">Wang Mingsheng</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wmsheng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wmsheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wangmingshenghku@163.com" title="E-Mail → mailto:wangmingshenghku@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/my/m/music/playlist?id=372605964" title="Music → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;my&#x2F;m&#x2F;music&#x2F;playlist?id&#x3D;372605964" rel="noopener" target="_blank"><i class="fa fa-fw fa-youtube"></i>Music</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+
+    </div>
+    
+    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=3314336&auto=1&height=66">
+    </iframe>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wang Mingsheng</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">413k</span>
+</div>
+
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_uv">
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_pv">
+    本站访问量<span id="busuanzi_value_site_pv"></span>
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共217.3k字</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
