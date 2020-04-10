@@ -66,7 +66,7 @@
 <meta property="og:image" content="https://s2.ax1x.com/2020/01/04/ldDjSA.jpg">
 <meta property="og:image" content="https://assets.leetcode.com/uploads/2018/12/28/237_example.png">
 <meta property="article:published_time" content="2019-12-28T01:38:41.000Z">
-<meta property="article:modified_time" content="2020-04-03T15:24:30.944Z">
+<meta property="article:modified_time" content="2020-04-09T03:50:40.000Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -160,7 +160,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">30</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">33</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -170,7 +170,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">36</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">37</span></a>
 
   </li>
   </ul>
@@ -230,7 +230,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-03 23:24:30" itemprop="dateModified" datetime="2020-04-03T23:24:30+08:00">2020-04-03</time>
+                <time title="Modified: 2020-04-09 11:50:40" itemprop="dateModified" datetime="2020-04-09T11:50:40+08:00">2020-04-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -258,7 +258,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>36k</span>
+              <span>37k</span>
             </span>
 
         </div>
@@ -562,9 +562,16 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 创建合并后链表的虚拟头结点</span></span><br><span class="line">        ListNode dummyHead = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">        ListNode curr = dummyHead;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 若链表不为空，开始合并,实际操作是插入节点</span></span><br><span class="line">        <span class="keyword">while</span>(l1 != <span class="keyword">null</span> &amp;&amp; l2 != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>(l1.val &lt; l2.val) &#123;</span><br><span class="line">                curr.next = l1;</span><br><span class="line">                l1 = l1.next;</span><br><span class="line">                curr = curr.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                curr.next = l2;</span><br><span class="line">                l2 = l2.next;</span><br><span class="line">                curr = curr.next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 若l1或者l2有一个为空，则直接返回另一条链表</span></span><br><span class="line">        <span class="keyword">if</span>(l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            curr.next = l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            curr.next = l1;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> dummyHead.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>方法二，递归</p>
+<p>分析递归的解法：</p>
+<ul>
+<li>终止条件：两条链表分别名为l1和l2，当l1为空或者l2为空是结束</li>
+<li>返回值：每一层调用都返回排好序的链表头</li>
+<li>本级递归内容：如果l1的val值更小，则将l1.next与排序好的链表头相接，l2同理</li>
+</ul>
+<p><a href="https://leetcode-cn.com/problems/merge-two-sorted-lists/solution/hua-jie-suan-fa-21-he-bing-liang-ge-you-xu-lian-bi/" target="_blank" rel="noopener">可以画图分析，具体分析可以参考这篇题解</a></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 使用recursion，代码虽然简洁，但是可能导致Stack OverFlow</span></span><br><span class="line">        <span class="keyword">if</span>(l1 == <span class="keyword">null</span>) <span class="keyword">return</span> l2;</span><br><span class="line">        <span class="keyword">if</span>(l2 == <span class="keyword">null</span>) <span class="keyword">return</span> l1;</span><br><span class="line">        <span class="keyword">if</span>(l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next,l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1,l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="88-Merge-Sorted-Array-合并两个有序数组-Easy"><a href="#88-Merge-Sorted-Array-合并两个有序数组-Easy" class="headerlink" title="88. Merge Sorted Array(合并两个有序数组)(Easy)"></a><a href="https://leetcode-cn.com/problems/merge-sorted-array/" target="_blank" rel="noopener">88. Merge Sorted Array(合并两个有序数组)(Easy)</a></h2><p>Given two sorted integer arrays <em>nums1</em> and <em>nums2</em>, merge <em>nums2</em> into <em>nums1</em> as one sorted array.</p>
+<h2 id=""><a href="#" class="headerlink" title="["></a>[</h2><h2 id="88-Merge-Sorted-Array-合并两个有序数组-Easy-https-leetcode-cn-com-problems-merge-sorted-array"><a href="#88-Merge-Sorted-Array-合并两个有序数组-Easy-https-leetcode-cn-com-problems-merge-sorted-array" class="headerlink" title="88. Merge Sorted Array(合并两个有序数组)(Easy)](https://leetcode-cn.com/problems/merge-sorted-array/)"></a>88. Merge Sorted Array(合并两个有序数组)(Easy)](<a href="https://leetcode-cn.com/problems/merge-sorted-array/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/merge-sorted-array/</a>)</h2><p>Given two sorted integer arrays <em>nums1</em> and <em>nums2</em>, merge <em>nums2</em> into <em>nums1</em> as one sorted array.</p>
 <p><strong>Note:</strong></p>
 <ul>
 <li><p>The number of elements initialized in <em>nums1</em> and <em>nums2</em> are m and n respectively.</p>
@@ -821,7 +828,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数组、链表、跳表"><span class="nav-text">数组、链表、跳表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#283-Move-zeros-移动零-Easy"><span class="nav-text">283.Move zeros(移动零)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-Container-With-Most-Water-盛水最多的容器-Mid"><span class="nav-text">11.Container With Most Water(盛水最多的容器)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Two-Sum-两数之和-Easy"><span class="nav-text">1. Two Sum(两数之和)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-3Sum-三数之和-Mid"><span class="nav-text">15. 3Sum(三数之和)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#206-Reverse-LinkedList-反转链表-Easy"><span class="nav-text">206. Reverse LinkedList(反转链表)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#92-Reverse-LinkedList-II-反转链表II-Mid"><span class="nav-text">92. Reverse LinkedList II(反转链表II)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#141-Linked-List-Cycle-环形链表-Easy"><span class="nav-text">141. Linked List Cycle(环形链表)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#142-Linked-List-Cycle-II-环形链表II-Mid"><span class="nav-text">142. Linked List Cycle II(环形链表II)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#24-Swap-Nodes-in-Pairs-两两交换链表中的节点-Mid"><span class="nav-text">24. Swap Nodes in Pairs(两两交换链表中的节点)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#25-Reverse-Nodes-in-k-Group-k个一组翻转链表-Hard"><span class="nav-text">25. Reverse Nodes in k-Group(k个一组翻转链表)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#26-Remove-Duplicates-from-Sorted-Array-删除排序数组中的重复项-Easy"><span class="nav-text">26. Remove Duplicates from Sorted Array(删除排序数组中的重复项)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#189-Rotate-Array-旋转数组-Easy"><span class="nav-text">189. Rotate Array(旋转数组)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#21-Merge-Two-Sorted-Lists-合并两个有序链表-Easy"><span class="nav-text">21. Merge Two Sorted Lists(合并两个有序链表)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#88-Merge-Sorted-Array-合并两个有序数组-Easy"><span class="nav-text">88. Merge Sorted Array(合并两个有序数组)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#66-Plus-One-加一-Easy"><span class="nav-text">66. Plus One(加一)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#83-Remove-Duplicates-from-Sorted-List-删除排序链表中的重复元素-Easy"><span class="nav-text">83. Remove Duplicates from Sorted List(删除排序链表中的重复元素)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#82-Remove-Duplicates-from-Sorted-List-II-删除排序链表中的重复元素-II-Mid"><span class="nav-text">82. Remove Duplicates from Sorted List II(删除排序链表中的重复元素 II)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#203-Remove-Linked-List-Elements-移除链表元素-Easy"><span class="nav-text">203. Remove Linked List Elements(移除链表元素)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#剑指offer22-链表中倒数第k个节点-Easy"><span class="nav-text">剑指offer22.链表中倒数第k个节点(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#237-Delete-Node-in-a-Linked-List-删除链表中的节点-Easy"><span class="nav-text">237. Delete Node in a Linked List(删除链表中的节点)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#61-Rotate-List-旋转链表-Mid"><span class="nav-text">61. Rotate List(旋转链表)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Add-Two-Numbers-两数相加-Mid"><span class="nav-text">2. Add Two Numbers(两数相加)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#54-剑指29-顺序打印矩阵-Spiral-Matrix-螺旋矩阵-Mid"><span class="nav-text">54. 剑指29(顺序打印矩阵) &#x2F; Spiral Matrix(螺旋矩阵)(Mid)</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数组、链表、跳表"><span class="nav-text">数组、链表、跳表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#283-Move-zeros-移动零-Easy"><span class="nav-text">283.Move zeros(移动零)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-Container-With-Most-Water-盛水最多的容器-Mid"><span class="nav-text">11.Container With Most Water(盛水最多的容器)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Two-Sum-两数之和-Easy"><span class="nav-text">1. Two Sum(两数之和)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-3Sum-三数之和-Mid"><span class="nav-text">15. 3Sum(三数之和)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#206-Reverse-LinkedList-反转链表-Easy"><span class="nav-text">206. Reverse LinkedList(反转链表)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#92-Reverse-LinkedList-II-反转链表II-Mid"><span class="nav-text">92. Reverse LinkedList II(反转链表II)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#141-Linked-List-Cycle-环形链表-Easy"><span class="nav-text">141. Linked List Cycle(环形链表)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#142-Linked-List-Cycle-II-环形链表II-Mid"><span class="nav-text">142. Linked List Cycle II(环形链表II)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#24-Swap-Nodes-in-Pairs-两两交换链表中的节点-Mid"><span class="nav-text">24. Swap Nodes in Pairs(两两交换链表中的节点)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#25-Reverse-Nodes-in-k-Group-k个一组翻转链表-Hard"><span class="nav-text">25. Reverse Nodes in k-Group(k个一组翻转链表)(Hard)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#26-Remove-Duplicates-from-Sorted-Array-删除排序数组中的重复项-Easy"><span class="nav-text">26. Remove Duplicates from Sorted Array(删除排序数组中的重复项)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#189-Rotate-Array-旋转数组-Easy"><span class="nav-text">189. Rotate Array(旋转数组)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#21-Merge-Two-Sorted-Lists-合并两个有序链表-Easy"><span class="nav-text">21. Merge Two Sorted Lists(合并两个有序链表)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-text">[</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#88-Merge-Sorted-Array-合并两个有序数组-Easy-https-leetcode-cn-com-problems-merge-sorted-array"><span class="nav-text">88. Merge Sorted Array(合并两个有序数组)(Easy)](https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;merge-sorted-array&#x2F;)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#66-Plus-One-加一-Easy"><span class="nav-text">66. Plus One(加一)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#83-Remove-Duplicates-from-Sorted-List-删除排序链表中的重复元素-Easy"><span class="nav-text">83. Remove Duplicates from Sorted List(删除排序链表中的重复元素)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#82-Remove-Duplicates-from-Sorted-List-II-删除排序链表中的重复元素-II-Mid"><span class="nav-text">82. Remove Duplicates from Sorted List II(删除排序链表中的重复元素 II)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#203-Remove-Linked-List-Elements-移除链表元素-Easy"><span class="nav-text">203. Remove Linked List Elements(移除链表元素)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#剑指offer22-链表中倒数第k个节点-Easy"><span class="nav-text">剑指offer22.链表中倒数第k个节点(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#237-Delete-Node-in-a-Linked-List-删除链表中的节点-Easy"><span class="nav-text">237. Delete Node in a Linked List(删除链表中的节点)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#61-Rotate-List-旋转链表-Mid"><span class="nav-text">61. Rotate List(旋转链表)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Add-Two-Numbers-两数相加-Mid"><span class="nav-text">2. Add Two Numbers(两数相加)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#54-剑指29-顺序打印矩阵-Spiral-Matrix-螺旋矩阵-Mid"><span class="nav-text">54. 剑指29(顺序打印矩阵) &#x2F; Spiral Matrix(螺旋矩阵)(Mid)</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -837,7 +844,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -850,7 +857,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">33</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -906,7 +913,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">427k</span>
+    <span title="Symbols count total">469k</span>
 </div>
 
 
@@ -923,7 +930,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共226.7k字</span>
+  <span class="post-count">博客全站共252.5k字</span>
 </div>
 
         

@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/siyecao.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/siyecao.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false,"b2t":true,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="面对赢不了的挑战有两个选择：要不就投降，要不就让自己变得更强。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K8s Basic I">
+<meta property="og:url" content="http://yoursite.com/2020/04/07/Docker-K8s-Basic-I/index.html">
+<meta property="og:site_name" content="Hi, This is Bennett">
+<meta property="og:description" content="面对赢不了的挑战有两个选择：要不就投降，要不就让自己变得更强。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/04/07/I8uqR3yH562KJdB.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/07/dgby9EwWrpjfoMK.png">
+<meta property="article:published_time" content="2020-04-06T23:49:03.000Z">
+<meta property="article:modified_time" content="2020-04-07T07:29:06.430Z">
+<meta property="article:author" content="Wang Mingsheng">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="K8s">
+<meta property="article:tag" content="MicroService">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/07/I8uqR3yH562KJdB.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/07/Docker-K8s-Basic-I/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>K8s Basic I | Hi, This is Bennett</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hi, This is Bennett</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">33</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">37</span></a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/07/Docker-K8s-Basic-I/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/faceimage.jpg">
+      <meta itemprop="name" content="Wang Mingsheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hi, This is Bennett">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          K8s Basic I
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-04-07 07:49:03 / Modified: 15:29:06" itemprop="dateCreated datePublished" datetime="2020-04-07T07:49:03+08:00">2020-04-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Study-Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Study Note</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              
+              <span>6.4k</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>面对赢不了的挑战有两个选择：要不就投降，要不就让自己变得更强。</p>
+</blockquote>
+<a id="more"></a>
+
+<p>Docker或者说容器，实现概念主要基于CGroups(限制每个进程的资源)、NameSpace(隔离不同的容器进程)、rootFS(文件系统，挂载到主机上)。</p>
+<p>下面着重讲一下K8s四组基本概念。</p>
+<h1 id="K8s四组基本概念"><a href="#K8s四组基本概念" class="headerlink" title="K8s四组基本概念"></a>K8s四组基本概念</h1><h2 id="Pod-Pod控制器"><a href="#Pod-Pod控制器" class="headerlink" title="Pod/Pod控制器"></a>Pod/Pod控制器</h2><h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><p>K8s集群中运行的最小单元不是容器，而是Pod。</p>
+<ul>
+<li>Pod是K8S里能被运行的最小的逻辑单元(原子单元)</li>
+<li><strong>1个Pod里面可以运行多个容器</strong>，他们共享UTS+NET+IPC名称空间</li>
+<li>可以把Pod看成豌豆荚，而同一个Pod内的每个容器是一颗颗豌豆</li>
+<li>一个Pod里运行多个容器，又称作：<strong>边车(SideCar)模式</strong>(类似从动轮)</li>
+</ul>
+<h3 id="Pod控制器"><a href="#Pod控制器" class="headerlink" title="Pod控制器"></a>Pod控制器</h3><ul>
+<li>Pod控制器是Pod启动的一种模板，用来<strong>保证在K8S里启动的Pod应始终按照人们的预期运行</strong>(副本数、生命周期、健康状态检查…)</li>
+<li>K8S内提供了众多的Pod控制器，常用的有以下几种：<ul>
+<li><font color=#FF0000>Deployment</font>（真正暴露在外面的）</li>
+<li><font color=#FF0000>DeamonSet</font>（每个运算节点上都起一份）</li>
+<li>ReplicaSet（Deployment管理ReplicaSet，ReplicaSet管理Pod,ReplicaSet不直接暴露在外面）</li>
+<li>StatefulSet（管理有状态应用）</li>
+<li>Job（管理普通任务）</li>
+<li>Cronjob（管理定时任务）</li>
+</ul>
+</li>
+</ul>
+<h2 id="Name-Namespace"><a href="#Name-Namespace" class="headerlink" title="Name/Namespace"></a>Name/Namespace</h2><h3 id="Name"><a href="#Name" class="headerlink" title="Name"></a>Name</h3><ul>
+<li>由于K8S内部，使用”资源”来定义每一种逻辑概念(功能)，所以每种”资源”，都应该有自己的”名称”</li>
+<li>“资源”有api版本(apiVersion)、类别(kind)、元数据(metadata)、定义清单(spec)、状态(status)等配置信息</li>
+<li>“名称”通常定义在”资源”的”元数据”信息里</li>
+</ul>
+<h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><ul>
+<li>随着项目增多、人员数量增加、集群规模扩大，需要一种能够隔离K8S内各种”资源”的方法，这就是Namespace命名空间</li>
+<li>Namespace可以理解为K8S内部的虚拟集群组</li>
+<li>不同名称空间内的”资源”，名称可以相同，相同名称空间内的同种”资源”，”名称”不能相同</li>
+<li>合理地使用K8S的名称空间，使得集群管理员能够更好地对交付到K8S里的服务进行分类管理和浏览</li>
+<li>K8S里默认的Namespace有：default、kube-system、kube-public</li>
+<li>查询K8S里特定”资源”要带上相应的名称空间(Namespace)，不带默认查询default空间</li>
+</ul>
+<h2 id="Label-Label选择器"><a href="#Label-Label选择器" class="headerlink" title="Label/Label选择器"></a>Label/Label选择器</h2><h3 id="Label"><a href="#Label" class="headerlink" title="Label"></a>Label</h3><ul>
+<li><strong>标签是K8S特色的管理方式</strong>，便于分类管理资源对象</li>
+<li>一个标签可以对应多个资源，一个资源也可以有多个标签，它们是<strong>多对多的</strong>关系。</li>
+<li>一个资源拥有多个标签，可以实现不同维度的管理(一个资源可以打上各种各样的标签，比如可以打上污点、容忍度等)</li>
+<li>标签的组成：key=value(键值对)</li>
+<li>与标签类似的，还有一种”注解”(annotations)</li>
+</ul>
+<p>Label的定义有限制，长度要小于63，必须以字母或数字开头，中间值也有要求。(官网原话：Valid label values must be 63 characters or less nad must be empty or begin and end with an alphanumeric character([a-z0-9A-Z]) with dashes(_),dots(.), and alphanumerics between).</p>
+<h3 id="Label选择器"><a href="#Label选择器" class="headerlink" title="Label选择器"></a>Label选择器</h3><ul>
+<li>给资源打上Label之后，<strong>可以使用标签选择器过滤指定的标签，然后执行我们想要的操作</strong></li>
+<li>标签选择器目前有两种：基于等值关系(等于、不等于)和基于集合关系(属于、不属于、存在)</li>
+<li>许多资源支持内嵌标签选择器字段<ul>
+<li>matchLabels</li>
+<li>matchExperssions</li>
+</ul>
+</li>
+</ul>
+<h2 id="Service-Ingress-最重要"><a href="#Service-Ingress-最重要" class="headerlink" title="Service/Ingress(最重要)"></a>Service/Ingress(最重要)</h2><h3 id="Service-暴露在OSI第四层，暴露IP和端口"><a href="#Service-暴露在OSI第四层，暴露IP和端口" class="headerlink" title="Service(暴露在OSI第四层，暴露IP和端口)"></a>Service(暴露在OSI第四层，暴露IP和端口)</h3><ul>
+<li>在K8S的”世界”里，虽然每个Pod都会被分配一个单独的IP地址，但这个IP地址会随着Pod的销毁而消失(Pod有生命周期，而且每次重启Pod的IP都会变化，那么IP地址每次都变化，怎么<strong>调度流量</strong>呢？每次都去修改IP么？不行，想到了巧妙的Service)</li>
+<li>Service(服务)就是用来解决这个问题的核心概念</li>
+<li>一个Service可以看做是一组提供相同服务的Pod的对外访问接口</li>
+<li>Service作用于哪些Pod是通过标签选择器来定义的</li>
+</ul>
+<h3 id="Ingress-暴露在应用层"><a href="#Ingress-暴露在应用层" class="headerlink" title="Ingress(暴露在应用层)"></a>Ingress(暴露在应用层)</h3><ul>
+<li>Ingress是K8S集群里工作在OSI网络参考模型下的应用层(第7层)的应用，对外直接暴露的接口</li>
+<li>Service只能进行L4流量调度，表现形式是ip + port</li>
+<li>Ingress则可以调度不同业务域、不同URL访问路径的业务流量</li>
+</ul>
+<p><strong>如果用了HTTP和HTTPS协议，那么暴露应用的时候绝大时候都是用Ingress暴露</strong>。</p>
+<p>查找逻辑关系是，Ingress去找Service，然后Service去找Pod。</p>
+<h1 id="K8S核心组件与核心附件"><a href="#K8S核心组件与核心附件" class="headerlink" title="K8S核心组件与核心附件"></a>K8S核心组件与核心附件</h1><h2 id="核心组件"><a href="#核心组件" class="headerlink" title="核心组件"></a>核心组件</h2><ul>
+<li><p><strong>配置存储中心</strong>：etcd服务(类似ZK，主要用来存储节点元数据信息，比如资源配置，类似MySQL，etcd是非关系型数据库)</p>
+</li>
+<li><p><strong>主控(master)节点</strong></p>
+<ul>
+<li>kube-apiserver服务</li>
+</ul>
+<p><strong>详解</strong>：apiserver是整个K8S的大脑，提供了集群管理的REST API接口(包括鉴权、数据校验及集群状态变更)；负责其他模块之间的数据交互；是资源配额控制的入口；提供完备的集群安全机制；</p>
+<ul>
+<li>kube-controller-manager服务</li>
+</ul>
+<p><strong>详解</strong>：由一系列控制器组成，通过apiserver监控整个集群的状态，并确保集群处于预期的工作状态。</p>
+<ul>
+<li>kube-scheduler服务</li>
+</ul>
+<p><strong>详解</strong>：主要功能是接收调度pod到适合的运算节点上</p>
+</li>
+<li><p><strong>运算(node)节点</strong></p>
+<ul>
+<li>kube-kubelet服务</li>
+</ul>
+<p><strong>详解</strong>：简单来说，kubelet的功能就是定时从某个地方获取节点上pod的期望状态(运行什么容器、网络状态配置等等)，并调用对应的容器平台接口以达到这个状态；kubelet还会定时汇报当前节点状态给apiserver，以供调度的时候使用；镜像和容器的清理工作，保证节点上的镜像不会沾满存储空间。</p>
+<p>可见，kubelet功能很多，很核心。</p>
+<ul>
+<li>kube-proxy服务</li>
+</ul>
+<p><strong>详解</strong>：proxy是K8S每个节点上运行网络的代理，是service资源的代理。说白了，是建立了pod网络和集群网络的关系(clusterip与podip的关系)；常用三种流量调度模式：Userspace(已经被废弃)、Iptables(濒临被废弃)、Ipvs(推荐使用)。实际proxy提供的是service的虚拟网络。</p>
+</li>
+</ul>
+<h2 id="CLI客户端"><a href="#CLI客户端" class="headerlink" title="CLI客户端"></a>CLI客户端</h2><ul>
+<li>kubectl</li>
+</ul>
+<p>详解：给Pod提供网络</p>
+<h2 id="核心附件"><a href="#核心附件" class="headerlink" title="核心附件"></a>核心附件</h2><ul>
+<li>CNI网络插件：flannel/calico</li>
+<li>服务发现用插件：coredns</li>
+<li>服务暴露用插件：traefik</li>
+<li>GUI管理插件：Dashboard</li>
+</ul>
+<h1 id="生产经验-K8S三条网络"><a href="#生产经验-K8S三条网络" class="headerlink" title="生产经验(K8S三条网络)"></a>生产经验(K8S三条网络)</h1><p>这里说的生产经验，实际上是<strong>如何规划K8S的三条网络</strong>。如下图所示：</p>
+<p><img src="https://i.loli.net/2020/04/07/I8uqR3yH562KJdB.png" alt="K8S三条网络.png"></p>
+<p>上图可以很清晰地展现K8S的三个网络：节点网络、Pod网络、Service网络。</p>
+<p>宿主机器的网络，或者说Node网络，就是图中的<strong>节点网络</strong>。</p>
+<p>Pod通过从宿主机上NAT，得到Pod网络，过程中利用了docker0设备，所有docker容器会从docker通过NAT映射出来。</p>
+<p>需要注意，<code>kube-proxy</code><strong>连接了Pod网络和Service网络，其中Service网络是虚的网络</strong>。</p>
+<p>举例：</p>
+<ul>
+<li>Service网络可以设置为：<code>192.168.0.0/16</code>，Pod网络可以设置为<code>172.7.0.0/16</code>，节点网络可以设置为<code>10.4.7.0/24</code></li>
+<li>Node1和Node2分别设置为：<code>10.4.7.21</code>和<code>10.4.7.22</code>，然后Node1对应的pod网络是<code>172.7.21.0/24</code>和<code>172.7.22.0/24</code>。</li>
+</ul>
+<p>上述设计经过了严格考虑，三条网络分别对应了三个私有地址，即10段的私有地址、172.7段的私有地址和192.168段的私有地址。(这个设计在很多生产环境上都在使用)</p>
+<p>首先，因为Service网络是虚拟的网络，所以用<code>192.168.x.x/16</code>没有问题。</p>
+<p>然后，因为pod的网络也经过了规划，所以我们一看到比如<code>172.7.21.4</code>之类的IP，就能知道是Node1节点上的pod，<font color=#FF0000>这样的对应关系有助于排错</font>。</p>
+<p>在规划pod的IP和Node的IP的时候，也是有讲究的。比如我们的Node1设置IP为<code>10.4.7.1</code>，每一位都有自己的含义：10代表公网的私有地址、4代表机房，也就是不同楼层的哪个机房、7代表不同的项目或者环境，比如7代表公共开发部NCE基础研发部，8代表NCE应用研发部，9和10代表生产环境等，也就是<strong>第三位用来区分业务和环境，可以用来做物理隔离</strong>。此外，pod的网络也要根据Node来变化，比如Node1的第二位是5，即<code>10.5.7.1</code>,那么此时pod网络可以设置第二位为17，即<code>172.17.21.0/24</code>，以此类推。</p>
+<p>所以，在规划Node网络和Pod网络的时候，我们最好要达到，一看到某个pod的IP，就知道是哪台机器上的，因为有可能pod挂的时候会挂一批，那么能通过pod的IP找到Node，就很利于排错。</p>
+<h1 id="K8S服务发现和负载均衡"><a href="#K8S服务发现和负载均衡" class="headerlink" title="K8S服务发现和负载均衡"></a>K8S服务发现和负载均衡</h1><p><a href="http://www.cnblogs.com/leidaxia/p/6485639.html" target="_blank" rel="noopener">可以参考这篇文章</a></p>
+<p><a href="https://blog.csdn.net/weixin_39891030/article/details/86480333" target="_blank" rel="noopener">详细的负载均衡可以参考这篇文章</a></p>
+<p><a href="https://baijiahao.baidu.com/s?id=1651231426160391377&wfr=spider&for=pc" target="_blank" rel="noopener">一个基于Service做服务发现和负载均衡的案例</a></p>
+<p>之前我们已经了解到 pod 的网络跟机器不是同一个段的网络，那怎么让 pod 网络暴露出去给外部访问，从而提供给外部的用户去调用的？这时就需要<strong>服务发现</strong>。而如果pod使用rc创建了多个副本，那么service就能代理多个相同的pod，通过<strong>kube-proxy，实现负载均衡</strong>。</p>
+<p>一个模型如图所示：</p>
+<p><img src="https://i.loli.net/2020/04/07/dgby9EwWrpjfoMK.png" alt="K8S服务发现和负载均衡.png"></p>
+<p>在 K8s 里面，服务发现与负载均衡就是 K8s <strong>Service</strong>。上图就是在 K8s 里 Service 的架构，K8s service 向上提供了外部网络以及 pod 网络的访问，即外部网络可以通过 service 去访问，pod 网络也可以通过 K8s Service 去访问。</p>
+<p>向下，K8s 对接了另外一组 pod，即可以通过 K8s Service 的方式去负载均衡到一组 pod 上面去，这样相当于解决了前面所说的复发性问题，或者提供了统一的访问入口去做服务发现，然后又可以给外部网络访问，解决不同的 pod 之间的访问，提供统一的访问地址。</p>
+<p>service：服务，是一个虚拟概念，逻辑上代理后端pod。众所周知，pod生命周期短，状态不稳定，pod异常后新生成的pod ip会发生变化，之前pod的访问方式均不可达。通过service对pod做代理，service有固定的ip和port，ip:port组合自动关联后端pod，即使pod发生改变，kubernetes内部更新这组关联关系，使得service能够匹配到新的pod。这样，通过service提供的固定ip，用户再也不用关心需要访问哪个pod，以及pod是否发生改变，大大提高了服务质量。</p>
+<p>每个节点都有一个组件<strong>kube-proxy</strong>，实际上是为service服务的，通过kube-proxy，实现流量从service到pod的转发，<strong>kube-proxy也可以实现简单的负载均衡功能</strong>。</p>
+<p>kube-proxy代理模式：userspace方式：kube-proxy 在节点上为每一个服务创建一个临时端口，service的IP：port 过来的流量转发到这个临时端口上，kube-proxy会用内部的负载均衡机制（轮询），选择一个后端pod，然后建立iptables，把流量导入这个pod里面。</p>
+<h2 id="K8S服务发现"><a href="#K8S服务发现" class="headerlink" title="K8S服务发现"></a>K8S服务发现</h2><p>服务发现在微服务架构里，服务之间经常进行通信，服务发现就是解决不同服务之间通信的问题。比如一个nginx的pod，要访问一个mysql服务，就需要知道mysql服务的ip和port，获取ip和port的过程就是服务发现。</p>
+<p>kubernetes 支持两种服务发现模式：</p>
+<ol>
+<li><strong>环境变量</strong></li>
+</ol>
+<p>Pod创建的时候，服务的ip和port会以环境变量的形式注入到pod里，比如pod创建时有一个redis-master服务，服务ip地址是10.0.0.11，port是6379，则会把下面一系列环境变量注入到pod里，通过这些环境变量访问redis-master服务。 REDIS_MASTER_SERVICE_HOST=10.0.0.11REDIS_MASTER_SERVICE_PORT=6379REDIS_MASTER_PORT=t</p>
+<ol start="2">
+<li><strong>dns</strong></li>
+</ol>
+<p>K8s集群会内置一个dns服务器，<strong>service创建成功后，会在dns服务器里导入一些记录，想要访问某个服务，通过dns服务器解析出对应的ip和port，从而实现服务访问</strong></p>
+<p>service 是微服务架构中的微服务。service 定义了一个服务的访问入口地址，前端的应用（pod）通过这个入口访问其背后的一组由pod副本组成的集群实例，service与其后端pod副本集群之间是通过label seletor 实现无缝对接的。而rc的功能实际上是保证servic的服务能力和服务质量处于预期的标准</p>
+<p>通常我们的系统是由多个提供不同业务能力而又彼此独立的微服务单元所组成，服务之间通过tcp／ip进行通信，从而形成了强大而又灵活的弹性网络，拥有了强大的分布式能力，弹性扩展能力，容错能力。</p>
+<h2 id="K8S的Service如何进行服务发现和负载均衡"><a href="#K8S的Service如何进行服务发现和负载均衡" class="headerlink" title="K8S的Service如何进行服务发现和负载均衡"></a>K8S的Service如何进行服务发现和负载均衡</h2><p>service可以将pod ip封装起来，即使pod发生重建，依然可以通过service来访问pod提供的服务，service还小程度地解决了负载均衡的问题。</p>
+<p>运行在每个node上的<strong>kube-proxy</strong>进程其实就是一个<strong>智能的软件负载均衡器</strong>，他负责<strong>把service的请求转发到后端的某个pod实例</strong>。<strong>Kube-proxy</strong> 的默认模式是 iptables，它支持相当复杂的基于规则的 IP 管理。iptables 模式下，负载分配的本地方法是随机选择——<strong>由一个传入的请求去随机选择一个服务中的 pod。</strong>早先版本（以及原来的默认模式）的 kube-proxy 模式是 userspace，它使用循环的负载分配，在 IP 列表上来分配下一个可以使用的 pod，然后更换（或置换）该列表。</p>
+<p><strong>kube-dns可以解决Service的发现问题</strong>，k8s将Service的名称当做域名注册到kube-dns中，通过Service的名称就可以访问其提供的服务。</p>
+<h2 id="真正的负载均衡：Ingress"><a href="#真正的负载均衡：Ingress" class="headerlink" title="真正的负载均衡：Ingress"></a>真正的负载均衡：Ingress</h2><p>上面讲到了支持K8S负载均衡的两种方式，即kube-proxy和service，但是这些并不是真正的负载均衡。为了实现真正的负载均衡，当前最流行、最灵活、应用于很多领域的方法是<strong>Ingress</strong>，它通过在专门的 Kubernetes pod 中的Controller(控制器)进行操作。</p>
+<p>控制器包括一个 Ingress 资源——一组管理流量的规则和一个应用这些规则的守护进程。 控制器有自己内置的负载均衡特性，具备一些相当复杂的功能。你还可以让 Ingress 资源包含更复杂的负载均衡规则，来满足对具体系统或供应商的负载均衡功能和需求。</p>
+<p>除了 Ingress，还可以使用负载均衡器类型的服务来替代它。该服务使用基于云服务的外部负载均衡器。负载均衡器只能与 AWS、Azure、OpenStack、CloudStack 和 Google Compute Engine 等特定的云服务提供商一起使用，且均衡器的功能根据提供者而定。除此之外其他的负载均衡方法可以从服务提供商以及第三方获得。</p>
+<p><font color=#FF000>但是总的来说，还是推荐Ingress</font>。当前 Ingress 是首选的负载均衡方法。因为它是作为一个基于 pod 的控制器在 Kubernetes 内部执行，因此对 Kubernetes 功能的访问相对不受限制（不同于外部负载均衡器，它们中的一些可能无法在 pod 层面访问）。Ingress 资源中包含的可配置规则支持非常详细和高度细化的负载均衡，可以根据应用程序的功能要求极其运行条件进行定制。</p>
+
+    </div>
+
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i># Docker</a>
+              <a href="/tags/K8s/" rel="tag"><i class="fa fa-tag"></i># K8s</a>
+              <a href="/tags/MicroService/" rel="tag"><i class="fa fa-tag"></i># MicroService</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/05/zookeeper-study-I/" rel="prev" title="zookeeper I">
+      <i class="fa fa-chevron-left"></i> zookeeper I
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODAxMC8yNDUwNw=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#K8s四组基本概念"><span class="nav-text">K8s四组基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Pod-Pod控制器"><span class="nav-text">Pod&#x2F;Pod控制器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod"><span class="nav-text">Pod</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod控制器"><span class="nav-text">Pod控制器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Name-Namespace"><span class="nav-text">Name&#x2F;Namespace</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Name"><span class="nav-text">Name</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Namespace"><span class="nav-text">Namespace</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Label-Label选择器"><span class="nav-text">Label&#x2F;Label选择器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Label"><span class="nav-text">Label</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Label选择器"><span class="nav-text">Label选择器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Service-Ingress-最重要"><span class="nav-text">Service&#x2F;Ingress(最重要)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Service-暴露在OSI第四层，暴露IP和端口"><span class="nav-text">Service(暴露在OSI第四层，暴露IP和端口)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ingress-暴露在应用层"><span class="nav-text">Ingress(暴露在应用层)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#K8S核心组件与核心附件"><span class="nav-text">K8S核心组件与核心附件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心组件"><span class="nav-text">核心组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CLI客户端"><span class="nav-text">CLI客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心附件"><span class="nav-text">核心附件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生产经验-K8S三条网络"><span class="nav-text">生产经验(K8S三条网络)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#K8S服务发现和负载均衡"><span class="nav-text">K8S服务发现和负载均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#K8S服务发现"><span class="nav-text">K8S服务发现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#K8S的Service如何进行服务发现和负载均衡"><span class="nav-text">K8S的Service如何进行服务发现和负载均衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#真正的负载均衡：Ingress"><span class="nav-text">真正的负载均衡：Ingress</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wang Mingsheng"
+      src="/images/faceimage.jpg">
+  <p class="site-author-name" itemprop="name">Wang Mingsheng</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wmsheng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wmsheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wangmingshenghku@163.com" title="E-Mail → mailto:wangmingshenghku@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/my/m/music/playlist?id=372605964" title="Music → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;my&#x2F;m&#x2F;music&#x2F;playlist?id&#x3D;372605964" rel="noopener" target="_blank"><i class="fa fa-fw fa-youtube"></i>Music</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+
+    </div>
+    
+    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=3314336&auto=1&height=66">
+    </iframe>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wang Mingsheng</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">469k</span>
+</div>
+
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_uv">
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_pv">
+    本站访问量<span id="busuanzi_value_site_pv"></span>
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共252.5k字</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>

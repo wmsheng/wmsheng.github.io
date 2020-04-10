@@ -89,7 +89,7 @@
 <meta property="og:image" content="https://s2.ax1x.com/2020/03/06/3q64pD.png">
 <meta property="og:image" content="https://s2.ax1x.com/2020/03/06/3qcmjJ.png">
 <meta property="article:published_time" content="2020-03-05T07:09:12.000Z">
-<meta property="article:modified_time" content="2020-03-06T07:54:08.658Z">
+<meta property="article:modified_time" content="2020-04-10T05:10:22.335Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="GC">
@@ -183,7 +183,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">30</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">33</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -193,7 +193,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">36</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">37</span></a>
 
   </li>
   </ul>
@@ -253,7 +253,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-06 15:54:08" itemprop="dateModified" datetime="2020-03-06T15:54:08+08:00">2020-03-06</time>
+                <time title="Modified: 2020-04-10 13:10:22" itemprop="dateModified" datetime="2020-04-10T13:10:22+08:00">2020-04-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -428,9 +428,9 @@
 <p>周而复始。对象在Survivor区每熬过一次Minor GC，其年龄就会被加1，当对象的年龄达到某个值之后(默认是15岁)，这些对象会成为老年代。</p>
 <p>NOTE：这个默认年龄可以通过<code>-XX:MaxTenuringThreshold</code>调整</p>
 <p>但这也不是一定的，如果存储的对象过大，Eden区和Survivor区都存不下，可能会需要用到老年代的空间协助存储。</p>
-<h3 id="对象如何晋升到老年代"><a href="#对象如何晋升到老年代" class="headerlink" title="对象如何晋升到老年代"></a>对象如何晋升到老年代</h3><p>在分代算法当中，对象如何晋升到老年代？</p>
+<h3 id="对象如何晋升到老年代"><a href="#对象如何晋升到老年代" class="headerlink" title="对象如何晋升到老年代"></a>对象如何晋升到老年代</h3><p>在分代算法当中，对象如何晋升到老年代？简单来说有3种场景：</p>
 <ul>
-<li>经历一定Minor次数依然存活的对象</li>
+<li>经历一定Minor GC次数(比如是15次)依然存活的对象</li>
 <li>Survivor区中村放不下的对象</li>
 <li>新生成的大对象(可以用:<code>-XX:+PretenuerSizeThreshold</code>来控制大对象的大小，只要大于这个大小，对象生成之后直接放入老年代)</li>
 </ul>
@@ -735,7 +735,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -748,7 +748,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">33</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -804,7 +804,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">427k</span>
+    <span title="Symbols count total">469k</span>
 </div>
 
 
@@ -821,7 +821,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共226.7k字</span>
+  <span class="post-count">博客全站共252.5k字</span>
 </div>
 
         

@@ -57,7 +57,7 @@
 <meta property="og:description" content="世界上最快乐的事，莫过于为理想而奋斗——苏格拉底  LeetCode字符串相关题目，其解决思路和具体代码。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-01-13T04:50:00.000Z">
-<meta property="article:modified_time" content="2020-03-20T03:00:05.073Z">
+<meta property="article:modified_time" content="2020-04-09T02:00:26.714Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -151,7 +151,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">30</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">33</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -161,7 +161,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">36</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">37</span></a>
 
   </li>
   </ul>
@@ -221,7 +221,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-20 11:00:05" itemprop="dateModified" datetime="2020-03-20T11:00:05+08:00">2020-03-20</time>
+                <time title="Modified: 2020-04-09 10:00:26" itemprop="dateModified" datetime="2020-04-09T10:00:26+08:00">2020-04-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -249,7 +249,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>16k</span>
+              <span>17k</span>
             </span>
 
         </div>
@@ -343,12 +343,19 @@
 <li>左边界枚举的时候可以从小到大，也可以从大到小</li>
 </ol>
 <p>这两种思路代码差别仅在于内层循环。</p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> String longestPalindrome(String s) &#123;</span><br><span class="line">        <span class="comment">// 方法二，DP</span></span><br><span class="line">        <span class="comment">// corner case</span></span><br><span class="line">        <span class="built_in">int</span> len = s.length();</span><br><span class="line">        <span class="keyword">if</span>(len &lt; <span class="number">2</span> || s == <span class="literal">null</span>) <span class="keyword">return</span> s;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 记录最长子串的长度的maxLen和起始位置start</span></span><br><span class="line">        <span class="built_in">int</span> maxLen = <span class="number">1</span>, start = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">bool</span>ean[][] dp = new <span class="built_in">bool</span>ean[len][len];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 初始化，对角线都为单个元素,全部为true</span></span><br><span class="line">        <span class="comment">// 但是这个初始化过程可以省略，因为只有一个字符的时候肯定是回文</span></span><br><span class="line">        <span class="comment">// dp[i][i]根本不会被其他状态值所参考</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">            dp[i][i] = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// i &lt; len-1 是因为最后要加到i+1，也就是下标为len-1的位置</span></span><br><span class="line">        <span class="comment">// 处理长度为2的边界条件，长度为2时i+1和j-1会越界</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; len - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(s.charAt(i) == s.charAt(i+<span class="number">1</span>)) &#123;</span><br><span class="line">                dp[i][i+<span class="number">1</span>] = <span class="literal">true</span>;</span><br><span class="line">                maxLen = <span class="number">2</span>;</span><br><span class="line">                start = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> j = <span class="number">2</span>; j &lt; len; j++) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span> ;i &lt; j - <span class="number">1</span>; i++) &#123; <span class="comment">// i &lt; j的话长度为2，之前已经处理过了</span></span><br><span class="line">                <span class="keyword">if</span>(s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                    dp[i][j] = dp[i + <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    dp[i][j] = <span class="literal">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 只要dp[i][j]是true,就证明此时子串s[i,j]是回文串</span></span><br><span class="line">                <span class="comment">// 记录此时回文长度和起始位置,用substring的时候下标从1开始</span></span><br><span class="line">                <span class="keyword">if</span>(dp[i][j] == <span class="literal">true</span>) &#123;</span><br><span class="line">                <span class="built_in">int</span> tempLen = j - i + <span class="number">1</span>;</span><br><span class="line">                    <span class="keyword">if</span>(tempLen &gt; maxLen) &#123;</span><br><span class="line">                        maxLen = tempLen;</span><br><span class="line">                        start = i;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> s.substring(start, start+maxLen);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 方法二，DP</span></span><br><span class="line">        <span class="comment">// corner case</span></span><br><span class="line">        <span class="keyword">int</span> len = s.length();</span><br><span class="line">        <span class="keyword">if</span>(len &lt; <span class="number">2</span> || s == <span class="keyword">null</span>) <span class="keyword">return</span> s;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 记录最长子串的长度的maxLen和起始位置start</span></span><br><span class="line">        <span class="keyword">int</span> maxLen = <span class="number">1</span>, start = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[len][len];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 初始化，对角线都为单个元素,全部为true</span></span><br><span class="line">        <span class="comment">// 但是这个初始化过程可以省略，因为只有一个字符的时候肯定是回文</span></span><br><span class="line">        <span class="comment">// dp[i][i]根本不会被其他状态值所参考</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">            dp[i][i] = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// i &lt; len-1 是因为最后要加到i+1，也就是下标为len-1的位置</span></span><br><span class="line">        <span class="comment">// 处理长度为2的边界条件，长度为2时i+1和j-1会越界</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(s.charAt(i) == s.charAt(i+<span class="number">1</span>)) &#123;</span><br><span class="line">                dp[i][i+<span class="number">1</span>] = <span class="keyword">true</span>;</span><br><span class="line">                maxLen = <span class="number">2</span>;</span><br><span class="line">                start = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">2</span>; j &lt; len; j++) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span> ;i &lt; j - <span class="number">1</span>; i++) &#123; <span class="comment">// i &lt; j的话长度为2，之前已经处理过了</span></span><br><span class="line">                <span class="keyword">if</span>(s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                    dp[i][j] = dp[i + <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    dp[i][j] = <span class="keyword">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 只要dp[i][j]是true,就证明此时子串s[i,j]是回文串</span></span><br><span class="line">                <span class="comment">// 记录此时回文长度和起始位置,用substring的时候下标从1开始</span></span><br><span class="line">                <span class="keyword">if</span>(dp[i][j] == <span class="keyword">true</span>) &#123;</span><br><span class="line">                <span class="keyword">int</span> tempLen = j - i + <span class="number">1</span>;</span><br><span class="line">                    <span class="keyword">if</span>(tempLen &gt; maxLen) &#123;</span><br><span class="line">                        maxLen = tempLen;</span><br><span class="line">                        start = i;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> s.substring(start, start+maxLen);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>时间复杂度：O(n^2)</li>
 <li>空间复杂度：O(n^2)</li>
 </ul>
+<p>方法四：中心扩散法</p>
+<p>回文串一定是对称的，所以我们可以每次循环选择一个中心，进行左右扩展，判断左右字符是否相等即可。</p>
+<p>由于存在奇数的字符串和偶数的字符串，所以我们需要从一个字符开始扩展，或者从两个字符之间开始扩展，所以总共有 <code>n+n-1</code> 个中心。（n为n个数，n-1为n个数之间的间隙位置数量）</p>
+<p>对于一个有n个元素的字符数组来说，索引为0和len-1的元素不需要扩散，因为扩散不出去。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (s == <span class="keyword">null</span> || s.length() &lt; <span class="number">1</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">int</span> start = <span class="number">0</span>, end = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> len1 = expandAroundCenter(s, i, i);</span><br><span class="line">        <span class="keyword">int</span> len2 = expandAroundCenter(s, i, i + <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">int</span> len = Math.max(len1, len2);</span><br><span class="line">        <span class="keyword">if</span> (len &gt; end - start) &#123;</span><br><span class="line">            start = i - (len - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">            end = i + len / <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s.substring(start, end + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">expandAroundCenter</span><span class="params">(String s, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> L = left, R = right;</span><br><span class="line">    <span class="keyword">while</span> (L &gt;= <span class="number">0</span> &amp;&amp; R &lt; s.length() &amp;&amp; s.charAt(L) == s.charAt(R)) &#123;</span><br><span class="line">        L--;</span><br><span class="line">        R++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> R - L - <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法好处在于逻辑更清晰，在LeetCode用例测试中最后耗时也更短（虽然时间复杂度分析起来和方法三的动态规划都是O(n^2)）。</p>
 <p>还有一个马拉车算法，暂时不讲，面试很难写完。</p>
 <p><strong>总而言之</strong>，”马拉车算法”虽然很著名，但是对待这种字符串的问题，最常用的还是二维的动态规划。实际上，碰到字符串问题，只要牵扯到动态规划，一般都是把这个字符串复制一份，分别放到行和列上。</p>
 <p>对于这道题，需要注意：</p>
@@ -553,7 +560,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -566,7 +573,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">33</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -622,7 +629,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">427k</span>
+    <span title="Symbols count total">469k</span>
 </div>
 
 
@@ -639,7 +646,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共226.7k字</span>
+  <span class="post-count">博客全站共252.5k字</span>
 </div>
 
         

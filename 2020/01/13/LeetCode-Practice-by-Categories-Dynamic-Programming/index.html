@@ -58,7 +58,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://s2.ax1x.com/2020/02/21/3uunUK.png">
 <meta property="article:published_time" content="2020-01-13T04:47:08.000Z">
-<meta property="article:modified_time" content="2020-03-22T06:52:54.421Z">
+<meta property="article:modified_time" content="2020-04-08T16:48:06.270Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -152,7 +152,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">30</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">33</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -162,7 +162,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">36</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">37</span></a>
 
   </li>
   </ul>
@@ -222,7 +222,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-22 14:52:54" itemprop="dateModified" datetime="2020-03-22T14:52:54+08:00">2020-03-22</time>
+                <time title="Modified: 2020-04-09 00:48:06" itemprop="dateModified" datetime="2020-04-09T00:48:06+08:00">2020-04-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -250,7 +250,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>6.7k</span>
+              <span>7.7k</span>
             </span>
 
         </div>
@@ -374,6 +374,17 @@
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">NumArray</span> &#123;</span><br><span class="line">    <span class="built_in">int</span> sums[];</span><br><span class="line">    <span class="keyword">public</span> NumArray(<span class="built_in">int</span>[] nums) &#123;</span><br><span class="line">        sums = new <span class="built_in">int</span>[nums.length + <span class="number">1</span>];</span><br><span class="line">        sums[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i &lt; nums.length; i++) &#123;</span><br><span class="line">            sums[i+<span class="number">1</span>]  = sums[i] + nums[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> sumRange(<span class="built_in">int</span> i, <span class="built_in">int</span> j) &#123;</span><br><span class="line">        <span class="keyword">return</span> sums[j+<span class="number">1</span>] - sums[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your NumArray object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * NumArray obj = new NumArray(nums);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj.sumRange(i,j);</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
 
 <p>注意，先把所有计算结果保存起来，每次访问的话只需要O(1)，否则每次访问再计算，会导致时间复杂度太高。</p>
+<h2 id="53-Maximum-Subarray-最大子序和"><a href="#53-Maximum-Subarray-最大子序和" class="headerlink" title="53.Maximum Subarray(最大子序和)"></a>53.<a href="https://leetcode-cn.com/problems/maximum-subarray/" target="_blank" rel="noopener">Maximum Subarray(最大子序和)</a></h2><p>Given an integer array <code>nums</code>, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: [<span class="number">-2</span>,<span class="number">1</span>,<span class="number">-3</span>,<span class="number">4</span>,<span class="number">-1</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">-5</span>,<span class="number">4</span>],</span><br><span class="line">Output: <span class="number">6</span></span><br><span class="line">Explanation: [<span class="number">4</span>,<span class="number">-1</span>,<span class="number">2</span>,<span class="number">1</span>] has the largest sum = <span class="number">6.</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Follow up:</strong></p>
+<p>If you have figured out the O(<em>n</em>) solution, try coding another solution using the divide and conquer approach, which is more subtle.</p>
+<hr>
+<p>解：动态规划，定义数组dp[n.length]，其中dp[i]表示当前第i个元素可以得到的最大和，递推公式关键在于dp[i]为nums[i]与dp[i]+nums[i]之间的最大值，因为每次两种选择，直接加入nums[i]，或者从之前dp[i]和都小于0，需要重新从nums[i]开始算起。而在过程中需要记录当前能得到的最大的子序和max，最后返回max即可。</p>
+<p>为什么要有一个max记录最大值？状态都放在dp[i]不就行了？——不可以，答案很可能是子序和，所以要有一个单独的变量保存结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len = nums.length;</span><br><span class="line">        <span class="comment">// dp[i]表示第i位置到上一个计算起点的最大子序和的值</span></span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[len];</span><br><span class="line">        <span class="keyword">int</span> result = nums[<span class="number">0</span>];</span><br><span class="line">        dp[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="comment">// 比较巧妙，如果dp[i-1]&lt;0，那么肯定丢弃dp[i-1]能让dp[i]更大</span></span><br><span class="line">            <span class="comment">// 反之同理，如果dp[i-1] &gt; 0，那么加上dp[i-1]能让dp[i]更大</span></span><br><span class="line">            dp[i] = nums[i] + (dp[i-<span class="number">1</span>] &gt; <span class="number">0</span> ? dp[i-<span class="number">1</span>] : <span class="number">0</span>);</span><br><span class="line">            result = Math.max(dp[i], result);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -465,7 +476,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#70-Climbing-stairsl-爬楼梯-Easy"><span class="nav-text">70. Climbing-stairsl(爬楼梯)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#322-Coin-Change-零钱兑换-Mid"><span class="nav-text">322. Coin Change(零钱兑换)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#343-Integer-Break-整数拆分-Mid"><span class="nav-text">343. Integer Break(整数拆分)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#221-Maximal-Square-最大正方形-Mid"><span class="nav-text">221.  Maximal Square(最大正方形)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#303-Range-Sum-Query-Immutable-区域和检索-数组不可变-Easy"><span class="nav-text">303.Range Sum Query-Immutable(区域和检索-数组不可变)(Easy)</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#70-Climbing-stairsl-爬楼梯-Easy"><span class="nav-text">70. Climbing-stairsl(爬楼梯)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#322-Coin-Change-零钱兑换-Mid"><span class="nav-text">322. Coin Change(零钱兑换)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#343-Integer-Break-整数拆分-Mid"><span class="nav-text">343. Integer Break(整数拆分)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#221-Maximal-Square-最大正方形-Mid"><span class="nav-text">221.  Maximal Square(最大正方形)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#303-Range-Sum-Query-Immutable-区域和检索-数组不可变-Easy"><span class="nav-text">303.Range Sum Query-Immutable(区域和检索-数组不可变)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#53-Maximum-Subarray-最大子序和"><span class="nav-text">53.Maximum Subarray(最大子序和)</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -481,7 +492,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -494,7 +505,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">33</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -550,7 +561,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">427k</span>
+    <span title="Symbols count total">469k</span>
 </div>
 
 
@@ -567,7 +578,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共226.7k字</span>
+  <span class="post-count">博客全站共252.5k字</span>
 </div>
 
         

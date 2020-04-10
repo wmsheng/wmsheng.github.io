@@ -1,6 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>K8s Basic I</title>
+    <url>/2020/04/07/Docker-K8s-Basic-I/</url>
+    <content><![CDATA[<blockquote>
+<p>面对赢不了的挑战有两个选择：要不就投降，要不就让自己变得更强。</p>
+</blockquote>
+<a id="more"></a>
+
+<p>Docker或者说容器，实现概念主要基于CGroups(限制每个进程的资源)、NameSpace(隔离不同的容器进程)、rootFS(文件系统，挂载到主机上)。</p>
+<p>下面着重讲一下K8s四组基本概念。</p>
+<h1 id="K8s四组基本概念"><a href="#K8s四组基本概念" class="headerlink" title="K8s四组基本概念"></a>K8s四组基本概念</h1><h2 id="Pod-Pod控制器"><a href="#Pod-Pod控制器" class="headerlink" title="Pod/Pod控制器"></a>Pod/Pod控制器</h2><h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><p>K8s集群中运行的最小单元不是容器，而是Pod。</p>
+<ul>
+<li>Pod是K8S里能被运行的最小的逻辑单元(原子单元)</li>
+<li><strong>1个Pod里面可以运行多个容器</strong>，他们共享UTS+NET+IPC名称空间</li>
+<li>可以把Pod看成豌豆荚，而同一个Pod内的每个容器是一颗颗豌豆</li>
+<li>一个Pod里运行多个容器，又称作：<strong>边车(SideCar)模式</strong>(类似从动轮)</li>
+</ul>
+<h3 id="Pod控制器"><a href="#Pod控制器" class="headerlink" title="Pod控制器"></a>Pod控制器</h3><ul>
+<li>Pod控制器是Pod启动的一种模板，用来<strong>保证在K8S里启动的Pod应始终按照人们的预期运行</strong>(副本数、生命周期、健康状态检查…)</li>
+<li>K8S内提供了众多的Pod控制器，常用的有以下几种：<ul>
+<li><font color=#FF0000>Deployment</font>（真正暴露在外面的）</li>
+<li><font color=#FF0000>DeamonSet</font>（每个运算节点上都起一份）</li>
+<li>ReplicaSet（Deployment管理ReplicaSet，ReplicaSet管理Pod,ReplicaSet不直接暴露在外面）</li>
+<li>StatefulSet（管理有状态应用）</li>
+<li>Job（管理普通任务）</li>
+<li>Cronjob（管理定时任务）</li>
+</ul>
+</li>
+</ul>
+<h2 id="Name-Namespace"><a href="#Name-Namespace" class="headerlink" title="Name/Namespace"></a>Name/Namespace</h2><h3 id="Name"><a href="#Name" class="headerlink" title="Name"></a>Name</h3><ul>
+<li>由于K8S内部，使用”资源”来定义每一种逻辑概念(功能)，所以每种”资源”，都应该有自己的”名称”</li>
+<li>“资源”有api版本(apiVersion)、类别(kind)、元数据(metadata)、定义清单(spec)、状态(status)等配置信息</li>
+<li>“名称”通常定义在”资源”的”元数据”信息里</li>
+</ul>
+<h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><ul>
+<li>随着项目增多、人员数量增加、集群规模扩大，需要一种能够隔离K8S内各种”资源”的方法，这就是Namespace命名空间</li>
+<li>Namespace可以理解为K8S内部的虚拟集群组</li>
+<li>不同名称空间内的”资源”，名称可以相同，相同名称空间内的同种”资源”，”名称”不能相同</li>
+<li>合理地使用K8S的名称空间，使得集群管理员能够更好地对交付到K8S里的服务进行分类管理和浏览</li>
+<li>K8S里默认的Namespace有：default、kube-system、kube-public</li>
+<li>查询K8S里特定”资源”要带上相应的名称空间(Namespace)，不带默认查询default空间</li>
+</ul>
+<h2 id="Label-Label选择器"><a href="#Label-Label选择器" class="headerlink" title="Label/Label选择器"></a>Label/Label选择器</h2><h3 id="Label"><a href="#Label" class="headerlink" title="Label"></a>Label</h3><ul>
+<li><strong>标签是K8S特色的管理方式</strong>，便于分类管理资源对象</li>
+<li>一个标签可以对应多个资源，一个资源也可以有多个标签，它们是<strong>多对多的</strong>关系。</li>
+<li>一个资源拥有多个标签，可以实现不同维度的管理(一个资源可以打上各种各样的标签，比如可以打上污点、容忍度等)</li>
+<li>标签的组成：key=value(键值对)</li>
+<li>与标签类似的，还有一种”注解”(annotations)</li>
+</ul>
+<p>Label的定义有限制，长度要小于63，必须以字母或数字开头，中间值也有要求。(官网原话：Valid label values must be 63 characters or less nad must be empty or begin and end with an alphanumeric character([a-z0-9A-Z]) with dashes(_),dots(.), and alphanumerics between).</p>
+<h3 id="Label选择器"><a href="#Label选择器" class="headerlink" title="Label选择器"></a>Label选择器</h3><ul>
+<li>给资源打上Label之后，<strong>可以使用标签选择器过滤指定的标签，然后执行我们想要的操作</strong></li>
+<li>标签选择器目前有两种：基于等值关系(等于、不等于)和基于集合关系(属于、不属于、存在)</li>
+<li>许多资源支持内嵌标签选择器字段<ul>
+<li>matchLabels</li>
+<li>matchExperssions</li>
+</ul>
+</li>
+</ul>
+<h2 id="Service-Ingress-最重要"><a href="#Service-Ingress-最重要" class="headerlink" title="Service/Ingress(最重要)"></a>Service/Ingress(最重要)</h2><h3 id="Service-暴露在OSI第四层，暴露IP和端口"><a href="#Service-暴露在OSI第四层，暴露IP和端口" class="headerlink" title="Service(暴露在OSI第四层，暴露IP和端口)"></a>Service(暴露在OSI第四层，暴露IP和端口)</h3><ul>
+<li>在K8S的”世界”里，虽然每个Pod都会被分配一个单独的IP地址，但这个IP地址会随着Pod的销毁而消失(Pod有生命周期，而且每次重启Pod的IP都会变化，那么IP地址每次都变化，怎么<strong>调度流量</strong>呢？每次都去修改IP么？不行，想到了巧妙的Service)</li>
+<li>Service(服务)就是用来解决这个问题的核心概念</li>
+<li>一个Service可以看做是一组提供相同服务的Pod的对外访问接口</li>
+<li>Service作用于哪些Pod是通过标签选择器来定义的</li>
+</ul>
+<h3 id="Ingress-暴露在应用层"><a href="#Ingress-暴露在应用层" class="headerlink" title="Ingress(暴露在应用层)"></a>Ingress(暴露在应用层)</h3><ul>
+<li>Ingress是K8S集群里工作在OSI网络参考模型下的应用层(第7层)的应用，对外直接暴露的接口</li>
+<li>Service只能进行L4流量调度，表现形式是ip + port</li>
+<li>Ingress则可以调度不同业务域、不同URL访问路径的业务流量</li>
+</ul>
+<p><strong>如果用了HTTP和HTTPS协议，那么暴露应用的时候绝大时候都是用Ingress暴露</strong>。</p>
+<p>查找逻辑关系是，Ingress去找Service，然后Service去找Pod。</p>
+<h1 id="K8S核心组件与核心附件"><a href="#K8S核心组件与核心附件" class="headerlink" title="K8S核心组件与核心附件"></a>K8S核心组件与核心附件</h1><h2 id="核心组件"><a href="#核心组件" class="headerlink" title="核心组件"></a>核心组件</h2><ul>
+<li><p><strong>配置存储中心</strong>：etcd服务(类似ZK，主要用来存储节点元数据信息，比如资源配置，类似MySQL，etcd是非关系型数据库)</p>
+</li>
+<li><p><strong>主控(master)节点</strong></p>
+<ul>
+<li>kube-apiserver服务</li>
+</ul>
+<p><strong>详解</strong>：apiserver是整个K8S的大脑，提供了集群管理的REST API接口(包括鉴权、数据校验及集群状态变更)；负责其他模块之间的数据交互；是资源配额控制的入口；提供完备的集群安全机制；</p>
+<ul>
+<li>kube-controller-manager服务</li>
+</ul>
+<p><strong>详解</strong>：由一系列控制器组成，通过apiserver监控整个集群的状态，并确保集群处于预期的工作状态。</p>
+<ul>
+<li>kube-scheduler服务</li>
+</ul>
+<p><strong>详解</strong>：主要功能是接收调度pod到适合的运算节点上</p>
+</li>
+<li><p><strong>运算(node)节点</strong></p>
+<ul>
+<li>kube-kubelet服务</li>
+</ul>
+<p><strong>详解</strong>：简单来说，kubelet的功能就是定时从某个地方获取节点上pod的期望状态(运行什么容器、网络状态配置等等)，并调用对应的容器平台接口以达到这个状态；kubelet还会定时汇报当前节点状态给apiserver，以供调度的时候使用；镜像和容器的清理工作，保证节点上的镜像不会沾满存储空间。</p>
+<p>可见，kubelet功能很多，很核心。</p>
+<ul>
+<li>kube-proxy服务</li>
+</ul>
+<p><strong>详解</strong>：proxy是K8S每个节点上运行网络的代理，是service资源的代理。说白了，是建立了pod网络和集群网络的关系(clusterip与podip的关系)；常用三种流量调度模式：Userspace(已经被废弃)、Iptables(濒临被废弃)、Ipvs(推荐使用)。实际proxy提供的是service的虚拟网络。</p>
+</li>
+</ul>
+<h2 id="CLI客户端"><a href="#CLI客户端" class="headerlink" title="CLI客户端"></a>CLI客户端</h2><ul>
+<li>kubectl</li>
+</ul>
+<p>详解：给Pod提供网络</p>
+<h2 id="核心附件"><a href="#核心附件" class="headerlink" title="核心附件"></a>核心附件</h2><ul>
+<li>CNI网络插件：flannel/calico</li>
+<li>服务发现用插件：coredns</li>
+<li>服务暴露用插件：traefik</li>
+<li>GUI管理插件：Dashboard</li>
+</ul>
+<h1 id="生产经验-K8S三条网络"><a href="#生产经验-K8S三条网络" class="headerlink" title="生产经验(K8S三条网络)"></a>生产经验(K8S三条网络)</h1><p>这里说的生产经验，实际上是<strong>如何规划K8S的三条网络</strong>。如下图所示：</p>
+<p><img src="https://i.loli.net/2020/04/07/I8uqR3yH562KJdB.png" alt="K8S三条网络.png"></p>
+<p>上图可以很清晰地展现K8S的三个网络：节点网络、Pod网络、Service网络。</p>
+<p>宿主机器的网络，或者说Node网络，就是图中的<strong>节点网络</strong>。</p>
+<p>Pod通过从宿主机上NAT，得到Pod网络，过程中利用了docker0设备，所有docker容器会从docker通过NAT映射出来。</p>
+<p>需要注意，<code>kube-proxy</code><strong>连接了Pod网络和Service网络，其中Service网络是虚的网络</strong>。</p>
+<p>举例：</p>
+<ul>
+<li>Service网络可以设置为：<code>192.168.0.0/16</code>，Pod网络可以设置为<code>172.7.0.0/16</code>，节点网络可以设置为<code>10.4.7.0/24</code></li>
+<li>Node1和Node2分别设置为：<code>10.4.7.21</code>和<code>10.4.7.22</code>，然后Node1对应的pod网络是<code>172.7.21.0/24</code>和<code>172.7.22.0/24</code>。</li>
+</ul>
+<p>上述设计经过了严格考虑，三条网络分别对应了三个私有地址，即10段的私有地址、172.7段的私有地址和192.168段的私有地址。(这个设计在很多生产环境上都在使用)</p>
+<p>首先，因为Service网络是虚拟的网络，所以用<code>192.168.x.x/16</code>没有问题。</p>
+<p>然后，因为pod的网络也经过了规划，所以我们一看到比如<code>172.7.21.4</code>之类的IP，就能知道是Node1节点上的pod，<font color=#FF0000>这样的对应关系有助于排错</font>。</p>
+<p>在规划pod的IP和Node的IP的时候，也是有讲究的。比如我们的Node1设置IP为<code>10.4.7.1</code>，每一位都有自己的含义：10代表公网的私有地址、4代表机房，也就是不同楼层的哪个机房、7代表不同的项目或者环境，比如7代表公共开发部NCE基础研发部，8代表NCE应用研发部，9和10代表生产环境等，也就是<strong>第三位用来区分业务和环境，可以用来做物理隔离</strong>。此外，pod的网络也要根据Node来变化，比如Node1的第二位是5，即<code>10.5.7.1</code>,那么此时pod网络可以设置第二位为17，即<code>172.17.21.0/24</code>，以此类推。</p>
+<p>所以，在规划Node网络和Pod网络的时候，我们最好要达到，一看到某个pod的IP，就知道是哪台机器上的，因为有可能pod挂的时候会挂一批，那么能通过pod的IP找到Node，就很利于排错。</p>
+<h1 id="K8S服务发现和负载均衡"><a href="#K8S服务发现和负载均衡" class="headerlink" title="K8S服务发现和负载均衡"></a>K8S服务发现和负载均衡</h1><p><a href="http://www.cnblogs.com/leidaxia/p/6485639.html" target="_blank" rel="noopener">可以参考这篇文章</a></p>
+<p><a href="https://blog.csdn.net/weixin_39891030/article/details/86480333" target="_blank" rel="noopener">详细的负载均衡可以参考这篇文章</a></p>
+<p><a href="https://baijiahao.baidu.com/s?id=1651231426160391377&wfr=spider&for=pc" target="_blank" rel="noopener">一个基于Service做服务发现和负载均衡的案例</a></p>
+<p>之前我们已经了解到 pod 的网络跟机器不是同一个段的网络，那怎么让 pod 网络暴露出去给外部访问，从而提供给外部的用户去调用的？这时就需要<strong>服务发现</strong>。而如果pod使用rc创建了多个副本，那么service就能代理多个相同的pod，通过<strong>kube-proxy，实现负载均衡</strong>。</p>
+<p>一个模型如图所示：</p>
+<p><img src="https://i.loli.net/2020/04/07/dgby9EwWrpjfoMK.png" alt="K8S服务发现和负载均衡.png"></p>
+<p>在 K8s 里面，服务发现与负载均衡就是 K8s <strong>Service</strong>。上图就是在 K8s 里 Service 的架构，K8s service 向上提供了外部网络以及 pod 网络的访问，即外部网络可以通过 service 去访问，pod 网络也可以通过 K8s Service 去访问。</p>
+<p>向下，K8s 对接了另外一组 pod，即可以通过 K8s Service 的方式去负载均衡到一组 pod 上面去，这样相当于解决了前面所说的复发性问题，或者提供了统一的访问入口去做服务发现，然后又可以给外部网络访问，解决不同的 pod 之间的访问，提供统一的访问地址。</p>
+<p>service：服务，是一个虚拟概念，逻辑上代理后端pod。众所周知，pod生命周期短，状态不稳定，pod异常后新生成的pod ip会发生变化，之前pod的访问方式均不可达。通过service对pod做代理，service有固定的ip和port，ip:port组合自动关联后端pod，即使pod发生改变，kubernetes内部更新这组关联关系，使得service能够匹配到新的pod。这样，通过service提供的固定ip，用户再也不用关心需要访问哪个pod，以及pod是否发生改变，大大提高了服务质量。</p>
+<p>每个节点都有一个组件<strong>kube-proxy</strong>，实际上是为service服务的，通过kube-proxy，实现流量从service到pod的转发，<strong>kube-proxy也可以实现简单的负载均衡功能</strong>。</p>
+<p>kube-proxy代理模式：userspace方式：kube-proxy 在节点上为每一个服务创建一个临时端口，service的IP：port 过来的流量转发到这个临时端口上，kube-proxy会用内部的负载均衡机制（轮询），选择一个后端pod，然后建立iptables，把流量导入这个pod里面。</p>
+<h2 id="K8S服务发现"><a href="#K8S服务发现" class="headerlink" title="K8S服务发现"></a>K8S服务发现</h2><p>服务发现在微服务架构里，服务之间经常进行通信，服务发现就是解决不同服务之间通信的问题。比如一个nginx的pod，要访问一个mysql服务，就需要知道mysql服务的ip和port，获取ip和port的过程就是服务发现。</p>
+<p>kubernetes 支持两种服务发现模式：</p>
+<ol>
+<li><strong>环境变量</strong></li>
+</ol>
+<p>Pod创建的时候，服务的ip和port会以环境变量的形式注入到pod里，比如pod创建时有一个redis-master服务，服务ip地址是10.0.0.11，port是6379，则会把下面一系列环境变量注入到pod里，通过这些环境变量访问redis-master服务。 REDIS_MASTER_SERVICE_HOST=10.0.0.11REDIS_MASTER_SERVICE_PORT=6379REDIS_MASTER_PORT=t</p>
+<ol start="2">
+<li><strong>dns</strong></li>
+</ol>
+<p>K8s集群会内置一个dns服务器，<strong>service创建成功后，会在dns服务器里导入一些记录，想要访问某个服务，通过dns服务器解析出对应的ip和port，从而实现服务访问</strong></p>
+<p>service 是微服务架构中的微服务。service 定义了一个服务的访问入口地址，前端的应用（pod）通过这个入口访问其背后的一组由pod副本组成的集群实例，service与其后端pod副本集群之间是通过label seletor 实现无缝对接的。而rc的功能实际上是保证servic的服务能力和服务质量处于预期的标准</p>
+<p>通常我们的系统是由多个提供不同业务能力而又彼此独立的微服务单元所组成，服务之间通过tcp／ip进行通信，从而形成了强大而又灵活的弹性网络，拥有了强大的分布式能力，弹性扩展能力，容错能力。</p>
+<h2 id="K8S的Service如何进行服务发现和负载均衡"><a href="#K8S的Service如何进行服务发现和负载均衡" class="headerlink" title="K8S的Service如何进行服务发现和负载均衡"></a>K8S的Service如何进行服务发现和负载均衡</h2><p>service可以将pod ip封装起来，即使pod发生重建，依然可以通过service来访问pod提供的服务，service还小程度地解决了负载均衡的问题。</p>
+<p>运行在每个node上的<strong>kube-proxy</strong>进程其实就是一个<strong>智能的软件负载均衡器</strong>，他负责<strong>把service的请求转发到后端的某个pod实例</strong>。<strong>Kube-proxy</strong> 的默认模式是 iptables，它支持相当复杂的基于规则的 IP 管理。iptables 模式下，负载分配的本地方法是随机选择——<strong>由一个传入的请求去随机选择一个服务中的 pod。</strong>早先版本（以及原来的默认模式）的 kube-proxy 模式是 userspace，它使用循环的负载分配，在 IP 列表上来分配下一个可以使用的 pod，然后更换（或置换）该列表。</p>
+<p><strong>kube-dns可以解决Service的发现问题</strong>，k8s将Service的名称当做域名注册到kube-dns中，通过Service的名称就可以访问其提供的服务。</p>
+<h2 id="真正的负载均衡：Ingress"><a href="#真正的负载均衡：Ingress" class="headerlink" title="真正的负载均衡：Ingress"></a>真正的负载均衡：Ingress</h2><p>上面讲到了支持K8S负载均衡的两种方式，即kube-proxy和service，但是这些并不是真正的负载均衡。为了实现真正的负载均衡，当前最流行、最灵活、应用于很多领域的方法是<strong>Ingress</strong>，它通过在专门的 Kubernetes pod 中的Controller(控制器)进行操作。</p>
+<p>控制器包括一个 Ingress 资源——一组管理流量的规则和一个应用这些规则的守护进程。 控制器有自己内置的负载均衡特性，具备一些相当复杂的功能。你还可以让 Ingress 资源包含更复杂的负载均衡规则，来满足对具体系统或供应商的负载均衡功能和需求。</p>
+<p>除了 Ingress，还可以使用负载均衡器类型的服务来替代它。该服务使用基于云服务的外部负载均衡器。负载均衡器只能与 AWS、Azure、OpenStack、CloudStack 和 Google Compute Engine 等特定的云服务提供商一起使用，且均衡器的功能根据提供者而定。除此之外其他的负载均衡方法可以从服务提供商以及第三方获得。</p>
+<p><font color=#FF000>但是总的来说，还是推荐Ingress</font>。当前 Ingress 是首选的负载均衡方法。因为它是作为一个基于 pod 的控制器在 Kubernetes 内部执行，因此对 Kubernetes 功能的访问相对不受限制（不同于外部负载均衡器，它们中的一些可能无法在 pod 层面访问）。Ingress 资源中包含的可配置规则支持非常详细和高度细化的负载均衡，可以根据应用程序的功能要求极其运行条件进行定制。</p>
+]]></content>
+      <categories>
+        <category>Study Note</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+        <tag>K8s</tag>
+        <tag>MicroService</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>zookeeper I</title>
     <url>/2020/04/05/zookeeper-study-I/</url>
     <content><![CDATA[<blockquote>
@@ -378,6 +545,14 @@
 <p><img src="https://i.loli.net/2020/04/03/jXU6ypAv9DRcFrY.png" alt="redis的不可用.png"></p>
 <h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><p>首先来看Redis相关知识图谱：</p>
 <p><img src="https://i.loli.net/2020/03/31/jHm7KrIlEhioawx.png" alt="Redis相关问题图谱.png"></p>
+<h2 id="Redis为什么快？"><a href="#Redis为什么快？" class="headerlink" title="Redis为什么快？"></a>Redis为什么快？</h2><p>三点原因：</p>
+<ol>
+<li>采用了多路复用io阻塞机制</li>
+<li>数据结构简单，操作节省时间</li>
+<li>运行在内存中，速度当然快</li>
+</ol>
+<h2 id="为什么Redis用单线程还能很快"><a href="#为什么Redis用单线程还能很快" class="headerlink" title="为什么Redis用单线程还能很快"></a>为什么Redis用单线程还能很快</h2><p>单线程的Redis在瓶颈是cpu的io时（这不是大多数应用的实际应用场景），确实速度会比多线程慢。但是，我们实际应用场景中很少会遇到瓶颈是CPU的io的情况，这时候单线程优势就凸显出来了。</p>
+<p>实现很简单！性能又不会比多线程差，并且，单线程确实不用处理上下文的切换，cpu利用率会比多线程高，这时候采用单线程实现是一种很划算的做法。</p>
 <h2 id="为什么要用-redis-而不用-map-guava-做缓存"><a href="#为什么要用-redis-而不用-map-guava-做缓存" class="headerlink" title="为什么要用 redis 而不用 map/guava 做缓存?"></a>为什么要用 redis 而不用 map/guava 做缓存?</h2><p>之前有提到，缓存实际上分为本地缓存和分布式缓存两种。Redis属于分布式缓存，那么本地缓存如果能解决问题，为什么要用分布式缓存呢？——答案很明显，本地缓存不够用。下面分析一下。</p>
 <p>以 Java 为例，使用自带的 LRUMap 或者 guava 实现的是本地缓存，主要的特点是 轻量以及快速，生命周期随着 jvm 的销毁而结束，并且在多实例的情况下，每个实例都需要各自保存一份缓存，缓存不具有一致性。</p>
 <p>使用 redis 或 memcached 之类的称为分布式缓存，在多实例的情况下，各实例共用一份缓存数据，缓存具有一致 性。缺点是需要保持 redis 或 memcached服务的高可用，整个程序架构上较为复杂。 </p>
@@ -881,7 +1056,7 @@
 
 <p>参考文章：<a href="https://wiki.jikexueyuan.com/project/spring/ioc-containers.html" target="_blank" rel="noopener">极客学院Spring教程</a></p>
 <p><a href="https://blog.csdn.net/weixin_43277643/article/details/84253237" target="_blank" rel="noopener">Spring Bean详细讲解 什么是Bean?</a></p>
-<h1 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h1><h1 id="Spring框架是什么"><a href="#Spring框架是什么" class="headerlink" title="Spring框架是什么"></a>Spring框架是什么</h1><p>Spring 是个java企业级应用的开源开发框架。Spring主要用来开发Java应用，但是有些扩展是针对构建J2EE平台的web应用。Spring 框架目标是简化Java企业级应用开发，并通过POJO为基础的编程模型促进良好的编程习惯。</p>
+<h1 id="Spring框架是什么"><a href="#Spring框架是什么" class="headerlink" title="Spring框架是什么"></a>Spring框架是什么</h1><p>Spring 是个java企业级应用的开源开发框架。Spring主要用来开发Java应用，但是有些扩展是针对构建J2EE平台的web应用。Spring 框架目标是简化Java企业级应用开发，并通过POJO为基础的编程模型促进良好的编程习惯。</p>
 <h2 id="Spring框架的好处"><a href="#Spring框架的好处" class="headerlink" title="Spring框架的好处"></a>Spring框架的好处</h2><p>可以说是Spring框架的精髓：</p>
 <ul>
 <li>轻量，基本版本大约2MB</li>
@@ -898,8 +1073,8 @@
 <p>Spring IoC 容器利用 Java 的 POJO 类和配置元数据来生成完全配置和可执行的系统或应用程序。</p>
 <p>Spring提供了两种不同类型的容器：</p>
 <ul>
-<li>Spring BeanFactory容器，最简单的容器(太简单了，功能实现比较少，不推荐了)，给DI提供了基本支持。</li>
-<li>Spring ApplicationContext容器，该容器添加了更多的企业特定的功能，例如从一个属性文件中解析文本信息的能力，发布应用程序事件给感兴趣的事件监听器的能力。该容器是由 org.springframework.context.ApplicationContext 接口定义。</li>
+<li><strong>BeanFactory容器</strong>，最简单的容器(太简单了，功能实现比较少，不推荐了)，给DI提供了基本支持。</li>
+<li><strong>ApplicationContext容器</strong>，该容器添加了更多的企业特定的功能，例如从一个属性文件中解析文本信息的能力，发布应用程序事件给感兴趣的事件监听器的能力。该容器是由 org.springframework.context.ApplicationContext 接口定义。</li>
 </ul>
 <p><strong>ApplicationContext 容器包括 BeanFactory 容器的所有功能，所以通常建议使用 ApplicationContext。BeanFactory 仍然可以用于轻量级的应用程序，如移动设备或基于 applet 的应用程序，其中它的数据量和速度是显著。</strong></p>
 <h3 id="Spring的基本模块——BeanFactory-BeanFactory容器"><a href="#Spring的基本模块——BeanFactory-BeanFactory容器" class="headerlink" title="Spring的基本模块——BeanFactory(BeanFactory容器)"></a>Spring的基本模块——BeanFactory(BeanFactory容器)</h3><p>BeanFactory是基本的Spring模块，提供spring 框架的基础功能，BeanFactory 是 任何以spring为基础的应用的核心。Spring 框架建立在此模块之上，它使Spring成为一个容器。</p>
@@ -1644,7 +1819,28 @@
 <p>内存的工作流程比寄存器多出许多步。每一步都会产生延迟，累积起来就使得内存比寄存器慢得多。</p>
 <p>为了缓解寄存器与内存之间的巨大速度差异，硬件设计师做出了许多努力，包括在CPU内部设置缓存、优化CPU工作方式，尽量一次性从内存读取指令所要用到的全部数据等等。</p>
 <h1 id="4-Linux"><a href="#4-Linux" class="headerlink" title="4.Linux"></a>4.Linux</h1><h2 id="线上服务器CPU占用率高如何排查定位问题？"><a href="#线上服务器CPU占用率高如何排查定位问题？" class="headerlink" title="线上服务器CPU占用率高如何排查定位问题？"></a>线上服务器CPU占用率高如何排查定位问题？</h2><p>如果 cpu 很高，但项目的性能却更差了，你会怎么排查？而且还要具体定位到出问题的代码在那里</p>
-<p><a href="https://mp.weixin.qq.com/s?__biz=Mzg2NzA4MTkxNQ==&mid=2247485874&idx=1&sn=0edacadb71654e7642832b81d86b6c60&scene=21#wechat_redirect" target="_blank" rel="noopener">参考这篇文章</a></p>
+<p>一个参考的回答，一共分成九步：</p>
+<ol>
+<li><p>top -c 查看所有的进程 </p>
+</li>
+<li><p>在1的基础上键入P让cpu从高到底排序</p>
+</li>
+<li><p>选择2中cpu占比最高的pid进程</p>
+</li>
+<li><p>top -Hp pid 查看pid对应的线程对cpu的占比</p>
+</li>
+<li><p>在4的页面键入P让当前pid的线程cpu占比从高到低排序</p>
+</li>
+<li><p>获取第5步骤中的线程占比最高的线程id,由于linux打印的id是16进制的</p>
+</li>
+<li><p>将第6的线程id十六进制转为10进制 print “%xn” tid</p>
+</li>
+<li><p>打印指定pid下指定tid的jstack日志,jstack pid | grep tid -C 10 –color</p>
+</li>
+<li><p>根据堆栈信息找到代码块</p>
+</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s?__biz=Mzg2NzA4MTkxNQ==&mid=2247485874&idx=1&sn=0edacadb71654e7642832b81d86b6c60&scene=21#wechat_redirect" target="_blank" rel="noopener">也可以参考这篇文章</a></p>
 <h1 id="5-数据库"><a href="#5-数据库" class="headerlink" title="5.数据库"></a>5.数据库</h1><h2 id="一条SQL语句执行得很慢的原因有哪些？"><a href="#一条SQL语句执行得很慢的原因有哪些？" class="headerlink" title="一条SQL语句执行得很慢的原因有哪些？"></a>一条SQL语句执行得很慢的原因有哪些？</h2><p>首先说一下总的答案：</p>
 <p>一个 SQL 执行的很慢，我们要分两种情况讨论：</p>
 <ol>
@@ -2065,24 +2261,99 @@
 <p>此时线程3会按照顺序进入等待队列，线程2执行之后线程3才会执行。</p>
 <p>如下图所示：</p>
 <p><img src="https://i.loli.net/2020/04/06/L4ifbJ639r85sMy.png" alt="AQS工作原理.png"></p>
-<h2 id="Java-内存模型详解"><a href="#Java-内存模型详解" class="headerlink" title="Java 内存模型详解"></a>Java 内存模型详解</h2><p>java内存模型(Java Memory Model，JMM)是java虚拟机规范定义的，用来屏蔽掉java程序在各种不同的硬件和操作系统对内存的访问的差异，这样就可以实现java程序在各种不同的平台上都能达到内存访问的一致性。可以避免像c++等直接使用物理硬件和操作系统的内存模型在不同操作系统和硬件平台下表现不同，比如有些c/c++程序可能在windows平台运行正常，而在linux平台却运行有问题。</p>
-<h3 id="1-简单说一下JVM的内存模型？"><a href="#1-简单说一下JVM的内存模型？" class="headerlink" title="1.简单说一下JVM的内存模型？"></a>1.简单说一下JVM的内存模型？</h3><p>回答这个问题，要答出两个要点：一个是各部分的功能，另一个是哪些线程共享，哪些线程独占。</p>
+<h2 id="Java-内存模型详解-JVM-JMM"><a href="#Java-内存模型详解-JVM-JMM" class="headerlink" title="Java 内存模型详解(JVM+JMM)"></a>Java 内存模型详解(JVM+JMM)</h2><p>java内存模型(Java Memory Model，JMM)是java虚拟机规范定义的，用来屏蔽掉java程序在各种不同的硬件和操作系统对内存的访问的差异，这样就可以实现java程序在各种不同的平台上都能达到内存访问的一致性。可以避免像c++等直接使用物理硬件和操作系统的内存模型在不同操作系统和硬件平台下表现不同，比如有些c/c++程序可能在windows平台运行正常，而在linux平台却运行有问题。</p>
+<h3 id="1-说一下JVM的内存模型？-由浅入深"><a href="#1-说一下JVM的内存模型？-由浅入深" class="headerlink" title="1.说一下JVM的内存模型？(由浅入深)"></a>1.说一下JVM的内存模型？(由浅入深)</h3><p>先简单回答这个问题，要答出两个要点：一个是各部分的功能，另一个是哪些线程共享，哪些线程独占。</p>
 <p><strong>JVM内存模型主要指<font color=#FF0000>运行时的数据区</font></strong>，包括5个部分。如下图：</p>
 <p><img src="https://i.loli.net/2020/03/16/CcQiorLdHl4w9EK.png" alt="Java内存模型.png"></p>
 <ul>
-<li><strong>栈</strong>，也叫方法栈，是线程私有的，线程在执行每个方法时都会同时创建一个栈帧，用来存储局部变量表、操作栈、动态链接、方法出口等信息。调用方法时执行入栈，方法返回时执行出栈。</li>
-<li><strong>本地方法栈</strong>与栈类似，也是用来保存线程执行方法时的信息，不同的是，执行 Java 方法使用栈，而执行 native 方法使用本地方法栈。</li>
-<li><strong>程序计数器</strong>保存着当前线程所执行的字节码位置，每个线程工作时都有一个独立的计数器。程序计数器为执行 Java 方法服务，执行 native 方法时，程序计数器为空。</li>
+<li><p><strong>栈</strong>，也叫方法栈，是线程私有的，线程在执行每个方法时都会同时创建一个栈帧，用来存储局部变量表、操作栈、动态链接、方法出口等信息。调用方法时执行入栈，方法返回时执行出栈。</p>
+</li>
+<li><p><strong>本地方法栈</strong>与栈类似，也是用来保存线程执行方法时的信息，不同的是，执行 Java 方法使用栈，而执行 native 方法使用本地方法栈。</p>
+</li>
+<li><p><strong>程序计数器</strong>保存着当前线程所执行的字节码位置，每个线程工作时都有一个独立的计数器。程序计数器为执行 Java 方法服务，执行 native 方法时，程序计数器为空。</p>
+</li>
 </ul>
 <p>以上三个部分：栈、本地方法栈、程序计数器，都是线程独占的。</p>
 <ul>
-<li><strong>堆</strong>是JVM管理的内存中最大的一块，堆被所有线程共享，目的是为了存放对象实例，几乎所有的对象实例都在这里分配。当堆内存没有可用的空间时，会抛出OOM异常。根据对象存活的周期不同，JVM把堆内存进行分代管理，由垃圾回收器来进行对象的回收管理。</li>
-<li><strong>方法区</strong>也是各个线程共享的内存区域，又叫非堆区。用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据，JDK1.7中的永久代和JDK1.8中的Metaspace都是方法区的一种实现。</li>
+<li><strong>堆</strong>是JVM管理的内存中最大的一块，堆被所有线程共享，目的是为了存放对象实例，几乎所有的对象实例都在这里分配。当堆内存没有可用的空间时，会抛出OOM异常。根据对象存活的周期不同，<strong>JVM把堆内存进行分代管理，由垃圾回收器来进行对象的回收管理</strong>。</li>
+<li><strong>方法区</strong>也是各个线程共享的内存区域，又叫<strong>非堆区</strong>。用于<strong>存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据</strong>，JDK1.7中的永久代和JDK1.8中的Metaspace都是方法区的一种实现。</li>
 </ul>
+<p>简单回答之后，可以深入地剖析线程独占和线程共享的每个部分的内容：</p>
+<h4 id="线程独占部分"><a href="#线程独占部分" class="headerlink" title="线程独占部分"></a>线程独占部分</h4><h5 id="程序计数器-Program-Counter-Register-即PC"><a href="#程序计数器-Program-Counter-Register-即PC" class="headerlink" title="程序计数器(Program Counter Register,即PC)"></a>程序计数器(Program Counter Register,即PC)</h5><ol>
+<li><p>它是一块较小的内存空间，它可以看做是<strong>当前线程所执行的字节码行号指示器(逻辑)</strong>。</p>
+</li>
+<li><p>在虚拟机的概念模型里，字节码解释器工作时，通过改变计数器的值来选取下一条需要执行的字节码指令。包括分支、循环、跳转、异常处理、线程恢复等基础功能，都需要依赖这个计数器来完成。</p>
+</li>
+<li><p>由于JVM的多线程是通过线程之间的来回切换，并且分配处理器执行时间的方式来实现的，所以在任何一个确定的时刻，一个处理器只会执行一条线程中的指令。因此，为了确保线程在切换后能回到正确的位置，每条线程都需要有一个独立的程序计数器，并且各条线程之间的计数器互不影响，独立存储。我们称这样的内存为”线程私有”的内存，这个计数器的值也和线程之间是一对一的关系。</p>
+</li>
+<li><p>如果一个线程正在执行Java方法，这个计数器记录的是正在执行的虚拟机字节码指令的地址，那么如果正在执行的是Native方法，则计数器值会为<code>&quot;Undefined&quot;</code></p>
+</li>
+<li><p>此外，由于只是记录行号，程序计数器不会存暴掉，即程序计数器不会存在内存泄漏的问题。</p>
+</li>
+</ol>
+<p>小总结：<strong>程序计数器是逻辑计数器，而不是物理计数器。为了线程切换后都能回到正确的执行位置，每个线程都有一个独立的程序计数器，它是线程独立的，并且只为Java方法计数。Native方法对应的程序计数器则是Undefined。使用程序计数器，不用担心会发生内存泄漏的问题。</strong></p>
+<ul>
+<li>当前线程所执行的字节码行号指示器</li>
+<li>改变计数器的值来选取下一条需要执行的字节码指令</li>
+<li>和线程一一对应</li>
+<li>只对Java方法计数，如果是Native方法则计数器值为Undefined</li>
+<li>不会发生内存泄漏</li>
+</ul>
+<h5 id="Java虚拟机栈-Stack"><a href="#Java虚拟机栈-Stack" class="headerlink" title="Java虚拟机栈(Stack)"></a>Java虚拟机栈(Stack)</h5><p>Java虚拟机栈也是线程私有的，是Java方法执行的内存模型。每个方法被执行的时候都会创建一个栈帧，结构如下图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/04/3IqmNR.png" alt="3IqmNR.png"></p>
+<p>图中的局部变量表和操作数栈有什么区别？</p>
+<ul>
+<li>局部变量表：包含方法执行过程中的所有变量，包含this引用、所有方法参数，其他局部变量(包括布尔值、Byte、char、long、short、int、float、double等等类型)</li>
+<li>操作数栈：在执行字节码指令过程中被用到，这种方式类似原生CPU寄存器。大部分JVM字节码把时间花费在操作数栈的操作上，包括入栈、出栈、复制、交换、产生消费变量</li>
+</ul>
+<p>栈本身是一个后进先出的数据结构。因此当前执行的方法在栈的顶部，每次方法调用时一个新的栈帧创建，并压入栈顶。当方法正常返回或抛出未捕获的异常时，栈帧就会出栈。除了栈帧的压栈和出栈，栈不能被直接操作。</p>
+<p>解读Java可能出现的异常</p>
+<p><strong>java.lang.StackOverflowError</strong></p>
+<p>递归为什么会引发java.lang.StackOverflowError异常？</p>
+<p>递归执行次数过多，栈帧过高。每次调用递归，都会创建一个对应的栈帧，并把建立的栈帧压入虚拟机栈中。</p>
+<ol>
+<li>如果递归层数过高，不断调用自身，每新调用一次方法，就会生成一个栈帧。</li>
+<li>它会保存当前方法的栈帧状态</li>
+<li>栈帧上下文切换的时候会切换到最新的方法栈帧当中</li>
+</ol>
+<p>如果递归调用过多，则会产生过多的栈帧，栈帧超过虚拟栈深度限制，就会报错。</p>
+<p>解决的方法主要是限制递归的次数，或者可以直接用循环替换递归。</p>
+<p><strong>java.lang.OutOfMemoryError</strong></p>
+<p>虚拟机栈过多会引发java.lang.OutOfMemoryError异常。当虚拟机栈可以动态扩展时，如果无法申请足够多的内存，就会抛出这个异常。</p>
+<p>如果虚拟机栈可以动态扩展，并超出内存，就会报这个错误。</p>
+<h5 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h5><ul>
+<li>与虚拟机栈类似，主要作用于标注了native的方法</li>
+</ul>
+<p>带有native关键字的方法，比如之前的forName0()之类的方法，用的是本地方法栈。</p>
+<p><strong>小总结</strong></p>
+<p>虚拟机栈是Java虚拟机自动管理的。栈类似一个集合，但是有容量限制，由多个栈帧组合而成。编写代码的时候，每调用一个方法，Java虚拟机就为其分配一块空间，就增加一层栈帧。<font color=#FF0000>而当方法调用结束后，对应的栈帧就会被自动释放掉。这就是为什么栈不需要GC，但是堆需要</font>。</p>
+<h4 id="线程共享部分"><a href="#线程共享部分" class="headerlink" title="线程共享部分"></a>线程共享部分</h4><p>从之前”JDK8内存模型”这张图中可以看到，JVM里线程共享的主要是两个部分：MataSpace和Java堆</p>
+<h5 id="元空间-MetaSpace-与永久代-PermGen-的区别"><a href="#元空间-MetaSpace-与永久代-PermGen-的区别" class="headerlink" title="元空间(MetaSpace)与永久代(PermGen)的区别"></a>元空间(MetaSpace)与永久代(PermGen)的区别</h5><p>JDK8之后，MetaSpace开始把类的元数据放在本地堆内存中，这段区域在JDK7以及以前，都是属于永久代的。</p>
+<p>元空间和永久代都用来存储class的相关信息，包括class对象的方法和filed等。</p>
+<p>元空间永久代都是方法区的实现，实现方法不同。方法区只是一种JVM的规范。</p>
+<p>Java7之后，把原先位于方法区的字符串常量池移动到了Java堆中，并且在JDK8之后，使用元空间替代了永久代。</p>
+<p>这一替代不仅是名字上的替代，两者最大的区别是：<strong>元空间使用本地内存，而永久代使用的是JVM的内存</strong>。这样设置的一个好处就是解决了内存不足的问题，<code>java.lang.OutOfMemoryError:PemGen space</code>这个错误将不复存在。因为此时MetaSpace的大小取决于本地内存的大小。本地内存有多大，MetaSpace就有多大。当然，实际运行的时候不可能放任MetaSpace的壮大，JVM在运行的时候会根据需要动态地设置其大小。</p>
+<p><strong>MetaSpace相比PermGen的优势</strong></p>
+<ul>
+<li>字符串常量池存在永久代中，容易出现性能问题和内存溢出</li>
+<li>永久代类和方法的信息大小难以确定，给永久代的大小指定带来困难</li>
+<li>永久代会为GC带来不必要的复杂性，而且回收效率可能较低</li>
+<li>用元空间方便HotSpot与其他JVM如Jrockit的集成</li>
+</ul>
+<p><font color=#FF0000>重点记住：元空间和永久代的主要区别，是前者内存空间主要使用的是本机内存。</font>MetaSpace没有了字符串常量池，它在JDK7中已经被移动到了堆中。MetaSpace其他存储的东西，包括类文件，在JVM运行时候的数据结构，以及class相关的内容，如method,filed，大体上都与永久代一样，只是划分上更加合理。比如类元素的生命周期与类加载器一致，每个类加载器(classLoader)都会分配一个单独的存储空间。</p>
+<h5 id="Java堆-Heap"><a href="#Java堆-Heap" class="headerlink" title="Java堆(Heap)"></a>Java堆(Heap)</h5><p>对于大多数应用来说，Java堆是Java虚拟机所管理的内存中最大的一块。Java堆是被所有内存共享的一块内存区域。在虚拟机启动时创建此内存区域的唯一目的，就是存放对象实例，几乎所有的对象实例都在这里分配内存。</p>
+<p>以一个32位处理器的Java内存布局为例：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3TNVFx.png" alt="32位处理器的Java内存布局"></p>
+<p>可以看到，Java堆会占用非常大的一块内存。</p>
+<p>此外，Java堆是垃圾收集器管理的主要区域，因此很多时候也被称为GC堆。</p>
+<p>如果从内存回收的角度看，由于现在的收集器基本都采用分代收集的算法，所以Java堆中还可以细分为新生代和老年代。</p>
+<p>可以参见下图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3TNefK.png" alt="GC堆"></p>
 <h3 id="2-JMM如何保证原子性、可见性、有序性？"><a href="#2-JMM如何保证原子性、可见性、有序性？" class="headerlink" title="2.JMM如何保证原子性、可见性、有序性？"></a>2.JMM如何保证原子性、可见性、有序性？</h3><p>首先应当搞清楚，JMM和JVM内存模型是完全不同的两个概念。JVM内存模型主要针对<strong>运行时数据区</strong>而言，而JMM是指Java程序中<strong>变量的访问规则</strong>，两者是完全不同的两个概念。</p>
 <p>JMM如下图所示：</p>
 <p><img src="https://i.loli.net/2020/04/06/pDqjgrUoiXQGRnL.png" alt="JMM与内存可见性.png"></p>
 <p>所有<strong>共享变量</strong>都存储在<strong>主内存</strong>中，共享。每个线程都有自己的<strong>工作内存</strong>，而工作内存中保存的是主内存中<strong>变量的副本</strong>，线程对变量的读写等操作必须在自己的工作内存中进行，而不能直接读写主内存中的变量。</p>
+<p>综合1和2两个部分，我们要注意，<font color=#FF0000>在回答”说一下JVM的内存模型？”这个问题的时候，要和面试官确认是希望回答JVM的内存模型，还是Java对内存数据访问的模型</font>，不要答跑偏。</p>
 <p>在多线程进行数据交互时，例如线程A给一个共享变量赋值后，由线程B来读取这个值，A修改完变量是修改在自己的工作区内存中，B是不可见的，只有从A的工作区写回主内存，B再从主内存读取自己的工作区才能进行进一步的操作。由于指令重排序的存在，这个写—读的顺序有可能被打乱。因此 JMM 需要提供<strong>原子性、可见性、有序性</strong>的保证。</p>
 <p>下面来详细分析一下如何保证这三个特性的。</p>
 <p>首先，还是来看一张图：</p>
@@ -2120,6 +2391,268 @@
 <p>这8条原则是避免说出现乱七八糟扰乱秩序的指令重排，要求是这几个重要的场景下，比如是按照顺序来，但是8条规则之外，可以随意重排指令。</p>
 <p>对于有序性的happens-before，面试的时候如果问到，不是要求你把上面8条全部背出来！</p>
 <p>你可以说个大概，happens-before规则制定了在一些特殊情况下，不允许编译器、指令器对你写的代码进行指令重排，必须保证你的代码的有序性，但是如果没满足上面的规则，那么就可能会出现指令重排，就这个意思。</p>
+<h3 id="3-类加载过程是怎样的？JVM是如何运行起来的？我们的对象是如何分配的？"><a href="#3-类加载过程是怎样的？JVM是如何运行起来的？我们的对象是如何分配的？" class="headerlink" title="3.类加载过程是怎样的？JVM是如何运行起来的？我们的对象是如何分配的？"></a>3.类加载过程是怎样的？JVM是如何运行起来的？我们的对象是如何分配的？</h3><p>类的加载指将编译好的 Class 类文件中的字节码读入内存中，将其放在方法区内并创建对应的 Class 对象。类的加载分为<strong>加载、链接、初始化</strong>，如下图：</p>
+<p><img src="https://i.loli.net/2020/04/10/uiE7nAk2wGSxVhm.png" alt="类的加载和卸载01.png"></p>
+<p>其中链接又包括<strong>验证、准备、解析</strong>三步。展开之后如下图所示。</p>
+<p><img src="https://i.loli.net/2020/04/10/faSQnUpKlIh2vWw.png" alt="类的加载和卸载02.png"></p>
+<p>整个加载过程描述如下：</p>
+<ol>
+<li>首先进行<strong>加载</strong>操作，首先查找到这个类的字节码文件，然后使用这个字节码文件创建一个<strong>class对象</strong>，这样就实现了从文件到内存的过程。</li>
+<li><strong>验证</strong>是对<strong>类文件内容</strong>的验证。主要是为了虚拟机自身安全考虑，保证当前class文件符合要求。验证主要包括四种：文件格式、元数据、字节码、符号引用的验证。</li>
+<li><strong>准备阶段</strong>是进行<strong>内存分配</strong>。为类中用<strong>static修饰的变量分配</strong>内存并设置初始值。需要注意这里只会赋值0或者null，程序中指定赋的初始值是在初始化阶段赋值的，不是在这一阶段赋值的。此外，这里也不包含用final修饰的静态变量，因为<strong>final的变量会在编译的时候分配</strong>。</li>
+<li><strong>解析</strong>主要是解析<strong>字段、接口、方法</strong>。主要是将常量池中的<u>符号引用</u>替换为<u>直接引用</u>的过程。（啥是直接引用？就是直接指向目标的指针、相对偏移量等）</li>
+<li><strong>初始化</strong>，主要完成静态代码块执行与静态变量的赋值(注意，用static修饰的变量在这一步才进行赋值)。这是类加载的最后阶段，若被加载的类的父类没有初始化，则先对父类进行初始化。——注意，只有对类主动使用时才会进行初始化。初始化的触发条件包括在创建类的实例时、访问类的静态方法或者静态变量时、Class.forName() 反射类时、或者某个子类被初始化时。</li>
+</ol>
+<p>需要注意一点，<font color=#FF0000>由Java虚拟机自带的三种类加载器(BootStrap启动类加载器、ExtClassLoader扩展类加载器、AppClassLoader应用加载器(也称系统加载器))加载的类在虚拟机的整个生命周期中是不会被卸载的，只有用户自定义的类加载器所加载的类才可以被卸载</font>。</p>
+<p>实际上我们平时写的代码一定会有很多线程去执行，比如程序有一个类里面包含了一个main方法，你去执行这个main方法，此时会启动一个jvm进程，程序会默认有一个main线程，这个main线程就负责执行这个main方法的代码，进而创建各种对象，然后执行业务逻辑等等。</p>
+<p>对于服务器也是类似。比如基于JDK的Tomcat，类会加载到JVM中；Spring 容器会把所有管理的类实例化成Bean，然后有线程使用Bean，等等。</p>
+<p><strong>栈里面放局部变量</strong>，先入后出，每次有新的对象被访问时都会新定义一个栈帧然后入栈、<strong>堆中放的是对象和对象和实例</strong>。方法执行完毕后，会把栈里面的栈帧弹出，并且对堆进行垃圾回收。</p>
+<h3 id="4-Java类加载器有几种？关系是怎样的？"><a href="#4-Java类加载器有几种？关系是怎样的？" class="headerlink" title="4.Java类加载器有几种？关系是怎样的？"></a>4.Java类加载器有几种？关系是怎样的？</h3><p>上面标红的内容已经提到了， 类加载器一共有四种，其中<strong>三种是JVM自带的</strong>：</p>
+<ul>
+<li>BootStrap启动类加载器</li>
+<li>ExtClassLoader扩展类加载器</li>
+<li>AppClassLoader应用加载器(也称系统加载器)</li>
+</ul>
+<p>还有一种是使用者可以自定义的类加载器：Custom ClassLoader(自定义类加载器)。</p>
+<p>这四种类加载器有上下层级关系，而且JVM自带的类加载器有默认的加载目录。如下图所示：</p>
+<p><img src="https://i.loli.net/2020/04/10/zVTRHPiSYKGM56g.png" alt="类加载器_双亲委派机制.png"></p>
+<p>启动类加载器会加载<code>JAVA_HOME</code>中lib目录下的类，扩展加载器会负责加载ext目录下的类。而应用加载起会加载classpath指定目录下的类，自定义加载器是最下层的子类加载器，即Custom ClassLoader。</p>
+<h3 id="5-双亲委派机制的加载流程是怎样的，有什么好处？"><a href="#5-双亲委派机制的加载流程是怎样的，有什么好处？" class="headerlink" title="5.双亲委派机制的加载流程是怎样的，有什么好处？"></a>5.双亲委派机制的加载流程是怎样的，有什么好处？</h3><p>双亲委派的加载流程就如下图所示(再展现一次)：</p>
+<p><img src="https://i.loli.net/2020/04/10/zVTRHPiSYKGM56g.png" alt="类加载器_双亲委派机制.png"></p>
+<p>其中在上面的是父类加载器，在下面的是子类加载器。Java在整个类加载过程都是通过双亲委派机制来实现的，即<strong>一个类加载器在加载类时，先把这个请求委托给自己的父类加载器去执行，如果父类加载器还存在父类加载器，就继续向上委托，直到顶层的启动类加载器，如上图中黑色向上的箭头。如果父类加载器能够完成类加载，就成功返回；如果父类加载器无法完成加载，则子类加载器才会尝试自己去加载</strong>，即图中的蓝色向下的箭头。</p>
+<p>双亲委派机制的好处主要是两个：</p>
+<ol>
+<li>避免类的重复加载，节省资源</li>
+<li>避免了Java核心API被篡改</li>
+</ol>
+<h3 id="6-JDK8之后对内存分代做了什么改进？为什么用Metaspace替换掉PermGen-Metaspace保存在哪里？"><a href="#6-JDK8之后对内存分代做了什么改进？为什么用Metaspace替换掉PermGen-Metaspace保存在哪里？" class="headerlink" title="6.JDK8之后对内存分代做了什么改进？为什么用Metaspace替换掉PermGen?Metaspace保存在哪里？"></a>6.JDK8之后对内存分代做了什么改进？为什么用Metaspace替换掉PermGen?Metaspace保存在哪里？</h3><p>JDK8之前，永久代里放了一些<strong>常量池+类信息</strong>。java 8以后进行了<strong>内存分代</strong>的改进，变成了：<strong>常量池放到堆里面，类信息放到了 metaspace（元区域）</strong>。</p>
+<p>实际上，JDK1.8版本中对方法区进行了调整，使用Metaspace替换掉了PermGen的永久代。<strong>Metaspace与PermGen之间最大的区别在于</strong>：<font color=#FF0000>Metaspace并不在虚拟机中，而是使用本地内存</font>。替换的目的主要有两个：</p>
+<ol>
+<li>可以提升对元数据的管理同时提升GC效率</li>
+<li>方便后序HotSpot与JRockit合并。</li>
+</ol>
+<h3 id="7-编译器会对指令做哪些优化？-简单描述编译器的指令重排"><a href="#7-编译器会对指令做哪些优化？-简单描述编译器的指令重排" class="headerlink" title="7.编译器会对指令做哪些优化？(简单描述编译器的指令重排)"></a>7.编译器会对指令做哪些优化？(简单描述编译器的指令重排)</h3><p>为了性能考虑，编译器和CPU可能会在执行过程中对指令重新排序。</p>
+<p>简而言之，就是程序在CPU执行的时候会细分为不同的指令，这些指令互相之间可能有依存关系，即某个操作需要等待另一个变量的计算结果，如果都是类似串行的执行，那么CPU的多核用不上，浪费了。我们可以通过指令重排让计算结果不相关的指令交替执行，这样哪怕是有的语句要等待别的语句的计算结果，也可以让整体执行效率比较高。</p>
+<p>当然，这样的重排在多线程的时候有出错风险，所以有类似volatile的指令来禁止或者限制指令重排。</p>
+<p>具体细节<a href="https://www.cnblogs.com/xdecode/p/8948277.html" target="_blank" rel="noopener">可以参考这篇文章</a></p>
+<h3 id="8-对象引用有哪几种方式，有什么特点？"><a href="#8-对象引用有哪几种方式，有什么特点？" class="headerlink" title="8.对象引用有哪几种方式，有什么特点？"></a>8.对象引用有哪几种方式，有什么特点？</h3><p>重点介绍Java的四种引用：<strong>强、弱、软、虚</strong>，以及<strong>在GC中的处理方式</strong>。</p>
+<h4 id="强引用-Strong-Reference"><a href="#强引用-Strong-Reference" class="headerlink" title="强引用(Strong Reference)"></a>强引用(Strong Reference)</h4><ul>
+<li>最普遍的引用：Object obj = new Object()，这里obj就是强引用</li>
+<li>抛出OutOfMemoryError终止程序也不会回收具有强引用的对象</li>
+<li>通过将对象设置为null来弱化引用，使其被回收</li>
+</ul>
+<h4 id="弱引用-Weak-Reference"><a href="#弱引用-Weak-Reference" class="headerlink" title="弱引用(Weak Reference)"></a>弱引用(Weak Reference)</h4><ul>
+<li>非必须的对象，比软引用更弱一些</li>
+<li>生命周期更短，在GC时会被回收——无论当前内存是否紧缺，GC都会回收被弱引用关联的对象</li>
+<li>被回收的概率也不大，因为GC线程优先级比较低</li>
+<li>弱引用适用于偶尔使用且不影响垃圾收集的对象</li>
+</ul>
+<p>弱引用案例：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3qyBqI.png" alt="弱引用例子"></p>
+<p>弱引用同样可以配合引用队列去使用。</p>
+<h4 id="软引用-Soft-Reference"><a href="#软引用-Soft-Reference" class="headerlink" title="软引用(Soft Reference)"></a>软引用(Soft Reference)</h4><ul>
+<li>对象处在有用但非必须的状态</li>
+<li>只有当内存空间不足时，GC会回收该引用的对象的内存</li>
+<li>可以用来实现高速缓存——这样我们就可以避免OutOfMemory的问题。因为软引用的内存会在内存不足的情况下回收。</li>
+</ul>
+<p>强引用和软引用例子如下图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3qsJ3Q.png" alt="强引用和软引用例子"></p>
+<h4 id="虚引用-Phantom-Reference"><a href="#虚引用-Phantom-Reference" class="headerlink" title="虚引用(Phantom Reference)"></a>虚引用(Phantom Reference)</h4><p>“虚无缥缈”，其生命周期比较不固定</p>
+<ul>
+<li>不会决定对象的生命周期</li>
+<li>任何时候都可能被垃圾收集器回收</li>
+<li>跟踪对象被垃圾收集器回收的活动，起哨兵作用</li>
+<li>比较特殊，必须和引用队列ReferenceQueue联合使用</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2020/03/06/3q63lQ.png" alt="虚引用例子"></p>
+<p>GC在回收一个对象时，若发现这个对象有虚引用，那么回收前会先将这个引用加入到与之关联的引用队列当中。</p>
+<h4 id="四种引用之间的关系"><a href="#四种引用之间的关系" class="headerlink" title="四种引用之间的关系"></a>四种引用之间的关系</h4><p><img src="https://s2.ax1x.com/2020/03/06/3q64pD.png" alt="四种引用之间的关系"></p>
+<h4 id="引用类结构层次"><a href="#引用类结构层次" class="headerlink" title="引用类结构层次"></a>引用类结构层次</h4><p><img src="https://s2.ax1x.com/2020/03/06/3qcmjJ.png" alt="引用类结构层次"></p>
+<h4 id="引用队列-ReferenceQueue"><a href="#引用队列-ReferenceQueue" class="headerlink" title="引用队列(ReferenceQueue)"></a>引用队列(ReferenceQueue)</h4><p>引用队列名义上是一个队列，但其内部没有实际存储结构。</p>
+<ul>
+<li>无实际存储结构，存储逻辑依赖于内部节点之间的关系来表达的——类似链表，节点是Reference本身，它自己只存储链表的头结点，而后面的节点都通过Reference指向下一个的next来保持。</li>
+<li>存储关联的且被GC的软引用，弱引用以及虚引用</li>
+</ul>
+<h3 id="9-使用过哪些JVM调优工具，主要分析哪些内容？"><a href="#9-使用过哪些JVM调优工具，主要分析哪些内容？" class="headerlink" title="9.使用过哪些JVM调优工具，主要分析哪些内容？"></a>9.使用过哪些JVM调优工具，主要分析哪些内容？</h3><h3 id="10-简单描述一下GC的分代回收"><a href="#10-简单描述一下GC的分代回收" class="headerlink" title="10.简单描述一下GC的分代回收"></a>10.简单描述一下GC的分代回收</h3><p>首先我们可以比较容易地理解为什么需要GC。我们的资源不可能是无限的，而且资源很多时候也是昂贵的，2核4G的机器，堆内存也就2GB左右，4核8G的机器，堆内存可能也就4G左右，栈内存也需要空间，metaspace区域放类信息也需要空间。所以，在jvm里必然是有一个内存分代模型，年轻代和老年代，年轻代中是经常要被清理的，而常用的放到老年代，清理的频次更低一些。</p>
+<p>实际上，Java堆中可以分为年轻代(新生代)和老年代，如下图所示：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3TNefK.png" alt="GC堆"></p>
+<p>比如内存一共是4G，可以给年轻代一共2GB内存，给老年代是2GB内存。对于年轻代，默认情况下Eden和2个s区(s1和s2区)的比例：8:1:1，即此时Eden是1.6GB，S是0.2GB。</p>
+<p>如果说eden区域满了，此时必然触发垃圾回收，young gc，ygc，如何判断某个对象是否是可回收的对象呢？——没有其他对象引用的对象就是垃圾对象。有关如何定义没有被其他对象引用，可以有两种标记算法：引用计数算法和可达性分析算法。下面介绍。</p>
+<p>需要注意，<strong>年轻代有两种对象不能回收</strong>：</p>
+<ol>
+<li>一个方法正在执行，这个正在执行的方法中的<strong>局部变量</strong>引用了某个对象，那被引用的这个对象不能被回收。</li>
+<li>一个类是存活着的，这个类里面的<strong>静态变量</strong>引用了某个对象，那这个对象也不能回收。</li>
+</ol>
+<p>除此之外，所有没被引用的对象，都可以是GC的目标对象。</p>
+<h3 id="11-介绍一下常用的两种对象标记算法？"><a href="#11-介绍一下常用的两种对象标记算法？" class="headerlink" title="11.介绍一下常用的两种对象标记算法？"></a>11.介绍一下常用的两种对象标记算法？</h3><h4 id="怎样的对象会被判定为垃圾？"><a href="#怎样的对象会被判定为垃圾？" class="headerlink" title="怎样的对象会被判定为垃圾？"></a>怎样的对象会被判定为垃圾？</h4><ul>
+<li>没有被其他对象引用</li>
+</ul>
+<p>此时这个对象占据的内存会被释放，此对象也会被销毁。</p>
+<h4 id="用什么方法判定对象不被引用了呢？"><a href="#用什么方法判定对象不被引用了呢？" class="headerlink" title="用什么方法判定对象不被引用了呢？"></a>用什么方法判定对象不被引用了呢？</h4><ul>
+<li>引用计数算法</li>
+<li>可达性分析算法</li>
+</ul>
+<h4 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h4><p><strong>通过判断对象的引用数量来决定对象是否可以被回收。</strong></p>
+<p>具体执行方法：</p>
+<ul>
+<li>每个对象实例都有一个引用计数器，被引用则+1，完成引用则-1</li>
+<li>任何引用计数为0的对象实例可以被当做垃圾收集</li>
+</ul>
+<p>引用计数算法的优劣：</p>
+<ul>
+<li>优点：执行效率高，程序执行受影响较小。因为我们只需要过滤掉引用计数为0的对象，然后将其回收即可，可以交织在程序运行中。由于垃圾回收的过程中可以做到几乎不打断程序的执行，所以这种方法适用于程序需要不被长时间打断的实时环境。</li>
+<li>缺点：无法检测出循环引用的情况，导致内存泄漏。这个缺点是很致命的，如果存在父对象与子对象互相引用的情况，那么它们的引用计数永远不可能为零，那么永远都不会被检测到为0，永远不会被释放。</li>
+</ul>
+<p>由于这种比较致命的缺点，主流JDK没有使用引用计数算法进行垃圾判定，而是用了下面的可达性分析算法。</p>
+<h4 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h4><p><strong>通过判断对象的引用链是否可达来决定对象是否可以被回收</strong>。</p>
+<p>这种方法从图论中引入。程序把所有的引用关系看作是一张图，通过一系列的名为GC Root的对象作为起始点，从这些节点开始向下搜索，搜索经过的路径会被称为”引用链”，即”reference chain”，当某个对象到其他图中的节点都不能相连的时候，也就是说从这个对象到其他部分的GC Root是不可达的，那么就判定这个对象为垃圾。</p>
+<p>如图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37rfUg.png" alt="可达性分析算法"></p>
+<p>蓝色为存活对象，即可达对象，灰色的部分不可达了，为垃圾对象。</p>
+<p>什么对象可以作为GC Root的对象呢？</p>
+<ul>
+<li>虚拟机栈中引用的对象(栈帧中的本地变量表)。比如在方法中new了一个Object，并赋值给了一个局部变量，那么在该局部变量没有被销毁之前，new出来的对象就会是GC Root。</li>
+<li>方法区中的常量引用的对象。比如在类中定义了一个常量，而该常量保存的是某个对象的地址，那么被保存的对象也会成为GC的根对象。</li>
+<li>方法区中的类静态属性引用的对象。这个和上面常量的情况如出一辙。</li>
+<li>本地方法栈中JNI(Native方法)的引用对象</li>
+<li>活跃线程的引用对象</li>
+</ul>
+<h3 id="12-介绍一下垃圾回收算法？"><a href="#12-介绍一下垃圾回收算法？" class="headerlink" title="12.介绍一下垃圾回收算法？"></a>12.介绍一下垃圾回收算法？</h3><p>判断了哪些对象是垃圾只是第一步，我们还需要解决一个很重要的问题：如何处理这些垃圾？或者说，如果回收这些垃圾？</p>
+<p>垃圾回收算法有以下这几种：</p>
+<h4 id="标记-清除算法-Mark-and-Sweep"><a href="#标记-清除算法-Mark-and-Sweep" class="headerlink" title="标记-清除算法(Mark and Sweep)"></a>标记-清除算法(Mark and Sweep)</h4><ul>
+<li>标记：从根集合进行扫描，对存活的对象进行标记</li>
+<li>清除：对堆内存从头到尾进行线性遍历，回收不可达对象内存</li>
+</ul>
+<p>如图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37y678.jpg" alt="标记-清除算法"></p>
+<p>如上图所示，经过了Mark阶段到达Sweep阶段的时候，所有不可达的对象都会被当做垃圾回收掉。</p>
+<p>但是这种方法会存在一些问题，在标记-清除之后，可能会产生大量不连续的碎片，空间碎片多，可能导致之后开辟大对象空间的时候出现内存不够用的情况。</p>
+<h4 id="复制算法-Copying"><a href="#复制算法-Copying" class="headerlink" title="复制算法(Copying)"></a>复制算法(Copying)</h4><p>复制算法将可用的内存按照容量和一定比例划分为两块或多块，并选择其中一块两块作为对象面，其他的作为空闲面。</p>
+<ul>
+<li>分为对象面和空闲面</li>
+<li>对象在对象面上创建 </li>
+<li>存活的对象被从对象面复制到空闲面。当被定义为对象面的块的内存用完了，就将还存活着的对象复制到其中一块空闲面上</li>
+<li>将对象面所有对象清除</li>
+</ul>
+<p>这种算法适用于对象存活率低的场景，比如年轻代。这样每次都对内存块进行回收，这样就解决了内存碎片的问题。</p>
+<p>推倒重建的过程只需要移动堆顶指针，按顺序分配内容即可。</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37r2b8.png" alt="复制算法"></p>
+<p>优势：</p>
+<ul>
+<li>解决碎片化问题</li>
+<li>顺序分配内存，简单高效</li>
+<li>适用于对象存活率低的场景(现在很多虚拟机都采用这种方法回收年轻代，因为年轻代每次都只存活10%左右，用复制算法效果不错)</li>
+</ul>
+<p>但是在老年代不能轻易选用这种算法，因为可能出现存活率特别高的情况。</p>
+<h4 id="标记-整理算法-Compacting"><a href="#标记-整理算法-Compacting" class="headerlink" title="标记-整理算法(Compacting)"></a>标记-整理算法(Compacting)</h4><p>这种算法比较适合用于老年代的对象回收。它使用类似”标记-清除”算法的方式进行对象的标记，但是在清除的时候不同。</p>
+<ul>
+<li>标记：从根集合进行扫描，对存活的对象进行标记</li>
+<li>清除：移动所有存活的对象，且按照内存地址次序依次排列，然后将末端内存地址以后的内存全部回收</li>
+</ul>
+<p>“标记-整理”算法是在”标记-清除”的基础上又进行了对象的移动，因此成本更高，但是能够解决内存碎片的问题。</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37RmRg.png" alt="标记整理算法"></p>
+<p>也可以参考这张图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37rWVS.png" alt="标记整理算法2"></p>
+<p>执行这个算法的时候会把存活的对象压缩到一端，然后将所有可回收的对象清除掉。</p>
+<p>这样做的好处：</p>
+<ul>
+<li>避免内存的不连续性</li>
+<li>不用设置两块内存互换</li>
+<li>适用于存活率高的场景(比如涉及分代收集算法中老年代的回收)</li>
+</ul>
+<h4 id="GC-最主流-分代收集算法-Generational-Collector"><a href="#GC-最主流-分代收集算法-Generational-Collector" class="headerlink" title="(GC,最主流)分代收集算法(Generational Collector)"></a>(GC,最主流)分代收集算法(Generational Collector)</h4><p>这是一种比较主流的垃圾回收算法。</p>
+<p>可以理解是一套”组合拳”</p>
+<ul>
+<li>垃圾回收算法的组合拳</li>
+<li>按照对象生命周期的不同划分区域以采用不同的垃圾回收算法</li>
+<li>目的：提高JVM的回收效率</li>
+</ul>
+<p>前面已经提过，JDK8之前，比如JDK6和JDK7，里面有年轻代、老年代和永久代，如下图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37r5Cj.png" alt="JDK6+7"></p>
+<p>但是JDK8之后(包括JDK8)就去掉了永久代：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37rI8s.png" alt="JDK8后去掉永久代"></p>
+<p>可以看到，JDK6、JDK7和JDK8中都有年轻代和老年代。其中年轻代的对象存活率低，采用复制算法。而老年代存活率高，一般使用”标记-清除算法”或者”标记-整理算法”。</p>
+<h5 id="GC的分类"><a href="#GC的分类" class="headerlink" title="GC的分类"></a>GC的分类</h5><p>分代收集的GC分为两种：</p>
+<ul>
+<li>Minor GC。发生在年轻代中的垃圾收集工作，采用复制算法。</li>
+<li>Full GC。与老年代的垃圾回收相关。</li>
+</ul>
+<p>年轻代是所有Java对象出生的地方，即Java对象申请的内存和存放对象，都是在年轻代进行的。</p>
+<p>实际上，Java大部分对象都不会长久存活，”朝生夕灭”。新生代是GC发生的频繁区域。</p>
+<p>老年代的回收一般伴随着年轻代的垃圾收集，因此第二种垃圾回收方式被命名为”Full GC”</p>
+<h5 id="年轻代：尽可能快速地收集掉那些生命周期短的对象"><a href="#年轻代：尽可能快速地收集掉那些生命周期短的对象" class="headerlink" title="年轻代：尽可能快速地收集掉那些生命周期短的对象"></a>年轻代：尽可能快速地收集掉那些生命周期短的对象</h5><ul>
+<li>Eden区</li>
+<li>两个Survivor区</li>
+</ul>
+<p>对象刚被创建出来的时候，其内存空间首先被分配在Eden区。如果Eden区放不下新创建的对象的话，对象也有可能被直接放在Survivor甚至是老年代中。</p>
+<p>而两个Survivor则分别被定义在from区和to区，并且哪个是from区，哪个是to区，也不是固定的，会随着垃圾回收的进行而相互转换。</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37qRlq.png" alt="年轻代"></p>
+<h5 id="年轻代垃圾回收的过程演示"><a href="#年轻代垃圾回收的过程演示" class="headerlink" title="年轻代垃圾回收的过程演示"></a>年轻代垃圾回收的过程演示</h5><p>通过一个实例演示年轻代的垃圾回收过程：</p>
+<p>演示过程暂时忽略Eden区和Survivor区的大小比例，并且假设每个对象的大小都是一样的。Eden区最多能保存四个对象，Survivor区最多能保存三个对象。</p>
+<p>一开始，如果对象在Eden出生，并且Eden被挤满，如下图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H1hJU.png" alt="3H1hJU.png"></p>
+<p>此时会触发一次Minor GC。此时如果对象还存活(绿色的为存活对象)，它就会被复制到一个Survivor区里面，假设是复制到了S0里面，此时我们称S0为from区。复制之后会增加1个年龄。比如图中复制过去之后年龄为1.</p>
+<p>然后清理所有使用过的Eden区域，如下图： </p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H1fiT.png" alt="3H1fiT.png"></p>
+<p>之后会清空Eden</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H1RoV.png" alt="3H1RoV.png"></p>
+<p>然后过了一段时间，发现Eden区又被填满了，如图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H12d0.png" alt="3H12d0.png"></p>
+<p>此时又会触发一次Minor GC，然后将Eden和S0里面的存活的对象都拷贝到S1里面，同时会把存活的对象的年龄都加1。</p>
+<p>此时S1从to区变成了from区，而S0从from区变成了to区。</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H1gZq.png" alt="3H1gZq.png"></p>
+<p>拷贝完成后，Eden和S0都会被清空，以此完成了第二次Minor GC。</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H14WF.png" alt="3H14WF.png"></p>
+<p>之后我们假设Eden区又满了：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H15z4.png" alt="3H15z4.png"></p>
+<p>此时会出发第三次Minor GC，操作行为也和之前一样，年龄加1。同时S1里面如果有一个对象没有被用到，那么也要把它清除。</p>
+<p>每次拷贝，存活对象的年龄都要加1.</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H1oQJ.png" alt="3H1oQJ.png"></p>
+<p>拷贝完成后，S1和Eden又会被再次清空：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/3H1Ty9.png" alt="3H1Ty9.png"></p>
+<p>周而复始。对象在Survivor区每熬过一次Minor GC，其年龄就会被加1，当对象的年龄达到某个值之后(默认是15岁)，这些对象会成为老年代。</p>
+<p>NOTE：这个默认年龄可以通过<code>-XX:MaxTenuringThreshold</code>调整</p>
+<p>但这也不是一定的，如果存储的对象过大，Eden区和Survivor区都存不下，可能会需要用到老年代的空间协助存储。</p>
+<h5 id="年轻代对象如何晋升到老年代"><a href="#年轻代对象如何晋升到老年代" class="headerlink" title="年轻代对象如何晋升到老年代"></a>年轻代对象如何晋升到老年代</h5><p>在分代算法当中，年轻代对象如何晋升到老年代？简单来说有3种场景：</p>
+<ul>
+<li>经历一定Minor GC次数(比如是15次)依然存活的对象</li>
+<li>Survivor区中村放不下的对象</li>
+<li>新生成的大对象(可以用:<code>-XX:+PretenuerSizeThreshold</code>来控制大对象的大小，只要大于这个大小，对象生成之后直接放入老年代)</li>
+</ul>
+<h5 id="常用的调优参数"><a href="#常用的调优参数" class="headerlink" title="常用的调优参数"></a>常用的调优参数</h5><p>介绍几个常用的用来做性能调优的参数。</p>
+<ul>
+<li>-XX:SurvivorRatio：Eden和Survivor的比值，默认8:1</li>
+<li>-XX:NewRatio：老年代和年轻代内存大小的比例(比如若值为2，则老年代是年轻代大小的两倍，即young generation占据内存的三分之一)。</li>
+<li>-XX:MaxTenuringThreshold:对象从年轻代晋升到老生代经历过GC次数的最大阈值</li>
+</ul>
+<p>新生代和老年代的总内存大小是通过”-Xms”和”-Xmx”来决定的。</p>
+<h5 id="老年代：存放生命周期较长的对象"><a href="#老年代：存放生命周期较长的对象" class="headerlink" title="老年代：存放生命周期较长的对象"></a>老年代：存放生命周期较长的对象</h5><p>回顾这副图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/05/37qRlq.png" alt="年轻代"></p>
+<p>可以看到，老年代占的内存比新生代大，而且大致的比例为2:1</p>
+<p>老年代的对象存活率较高，而且没有额外空间做担保，所以老年代主要用的算法为：</p>
+<ul>
+<li>标记-清理算法</li>
+<li>标记-整理算法</li>
+</ul>
+<p>之前已经详细介绍过这两种算法，这里就不再介绍了。</p>
+<h3 id="12-G1垃圾回收器与CMS的区别有哪些？"><a href="#12-G1垃圾回收器与CMS的区别有哪些？" class="headerlink" title="12.G1垃圾回收器与CMS的区别有哪些？"></a>12.G1垃圾回收器与CMS的区别有哪些？</h3><p>1.9之后已经将G1设置为默认的垃圾回收器</p>
+<h3 id="13-什么情况下会触发FullGC"><a href="#13-什么情况下会触发FullGC" class="headerlink" title="13.什么情况下会触发FullGC?"></a>13.什么情况下会触发FullGC?</h3><p>当触发老年代的垃圾回收的时候，往往也会伴随对新生代堆内存的回收，即对整个堆进行垃圾回收，也就是所谓的Full GC，或者叫做Major GC。Major GC和Full GC是等价的，即收集所有的GC堆。</p>
+<p>主要是因为HotSpot VM发展了很多年，外界对很多名词的解读都已经混乱了，当有人说到了”Major GC”的时候，一定要问清楚，他说的到底是针对所有代的Full GC，还是只是针对老年代的GC。</p>
+<p>Full GC比Minor GC慢(慢十倍)，但因为老年代里面元素本身就不容易被淘汰，所以执行频率也会更低。</p>
+<h4 id="触发Full-GC的条件"><a href="#触发Full-GC的条件" class="headerlink" title="触发Full GC的条件"></a>触发Full GC的条件</h4><ul>
+<li>老年代空间不足——如果创建的对象很大，Eden区域放不下这个对象，会放入到老年代中。如果老年代空间也不足，就会触发Full GC。为了避免这种情况，最好就是不要创建太大的对象。</li>
+<li>永久代空间不足——这主要是针对JDK7以及以前的版本。当系统中需要加载和调用的类很多，而同时持久代当中没有足够的空间去存放类的信息和方法信息的时候，就会触发出一次Full GC。而JDK8以后由于取消了永久代，就不存在”永久代空间不足”这种情况了。(这也是JDK8后面用元空间替代永久代的原因之一，为了降低Full GC的频率，减少GC的负担，提升其效率)</li>
+<li>CMS GC时出现promotion failed, concurrent mode failure。对于采用CMS 进行老年代GC的程序而言，如果GC日志中出现了这两个字段。如果出现了，可能会触发Full GC。</li>
+<li>Minor GC晋升到老年代的平均大小大于老年代的剩余空间</li>
+<li>调用System.gc()——这个是我们在程序里面手动调用的，触发Full GC。需要注意这个方法只是提醒虚拟机，程序员希望你在这里回收一下对象。但是具体怎么做还是要看虚拟机自己，程序员没有控制权</li>
+<li>使用RMI来进行RPC或管理的JDK应用，每小时执行1次Full GC</li>
+</ul>
+<p>这些点很多，面试的时候只要能够提到3点，基本可以点到为止了，可以答到老年代空间不足，程序手动调用System.gc()，然后如果用的JDK版本比较老，在JDK8之前的版本，会有永久代空间不足的情况。当然其他的能说出来更好。</p>
+<p>需要注意：</p>
+<p>1.promotion failed是在进行Minor GC的时候Survivor放不下了，对象只能放入老年代，而此时恰好老年代也放不下，这时候就会造成promotion failed。</p>
+<p>2.concurrent mode failure是在执行CMS GC的过程中同时有对象要放入老年代中，而此时老年代空间不足，就会造成这个failure。</p>
+<p>而对于Minor GC晋升的这第四点，是比较复杂的触发情况。HotSpot为了避免由于新生代对象晋升到老年代而导致老年代空间不足的现象，在进行Minor GC的时候做了一个判断：如果之前统计所得到的Minor GC晋升到老年代的平均大小大于老年代的剩余空间，就直接触发Full GC。例如，程序第一次触发GC后有6M的对象晋升到老年代，当下一次Minor GC发生的时候，首先先检查老年代的剩余空间是否大于6M，如果小于6M，则执行Full GC。</p>
+<h3 id="14-介绍一下JDK11新推出的ZGC算法？"><a href="#14-介绍一下JDK11新推出的ZGC算法？" class="headerlink" title="14.介绍一下JDK11新推出的ZGC算法？"></a>14.介绍一下JDK11新推出的ZGC算法？</h3><p>JDK11提供的最激动人心的就是ZGC这个新的垃圾回收器，ZGC专门为大内存堆设计，有很强悍的性能，能够实现10ms一下的GC暂停时间。</p>
 <h2 id="Java内存模型与synchronized和volatile的面试二连击"><a href="#Java内存模型与synchronized和volatile的面试二连击" class="headerlink" title="Java内存模型与synchronized和volatile的面试二连击"></a>Java内存模型与synchronized和volatile的面试二连击</h2><h3 id="1-Java内存模型-JMM"><a href="#1-Java内存模型-JMM" class="headerlink" title="1.Java内存模型(JMM)"></a>1.Java内存模型(JMM)</h3><p>这里简要概括上面写过的Java内存模型的内容。</p>
 <p>Java内存模型JMM和JVM是两回事，JVM内存模型主要针对<strong>运行时数据区</strong>而言，而JMM是指Java程序中<strong>变量的访问规则</strong>，两者是完全不同的两个概念。</p>
 <p>在 JDK1.2 之前，Java的内存模型(JMM)实现总是从<font color=#FF0000><strong>主存</strong>（即共享内存）读取变量</font>，是不需要进行特别的注意的。而在当前 的 Java 内存模型下，线程可以把变量保存<font color=#FF0000><strong>本地内存</strong></font>（比如机器的寄存器）中，而不是直接在主存中进行读写。这就 可能造成一个线程在主存中修改了一个变量的值，而另外一个线程还继续使用它在寄存器中的变量值的拷贝，造成<font color=#FF0000><strong>数据的不一致</strong></font>。</p>
@@ -2271,7 +2804,7 @@
 <h3 id="什么是死锁？如何手动模拟一个死锁？"><a href="#什么是死锁？如何手动模拟一个死锁？" class="headerlink" title="什么是死锁？如何手动模拟一个死锁？"></a>什么是死锁？如何手动模拟一个死锁？</h3><p>首先，死锁是指两个线程都各自拥有一个资源的锁，但是又都在等待对方释放对方锁拥有的资源的锁。如下图所示：</p>
 <p><img src="https://i.loli.net/2020/03/30/LeThwqHWSBGvtzX.png" alt="死锁.png"></p>
 <p>代码例子如下：</p>
-<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line">import java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line">public <span class="keyword">class</span> LockExample &#123;</span><br><span class="line">	public static void main(String<span class="literal">[]</span> arg) &#123;</span><br><span class="line">		dead<span class="constructor">Lock()</span>; <span class="comment">// 死锁</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	* 死锁</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	<span class="keyword">private</span> static void dead<span class="constructor">Lock()</span> &#123;</span><br><span class="line">		Object lock1 = <span class="keyword">new</span> <span class="constructor">Object()</span>;</span><br><span class="line">		Object lock2 = <span class="keyword">new</span> <span class="constructor">Object()</span>;</span><br><span class="line">		<span class="comment">// 线程1拥有 lock1 试图获取lock2</span></span><br><span class="line">		<span class="keyword">new</span> <span class="constructor">Thread(()</span> -&gt; &#123;</span><br><span class="line">			synchronized(lock1) &#123;</span><br><span class="line">				<span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(<span class="string">"获取lock1成功"</span>);</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					<span class="module-access"><span class="module"><span class="identifier">TimeUnit</span>.</span><span class="module"><span class="identifier">SECONDS</span>.</span></span>sleep(<span class="number">3</span>);</span><br><span class="line">				&#125; catch (InterruptedException e) &#123;</span><br><span class="line">					e.print<span class="constructor">StackTrace()</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// 试图获取lock2</span></span><br><span class="line">				synchronized(lock2) &#123;</span><br><span class="line">					<span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(<span class="module-access"><span class="module"><span class="identifier">Thread</span>.</span></span>current<span class="constructor">Thread()</span>.get<span class="constructor">Name()</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;).start<span class="literal">()</span>;</span><br><span class="line">		<span class="comment">// 线程二拥有 lock2 试图获取lock1</span></span><br><span class="line">		<span class="keyword">new</span> <span class="constructor">Thread(()</span> -&gt; &#123;</span><br><span class="line">			synchronized(lock2) &#123;</span><br><span class="line">				<span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(<span class="string">"获取lock2成功"</span>);</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					<span class="module-access"><span class="module"><span class="identifier">TimeUnit</span>.</span><span class="module"><span class="identifier">SECONDS</span>.</span></span>sleep(<span class="number">3</span>);</span><br><span class="line">				&#125; catch (InterruptedException e) &#123;</span><br><span class="line">					e.print<span class="constructor">StackTrace()</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// 试图获取lock2</span></span><br><span class="line">				synchronized(lock1) &#123;</span><br><span class="line">					<span class="module-access"><span class="module"><span class="identifier">System</span>.</span></span>out.println(<span class="module-access"><span class="module"><span class="identifier">Thread</span>.</span></span>current<span class="constructor">Thread()</span>.get<span class="constructor">Name()</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;).start<span class="literal">()</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LockExample</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] arg)</span> </span>&#123;</span><br><span class="line">		deadLock(); <span class="comment">// 死锁</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	* 死锁</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">deadLock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		Object lock1 = <span class="keyword">new</span> Object();</span><br><span class="line">		Object lock2 = <span class="keyword">new</span> Object();</span><br><span class="line">		<span class="comment">// 线程1拥有 lock1 试图获取lock2</span></span><br><span class="line">		<span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">			<span class="keyword">synchronized</span>(lock1) &#123;</span><br><span class="line">				System.out.println(<span class="string">"获取lock1成功"</span>);</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">				&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// 试图获取lock2</span></span><br><span class="line">				<span class="keyword">synchronized</span>(lock2) &#123;</span><br><span class="line">					System.out.println(Thread.currentThread().getName());</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;).start();</span><br><span class="line">		<span class="comment">// 线程二拥有 lock2 试图获取lock1</span></span><br><span class="line">		<span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">			<span class="keyword">synchronized</span>(lock2) &#123;</span><br><span class="line">				System.out.println(<span class="string">"获取lock2成功"</span>);</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">				&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// 试图获取lock2</span></span><br><span class="line">				<span class="keyword">synchronized</span>(lock1) &#123;</span><br><span class="line">					System.out.println(Thread.currentThread().getName());</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;).start();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上述代码执行结果如下：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">获取lock1成功</span><br><span class="line">获取lock2成功</span><br></pre></td></tr></table></figure>
@@ -2300,7 +2833,351 @@
 
 <p>从结果可以看出reentrantA方法和reentrantB方法的执行线程都是“main”，我们调用了reentrantA方法，它的方法中嵌套了reentrantB，如果synchronized是不可重入的话，那么线程会一直堵塞。</p>
 <p>可重入锁的实现原理，是在锁内部存储了一个线程标识，用于判断当前的锁属于哪个线程，并且锁的内部维护了一个计数器，当锁空闲时此计数器的值为0，当被线程占用和重入时分别加1，当锁被释放时计数器减1，直到减到 0 时表示此锁为空闲状态。</p>
-<h2 id="Java垃圾回收机制"><a href="#Java垃圾回收机制" class="headerlink" title="Java垃圾回收机制"></a>Java垃圾回收机制</h2><h1 id="7-Spring"><a href="#7-Spring" class="headerlink" title="7.Spring"></a>7.Spring</h1>]]></content>
+<h1 id="7-Spring"><a href="#7-Spring" class="headerlink" title="7.Spring"></a>7.Spring</h1><h2 id="说说你对Spring-IOC机制的理解"><a href="#说说你对Spring-IOC机制的理解" class="headerlink" title="说说你对Spring IOC机制的理解"></a>说说你对Spring IOC机制的理解</h2><h3 id="Spring-IOC的演进由来"><a href="#Spring-IOC的演进由来" class="headerlink" title="Spring IOC的演进由来"></a>Spring IOC的演进由来</h3><p>首先，我们可以对比，没有IOC的常规情况：</p>
+<p><strong>没有IOC的项目模式</strong>：tomcat最初的流程是接受http请求，然后封装后转发给我们自己写的servlet，最后由我们手动创建实现类的对象去执行业务逻辑。<strong>但是这样存在很大弊端：耦合性太高</strong>。比如我要修改这个方法，那么所有调用了这个方法的类全都要改代码！改动过程复杂不说，后序测试也会非常复杂！出了一点点问题，都会要改动很多代码！很不合理。</p>
+<p>上面这个过程如图所示：</p>
+<p><img src="https://i.loli.net/2020/04/07/6xaodPEkOAKIHc3.png" alt="原始项目流程.png"></p>
+<p>紧接着，<strong>整个体系进行演化</strong>，演化出了Spring IOC框架，即控制反转，依赖注入(DI)。在以前，我们都会用xml文件来进行配置我们的系统，现在都是用<strong>注解</strong>来完成。具体做法：把原先完成业务逻辑的Servlet修改成Controller，在最上面加上注解”@Controller”，然后实现这个Controller的类加上注解”@Resource”，后面我们只要在这个工程里通过maven引入一些spring框架的依赖比如ioc功能，那么<strong>tomcat在启动的时候，直接会启动spring容器</strong>。</p>
+<p>spring容器启动后会扫描所有代码，之后的过程是，spring容器会理解你的注解或者xml配置，只要你加了”<strong>@Controller</strong>“注解，spring容器就会知道现在需要它来创建你这个类的对象实例；你加了”<strong>@Service</strong>“，spring容器就会管理和创建这个类；如果加了”<strong>@Resource</strong>“，就知道这个是一个引用变量，没有对象实例，这个对象实例的bean是不是在spring容器的管理之下，如果在，就把之前创建的带有”<strong>@Service</strong>“的类赋值给”<strong>@Resource</strong>“的变量，也就是让”<strong>@Controller</strong>“去引用”<strong>@Service</strong>“。</p>
+<p><strong>然后引入spring mvc其实就是由它实现了之前servlet的一些功能，处理包装请求，然后一些filter，最终转发到我们的controller，最终调用实现类完成业务逻辑</strong>。 整个IOC容器就像是一个map，key是对应的名称，value是通过反射创建的bean。比较明显的作用就是解耦。</p>
+<p>样例代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> MyService myService;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doRequest</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 对请求统一处理</span></span><br><span class="line">        <span class="comment">// 调用自己的业务逻辑组件，去执行一些业务逻辑</span></span><br><span class="line">        myService.doService(request);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyServiceImpl</span> <span class="keyword">implements</span> <span class="title">MyService</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NewServiceManagerImpl</span> <span class="keyword">implements</span> <span class="title">MyService</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面这段代码中，MyServiceImpl 和 NewServiceManagerImpl 是一前一后实现MyService这个接口的实现类。可以假设原本项目中的实现方法是MyServiceImpl，但是后面改成了NewServiceManagerImpl ，但是此时修改代码非常简单，只需要改一下”@Service”的位置即可，就会改变实例化的方法。但项目要修改的时候，不用改代码，只要改之前的”@Service”注解即可。</p>
+<p>上述代码的执行过程如图：</p>
+<p><img src="https://i.loli.net/2020/04/07/DBStkXIYlCNd97G.png" alt="新的使用IOC的系统.png"></p>
+<p><font color=#FF0000>IOC底层核心技术是反射</font>，直接根据你的类去自己构建对应的对象出来。</p>
+<p>spring容器会根据xml配置或者注解，去实例化对应的bean对象，再然后根据xml配置或者注解，去对bean对象之间的引用关系，去进行依赖注入，某个bean依赖了另外一个bean。最后spring ioc实现了系统的类与类之间彻底的解耦合。现在这套比较高大上的一点系统里，有几十个类都使用了@Resource这个注解去标注MyService myService，几十个地方都依赖了这个类，如果要修改实现类为NewServiceManagerImpl</p>
+<p>Tomcat启动后会去启动一个spring容器，由spring将对应的bean进行创建于初始化，并且管理对应的依赖关系，这里的就是控制反转了，将类的调用关系由主动变成了被动，交给了spring去管理。 3、有了这个机制以后，就可以轻松的完成解耦，然后引入spring mvc其实就是由它实现了之前servlet的一些功能，处理包装请求，然后一些filter，最终转发到我们的controller，最终调用实现类完成业务逻辑。 4、整个IOC容器就像是一个map，key是对应的名称，value是通过反射创建的bean。比较明显的作用就是解耦。</p>
+<h3 id="Spring-IOC的优点？"><a href="#Spring-IOC的优点？" class="headerlink" title="Spring IOC的优点？"></a>Spring IOC的优点？</h3><p>IOC 或 依赖注入把应用的代码量降到最低。它使应用容易测试，单元测试不再需要单例和JNDI查找机制。最小的代价和最小的侵入性使松散耦合得以实现。IOC容器支持加载服务时的饿汉式初始化和懒加载。</p>
+<h3 id="SpringIOC初始化过程-重要"><a href="#SpringIOC初始化过程-重要" class="headerlink" title="SpringIOC初始化过程(重要)"></a>SpringIOC初始化过程(重要)</h3><p>详细来说，其实Spring IOC初始化过程就是容器的初始化过程。</p>
+<p>之前介绍Spring Bean的时候已经提到了，Spring Bean都是由Spring容器去管理的，而Spring主要有两个容器系列：</p>
+<ol>
+<li>实现BeanFactory接口的简单容器；</li>
+<li>实现ApplicationContext接口的高级容器。</li>
+</ol>
+<p>ApplicationContext比较复杂，它不但继承了BeanFactory的大部分属性，还继承其它可扩展接口，扩展的了许多高级的属性，其接口定义如下：</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="symbol">ApplicationContext</span> <span class="symbol">extends</span> <span class="symbol">EnvironmentCapable</span>, </span><br><span class="line">　　　　　　　　　　　　　　　　　　<span class="symbol">ListableBeanFactory</span>,    //继承于<span class="symbol">BeanFactory</span></span><br><span class="line">　　　　　　　　　　　　　　　　　　<span class="symbol">HierarchicalBeanFactory</span>,//继承于<span class="symbol">BeanFactory</span></span><br><span class="line">　　　　　　　　　　　　　　　　　　<span class="symbol">MessageSource</span>,            //</span><br><span class="line">　　　　　　　　　　　　　　　　　　<span class="symbol">ApplicationEventPublisher</span>,//</span><br><span class="line">　　　　　　　　　　　　　　　　　　<span class="symbol">ResourcePatternResolver</span>   //继承<span class="symbol">ResourceLoader</span>，用于获取<span class="symbol">resource</span>对象</span><br></pre></td></tr></table></figure>
+
+<p>在BeanFactory子类中有一个DefaultListableBeanFactory类，它包含了基本Spirng IoC容器所具有的重要功能，开发时不论是使用BeanFactory系列还是ApplicationContext系列来创建容器基本都会使用到DefaultListableBeanFactory类，可以这么说，在spring中实际上把它当成默认的IoC容器来使用。</p>
+<p>关于Spirng IoC容器的初始化过程在《Spirng技术内幕：深入解析Spring架构与设计原理》一书中有明确的指出，IoC容器的初始化过程可以分为三步：</p>
+<ol>
+<li><font color=#FF0000>Resource定位（Bean的定义文件定位）</font></li>
+<li><font color=#FF0000>将Resource定位好的资源载入到BeanDefinition </font></li>
+<li><font color=#FF0000>将BeanDefiniton注册到容器中 </font></li>
+</ol>
+<p>如下图：</p>
+<p><img src="https://i.loli.net/2020/03/25/YNAar5mMChU2Dzc.png" alt="SpringIOC初始化过程.png"></p>
+<h2 id="Spring实现IOC的三种方式"><a href="#Spring实现IOC的三种方式" class="headerlink" title="Spring实现IOC的三种方式"></a>Spring实现IOC的三种方式</h2><h3 id="属性注入"><a href="#属性注入" class="headerlink" title="属性注入"></a>属性注入</h3><p>通过setXXX()方法注入Bean的属性值或者依赖对象，最常用。</p>
+<ul>
+<li>Spring首先会调用bean的默认构造函数实例化bean对象，然后再通过反射的方法来调用set方法来注入属性值。</li>
+<li>属性注入要求bean提供一个默认的构造函数,并且得为需要注入的属性提供set方法</li>
+</ul>
+<h3 id="构造函数注入-构造器依赖注入"><a href="#构造函数注入-构造器依赖注入" class="headerlink" title="构造函数注入(构造器依赖注入)"></a>构造函数注入(构造器依赖注入)</h3><p>使用构造函数注入的前提是：bean必须提供带参的构造函数。</p>
+<p>构造器依赖注入通过容器触发一个类的构造器来实现的，该类有一系列参数，每个参数代表一个对其他类的依赖。</p>
+<h3 id="工厂方法注入"><a href="#工厂方法注入" class="headerlink" title="工厂方法注入"></a>工厂方法注入</h3><p>注解的方式注入 @Autowired,@Resource,@Required。</p>
+<h4 id="Autowired和-Resource的区别-重要"><a href="#Autowired和-Resource的区别-重要" class="headerlink" title="@Autowired和@Resource的区别(重要)"></a>@Autowired和@Resource的区别(重要)</h4><p>简而言之：<strong>@Autowired按<code>byType</code>(类型)自动注入</strong>，而<strong>@Resource则默认按<code>byName</code>(名字)自动注入</strong>，当然@Resource可以指定按照什么方式注入。</p>
+<p>@Autowired是在Spring2.5后引入的，它可以对类成员变量、方法及构造函数进行标注，完成自动装配的工作。 可以通过 @Autowired的使用来消除 set ，get方法。</p>
+<p>@Resource有两个属性是比较重要的，分别是<code>name</code>和<code>type</code>，Spring 将@Resource注解的<code>name</code>属性解析为bean的名字，而<code>type</code>属性则解析为bean的类型。因此，如果使用<code>name</code>属性，则使用<code>byName</code>的自动注入策略，而使用<code>type</code>属性时则使用byType自动注入策略。如果既不指定<code>name</code>也不指定<code>type</code>属性，这时将通过反射机制使用<code>byName</code>自动注入策略。</p>
+<h2 id="说说你对Spring-AOP机制的理解"><a href="#说说你对Spring-AOP机制的理解" class="headerlink" title="说说你对Spring AOP机制的理解"></a>说说你对Spring AOP机制的理解</h2><p>spring核心框架里面，最关键的两个机制，就是ioc和aop，spring IOC可以根据xml配置或者注解，去实例化我们所有的bean，管理bean之间的依赖注入，让类与类之间解耦，维护代码的时候可以更加的轻松便利。</p>
+<p>下面介绍Spring AOP。</p>
+<p>AOP是一个编程目标，”面向切面编程”的目标。实现这个目标，有哪些手段？——其中一个手段是Spring AOP,还有一个手段是AspectJ。Spring在2.5之后借用了AspectJ的语法，借鉴了其编程风格</p>
+<h3 id="为什么需要AOP？"><a href="#为什么需要AOP？" class="headerlink" title="为什么需要AOP？"></a>为什么需要AOP？</h3><p>AOP可以说是对OOP的补充和完善。OOP引入封装、继承和多态性等概念来建立一种对象层次结构，用以模拟公共行为的一个集合。当我们<strong>需要为分散的对象引入公共行为的时候，OOP则显得无能为力</strong>。也就是说，<font color=#FF0000><strong>OOP允许你定义从上到下的关系，但并不适合定义从左到右的关系</strong></font>。</p>
+<p>例如<strong>日志功能</strong>。日志代码往往水平地散布在所有对象层次中，而与它所散布到的对象的核心功能毫无关系。在OOP设计中，它导致了大量代码的重复，而不利于各个模块的重用。</p>
+<blockquote>
+<p>将程序中的交叉业务逻辑（比如安全检查，日志，事务管理、缓存、对象池等），封装成一个切面，然后注入到目标对象（具体业务逻辑）中去。</p>
+</blockquote>
+<h3 id="代理模式-AOP实现原理"><a href="#代理模式-AOP实现原理" class="headerlink" title="代理模式(AOP实现原理)"></a>代理模式(AOP实现原理)</h3><p>之所以这里单独列出来代理模式，主要因为<font color=#FF0000>AOP就是通过代理模式实现的(静态代理、动态代理)</font></p>
+<p>代理模式是23种设计模式的一种，他是指<strong>一个对象A通过持有另一个对象B，可以具有B同样的行为的模式</strong>。为了对外开放协议，B往往实现了一个接口，A也会去实现接口。但是B是“真正”实现类，A则比较“虚”，他借用了B的方法去实现接口的方法。A虽然是“伪军”，但它可以增强B，在调用B的方法前后都做些其他的事情。Spring AOP就是使用了动态代理完成了代码的动态“织入”。</p>
+<p>使用代理好处还不止这些，一个工程如果依赖另一个工程给的接口，但是另一个工程的接口不稳定，经常变更协议，就可以使用一个代理，接口变更时，只需要修改代理，不需要一一修改业务代码。从这个意义上说，所有调外界的接口，我们都可以这么做，不让外界的代码对我们的代码有侵入，这叫防御式编程。代理其他的应用可能还有很多。</p>
+<p><strong>上述例子中，类A写死持有B，就是B的静态代理。如果A代理的对象是不确定的，就是动态代理。</strong></p>
+<blockquote>
+<p>动态代理目前有两种常见的实现，jdk动态代理和cglib动态代理。</p>
+<p>静态代理的实现有两种——组合和继承。一种通过组合的方式获取目标函数，一个通过继承目标类通过父类调用函数。(如果用面向对象的思路来看，能用组合就尽量用组合，因为继承出了情况的话修改代码太麻烦)。</p>
+</blockquote>
+<h3 id="AOP实现原理"><a href="#AOP实现原理" class="headerlink" title="AOP实现原理"></a>AOP实现原理</h3><blockquote>
+<p>AOP 实现的关键就在于 AOP 框架自动创建的 AOP 代理，AOP 代理则可分为静态代理和动态代理两大类，其中静态代理是指使用 AOP 框架提供的命令进行编译，从而在编译阶段就可生成 AOP 代理类，因此也称为编译时增强；而动态代理则在运行时借助于 JDK 动态代理、CGLIB 等在内存中“临时”生成 AOP 动态代理类，因此也被称为运行时增强。</p>
+</blockquote>
+<p>实现AOP(不是Spring AOP，而是AOP技术，即Spring AOP和AspectJ)的技术，主要分为两大类：</p>
+<ul>
+<li>一是采用<strong>动态代理技术</strong>(Spring AOP)，利用截取消息的方式，对该消息进行装饰，以取代原有对象行为的执行；</li>
+<li>二是采用<strong>静态织入(静态代理)</strong>的方式(AspectJ)，引入特定的语法创建“切面”，从而使得编译器可以在编译期间织入有关“切面”的代码.</li>
+</ul>
+<h2 id="JDK和CGLib动态代理性能对比"><a href="#JDK和CGLib动态代理性能对比" class="headerlink" title="JDK和CGLib动态代理性能对比"></a>JDK和CGLib动态代理性能对比</h2><p><strong>JDK动态代理基于接口、CGLib基于子类</strong>。</p>
+<p>关于两者之间的性能的话，JDK动态代理所创建的代理对象，在以前的JDK版本中，性能并不是很高，虽然在高版本中JDK动态代理对象的性能得到了很大的提升，但是他也并不是适用于所有的场景。主要体现在<strong>创建的实例对象的性能</strong>和<strong>创建对象需要花费的时间</strong>这两个指标中：</p>
+<p>1、CGLib所创建的动态代理对象在实际运行时候的<strong>性能要比JDK动态代理高不少</strong>，有研究表明，<strong>大概要高10倍</strong>；</p>
+<p>2、但是CGLib在创建对象的时候所<strong>花费的时间却比JDK动态代理要多很多</strong>，有研究表明，大概有<strong>8倍的差距</strong>；</p>
+<p>因此，<strong>对于singleton的代理对象或者具有实例池的代理，因为无需频繁的创建代理对象，所以比较适合采用CGLib动态代理，反之，则比较适用JDK动态代理</strong>。</p>
+<p><a href="https://blog.csdn.net/xlgen157387/article/details/82497594" target="_blank" rel="noopener">Spring AOP中的JDK和CGLib动态代理哪个效率更高？</a></p>
+<p><a href="https://blog.csdn.net/flyfeifei66/article/details/81481222" target="_blank" rel="noopener">Java两种动态代理JDK动态代理和CGLIB动态代理</a></p>
+<h2 id="画一张图说说Spring的核心架构？"><a href="#画一张图说说Spring的核心架构？" class="headerlink" title="画一张图说说Spring的核心架构？"></a>画一张图说说Spring的核心架构？</h2><p>spring容器的执行的核心原理实际上可以用bean的流程来表述。</p>
+<p>spring和新架构比较简单，但是实现细节很复杂。你在系统里用xml或者注解，定义一大堆的bean，然后整个过程就是对bean进行操作。</p>
+<p>比如你要用AOP进行一些增强，可能用到<strong>动态代理</strong>，或者IOC的<strong>反射</strong>，得到bean的对象实例。</p>
+<p><img src="https://i.loli.net/2020/04/08/PQgf5M7T1RIax49.png" alt="spring容器的核心流程.png"></p>
+<h2 id="Spring-Bean是什么"><a href="#Spring-Bean是什么" class="headerlink" title="Spring Bean是什么"></a>Spring Bean是什么</h2><p>被称作 bean 的对象是构成应用程序的支柱也是由 Spring IoC 容器管理的。<strong>bean 是一个被实例化，组装，并通过 Spring IoC 容器所管理的对象</strong>。这些 bean 是由用容器提供的配置元数据创建。</p>
+<h2 id="一个Spring-Bean定义包含什么"><a href="#一个Spring-Bean定义包含什么" class="headerlink" title="一个Spring Bean定义包含什么"></a>一个Spring Bean定义包含什么</h2><p>bean 定义包含称为<strong>配置元数据</strong>的信息。</p>
+<p>Spring IOC容器管理Bean时，需要了解Bean的类名、名称、依赖项、属性、生命周期及作用域等信息。为此，Spring IOC提供了一系列配置项，用于Bean在IOC容器中的定义。已创建的Bean类需要在Spring配置文件中进行定义，Spring IOC容器才能对Bean进行组配和管理。</p>
+<p>一些配置项如下表所示：</p>
+<p><img src="https://i.loli.net/2020/03/25/PWQAFcpv4hqM9Ze.png" alt="bean的一些配置项.png"></p>
+<h2 id="Spring的两种IOC容器——BeanFactory和ApplicationContext"><a href="#Spring的两种IOC容器——BeanFactory和ApplicationContext" class="headerlink" title="Spring的两种IOC容器——BeanFactory和ApplicationContext"></a>Spring的两种IOC容器——BeanFactory和ApplicationContext</h2><p>Spring 容器是 Spring 框架的核心。容器将创建对象，把它们连接在一起，配置它们，并管理他们的整个生命周期从创建到销毁。Spring 容器使用依赖注入（DI）来管理组成一个应用程序的组件。这些对象被称为 Spring Beans.</p>
+<p>通过阅读配置元数据提供的指令，容器知道对哪些对象进行实例化，配置和组装。配置元数据可以通过 XML，Java 注释或 Java 代码来表示。下图是 Spring 如何工作的高级视图。 </p>
+<p><img src="https://i.loli.net/2020/03/25/nEIgC9TfwFkYr1s.png" alt="Spring如何工作的高级视图.png"></p>
+<p>Spring IoC 容器利用 Java 的 POJO 类和配置元数据来生成完全配置和可执行的系统或应用程序。</p>
+<p>Spring提供了两种不同类型的容器：</p>
+<ul>
+<li><strong>BeanFactory容器</strong>，最简单的容器(太简单了，功能实现比较少，不推荐了)，给DI提供了基本支持。</li>
+<li><strong>ApplicationContext容器</strong>，该容器添加了更多的企业特定的功能，例如从一个属性文件中解析文本信息的能力，发布应用程序事件给感兴趣的事件监听器的能力。该容器是由 org.springframework.context.ApplicationContext 接口定义。</li>
+</ul>
+<p>两者区别：<strong>ApplicationContext 容器包括 BeanFactory 容器的所有功能，所以通常建议使用 ApplicationContext。BeanFactory 仍然可以用于轻量级的应用程序，如移动设备或基于 applet 的应用程序，其中它的数据量和速度是显著。</strong></p>
+<h3 id="Spring的基本模块——BeanFactory-BeanFactory容器"><a href="#Spring的基本模块——BeanFactory-BeanFactory容器" class="headerlink" title="Spring的基本模块——BeanFactory(BeanFactory容器)"></a>Spring的基本模块——BeanFactory(BeanFactory容器)</h3><p>BeanFactory是基本的Spring模块，提供spring 框架的基础功能，BeanFactory 是 任何以spring为基础的应用的核心。Spring 框架建立在此模块之上，它使Spring成为一个容器。</p>
+<p>Bean 工厂是工厂模式的一个实现，提供了控制反转功能，用来把应用的配置和依赖从真正的应用代码中分离。</p>
+<p>最常用的BeanFactory 实现是<strong>XmlBeanFactory</strong> 类。即org.springframework.beans.factory.xml.XmlBeanFactory ，它根据XML文件中的定义加载beans。这个容器从一个 XML 文件中读取配置元数据，由这些元数据来生成一个被配置化的系统或者应用。</p>
+<p>需要注意，在资源宝贵的移动设备或者基于 applet 的应用当中， BeanFactory 会被优先选择。否则，一般使用的是 ApplicationContext，除非你有更好的理由选择 BeanFactory。</p>
+<h3 id="ApplicationContext是什么？通常的实现是什么"><a href="#ApplicationContext是什么？通常的实现是什么" class="headerlink" title="ApplicationContext是什么？通常的实现是什么?"></a>ApplicationContext是什么？通常的实现是什么?</h3><p><em>Application Context</em> 是 spring 中较高级的容器。和 BeanFactory 类似，它可以加载配置文件中定义的 bean，将所有的 bean 集中在一起，当有请求的时候分配 bean。 另外，它增加了企业所需要的功能，比如，从属性文件从解析文本信息和将事件传递给所指定的监听器。这个容器在 <em>org.springframework.context.ApplicationContext interface</em> 接口中定义。</p>
+<ul>
+<li><strong>FileSystemXmlApplicationContext</strong> ：此容器从一个<strong>XML文件</strong>中加载已被定义的bean。在这里，你<font color=#FF0000>需要提供给构造器 XML 文件的完整路径</font></li>
+<li><strong>ClassPathXmlApplicationContext</strong>：该容器从 XML 文件中加载已被定义的 bean。在这里，你<font color=#FF0000>不需要提供 XML 文件的完整路径</font>，只需正确配置 CLASSPATH 环境变量即可，因为，容器会从 CLASSPATH 中搜索 bean 配置文件。</li>
+<li><strong>WebXmlApplicationContext</strong>：此容器加载一个XML文件，此文件定义了一个WEB应用的所有bean。</li>
+</ul>
+<h3 id="BeanFactory和ApplicationContext有什么区别？"><a href="#BeanFactory和ApplicationContext有什么区别？" class="headerlink" title="BeanFactory和ApplicationContext有什么区别？"></a>BeanFactory和ApplicationContext有什么区别？</h3><p>ApplicationContext 包含 BeanFactory 所有的功能，一般情况下，相对于 BeanFactory，ApplicationContext 会被推荐使用。BeanFactory 仍然可以在轻量级应用中使用，比如移动设备或者基于 applet 的应用程序。</p>
+<p><code>ApplicationContext</code>在<code>BeanFactory</code>的基础上实现的额外功能：</p>
+<ul>
+<li><p>默认初始化所有的Singleton，也可以通过配置取消预初始化。</p>
+</li>
+<li><p>继承MessageSource，因此<strong>支持国际化</strong>。</p>
+</li>
+<li><p>继承ResourceLoader，可以资源访问，比如访问URL和文件。</p>
+</li>
+<li><p>事件机制，比如发送消息、相应机制(ApplicationEventPublisher)。</p>
+</li>
+<li><p>可以载入多个(有继承关系)的上下文，使得每一个上下文都专注于一个特定的层次，比如应用的web层。</p>
+</li>
+<li><p>支持Spring的AOP(最常用的是拦截器，一般实现<code>HandlerInterceptor</code>，其中有三个方法：preHandle、postHandle、afterCompletion)。</p>
+</li>
+</ul>
+<blockquote>
+<p>注：由于ApplicationContext会预先初始化所有的Singleton Bean，于是在系统创建前期会有较大的系统开销，但一旦ApplicationContext初始化完成，程序后面获取Singleton Bean实例时候将有较好的性能。也可以为bean设置lazy-init属性为true，即Spring容器将不会预先初始化该bean。</p>
+</blockquote>
+<p>参考文章：<a href="https://blog.csdn.net/pythias_/article/details/82752881" target="_blank" rel="noopener">BeanFactory和ApplicationContext的区别</a></p>
+<h2 id="Spring-Bean加载机制"><a href="#Spring-Bean加载机制" class="headerlink" title="Spring Bean加载机制"></a>Spring Bean加载机制</h2><p>将Bean类添加到Spring IOC容器有三种方式</p>
+<ul>
+<li>一种方式是基于XML的配置文件；(现在很不推荐用，太久远了)</li>
+<li>一种方式是基于注解的配置(Annotation-based configuration，从Spring2.5开始)；</li>
+<li>一种方式是基于Java的配置(java-based configuration, 从Spring3.0开始)</li>
+</ul>
+<h2 id="Spring-Bean的生命周期-重要"><a href="#Spring-Bean的生命周期-重要" class="headerlink" title="Spring Bean的生命周期(重要)"></a>Spring Bean的生命周期(重要)</h2><p>理解 Spring bean 的生命周期很容易。当一个 bean 被实例化时，它可能需要执行一些初始化使它转换成可用状态。同样，当 bean 不再需要，并且从容器中移除时，可能需要做一些清除工作。</p>
+<p>尽管还有一些在 Bean 实例化和销毁之间发生的活动，但是本章将只讨论两个重要的生命周期回调方法，它们在 bean 的初始化和销毁的时候是必需的。</p>
+<p>为了定义安装和拆卸一个 bean，我们只要声明带有 init-method 和/或 destroy-method 参数的 。init-method 属性指定一个方法，在实例化 bean 时，立即调用该方法。同样，destroy-method 指定一个方法，只有从容器中移除 bean 之后，才能调用该方法。</p>
+<p>首先<strong>大体看一下</strong>，Spring Bean的生命周期可以分为八步：</p>
+<p>（1）<strong>实例化Bean</strong>：如果要使用一个bean的话会实例化这个Bean</p>
+<p>（2）<strong>设置对象属性（依赖注入）</strong>：spring容器需要去看看，你的这个bean依赖了谁，把你依赖的bean也创建出来，给你进行一个注入，比如说通过构造函数，setter</p>
+<p>举个例子，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> MyDao myDao;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyService</span><span class="params">(MyDao myDao)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.myDao = myDao;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMyDao</span><span class="params">(MyDao myDao)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.myDao = myDao;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>（3）<strong>处理并调用Aware接口</strong>：如果这个Bean已经实现了<code>ApplicationContextAware</code>接口，spring容器就会调用我们的bean的setApplicationContext(ApplicationContext)方法，传入Spring上下文，把spring容器给传递给这个bean</p>
+<p>（4）<strong>BeanPostProcessor</strong>：如果我们想在bean实例构建好了之后，此时在这个时间点，我们想要对Bean进行一些自定义的处理，那么可以让Bean实现了<code>BeanPostProcessor</code>接口，那将会调用<code>postProcessBeforeInitialization(Object obj, String s)</code>方法。</p>
+<p>（5）<strong>InitializingBean 与 init-method</strong>：如果Bean在Spring配置文件中配置了 init-method 属性，则会自动调用其配置的初始化方法。</p>
+<p>（6）如果这个Bean实现了BeanPostProcessor接口，将会调用postProcessAfterInitialization(Object obj, String s)方法。这步完成之后，整个Bean就已经初始化好了，后面开始使用。</p>
+<p>（7）<strong>DisposableBean</strong>：当Bean不再需要时，会经过清理阶段，如果Bean实现了DisposableBean这个接口，会调用其实现的destroy()方法；</p>
+<p>（8）<strong>destory-method</strong>：最后，如果这个Bean的Spring配置中配置了destroy-method属性，会自动调用其配置的销毁方法。</p>
+<p>整个过程大体描述：创建+初始化一个bean -&gt; spring容器管理的bean长期存活 -&gt; 销毁bean（两个回调函数）</p>
+<p><strong>更详细地来看</strong>，Spring Bean的生命周期可以分得更细：</p>
+<p><a href="https://blog.csdn.net/w_linux/article/details/80086950?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task" target="_blank" rel="noopener">参考文章：Spring了解Bean的一生(生命周期)</a></p>
+<p><a href="https://www.jianshu.com/p/3944792a5fff" target="_blank" rel="noopener">Spring Bean的生命周期</a> ,这篇文章也包含案例</p>
+<h3 id="ApplicationContext-Bean的生命周期"><a href="#ApplicationContext-Bean的生命周期" class="headerlink" title="ApplicationContext Bean的生命周期"></a>ApplicationContext Bean的生命周期</h3><p><img src="https://i.loli.net/2020/03/25/HypdfUSJNYqAEzG.png" alt="ApplicationContextBean的生命周期.png"></p>
+<p>ApplicationContext容器中，Bean的生命周期流程如上图所示，流程大致如下：</p>
+<p>1.首先容器启动后，会对scope为singleton且非懒加载的bean进行实例化，</p>
+<p>2.按照Bean定义信息配置信息，注入所有的属性，</p>
+<p>3.如果Bean实现了BeanNameAware接口，会回调该接口的setBeanName()方法，传入该Bean的id，此时该Bean就获得了自己在配置文件中的id，</p>
+<p>4.如果Bean实现了BeanFactoryAware接口,会回调该接口的setBeanFactory()方法，传入该Bean的BeanFactory，这样该Bean就获得了自己所在的BeanFactory，</p>
+<p>5.如果Bean实现了ApplicationContextAware接口,会回调该接口的setApplicationContext()方法，传入该Bean的ApplicationContext，这样该Bean就获得了自己所在的ApplicationContext，</p>
+<p>6.如果有Bean实现了BeanPostProcessor接口，则会回调该接口的postProcessBeforeInitialzation()方法，</p>
+<p>7.如果Bean实现了InitializingBean接口，则会回调该接口的afterPropertiesSet()方法，</p>
+<p>8.如果Bean配置了init-method方法，则会执行init-method配置的方法，</p>
+<p>9.如果有Bean实现了BeanPostProcessor接口，则会回调该接口的postProcessAfterInitialization()方法，</p>
+<p>10.经过流程9之后，就可以正式使用该Bean了,对于scope为singleton的Bean,Spring的ioc容器中会缓存一份该bean的实例，而对于scope为prototype的Bean,每次被调用都会new一个新的对象，期生命周期就交给调用方管理了，不再是Spring容器进行管理了</p>
+<p>11.容器关闭后，如果Bean实现了DisposableBean接口，则会回调该接口的destroy()方法，</p>
+<p>12.如果Bean配置了destroy-method方法，则会执行destroy-method配置的方法，至此，整个Bean的生命周期结束</p>
+<h3 id="BeanFactory-Bean的生命周期"><a href="#BeanFactory-Bean的生命周期" class="headerlink" title="BeanFactory Bean的生命周期"></a>BeanFactory Bean的生命周期</h3><p><img src="https://i.loli.net/2020/03/25/NU6EPjKc7n2To1L.png" alt="BeanFactory Bean生命周期.png"></p>
+<p>BeanFactoty容器中, Bean的生命周期如上图所示，与ApplicationContext相比，有如下几点不同:</p>
+<p>1.BeanFactory容器中，不会调用ApplicationContextAware接口的setApplicationContext()方法，</p>
+<p>2.BeanPostProcessor接口的postProcessBeforeInitialzation()方法和postProcessAfterInitialization()方法不会自动调用，必须自己通过代码手动注册</p>
+<p>3.BeanFactory容器启动的时候，不会去实例化所有Bean,包括所有scope为singleton且非懒加载的Bean也是一样，而是在调用的时候去实例化。</p>
+<h2 id="哪些是重要的bean生命周期方法？-你能重载它们吗？-setup和teardown"><a href="#哪些是重要的bean生命周期方法？-你能重载它们吗？-setup和teardown" class="headerlink" title="哪些是重要的bean生命周期方法？ 你能重载它们吗？(setup和teardown)"></a>哪些是重要的bean生命周期方法？ 你能重载它们吗？(setup和teardown)</h2><p>有两个重要的bean 生命周期方法，第一个是setup ， 它是在容器加载bean的时候被调用。第二个方法是 teardown  它是在容器卸载类的时候被调用。</p>
+<p>bean 标签有两个重要的属性（init-method和destroy-method）。用它们你可以自己定制初始化和注销方法。它们也有相应的注解（@PostConstruct和@PreDestroy）。</p>
+<p>换句话说：为了定义安装和拆卸一个 bean，我们只要声明带有 init-method 和/或 destroy-method 参数的 。init-method 属性指定一个方法(setup)，在实例化 bean 时，立即调用该方法。同样，destroy-method 指定一个方法(teardown)，只有从容器中移除 bean 之后，才能调用该方法。</p>
+<h2 id="Bean的作用域"><a href="#Bean的作用域" class="headerlink" title="Bean的作用域"></a>Bean的作用域</h2><p>在IoC容器启动之后，并不会马上就实例化相应的bean，此时容器仅仅拥有所有对象的BeanDefinition(BeanDefinition：是容器依赖某些工具加载的XML配置信息进行解析和分析，并将分析后的信息编组为相应的BeanDefinition)。只有当getBean()调用时才是有可能触发Bean实例化阶段的活动。</p>
+<p>当在 Spring 中定义一个 时，你必须声明该 bean 的作用域的选项。例如，为了强制 Spring 在每次需要时都产生一个新的 bean 实例，你应该声明 bean 的作用域的属性为 prototype。同理，如果你想让 Spring 在每次需要时都返回同一个bean实例，你应该声明 bean 的作用域的属性为 singleton。</p>
+<p>Spring 框架支持以下五个作用域，如果你使用 web-aware ApplicationContext 时，其中三个是可用的。</p>
+<p>如下表：</p>
+<p><img src="https://i.loli.net/2020/03/25/iJZPArWfomIY9M6.png" alt="Bean的作用域.png"></p>
+<p><strong>在实际开发中，用得最多的是singleton，prototype偶尔也会用。也就是说，大部分情况每个bean都只有一个实例</strong>。99.99%的时候用得都是singleton。</p>
+<h2 id="Spring中的bean是线程安全的么？-重要"><a href="#Spring中的bean是线程安全的么？-重要" class="headerlink" title="Spring中的bean是线程安全的么？(重要)"></a>Spring中的bean是线程安全的么？(重要)</h2><p>首先，这个答案是<strong>不一定</strong>，<font color=#FF0000>Spring框架中的单例bean不一定是线程安全的</font>。如果针对的是在Bean中放入的线程不安全的状态变量，比如int data，然后执行线程不安全的操作，比如data++，那么就是线程不安全的(这个可以结合Bean的作用域默认为singleton)。但是，如果在Bean里面放入线程安全的状态变量，比如<code>ConcurrentHashMap</code>，那么系统是线程安全的。</p>
+<p>要讲清楚spring bean是不是线程安全的，要先讲一下Bean的作用域(上一节已经讲了)。bean默认的作用域是singleton，即单例，也是99.99%的情况下使用。</p>
+<p>虽然一般情况下@Controller类不会有自己的变量，但是如果定义了，比如定义了一个<code>data</code>，那么每次执行<code>data++</code>的时候，是线程不安全的。</p>
+<p>代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyServiceImpl</span> <span class="keyword">implements</span> <span class="title">MyService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> data;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        data++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为MyServiceImpl只有一个对象实例(Spring Bean的singleton)，而data是这个实例中的一个比量，所以在面对多线程执行的时候，是有可能出现多线程访问造成的data值出错的情况的。</p>
+<p>需要注意Tomcat本身是会开多线程的，可能同时有多个请求发送，多个线程可能会同时调用同一个bean的对象实例，就是这里的data，而且都执行data++，则可能会出错。</p>
+<p>但是，<strong>对于java web系统来说，一般来说很少在spring bean里放一些实例变量，一般来说他们都是多个组件互相调用，最终去访问数据库的</strong>。也就是说一般不会在Spring 的Service和Controller组件里面定义变量，所以大部分变量没有所谓的状态。因此虽然Spring Bean单例下是线程不安全的，但是多个线程不会访问内存中的共享数据，而大部分情况是会造成多个线程并发通过实例访问数据库，<strong>并不会对实例的状态变量有什么影响</strong>。</p>
+<h2 id="Spring-Bean小结"><a href="#Spring-Bean小结" class="headerlink" title="Spring Bean小结"></a>Spring Bean小结</h2><p>项目中的<strong>事务处理组件</strong>和<strong>实体类</strong>（POJO）可以作为Bean类，Bean类需要在Spring配置文件中进行定义，才能被IOC容器管理和组配。Spring IOC容器管理Bean时，需要了解Bean的<strong>类名、名称、依赖项、属性、生命周期及作用域等</strong>信息。为此，Spring IOC提供了一系列配置项，用于Bean在IOC容器中的定义。</p>
+<h2 id="Spring事务机制"><a href="#Spring事务机制" class="headerlink" title="Spring事务机制"></a>Spring事务机制</h2><p>首先，<strong>加上了一个@Transactional注解，就会开启事务</strong>。此时就spring会使用AOP思想，对你的这个方法在执行之前，先去开启事务，执行完毕之后，根据你方法是否报错，来决定回滚还是提交事务。</p>
+<p>这是<strong>Spring针对JDBC来设计的，事务和数据库的事务定义相同</strong>。</p>
+<p>关于事务，老生常谈的就是ACID，然后三种事务并发可能的问题：<strong>脏读、不可重复读、幻读</strong>。针对这三种问题，设计了四种解决的隔离级别：READ-UNCOMMITTED、READ-COMMITTED、REPEATABLE-READ、SERIALIZABLE。</p>
+<h2 id="Spring-事务中的隔离级别"><a href="#Spring-事务中的隔离级别" class="headerlink" title="Spring 事务中的隔离级别"></a>Spring 事务中的隔离级别</h2><p>而Spring的事务隔离级别就是根据上面四种隔离级别而设置的。加上”默认”的级别，一共有五种级别。具体说，TransactionDeﬁnition 接口中定义了五个表示隔离级别的常量： </p>
+<ul>
+<li><p><strong>TransactionDeﬁnition.ISOLATION_DEFAULT</strong>: 使用后端数据库默认的隔离级别，Mysql 默认采用的 REPEATABLE_READ隔离级别 Oracle 默认采用的 READ_COMMITTED隔离级别. </p>
+<ul>
+<li><strong>TransactionDeﬁnition.ISOLATION_READ_UNCOMMITTED</strong>: 低的隔离级别，允许读取尚未提交的数据变 更，可能会导致脏读、幻读或不可重复读</li>
+</ul>
+</li>
+<li><p><strong>TransactionDeﬁnition.ISOLATION_READ_COMMITTED</strong>: 允许读取并发事务已经提交的数据，可以阻止脏 读，但是幻读或不可重复读仍有可能发生</p>
+</li>
+<li><p><strong>TransactionDeﬁnition.ISOLATION_REPEATABLE_READ</strong>: 对同一字段的多次读取结果都是一致的，除非数据 是被本身事务自己所修改，可以阻止脏读和不可重复读，但幻读仍有可能发生。 </p>
+</li>
+<li><p><strong>TransactionDeﬁnition.ISOLATION_SERIALIZABLE</strong>: 高的隔离级别，完全服从ACID的隔离级别。所有的事 务依次逐个执行，这样事务之间就完全不可能产生干扰，也就是说，该级别可以防止脏读、不可重复读以及幻 读。但是这将严重影响程序的性能。通常情况下也不会用到该级别。 </p>
+</li>
+</ul>
+<h2 id="Spring事务中的事务传播行为"><a href="#Spring事务中的事务传播行为" class="headerlink" title="Spring事务中的事务传播行为"></a>Spring事务中的事务传播行为</h2><p>Spring事务的传播机制是比较关键的一个内容。</p>
+<p>举例，我现在有两个方法，方法A和方法B：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.REQUIRED)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    doSomethingPre();</span><br><span class="line">    methodB();</span><br><span class="line">    doSomethingPost();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.NESTED)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>两个方法都带有<code>@Transactional</code>注解，他们之间调用的时候，事务是怎样传播的呢？</p>
+<p>下面讲解某个事务类型的时候，实际上所有类型的变量都是属于<code>TransactionDeﬁnition</code>中的，比如PROPAGATION_REQUIRED，实质上应该是<code>TransactionDeﬁnition.PROPAGATION_REQUIRED</code>，但是为了方便阅读，统一省略掉前面的<code>TransactionDeﬁnition</code></p>
+<p>Spring中一共有<strong>七种事务</strong>。</p>
+<p><strong>支持当前事务的情况</strong>：</p>
+<ul>
+<li><font color=#FF0000>PROPAGATION_REQUIRED</font>： 如果当前存在事务，则加入该事务；如果当前没有事 务，则创建一个新的事务。 如果什么都不设置，只写上一个<code>@Transactional</code>，那么默认就是这个事务，实际上<strong>这个也是最常用的</strong>。</li>
+</ul>
+<p>举例，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.REQUIRED)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    methodB();</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.REQUIRED)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果直接执行了methodB，因为没有执行A，所以B会自己开启一个事务。</p>
+<p>但是如果先执行了methodA,则此时执行的流程会是：</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 开启一个事务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行方法A的代码，接着执行方法B的代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 提交或者回滚事务</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><font color=#FF0000>PROPAGATION_SUPPORTS</font>： 如果当前存在事务，则加入该事务；如果当前没有事务，则以非事务的方式继续运行。 (<strong>比较少用</strong>)</li>
+</ul>
+<p>举例，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.REQUIRED)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    methodB();</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.SUPPORTS)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>和上面类似，但是如果此时直接先执行了methodB，那么<strong>因为当前没有事务，所以methodB会直接以非事务的方式继续运行</strong>。</p>
+<p>如果先执行了methodA，那么过程和上面的PROPAGATION_REQUIRED一样，<strong>B会加入A的事务</strong>。</p>
+<ul>
+<li><font color=#FF0000>PROPAGATION_MANDATORY</font>： 如果当前存在事务，则加入该事务；如果当前没有事务，则抛出异常。（mandatory：强制性），这个解释很清楚了，B加入A，或者B抛出异常。</li>
+</ul>
+<p><strong>不支持当前事务的情况：</strong></p>
+<ul>
+<li><font color=#FF0000>PROPAGATION_REQUIRES_NEW</font>： 创建一个新的事务，如果当前存在事务，则把当前事务挂起。字面解释的也很清楚，先执行了methodA，再执行methodB的时候，会挂起A，直接执行B的代码。</li>
+</ul>
+<p>举例，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.REQUIRED)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    doSomethingPre();</span><br><span class="line">    methodB();</span><br><span class="line">    doSomethingPost();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.REQUIRES_NEW)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么执行的流程会是：</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 开启一个事务1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行方法A里的一些代码，doSomethingPre()</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 开启一个事务2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行方法B里的一些代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 提交或者回滚事务2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行方法A里的一些代码，doSomethingPost()</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 提交或者回滚事务1</span></span><br></pre></td></tr></table></figure>
+
+<p>如果方法B的代码出错了，那么只会回滚B的程序，A还是能够继续执行。如果A出错了，也只会回滚A，不会回滚B，因为A和B是两个事务，互不相关。</p>
+<ul>
+<li><font color=#FF0000>PROPAGATION_NOT_SUPPORTED</font>： 以非事务方式运行，如果当前存在事务，则把当前事务挂起。 (<strong>很少用</strong>)</li>
+<li><font color=#FF0000>PROPAGATION_NEVER</font>： 以非事务方式运行，如果当前存在事务，则抛出异常。</li>
+</ul>
+<p>举例，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.REQUIRED)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    doSomethingPre();</span><br><span class="line">    methodB();</span><br><span class="line">    doSomethingPost();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.NEVER)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时只能以非事务方式调用methodB，也就是直接执行B。如果你先执行A，那么在执行B的时候，因为当前存在了事务A，所以程序会抛出异常！</p>
+<p><strong>其他情况：</strong></p>
+<ul>
+<li><font color=#FF0000>PROPAGATION_NESTED</font>： 如果当前存在事务，则创建一个事务作为当前事务的<strong>嵌套事务</strong>来运行；如果当前没有事务，则该取值等价于TransactionDeﬁnition.PROPAGATION_REQUIRED。 </li>
+</ul>
+<p>举例，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.REQUIRED)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    doSomethingPre();</span><br><span class="line">    methodB();</span><br><span class="line">    doSomethingPost();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.NESTED)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么执行流程会是：</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 开启一个事务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行方法A里的一些代码，doSomethingPre()</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置一个回滚点，savepoint</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行方法B里的一些代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果方法B里抛出了异常，此时进行回滚，回滚到之前的savepoint</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行方法A里的一些代码，doSomethingPost()</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 提交或者回滚事务</span></span><br></pre></td></tr></table></figure>
+
+<p>需要注意，如果执行到了A的<code>doSomethingPost()</code>的时候出了异常，那么会把A和B全部回滚。而B如果出了异常，那么只会回滚B。</p>
+<p>也就是说：嵌套事务，外层的事务如果回滚，会导致内层的事务也回滚；但是内层的事务如果回滚，仅仅是回滚自己的代码。</p>
+<p><strong>需要注意</strong>，面试的时候，问事务传播机制不会直接傻乎乎地问你知不知道啥啥的，而是会营造一个场景，比如：</p>
+<ol>
+<li><p>我们现在有一段业务逻辑，方法A调用方法B，我希望的是如果说方法A出错了，此时仅仅回滚方法A，不能回滚方法B，必须得用<strong>REQUIRES_NEW</strong>，传播机制，让他们俩的事务是不同的。</p>
+</li>
+<li><p>方法A调用方法B，如果出错，方法B只能回滚他自己，方法A可以带着方法B一起回滚，<strong>NESTED</strong>嵌套事务。</p>
+</li>
+</ol>
+<h2 id="Spring-Boot如何演化得来"><a href="#Spring-Boot如何演化得来" class="headerlink" title="Spring Boot如何演化得来"></a>Spring Boot如何演化得来</h2><p>spring boot本身是spring这个项目发展到一定阶段之后的一个产物，</p>
+<p>在传统中，我们使用spring框架，mybatis，spring mvc，去做一些开发，打包部署到线上的tomcat里去，tomcat启动了，他就会接收http请求，转发给spring mvc框架，在架构中的调用顺序为：controller -&gt; service -&gt; dao -&gt; mybatis（sql语句）。</p>
+<p>带了后面，在进行java web开发的时候，经常需要整合进来redis、elasticsearch、还有很多其他的一些东西，rabbitmq、zookeeper，等等，诸如此类的一些东西，会很繁杂，但是又是使用的常态。而如果没有spring boot，我们需要自己手动做很多的配置，自己去定义一些bean，流程比较繁琐。</p>
+<p>为了解决这个问题，国外的spring开源社区，就发起了一个项目即spring boot，我们基于spring boot直接进行开发，里面还是使用spring + spring mvc + mybatis一些框架，我们可以一定程度上来简化我们之前的开发流程。</p>
+<p>spring boot内嵌一个tomcat去直接让我们一下子就可以把写好的java web系统给启动起来，直接运行一个main方法，spring boot就直接把tomcat服务器给跑起来，把我们的代码运行起来了。</p>
+<p>spring boot的另一个核心功能是<strong>自动装配</strong>，比如说我们可以引入mybatis，我其实主要引入一个starter依赖，他会一定程度上个自动完成mybatis的一些配置和定义，不需要我们手工去做大量的配置了，一定程度上简化我们搭建一个工程的成本。</p>
+<p>也就是说，如果没有spring boot，如果要使用mybatis，我们要引入一些mybatis的jar包，还有mybatis依赖的一些其他的jar包，然后动手编写一些xml配置文件，然后定义一些bean，写一些sql语句，写一些dao代码，之后才可以使用mybatis去执行sql语句。</p>
+<p>但是用了spring boot之后，只要引入一个starter，他会自动给你引入需要的一些jar包，做非常简单的、必须的一些配置，比如数据库的地址，几乎就不用你做太多的其他额外的配置了，他会自动帮你去进行一些配置，定义和生成对应的bean。生成的bean会自动注入比如你的dao里去，让你免去一些手工配置+定义bean的一些工作。</p>
+<p>很多人意识到了spring开发的复杂性，想到了<font color=#FF0000>约定大于配置</font>的思路，spring boot + spring + spirng mvc + mybatis + XXX之类的技术去进行开发，后续很多配置和定义的一些繁琐的重复性的工作就免去了，自动装配的一些功能，自动给你把一些事情干完了，不需要你去做了。</p>
+<h2 id="Spring-Boot启动流程"><a href="#Spring-Boot启动流程" class="headerlink" title="Spring Boot启动流程"></a>Spring Boot启动流程</h2><ol>
+<li>配置Environment</li>
+<li>准备Context上下文，包括执行 ApplicationContext 的后置处理、初始化 Initializer、通知Listener 处理 ContextPrepared 和 ContextLoaded 事件。</li>
+<li>执行 refreshContext，也就是前面介绍过的 AbstractApplicationContext 类的 refresh 方法。</li>
+</ol>
+<p>在SpringBoot中有两种上下文，一种是bootstrap,另外一种是application：</p>
+<ul>
+<li>bootstrap是应用程序的父上下文，会先于applicaton加载。bootstrap 主要用于从额外的资源来加载配置信息，还可以在本地外部配置文件中解密属性。</li>
+<li>bootstrap 里面的属性会优先加载，默认也不能被本地相同配置覆盖。</li>
+</ul>
+<h2 id="能画一张图说说Spring-Boot的核心架构吗？"><a href="#能画一张图说说Spring-Boot的核心架构吗？" class="headerlink" title="能画一张图说说Spring Boot的核心架构吗？"></a>能画一张图说说Spring Boot的核心架构吗？</h2><p>假定一个场景，就是我们已经有了一个spring的传统模式开发的系统，如图：</p>
+<p><img src="https://i.loli.net/2020/04/08/Es9wfnRFGDugQkV.png" alt="初始项目.png"></p>
+<p>在使用了spring boot之后，会调用spring boot的main方法，自动启动一个内嵌的tomcat。</p>
+<p>启动spring boot之后，你肯定会使用很多框架来完成任务，所以Tomcat运行起来之后，必然会把spring mvc核心的Servlet、Filter注册到Tomcat中。</p>
+<p>然后spring boot会自动完成bean的装配和定义，一些Mybatis的bean会注入到mybatis的核心组件等等，最后程序访问的很多bean都是spring boot自动装配的。</p>
+<p>使用spring boot之后的框架图如下：</p>
+<p><img src="https://i.loli.net/2020/04/08/nq23vyUlmeP9cGd.png" alt="引入spring boot之后.png"></p>
+<h2 id="Spring-中都用了哪些设计模式？"><a href="#Spring-中都用了哪些设计模式？" class="headerlink" title="Spring 中都用了哪些设计模式？"></a>Spring 中都用了哪些设计模式？</h2><p>实际上Spring中用到很多设计模式，简单举三个例子：工厂模式，单例模式，代理模式。下面一个一个简单地介绍：</p>
+<p><strong>工厂模式</strong>：</p>
+<p>工厂模式主要用在IOC，一个例子如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyController</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> MyService myService = MyServiceFactory.getMyService();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyServiceFactory</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> MyService <span class="title">getMyService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MyServiceImpl();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这就是一个典型的工厂模式，我把MyService对象的创建封装在了MyServiceFactory工厂里面(一般创建的时候使用静态的方法)。之后每次我想使用它的时候，直接通过工厂把它拿出来即可。</p>
+<p>spring ioc核心的设计模式的思想就是工厂模式，他自己就是一个大的工厂，把所有的bean实例都给放在了spring容器里（大工厂），如果你要使用bean，就找spring容器就可以了，你自己不用创建对象了。</p>
+<p><strong>单例模式</strong>：</p>
+<p>spring默认对每个bean走的都是一个单例模式，确保说你的一个类在系统运行期间只有一个实例对象，只有一个bean，用到了一个单例模式的思想，保证了每个bean都是单例的。</p>
+<p>单例模式的经典写法：双check+volatile+synchronized基本耳熟能详，这里用MyService类再次写出来一下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> MyService myService;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">MyService</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> MyService <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(myService == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span>(MyService<span class="class">.<span class="keyword">class</span>) </span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(myService == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    myService = <span class="keyword">new</span> MyService();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> myService;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>代理模式</strong>：</p>
+<p>相比理解门槛更低的工厂模式和单例模式，代理模式算是稍微更有含金量的。</p>
+<p>一般出现在你要对一些类的方法切入一些增强的代码，此时会创建一些动态代理的对象(比如称作B)，让你对那些目标对象(比如称作A)的访问，A先经过动态代理对象B，让动态代理的对象B先做一些增强的代码，然后再调用你的目标对象A，这样A的行为就在原有基础上有了变化或者叫增强。</p>
+<p>在设计模式里，就是一个代理模式的体现和运用，让动态代理的对象，去代理了你的目标对象，在这个过程中做一些增强的访问，你可以把面试突击的内容作为一个抛砖引玉的作用，去更加深入的学习一些技术</p>
+<h2 id="用一张图说说Spring-Web-MVC的核心架构"><a href="#用一张图说说Spring-Web-MVC的核心架构" class="headerlink" title="用一张图说说Spring Web MVC的核心架构"></a>用一张图说说Spring Web MVC的核心架构</h2><p>首先，这张图可以很生动地展现整个过程：</p>
+<p><img src="https://i.loli.net/2020/04/08/CtXPN8OsauEKGF6.png" alt="SpringWebMVC架构.png"></p>
+<p>客户端发送请求-&gt; 前端控制器 DispatcherServlet 接受客户端请求 -&gt; 找到处理器映射 HandlerMapping 解析请求对应的 Handler-&gt; HandlerAdapter 会根据 Handler 来调用真正的处理器开处理请求，并处理相应的业务逻辑 -&gt; 处理器返回一个模型视图 ModelAndView -&gt; 视图解析器进行解析 -&gt; 返回一个视图对象-&gt;前端控制器 DispatcherServlet 渲染数据（Model）-&gt;将得到视图对象返回给用户 。</p>
+<p>另外一种流程解析：</p>
+<p>（1）tomcat的工作线程将请求转交给spring mvc框架的DispatcherServlet</p>
+<p>（2）发送查找请求给处理器映射器HandlerMapping，如果能查找到内容，则返回执行链给前端控制器。</p>
+<p>（3）前端控制器拿到返回的执行链之后，发送请求给处理适配器去执行Handler</p>
+<p>（4）DispatcherServlet查找@Controller注解的controller，我们一般会给controller加上一个@RequestMapping的注解，标注说哪些controller用来处理哪些请求，之后处理器适配器会根据请求的uri，去定位到哪个controller来进行处理。</p>
+<p>（5）根据@RequestMapping去查找，使用这个controller内的哪个方法来进行请求的处理，对每个方法一般也会加@RequestMapping的注解</p>
+<p>（6）处理器(Handler，或者会被叫做controller)会直接调用对应的某个方法来进行请求处理，处理结束后返回一个ModelAndView视图给处理器适配器。</p>
+<p>注意！我们的controller的方法会有一个返回值，以前的时候，一般来说还是走jsp、模板技术，我们会把前端页面放在后端的工程里面，返回一个页面模板的名字，spring mvc的框架使用模板技术，对html页面做一个渲染；返回一个json串，前后端分离，可能前端发送一个请求过来，我们只要返回json数据。即：<strong>处理完毕后，分为两种方式返回。一是前端页面放在后端工程时，可以返回对应的页面模板名字，然后springmcv使用模板技术进行渲染后返回。二是前后端分离以后，直接返回前端所需JSON串即可。</strong></p>
+<p>（8）再把渲染以后的html页面返回给浏览器去进行显示；前端负责把html页面渲染给浏览器就可以了</p>
+<h2 id="一张图说说Spring-Cloud的核心架构"><a href="#一张图说说Spring-Cloud的核心架构" class="headerlink" title="一张图说说Spring Cloud的核心架构"></a>一张图说说Spring Cloud的核心架构</h2><p>如下图所示：</p>
+<p><img src="https://i.loli.net/2020/04/08/RnUL7NdKGpWYM1o.png" alt="Spring Cloud核心架构整体图.png"></p>
+<p>Spring Cloud的部分主要在图的左边和上边。</p>
+<p>这里只是简单说说Spring Cloud的架构，传统方法的spring boot、spring、spring mvc是让你开发那种单体架构的系统，而spring cloud是让你去开发分布式系统，让你把系统拆分为很多的子系统，子系统互相之间进行请求和调用，也可以比较方便地迁移微服务。</p>
+<p>比较常用的组件：</p>
+<ul>
+<li><p>zuul：网关，前面部署一个网关，所有请求发送到网关上，然后从网关往外去请求Tomcat来得到服务内容。</p>
+</li>
+<li><p>eureka 服务注册中心，服务可以通过Spring Boot内嵌的Tomcat启动，启动之后，会进行服务注册。这样之后再调用服务的时候会进行服务发现，发现其他服务的地址。</p>
+</li>
+<li><p>ribbon、feign：先通过ribbon由负载均衡随机地挑选一台机器，然后通过feign构造HTTP请求，再把这个请求发送到其他服务上。过程使用远程RPC调用。</p>
+</li>
+<li><p>hystrix主要用于服务之间调用的熔断、隔离、降级。</p>
+</li>
+<li><p>链路追踪等等其他组件，这些组件都是服务于分布式系统的</p>
+</li>
+</ul>
+]]></content>
       <categories>
         <category>Interview Note</category>
       </categories>
@@ -3194,9 +4071,9 @@
 <p>周而复始。对象在Survivor区每熬过一次Minor GC，其年龄就会被加1，当对象的年龄达到某个值之后(默认是15岁)，这些对象会成为老年代。</p>
 <p>NOTE：这个默认年龄可以通过<code>-XX:MaxTenuringThreshold</code>调整</p>
 <p>但这也不是一定的，如果存储的对象过大，Eden区和Survivor区都存不下，可能会需要用到老年代的空间协助存储。</p>
-<h3 id="对象如何晋升到老年代"><a href="#对象如何晋升到老年代" class="headerlink" title="对象如何晋升到老年代"></a>对象如何晋升到老年代</h3><p>在分代算法当中，对象如何晋升到老年代？</p>
+<h3 id="对象如何晋升到老年代"><a href="#对象如何晋升到老年代" class="headerlink" title="对象如何晋升到老年代"></a>对象如何晋升到老年代</h3><p>在分代算法当中，对象如何晋升到老年代？简单来说有3种场景：</p>
 <ul>
-<li>经历一定Minor次数依然存活的对象</li>
+<li>经历一定Minor GC次数(比如是15次)依然存活的对象</li>
 <li>Survivor区中村放不下的对象</li>
 <li>新生成的大对象(可以用:<code>-XX:+PretenuerSizeThreshold</code>来控制大对象的大小，只要大于这个大小，对象生成之后直接放入老年代)</li>
 </ul>
@@ -5080,7 +5957,7 @@ Double d = Double.parseDouble( s );
 </ul>
 <p>如果出现了重复的子串，处理方法是定义两个指针，i为慢指针，j为快指针。</p>
 <p>当 j 遇到一个重复出现的字符时，我们从慢指针开始一个一个地将 i 指针指向的字符从集合中删除，然后判断是否可以把新字符加入到集合而不会重复。</p>
-<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(<span class="keyword">String</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 定义一个哈希集合set,初始化结果max为0</span></span><br><span class="line">        Set&lt;Character&gt; <span class="built_in">set</span> = <span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> <span class="built_in">max</span> = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 利用快慢指针i(慢)和j(快)扫描一遍字符串</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; j &lt; s.length(); j++) &#123;</span><br><span class="line">            <span class="comment">// 如果快指针指向的字符已经出现在哈希集合中,不断尝试将慢指针指向的字符从哈希集合中删除</span></span><br><span class="line">            <span class="keyword">while</span>(<span class="built_in">set</span>.contains(s.charAt(j))) &#123;</span><br><span class="line">                <span class="built_in">set</span>.<span class="built_in">remove</span>(s.charAt(i));</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 当快指针的字符终于能加入到哈希集合的时候，更新结果max</span></span><br><span class="line">            <span class="built_in">set</span>.add(s.charAt(j));</span><br><span class="line">            <span class="built_in">max</span> = Math.<span class="built_in">max</span>(<span class="built_in">max</span>, <span class="built_in">set</span>.<span class="built_in">size</span>());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 遍历完毕后，返回结果max</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 定义一个哈希集合set,初始化结果max为0</span></span><br><span class="line">        Set&lt;Character&gt; set = <span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> max = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 利用快慢指针i(慢)和j(快)扫描一遍字符串</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; j &lt; s.length(); j++) &#123;</span><br><span class="line">            <span class="comment">// 如果快指针指向的字符已经出现在哈希集合中,不断尝试将慢指针指向的字符从哈希集合中删除</span></span><br><span class="line">            <span class="keyword">while</span>(set.contains(s.charAt(j))) &#123;</span><br><span class="line">                set.remove(s.charAt(i));</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 当快指针的字符终于能加入到哈希集合的时候，更新结果max</span></span><br><span class="line">            set.add(s.charAt(j));</span><br><span class="line">            max = Math.max(max, set.size());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 遍历完毕后，返回结果max</span></span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>时间复杂度分析：O(n)。使用了快慢指针策略，字符串最多被遍历两次。快指针会被添加到哈希表集合，慢指针遇到的字符会从哈希集合中删除。哈希集合操作时间为O(1)，因此整个算法复杂度为：n * O(1) + n*O(1) = O(n)</li>
@@ -5090,7 +5967,7 @@ Double d = Double.parseDouble( s );
 <p>基于方法二的线性法。也就是，如果我们在遍历过程中遇到了set已经有的字符的时候，如何不让慢指针一步一步移动，而是直接移动到重复元素的后面呢？这样可以大大减少比较次数。</p>
 <p>这样一来我们需要能够记录每个字符出现的下标位置，可以用哈希表记录，因为查找过程时间复杂度也是O(1)</p>
 <p>而且此时，我们不能像之前一样去数哈希集合的元素作为max的结果。比如可能出现一种情况，就是当前快指针j遍历到的元素在之前已经出现过了，那么此时不能让i又跳回到前面去呀！所以i的值需要有max计算得到：i = Math.max(i, map.get(s.charAt(j) + 1));</p>
-<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(<span class="keyword">String</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 定义一个哈希表map用来记录上次某字符出现的位置,初始化结果max为0</span></span><br><span class="line">        Map&lt;Character, Integer&gt; <span class="built_in">map</span> = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> <span class="built_in">max</span> = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 利用快慢指针i(慢)和j(快)扫描一遍字符串</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; j &lt; s.length(); j++) &#123;</span><br><span class="line">            <span class="comment">// 如果发现快指针所对应的字符已经出现过，慢指针就进行跳跃</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">map</span>.containsKey(s.charAt(j))) &#123;</span><br><span class="line">                i = Math.<span class="built_in">max</span>(i, <span class="built_in">map</span>.<span class="built_in">get</span>(s.charAt(j)) + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 把快指针所对应的字符添加到哈希表中，更新结果max</span></span><br><span class="line">            <span class="built_in">map</span>.<span class="built_in">put</span>(s.charAt(j), j);</span><br><span class="line">            <span class="built_in">max</span> = Math.<span class="built_in">max</span>(<span class="built_in">max</span>, j - i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 遍历完毕后，返回结果max</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 定义一个哈希表map用来记录上次某字符出现的位置,初始化结果max为0</span></span><br><span class="line">        Map&lt;Character, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> max = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 利用快慢指针i(慢)和j(快)扫描一遍字符串</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; j &lt; s.length(); j++) &#123;</span><br><span class="line">            <span class="comment">// 如果发现快指针所对应的字符已经出现过，慢指针就进行跳跃</span></span><br><span class="line">            <span class="keyword">if</span>(map.containsKey(s.charAt(j))) &#123;</span><br><span class="line">                i = Math.max(i, map.get(s.charAt(j)) + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 把快指针所对应的字符添加到哈希表中，更新结果max</span></span><br><span class="line">            map.put(s.charAt(j), j);</span><br><span class="line">            max = Math.max(max, j - i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 遍历完毕后，返回结果max</span></span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="4-Median-of-Two-Sorted-Arrays-寻找两个有序数组的中位数-Hard"><a href="#4-Median-of-Two-Sorted-Arrays-寻找两个有序数组的中位数-Hard" class="headerlink" title="4.Median of Two Sorted Arrays(寻找两个有序数组的中位数)(Hard)"></a><a href="https://leetcode-cn.com/problems/median-of-two-sorted-arrays" target="_blank" rel="noopener">4.Median of Two Sorted Arrays(寻找两个有序数组的中位数)(Hard)</a></h2><p>There are two sorted arrays <strong>nums1</strong> and <strong>nums2</strong> of size m and n respectively.</p>
 <p>Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).</p>
@@ -5127,7 +6004,7 @@ Double d = Double.parseDouble( s );
 <li>a2&gt;b1，我们同样无法肯定a2和b1是第五小的数。但是这种情况下我们可以确定，第五小的数不可能是b0, b1和a3, a4。所以这种情况下，整个搜索范围可以缩小为：{a0, a1, a2, b2, b3}</li>
 </ol>
 <p>代码：</p>
-<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> Solution &#123;</span><br><span class="line">    public double find<span class="constructor">MedianSortedArrays(<span class="params">int</span>[] <span class="params">nums1</span>, <span class="params">int</span>[] <span class="params">nums2</span>)</span> &#123;</span><br><span class="line">        <span class="comment">// 根据两个字符串长度的总和判断如何调用递归函数以及返回结果</span></span><br><span class="line">        <span class="built_in">int</span> m = nums1.length, n = nums2.length;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">int</span> k = (m + n) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>((m+n) % <span class="number">2</span><span class="operator"> == </span><span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 当总长度为奇数时，返回正中间的数</span></span><br><span class="line">            return find<span class="constructor">Kth(<span class="params">nums1</span>, 0, <span class="params">m</span>-1, <span class="params">nums2</span>, 0, <span class="params">n</span>-1, <span class="params">k</span>+1)</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 当总长度为偶数时，返回两个数的平均值</span></span><br><span class="line">            return (find<span class="constructor">Kth(<span class="params">nums1</span>, 0, <span class="params">m</span>-1, <span class="params">nums2</span>, 0, <span class="params">n</span>-1, <span class="params">k</span>)</span> + </span><br><span class="line">                    find<span class="constructor">Kth(<span class="params">nums1</span>, 0, <span class="params">m</span>-1, <span class="params">nums2</span>, 0, <span class="params">n</span>-1, <span class="params">k</span>+1)</span>)<span class="operator"> / </span><span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 进入findKth,这个函数目的是寻找第k小的元素</span></span><br><span class="line">    public double find<span class="constructor">Kth(<span class="params">int</span>[] <span class="params">nums1</span>, <span class="params">int</span> <span class="params">start1</span>, <span class="params">int</span> <span class="params">end1</span>, <span class="params">int</span>[] <span class="params">nums2</span>, <span class="params">int</span> <span class="params">start2</span>, <span class="params">int</span> <span class="params">end2</span>, <span class="params">int</span> <span class="params">k</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">int</span> m = end1 - start1 + <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">int</span> n = end2 - start2 + <span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果nums1数组的长度大于nums2数组的长度，将二者互换，加快程序结束的速度</span></span><br><span class="line">        <span class="keyword">if</span>(m &gt; n) &#123;</span><br><span class="line">            return find<span class="constructor">Kth(<span class="params">nums2</span>, <span class="params">start2</span>, <span class="params">end2</span>, <span class="params">nums1</span>, <span class="params">start1</span>, <span class="params">end1</span>, <span class="params">k</span>)</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 当nums1数组长度为0的时候，直接返回nums2数组中第k小的数</span></span><br><span class="line">        <span class="keyword">if</span>(m<span class="operator"> == </span><span class="number">0</span>) &#123;</span><br><span class="line">            return nums2<span class="literal">[<span class="identifier">start2</span> + <span class="identifier">k</span> - <span class="number">1</span>]</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 当k == 1时，返回两个数组中的最小值</span></span><br><span class="line">        <span class="keyword">if</span>(k<span class="operator"> == </span><span class="number">1</span>) &#123;</span><br><span class="line">            return <span class="module-access"><span class="module"><span class="identifier">Math</span>.</span></span>min(nums1<span class="literal">[<span class="identifier">start1</span>]</span>, nums2<span class="literal">[<span class="identifier">start2</span>]</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 分别选两个数组的中间数</span></span><br><span class="line">        <span class="built_in">int</span> na = <span class="module-access"><span class="module"><span class="identifier">Math</span>.</span></span>min(k/<span class="number">2</span>, m);</span><br><span class="line">        <span class="built_in">int</span> nb = k - na;</span><br><span class="line">        <span class="built_in">int</span> va = nums1<span class="literal">[<span class="identifier">start1</span> + <span class="identifier">na</span> -<span class="number">1</span>]</span>;</span><br><span class="line">        <span class="built_in">int</span> vb = nums2<span class="literal">[<span class="identifier">start2</span> + <span class="identifier">nb</span> -<span class="number">1</span>]</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 比较下两者的大小</span></span><br><span class="line">        <span class="comment">// 如果相等，表明中位数已经找到，返回该值即可</span></span><br><span class="line">        <span class="keyword">if</span>(va<span class="operator"> == </span>vb) &#123;</span><br><span class="line">            return va;</span><br><span class="line">            <span class="comment">// 如果不相等，进行剪枝处理</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(va &lt; vb) &#123;</span><br><span class="line">            return find<span class="constructor">Kth(<span class="params">nums1</span>, <span class="params">start1</span> + <span class="params">na</span>, <span class="params">end1</span>, <span class="params">nums2</span>,<span class="params">start2</span>,  <span class="params">start2</span> + <span class="params">nb</span> - 1, <span class="params">k</span> - <span class="params">na</span>)</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            return find<span class="constructor">Kth(<span class="params">nums1</span>, <span class="params">start1</span>, <span class="params">start1</span> + <span class="params">na</span> - 1, <span class="params">nums2</span>, <span class="params">start2</span> + <span class="params">nb</span>, <span class="params">end2</span>, <span class="params">k</span> - <span class="params">nb</span>)</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">findMedianSortedArrays</span><span class="params">(<span class="keyword">int</span>[] nums1, <span class="keyword">int</span>[] nums2)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 根据两个字符串长度的总和判断如何调用递归函数以及返回结果</span></span><br><span class="line">        <span class="keyword">int</span> m = nums1.length, n = nums2.length;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> k = (m + n) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>((m+n) % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 当总长度为奇数时，返回正中间的数</span></span><br><span class="line">            <span class="keyword">return</span> findKth(nums1, <span class="number">0</span>, m-<span class="number">1</span>, nums2, <span class="number">0</span>, n-<span class="number">1</span>, k+<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 当总长度为偶数时，返回两个数的平均值</span></span><br><span class="line">            <span class="keyword">return</span> (findKth(nums1, <span class="number">0</span>, m-<span class="number">1</span>, nums2, <span class="number">0</span>, n-<span class="number">1</span>, k) + </span><br><span class="line">                    findKth(nums1, <span class="number">0</span>, m-<span class="number">1</span>, nums2, <span class="number">0</span>, n-<span class="number">1</span>, k+<span class="number">1</span>)) / <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 进入findKth,这个函数目的是寻找第k小的元素</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">findKth</span><span class="params">(<span class="keyword">int</span>[] nums1, <span class="keyword">int</span> start1, <span class="keyword">int</span> end1, <span class="keyword">int</span>[] nums2, <span class="keyword">int</span> start2, <span class="keyword">int</span> end2, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> m = end1 - start1 + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> n = end2 - start2 + <span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果nums1数组的长度大于nums2数组的长度，将二者互换，加快程序结束的速度</span></span><br><span class="line">        <span class="keyword">if</span>(m &gt; n) &#123;</span><br><span class="line">            <span class="keyword">return</span> findKth(nums2, start2, end2, nums1, start1, end1, k);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 当nums1数组长度为0的时候，直接返回nums2数组中第k小的数</span></span><br><span class="line">        <span class="keyword">if</span>(m == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> nums2[start2 + k - <span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 当k == 1时，返回两个数组中的最小值</span></span><br><span class="line">        <span class="keyword">if</span>(k == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> Math.min(nums1[start1], nums2[start2]);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 分别选两个数组的中间数</span></span><br><span class="line">        <span class="keyword">int</span> na = Math.min(k/<span class="number">2</span>, m);</span><br><span class="line">        <span class="keyword">int</span> nb = k - na;</span><br><span class="line">        <span class="keyword">int</span> va = nums1[start1 + na -<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> vb = nums2[start2 + nb -<span class="number">1</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 比较下两者的大小</span></span><br><span class="line">        <span class="comment">// 如果相等，表明中位数已经找到，返回该值即可</span></span><br><span class="line">        <span class="keyword">if</span>(va == vb) &#123;</span><br><span class="line">            <span class="keyword">return</span> va;</span><br><span class="line">            <span class="comment">// 如果不相等，进行剪枝处理</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(va &lt; vb) &#123;</span><br><span class="line">            <span class="keyword">return</span> findKth(nums1, start1 + na, end1, nums2,start2,  start2 + nb - <span class="number">1</span>, k - na);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> findKth(nums1, start1, start1 + na - <span class="number">1</span>, nums2, start2 + nb, end2, k - nb);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -5490,12 +6367,19 @@ Double d = Double.parseDouble( s );
 <li>左边界枚举的时候可以从小到大，也可以从大到小</li>
 </ol>
 <p>这两种思路代码差别仅在于内层循环。</p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> String longestPalindrome(String s) &#123;</span><br><span class="line">        <span class="comment">// 方法二，DP</span></span><br><span class="line">        <span class="comment">// corner case</span></span><br><span class="line">        <span class="built_in">int</span> len = s.length();</span><br><span class="line">        <span class="keyword">if</span>(len &lt; <span class="number">2</span> || s == <span class="literal">null</span>) <span class="keyword">return</span> s;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 记录最长子串的长度的maxLen和起始位置start</span></span><br><span class="line">        <span class="built_in">int</span> maxLen = <span class="number">1</span>, start = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">bool</span>ean[][] dp = new <span class="built_in">bool</span>ean[len][len];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 初始化，对角线都为单个元素,全部为true</span></span><br><span class="line">        <span class="comment">// 但是这个初始化过程可以省略，因为只有一个字符的时候肯定是回文</span></span><br><span class="line">        <span class="comment">// dp[i][i]根本不会被其他状态值所参考</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">            dp[i][i] = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// i &lt; len-1 是因为最后要加到i+1，也就是下标为len-1的位置</span></span><br><span class="line">        <span class="comment">// 处理长度为2的边界条件，长度为2时i+1和j-1会越界</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; len - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(s.charAt(i) == s.charAt(i+<span class="number">1</span>)) &#123;</span><br><span class="line">                dp[i][i+<span class="number">1</span>] = <span class="literal">true</span>;</span><br><span class="line">                maxLen = <span class="number">2</span>;</span><br><span class="line">                start = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> j = <span class="number">2</span>; j &lt; len; j++) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span> ;i &lt; j - <span class="number">1</span>; i++) &#123; <span class="comment">// i &lt; j的话长度为2，之前已经处理过了</span></span><br><span class="line">                <span class="keyword">if</span>(s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                    dp[i][j] = dp[i + <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    dp[i][j] = <span class="literal">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 只要dp[i][j]是true,就证明此时子串s[i,j]是回文串</span></span><br><span class="line">                <span class="comment">// 记录此时回文长度和起始位置,用substring的时候下标从1开始</span></span><br><span class="line">                <span class="keyword">if</span>(dp[i][j] == <span class="literal">true</span>) &#123;</span><br><span class="line">                <span class="built_in">int</span> tempLen = j - i + <span class="number">1</span>;</span><br><span class="line">                    <span class="keyword">if</span>(tempLen &gt; maxLen) &#123;</span><br><span class="line">                        maxLen = tempLen;</span><br><span class="line">                        start = i;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> s.substring(start, start+maxLen);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 方法二，DP</span></span><br><span class="line">        <span class="comment">// corner case</span></span><br><span class="line">        <span class="keyword">int</span> len = s.length();</span><br><span class="line">        <span class="keyword">if</span>(len &lt; <span class="number">2</span> || s == <span class="keyword">null</span>) <span class="keyword">return</span> s;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 记录最长子串的长度的maxLen和起始位置start</span></span><br><span class="line">        <span class="keyword">int</span> maxLen = <span class="number">1</span>, start = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[len][len];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 初始化，对角线都为单个元素,全部为true</span></span><br><span class="line">        <span class="comment">// 但是这个初始化过程可以省略，因为只有一个字符的时候肯定是回文</span></span><br><span class="line">        <span class="comment">// dp[i][i]根本不会被其他状态值所参考</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">            dp[i][i] = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// i &lt; len-1 是因为最后要加到i+1，也就是下标为len-1的位置</span></span><br><span class="line">        <span class="comment">// 处理长度为2的边界条件，长度为2时i+1和j-1会越界</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(s.charAt(i) == s.charAt(i+<span class="number">1</span>)) &#123;</span><br><span class="line">                dp[i][i+<span class="number">1</span>] = <span class="keyword">true</span>;</span><br><span class="line">                maxLen = <span class="number">2</span>;</span><br><span class="line">                start = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">2</span>; j &lt; len; j++) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span> ;i &lt; j - <span class="number">1</span>; i++) &#123; <span class="comment">// i &lt; j的话长度为2，之前已经处理过了</span></span><br><span class="line">                <span class="keyword">if</span>(s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                    dp[i][j] = dp[i + <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    dp[i][j] = <span class="keyword">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 只要dp[i][j]是true,就证明此时子串s[i,j]是回文串</span></span><br><span class="line">                <span class="comment">// 记录此时回文长度和起始位置,用substring的时候下标从1开始</span></span><br><span class="line">                <span class="keyword">if</span>(dp[i][j] == <span class="keyword">true</span>) &#123;</span><br><span class="line">                <span class="keyword">int</span> tempLen = j - i + <span class="number">1</span>;</span><br><span class="line">                    <span class="keyword">if</span>(tempLen &gt; maxLen) &#123;</span><br><span class="line">                        maxLen = tempLen;</span><br><span class="line">                        start = i;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> s.substring(start, start+maxLen);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>时间复杂度：O(n^2)</li>
 <li>空间复杂度：O(n^2)</li>
 </ul>
+<p>方法四：中心扩散法</p>
+<p>回文串一定是对称的，所以我们可以每次循环选择一个中心，进行左右扩展，判断左右字符是否相等即可。</p>
+<p>由于存在奇数的字符串和偶数的字符串，所以我们需要从一个字符开始扩展，或者从两个字符之间开始扩展，所以总共有 <code>n+n-1</code> 个中心。（n为n个数，n-1为n个数之间的间隙位置数量）</p>
+<p>对于一个有n个元素的字符数组来说，索引为0和len-1的元素不需要扩散，因为扩散不出去。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (s == <span class="keyword">null</span> || s.length() &lt; <span class="number">1</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">int</span> start = <span class="number">0</span>, end = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> len1 = expandAroundCenter(s, i, i);</span><br><span class="line">        <span class="keyword">int</span> len2 = expandAroundCenter(s, i, i + <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">int</span> len = Math.max(len1, len2);</span><br><span class="line">        <span class="keyword">if</span> (len &gt; end - start) &#123;</span><br><span class="line">            start = i - (len - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">            end = i + len / <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s.substring(start, end + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">expandAroundCenter</span><span class="params">(String s, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> L = left, R = right;</span><br><span class="line">    <span class="keyword">while</span> (L &gt;= <span class="number">0</span> &amp;&amp; R &lt; s.length() &amp;&amp; s.charAt(L) == s.charAt(R)) &#123;</span><br><span class="line">        L--;</span><br><span class="line">        R++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> R - L - <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法好处在于逻辑更清晰，在LeetCode用例测试中最后耗时也更短（虽然时间复杂度分析起来和方法三的动态规划都是O(n^2)）。</p>
 <p>还有一个马拉车算法，暂时不讲，面试很难写完。</p>
 <p><strong>总而言之</strong>，”马拉车算法”虽然很著名，但是对待这种字符串的问题，最常用的还是二维的动态规划。实际上，碰到字符串问题，只要牵扯到动态规划，一般都是把这个字符串复制一份，分别放到行和列上。</p>
 <p>对于这道题，需要注意：</p>
@@ -5940,6 +6824,17 @@ Double d = Double.parseDouble( s );
 <figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">NumArray</span> &#123;</span><br><span class="line">    <span class="built_in">int</span> sums[];</span><br><span class="line">    <span class="keyword">public</span> NumArray(<span class="built_in">int</span>[] nums) &#123;</span><br><span class="line">        sums = new <span class="built_in">int</span>[nums.length + <span class="number">1</span>];</span><br><span class="line">        sums[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i &lt; nums.length; i++) &#123;</span><br><span class="line">            sums[i+<span class="number">1</span>]  = sums[i] + nums[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> sumRange(<span class="built_in">int</span> i, <span class="built_in">int</span> j) &#123;</span><br><span class="line">        <span class="keyword">return</span> sums[j+<span class="number">1</span>] - sums[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your NumArray object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * NumArray obj = new NumArray(nums);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj.sumRange(i,j);</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
 
 <p>注意，先把所有计算结果保存起来，每次访问的话只需要O(1)，否则每次访问再计算，会导致时间复杂度太高。</p>
+<h2 id="53-Maximum-Subarray-最大子序和"><a href="#53-Maximum-Subarray-最大子序和" class="headerlink" title="53.Maximum Subarray(最大子序和)"></a>53.<a href="https://leetcode-cn.com/problems/maximum-subarray/" target="_blank" rel="noopener">Maximum Subarray(最大子序和)</a></h2><p>Given an integer array <code>nums</code>, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">Input: [<span class="number">-2</span>,<span class="number">1</span>,<span class="number">-3</span>,<span class="number">4</span>,<span class="number">-1</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">-5</span>,<span class="number">4</span>],</span><br><span class="line">Output: <span class="number">6</span></span><br><span class="line">Explanation: [<span class="number">4</span>,<span class="number">-1</span>,<span class="number">2</span>,<span class="number">1</span>] has the largest sum = <span class="number">6.</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Follow up:</strong></p>
+<p>If you have figured out the O(<em>n</em>) solution, try coding another solution using the divide and conquer approach, which is more subtle.</p>
+<hr>
+<p>解：动态规划，定义数组dp[n.length]，其中dp[i]表示当前第i个元素可以得到的最大和，递推公式关键在于dp[i]为nums[i]与dp[i]+nums[i]之间的最大值，因为每次两种选择，直接加入nums[i]，或者从之前dp[i]和都小于0，需要重新从nums[i]开始算起。而在过程中需要记录当前能得到的最大的子序和max，最后返回max即可。</p>
+<p>为什么要有一个max记录最大值？状态都放在dp[i]不就行了？——不可以，答案很可能是子序和，所以要有一个单独的变量保存结果。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len = nums.length;</span><br><span class="line">        <span class="comment">// dp[i]表示第i位置到上一个计算起点的最大子序和的值</span></span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[len];</span><br><span class="line">        <span class="keyword">int</span> result = nums[<span class="number">0</span>];</span><br><span class="line">        dp[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="comment">// 比较巧妙，如果dp[i-1]&lt;0，那么肯定丢弃dp[i-1]能让dp[i]更大</span></span><br><span class="line">            <span class="comment">// 反之同理，如果dp[i-1] &gt; 0，那么加上dp[i-1]能让dp[i]更大</span></span><br><span class="line">            dp[i] = nums[i] + (dp[i-<span class="number">1</span>] &gt; <span class="number">0</span> ? dp[i-<span class="number">1</span>] : <span class="number">0</span>);</span><br><span class="line">            result = Math.max(dp[i], result);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>Algorithms Note</category>
@@ -7456,9 +8351,16 @@ Double d = Double.parseDouble( s );
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 创建合并后链表的虚拟头结点</span></span><br><span class="line">        ListNode dummyHead = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">        ListNode curr = dummyHead;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 若链表不为空，开始合并,实际操作是插入节点</span></span><br><span class="line">        <span class="keyword">while</span>(l1 != <span class="keyword">null</span> &amp;&amp; l2 != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>(l1.val &lt; l2.val) &#123;</span><br><span class="line">                curr.next = l1;</span><br><span class="line">                l1 = l1.next;</span><br><span class="line">                curr = curr.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                curr.next = l2;</span><br><span class="line">                l2 = l2.next;</span><br><span class="line">                curr = curr.next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 若l1或者l2有一个为空，则直接返回另一条链表</span></span><br><span class="line">        <span class="keyword">if</span>(l1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            curr.next = l2;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            curr.next = l1;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> dummyHead.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>方法二，递归</p>
+<p>分析递归的解法：</p>
+<ul>
+<li>终止条件：两条链表分别名为l1和l2，当l1为空或者l2为空是结束</li>
+<li>返回值：每一层调用都返回排好序的链表头</li>
+<li>本级递归内容：如果l1的val值更小，则将l1.next与排序好的链表头相接，l2同理</li>
+</ul>
+<p><a href="https://leetcode-cn.com/problems/merge-two-sorted-lists/solution/hua-jie-suan-fa-21-he-bing-liang-ge-you-xu-lian-bi/" target="_blank" rel="noopener">可以画图分析，具体分析可以参考这篇题解</a></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 使用recursion，代码虽然简洁，但是可能导致Stack OverFlow</span></span><br><span class="line">        <span class="keyword">if</span>(l1 == <span class="keyword">null</span>) <span class="keyword">return</span> l2;</span><br><span class="line">        <span class="keyword">if</span>(l2 == <span class="keyword">null</span>) <span class="keyword">return</span> l1;</span><br><span class="line">        <span class="keyword">if</span>(l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next,l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1,l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="88-Merge-Sorted-Array-合并两个有序数组-Easy"><a href="#88-Merge-Sorted-Array-合并两个有序数组-Easy" class="headerlink" title="88. Merge Sorted Array(合并两个有序数组)(Easy)"></a><a href="https://leetcode-cn.com/problems/merge-sorted-array/" target="_blank" rel="noopener">88. Merge Sorted Array(合并两个有序数组)(Easy)</a></h2><p>Given two sorted integer arrays <em>nums1</em> and <em>nums2</em>, merge <em>nums2</em> into <em>nums1</em> as one sorted array.</p>
+<h2 id=""><a href="#" class="headerlink" title="["></a>[</h2><h2 id="88-Merge-Sorted-Array-合并两个有序数组-Easy-https-leetcode-cn-com-problems-merge-sorted-array"><a href="#88-Merge-Sorted-Array-合并两个有序数组-Easy-https-leetcode-cn-com-problems-merge-sorted-array" class="headerlink" title="88. Merge Sorted Array(合并两个有序数组)(Easy)](https://leetcode-cn.com/problems/merge-sorted-array/)"></a>88. Merge Sorted Array(合并两个有序数组)(Easy)](<a href="https://leetcode-cn.com/problems/merge-sorted-array/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/merge-sorted-array/</a>)</h2><p>Given two sorted integer arrays <em>nums1</em> and <em>nums2</em>, merge <em>nums2</em> into <em>nums1</em> as one sorted array.</p>
 <p><strong>Note:</strong></p>
 <ul>
 <li><p>The number of elements initialized in <em>nums1</em> and <em>nums2</em> are m and n respectively.</p>
