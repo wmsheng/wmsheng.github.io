@@ -1486,7 +1486,7 @@
 <blockquote>
 <p>这里在补充一点关于SYN-ACK 重传次数的问题：　服务器发送完SYN－ACK包，如果未收到客户确认包，服务器进行首次重传，等待一段时间仍未收到客户确认包，进行第二次重传，如果重传次数超 过系统规定的最大重传次数，系统将该连接信息从半连接队列中删除。注意，每次重传等待的时间不一定相同，一般会是指数增长，例如间隔时间为 1s, 2s, 4s, 8s, ….</p>
 </blockquote>
-<h5 id="4-三次握手过程中可以携带数据吗"><a href="#4-三次握手过程中可以携带数据吗" class="headerlink" title="4.三次握手过程中可以携带数据吗"></a>4.三次握手过程中可以携带数据吗</h5><p>很多人可能会认为三次握手都不能携带数据，其实第三次握手的时候，是可以携带数据的。也就是说，第一次、第二次握手不可以携带数据，而第三次握手是可以携带数据的。</p>
+<h5 id="4-三次握手过程中可以携带数据吗"><a href="#4-三次握手过程中可以携带数据吗" class="headerlink" title="4.三次握手过程中可以携带数据吗"></a>4.三次握手过程中可以携带数据吗</h5><p>很多人可能会认为三次握手都不能携带数据，其实<strong>第三次握手的时候，是可以携带数据的</strong>。也就是说，第一次、第二次握手不可以携带数据，而<strong>第三次握手是可以携带数据的</strong>。</p>
 <p>为什么这样呢？大家可以想一个问题，假如第一次握手可以携带数据的话，如果有人要恶意攻击服务器，那他每次都在第一次握手中的 SYN 报文中放入大量的数据，因为攻击者根本就不理服务器的接收、发送能力是否正常，然后疯狂着重复发 SYN 报文的话，这会让服务器花费很多时间、内存空间来接收这些报文。也就是说，第一次握手可以放数据的话，其中一个简单的原因就是会让服务器更加容易受到攻击了。</p>
 <p>而对于第三次的话，此时客户端已经处于 established 状态，也就是说，对于客户端来说，他已经建立起连接了，并且也已经知道服务器的接收、发送能力是正常的了，所以能携带数据页没啥毛病。</p>
 <p>此外，三次握手还会涉及https加密过程。</p>
@@ -1853,6 +1853,7 @@
 </ol>
 <p>(1)、没有用上索引：例如该字段没有索引；由于对字段进行运算、函数操作导致无法用索引。</p>
 <p>(2)、数据库选错了索引(数据库自己预测不使用你的索引能够更快)。主要由于统计失误，导致系统没有走索引，而是走了全表扫描，从而导致某条SQL执行很慢。</p>
+<p>数据库在执行语句之前会做采样，如果采样之后发现走索引不比不走索引快，那么可能不走索引了，那么你定义的索引可能有问题，比如对表的覆盖程度不够。</p>
 <h2 id="什么是数据库的脏读、不可重复读和幻读"><a href="#什么是数据库的脏读、不可重复读和幻读" class="headerlink" title="什么是数据库的脏读、不可重复读和幻读"></a>什么是数据库的脏读、不可重复读和幻读</h2><p>事务的隔离性上，从低到高可能产生的读现象分别是：脏读、不可重复读、幻读。</p>
 <p>脏读指读到了未提交的数据。</p>
 <p>不可重复读指一次事务内的多次相同查询，读取到了不同的结果。</p>
@@ -2261,6 +2262,34 @@
 <p>此时线程3会按照顺序进入等待队列，线程2执行之后线程3才会执行。</p>
 <p>如下图所示：</p>
 <p><img src="https://i.loli.net/2020/04/06/L4ifbJ639r85sMy.png" alt="AQS工作原理.png"></p>
+<h2 id="说说Java多线程的互斥锁和同步锁？"><a href="#说说Java多线程的互斥锁和同步锁？" class="headerlink" title="说说Java多线程的互斥锁和同步锁？"></a>说说Java多线程的互斥锁和同步锁？</h2><h3 id="通俗解释"><a href="#通俗解释" class="headerlink" title="通俗解释"></a>通俗解释</h3><p>首先，所谓互斥锁，有互斥锁，其实就有同步锁。不论是在java语法层面包装成了sycnchronized或者明确的XXXLock，但是底层都是一样的。无非就是哪种写起来方便而已。</p>
+<p>所谓锁，就是锁而已，<strong>避免多个线程对同一个共享的数据并发修改带来的数据混乱</strong>。</p>
+<p>锁其实要解决的是这四大问题：</p>
+<ul>
+<li><strong>“谁拿到了锁“这个信息存哪里</strong>（可以是当前class，当前instance的markword，还可以是某个具体的Lock的实例）</li>
+<li><strong>谁能抢到锁的规则</strong>（只能一个人抢到 - Mutex；能抢有限多个数量 - Semphore；自己可以反复抢 - 重入锁；读可以反复抢到但是写独占 - 读写锁……）</li>
+<li><strong>抢不到时怎么办</strong>（抢不到玩命抢；抢不到暂时睡着，等一段时间再试/等通知再试；或者二者的结合，先玩命抢几次，还没抢到就睡着）</li>
+<li><strong>如果锁被释放了还有其他等待锁的怎么办</strong>（不管，让等的线程通过超时机制自己抢；按照一定规则通知某一个等待的线程；通知所有线程唤醒他们，让他们一起抢……）</li>
+</ul>
+<p>有了这些选择，你就可以按照业务需求组装出你需要的锁。</p>
+<p><font color=#FF0000>关于“互斥”和“同步”的概念</font>：</p>
+<ul>
+<li><strong>互斥</strong>就是线程A访问了一组数据，线程BCD就不能同时访问这些数据，直到A停止访问了</li>
+<li><strong>同步</strong>就是ABCD这些线程要约定一个执行的协调顺序，比如D要执行，B和C必须都得做完，而B和C要开始，A必须先得做完。</li>
+</ul>
+<p>这是两种典型的并发问题。恰当的使用锁，可以解决同步或者互斥的问题。</p>
+<p>你可以说Mutex是专门被设计来解决互斥的；Barrier，Semphore是专门来解决同步的。但是这些都离不开上述对上述4个问题的处理。同时，如果遇到了其他的具体的并发问题，你也可以定制一个锁来满足需要。</p>
+<h3 id="更正式的学术解释"><a href="#更正式的学术解释" class="headerlink" title="更正式的学术解释"></a>更正式的学术解释</h3><p>所谓互斥，就是不同线程通过竞争进入临界区（共享的数据和硬件资源），为了防止访问冲突，在有限的时间内只允许其中之一独占性的使用共享资源。如不允许同时写</p>
+<p>同步关系则是多个线程彼此合作，通过一定的逻辑关系来共同完成一个任务。一般来说，同步关系中往往包含互斥，同时对临界区的资源会按照某种逻辑顺序进行访问。如先生产后使用</p>
+<p>总的来说，两者的区别就是：</p>
+<ul>
+<li><p><strong>互斥</strong>是通过竞争对资源的独占使用，彼此之间不需要知道对方的存在，执行顺序是一个乱序。</p>
+</li>
+<li><p><strong>同步</strong>是协调多个相互关联线程合作完成任务，彼此之间知道对方存在，执行顺序往往是有序的。</p>
+</li>
+</ul>
+<p><a href="https://www.cnblogs.com/yuxiang1/p/9183671.html" target="_blank" rel="noopener">有关同步锁和互斥锁可以参考这篇文章</a></p>
+<p><a href="https://www.oschina.net/code/piece_full?code=11175" target="_blank" rel="noopener">有关互斥锁的样例可以参考这篇文章</a></p>
 <h2 id="Java-内存模型详解-JVM-JMM"><a href="#Java-内存模型详解-JVM-JMM" class="headerlink" title="Java 内存模型详解(JVM+JMM)"></a>Java 内存模型详解(JVM+JMM)</h2><p>java内存模型(Java Memory Model，JMM)是java虚拟机规范定义的，用来屏蔽掉java程序在各种不同的硬件和操作系统对内存的访问的差异，这样就可以实现java程序在各种不同的平台上都能达到内存访问的一致性。可以避免像c++等直接使用物理硬件和操作系统的内存模型在不同操作系统和硬件平台下表现不同，比如有些c/c++程序可能在windows平台运行正常，而在linux平台却运行有问题。</p>
 <h3 id="1-说一下JVM的内存模型？-由浅入深"><a href="#1-说一下JVM的内存模型？-由浅入深" class="headerlink" title="1.说一下JVM的内存模型？(由浅入深)"></a>1.说一下JVM的内存模型？(由浅入深)</h3><p>先简单回答这个问题，要答出两个要点：一个是各部分的功能，另一个是哪些线程共享，哪些线程独占。</p>
 <p><strong>JVM内存模型主要指<font color=#FF0000>运行时的数据区</font></strong>，包括5个部分。如下图：</p>
@@ -2349,6 +2378,10 @@
 <p>如果从内存回收的角度看，由于现在的收集器基本都采用分代收集的算法，所以Java堆中还可以细分为新生代和老年代。</p>
 <p>可以参见下图：</p>
 <p><img src="https://s2.ax1x.com/2020/03/05/3TNefK.png" alt="GC堆"></p>
+<h4 id="JVM的运行模式-server和client"><a href="#JVM的运行模式-server和client" class="headerlink" title="JVM的运行模式(server和client)"></a>JVM的运行模式(server和client)</h4><p>JVM有两种运行模式：Server和Client。</p>
+<p>这两种运行模式的区别在于：Server启动较慢，Client启动较快。但是启动后运行进入稳定期之后，Server模式的程序运行速度比Client更快。</p>
+<p>因为Server模式启动的是重量级的虚拟机，对程序采用了更多优化，对比之下Client模式启用的是轻量级的虚拟机。</p>
+<p>如果想要查看当前Java是Server模式还是Client模式，可以直接用<code>java -version</code>查看即可.</p>
 <h3 id="2-JMM如何保证原子性、可见性、有序性？"><a href="#2-JMM如何保证原子性、可见性、有序性？" class="headerlink" title="2.JMM如何保证原子性、可见性、有序性？"></a>2.JMM如何保证原子性、可见性、有序性？</h3><p>首先应当搞清楚，JMM和JVM内存模型是完全不同的两个概念。JVM内存模型主要针对<strong>运行时数据区</strong>而言，而JMM是指Java程序中<strong>变量的访问规则</strong>，两者是完全不同的两个概念。</p>
 <p>JMM如下图所示：</p>
 <p><img src="https://i.loli.net/2020/04/06/pDqjgrUoiXQGRnL.png" alt="JMM与内存可见性.png"></p>
@@ -2473,7 +2506,30 @@
 <li>无实际存储结构，存储逻辑依赖于内部节点之间的关系来表达的——类似链表，节点是Reference本身，它自己只存储链表的头结点，而后面的节点都通过Reference指向下一个的next来保持。</li>
 <li>存储关联的且被GC的软引用，弱引用以及虚引用</li>
 </ul>
-<h3 id="9-使用过哪些JVM调优工具，主要分析哪些内容？"><a href="#9-使用过哪些JVM调优工具，主要分析哪些内容？" class="headerlink" title="9.使用过哪些JVM调优工具，主要分析哪些内容？"></a>9.使用过哪些JVM调优工具，主要分析哪些内容？</h3><h3 id="10-简单描述一下GC的分代回收"><a href="#10-简单描述一下GC的分代回收" class="headerlink" title="10.简单描述一下GC的分代回收"></a>10.简单描述一下GC的分代回收</h3><p>首先我们可以比较容易地理解为什么需要GC。我们的资源不可能是无限的，而且资源很多时候也是昂贵的，2核4G的机器，堆内存也就2GB左右，4核8G的机器，堆内存可能也就4G左右，栈内存也需要空间，metaspace区域放类信息也需要空间。所以，在jvm里必然是有一个内存分代模型，年轻代和老年代，年轻代中是经常要被清理的，而常用的放到老年代，清理的频次更低一些。</p>
+<h3 id="9-使用过哪些JVM调优工具，主要分析哪些内容？"><a href="#9-使用过哪些JVM调优工具，主要分析哪些内容？" class="headerlink" title="9.使用过哪些JVM调优工具，主要分析哪些内容？"></a>9.使用过哪些JVM调优工具，主要分析哪些内容？</h3><h3 id="10-什么是垃圾回收的stop-the-world和-Safepoint"><a href="#10-什么是垃圾回收的stop-the-world和-Safepoint" class="headerlink" title="10.什么是垃圾回收的stop the world和 Safepoint?"></a>10.什么是垃圾回收的stop the world和 Safepoint?</h3><h4 id="Stop-the-World"><a href="#Stop-the-World" class="headerlink" title="Stop-the-World"></a>Stop-the-World</h4><ul>
+<li>JVM由于要执行GC而停止了应用程序的执行</li>
+<li>会在任何一种GC算法中发生</li>
+<li>多数GC优化通过减少Stop-the-World发生的时间来提高程序性能，从而让系统有高吞吐，低停顿的特点</li>
+</ul>
+<p>如果执行的垃圾回收比较慢，比如要回收100mb，那么可能stop the world需要100ms，这段期间不能处理任何请求，要尽可能地让垃圾回收和工作线程的运行并发执行。</p>
+<h4 id="Safepoint"><a href="#Safepoint" class="headerlink" title="Safepoint"></a>Safepoint</h4><p>JVM垃圾回收就好比是保洁阿姨在打扫卫生，如果一边打扫一遍有人扔垃圾，那很难能打扫完。怎么办呢？可以在开始打扫之前和所有人说好:”我要开始打扫了！你们不准扔垃圾了！”，这样就可以了。</p>
+<p><strong>安全点，即程序执行时并非在所有地方都能停顿下来开始GC，只有在到达安全点时才能暂停</strong>。所以SafePoint的选定不能太长以至于让GC等待时间太长，也不能过于频繁导致过分增大运行时的负荷。由于JVM系统运行期间的复杂性，不可能做到随时暂停，因此引入了安全点的概念。</p>
+<p>安全点的初始目的并不是让其他线程停下，而是找到一个稳定的执行状态。在这个执行状态下，Java虚拟机的堆栈不会发生变化。这么一来，垃圾回收器便能够“安全”地执行可达性分析。只要不离开这个安全点，Java虚拟机便能够在垃圾回收的同时，继续运行这段本地代码。</p>
+<ul>
+<li>分析过程中对象引用关系不会发生变化的点——这是程序运行过程中的一个特殊点的，在这个点所有线程都被冻结了，不能出现分析过程中对象引用关系还在不断变化的情况。类似函数的可导，我们分析的结果需要在某个节点具备确定性，这个节点就叫做安全点。</li>
+<li>产生Safepoint的地方一般是：方法调用；循环跳转；异常跳转等</li>
+<li>安全点数量得适中——安全点选择不能太多也不能太少</li>
+</ul>
+<p>两种安全点的解决方案：</p>
+<ul>
+<li>抢先式中断(Preemptive Suspension)</li>
+</ul>
+<p>抢先式中断不需要线程的执行代码主动去配合，在GC发生时，首先把所有线程全部中断，如果发现有线程中断的地方不在安全点上，就恢复线程，让它“跑”到安全点上。现在几乎没有虚拟机采用这种方式来暂停线程从而响应GC事件。</p>
+<ul>
+<li>主动式中断(Voluntary Suspension)</li>
+</ul>
+<p>主动式中断的思想是当GC需要中断线程的时候，不直接对线程操作，仅仅简单地设置一个标志，各个线程执行时主动去轮询这个标志，发现中断标志为真时就自己中断挂起。轮询标志的地方和安全点是重合的，另外再加上创建对象需要分配内存的地方。</p>
+<h3 id="11-简单描述一下GC的分代回收"><a href="#11-简单描述一下GC的分代回收" class="headerlink" title="11.简单描述一下GC的分代回收"></a>11.简单描述一下GC的分代回收</h3><p>首先我们可以比较容易地理解为什么需要GC。我们的资源不可能是无限的，而且资源很多时候也是昂贵的，2核4G的机器，堆内存也就2GB左右，4核8G的机器，堆内存可能也就4G左右，栈内存也需要空间，metaspace区域放类信息也需要空间。所以，在jvm里必然是有一个内存分代模型，年轻代和老年代，年轻代中是经常要被清理的，而常用的放到老年代，清理的频次更低一些。</p>
 <p>实际上，Java堆中可以分为年轻代(新生代)和老年代，如下图所示：</p>
 <p><img src="https://s2.ax1x.com/2020/03/05/3TNefK.png" alt="GC堆"></p>
 <p>比如内存一共是4G，可以给年轻代一共2GB内存，给老年代是2GB内存。对于年轻代，默认情况下Eden和2个s区(s1和s2区)的比例：8:1:1，即此时Eden是1.6GB，S是0.2GB。</p>
@@ -2484,7 +2540,12 @@
 <li>一个类是存活着的，这个类里面的<strong>静态变量</strong>引用了某个对象，那这个对象也不能回收。</li>
 </ol>
 <p>除此之外，所有没被引用的对象，都可以是GC的目标对象。</p>
-<h3 id="11-介绍一下常用的两种对象标记算法？"><a href="#11-介绍一下常用的两种对象标记算法？" class="headerlink" title="11.介绍一下常用的两种对象标记算法？"></a>11.介绍一下常用的两种对象标记算法？</h3><h4 id="怎样的对象会被判定为垃圾？"><a href="#怎样的对象会被判定为垃圾？" class="headerlink" title="怎样的对象会被判定为垃圾？"></a>怎样的对象会被判定为垃圾？</h4><ul>
+<p>Java的堆内存被分类管理的，这主要是为了方便垃圾回收，<font color=#FF0000>分代管理这样的做法基于两个原因</font>：</p>
+<ol>
+<li>大部分对象很快就不再被系统需要和使用</li>
+<li>有一部分对象不会立即无用，但也不会持续很长时间</li>
+</ol>
+<h3 id="12-介绍一下常用的两种对象标记算法？"><a href="#12-介绍一下常用的两种对象标记算法？" class="headerlink" title="12.介绍一下常用的两种对象标记算法？"></a>12.介绍一下常用的两种对象标记算法？</h3><h4 id="怎样的对象会被判定为垃圾？"><a href="#怎样的对象会被判定为垃圾？" class="headerlink" title="怎样的对象会被判定为垃圾？"></a>怎样的对象会被判定为垃圾？</h4><ul>
 <li>没有被其他对象引用</li>
 </ul>
 <p>此时这个对象占据的内存会被释放，此对象也会被销毁。</p>
@@ -2517,7 +2578,7 @@
 <li>本地方法栈中JNI(Native方法)的引用对象</li>
 <li>活跃线程的引用对象</li>
 </ul>
-<h3 id="12-介绍一下垃圾回收算法？"><a href="#12-介绍一下垃圾回收算法？" class="headerlink" title="12.介绍一下垃圾回收算法？"></a>12.介绍一下垃圾回收算法？</h3><p>判断了哪些对象是垃圾只是第一步，我们还需要解决一个很重要的问题：如何处理这些垃圾？或者说，如果回收这些垃圾？</p>
+<h3 id="13-介绍一下垃圾回收算法？"><a href="#13-介绍一下垃圾回收算法？" class="headerlink" title="13.介绍一下垃圾回收算法？"></a>13.介绍一下垃圾回收算法？</h3><p>判断了哪些对象是垃圾只是第一步，我们还需要解决一个很重要的问题：如何处理这些垃圾？或者说，如果回收这些垃圾？</p>
 <p>垃圾回收算法有以下这几种：</p>
 <h4 id="标记-清除算法-Mark-and-Sweep"><a href="#标记-清除算法-Mark-and-Sweep" class="headerlink" title="标记-清除算法(Mark and Sweep)"></a>标记-清除算法(Mark and Sweep)</h4><ul>
 <li>标记：从根集合进行扫描，对存活的对象进行标记</li>
@@ -2534,7 +2595,7 @@
 <li>存活的对象被从对象面复制到空闲面。当被定义为对象面的块的内存用完了，就将还存活着的对象复制到其中一块空闲面上</li>
 <li>将对象面所有对象清除</li>
 </ul>
-<p>这种算法适用于对象存活率低的场景，比如年轻代。这样每次都对内存块进行回收，这样就解决了内存碎片的问题。</p>
+<p><font color=#FF0000><strong>这种算法适用于对象存活率低的场景，比如年轻代</strong></font>。这样每次都对内存块进行回收，这样就解决了内存碎片的问题。</p>
 <p>推倒重建的过程只需要移动堆顶指针，按顺序分配内容即可。</p>
 <p><img src="https://s2.ax1x.com/2020/03/05/37r2b8.png" alt="复制算法"></p>
 <p>优势：</p>
@@ -2544,7 +2605,7 @@
 <li>适用于对象存活率低的场景(现在很多虚拟机都采用这种方法回收年轻代，因为年轻代每次都只存活10%左右，用复制算法效果不错)</li>
 </ul>
 <p>但是在老年代不能轻易选用这种算法，因为可能出现存活率特别高的情况。</p>
-<h4 id="标记-整理算法-Compacting"><a href="#标记-整理算法-Compacting" class="headerlink" title="标记-整理算法(Compacting)"></a>标记-整理算法(Compacting)</h4><p>这种算法比较适合用于老年代的对象回收。它使用类似”标记-清除”算法的方式进行对象的标记，但是在清除的时候不同。</p>
+<h4 id="标记-整理算法-Compacting"><a href="#标记-整理算法-Compacting" class="headerlink" title="标记-整理算法(Compacting)"></a>标记-整理算法(Compacting)</h4><p><font color=#FF0000><strong>这种算法比较适合用于老年代的对象回收</strong></font>。它使用类似”标记-清除”算法的方式进行对象的标记，但是在清除的时候不同。</p>
 <ul>
 <li>标记：从根集合进行扫描，对存活的对象进行标记</li>
 <li>清除：移动所有存活的对象，且按照内存地址次序依次排列，然后将末端内存地址以后的内存全部回收</li>
@@ -2584,6 +2645,8 @@
 <li>Eden区</li>
 <li>两个Survivor区</li>
 </ul>
+<p><font color=#FF0000>年轻代用到的算法基本都是复制算法</font>。</p>
+<p>年轻代主要用来存放新建的对象，分为Eden和两个Survivor区(又被称为S1和S2或者from区和to区)。大部分对象在Eden区生成，当Eden区满时，还存活的对象会在两个Survivor区交替保存，达到一定存活时间(比如15)之后会晋升到老年代。</p>
 <p>对象刚被创建出来的时候，其内存空间首先被分配在Eden区。如果Eden区放不下新创建的对象的话，对象也有可能被直接放在Survivor甚至是老年代中。</p>
 <p>而两个Survivor则分别被定义在from区和to区，并且哪个是from区，哪个是to区，也不是固定的，会随着垃圾回收的进行而相互转换。</p>
 <p><img src="https://s2.ax1x.com/2020/03/05/37qRlq.png" alt="年轻代"></p>
@@ -2613,10 +2676,10 @@
 <p>周而复始。对象在Survivor区每熬过一次Minor GC，其年龄就会被加1，当对象的年龄达到某个值之后(默认是15岁)，这些对象会成为老年代。</p>
 <p>NOTE：这个默认年龄可以通过<code>-XX:MaxTenuringThreshold</code>调整</p>
 <p>但这也不是一定的，如果存储的对象过大，Eden区和Survivor区都存不下，可能会需要用到老年代的空间协助存储。</p>
-<h5 id="年轻代对象如何晋升到老年代"><a href="#年轻代对象如何晋升到老年代" class="headerlink" title="年轻代对象如何晋升到老年代"></a>年轻代对象如何晋升到老年代</h5><p>在分代算法当中，年轻代对象如何晋升到老年代？简单来说有3种场景：</p>
+<h5 id="年轻代对象如何晋升到老年代"><a href="#年轻代对象如何晋升到老年代" class="headerlink" title="年轻代对象如何晋升到老年代"></a>年轻代对象如何晋升到老年代</h5><p>在分代算法当中，年轻代对象如何晋升到老年代？<strong>简单来说有3种场景</strong>：</p>
 <ul>
 <li>经历一定Minor GC次数(比如是15次)依然存活的对象</li>
-<li>Survivor区中村放不下的对象</li>
+<li>Survivor区中存放不下的对象</li>
 <li>新生成的大对象(可以用:<code>-XX:+PretenuerSizeThreshold</code>来控制大对象的大小，只要大于这个大小，对象生成之后直接放入老年代)</li>
 </ul>
 <h5 id="常用的调优参数"><a href="#常用的调优参数" class="headerlink" title="常用的调优参数"></a>常用的调优参数</h5><p>介绍几个常用的用来做性能调优的参数。</p>
@@ -2626,17 +2689,213 @@
 <li>-XX:MaxTenuringThreshold:对象从年轻代晋升到老生代经历过GC次数的最大阈值</li>
 </ul>
 <p>新生代和老年代的总内存大小是通过”-Xms”和”-Xmx”来决定的。</p>
-<h5 id="老年代：存放生命周期较长的对象"><a href="#老年代：存放生命周期较长的对象" class="headerlink" title="老年代：存放生命周期较长的对象"></a>老年代：存放生命周期较长的对象</h5><p>回顾这副图：</p>
+<h5 id="老年代：存放生命周期较长的对象"><a href="#老年代：存放生命周期较长的对象" class="headerlink" title="老年代：存放生命周期较长的对象"></a>老年代：存放生命周期较长的对象</h5><p>首先应该明确，<font color=#FF0000>老年代不适合用类似年轻代的复制算法</font>，因为老年代的对象很多都是被长期引用的，spring容器管理各种的bean。老年代中长期存活的对象是比较多的，可能甚至有几百MB，这么大的对象复制来复制去，效率很低。而且老年代中垃圾没有那么多。</p>
+<p>回顾这副图：</p>
 <p><img src="https://s2.ax1x.com/2020/03/05/37qRlq.png" alt="年轻代"></p>
 <p>可以看到，老年代占的内存比新生代大，而且大致的比例为2:1</p>
-<p>老年代的对象存活率较高，而且没有额外空间做担保，所以老年代主要用的算法为：</p>
+<p><strong>老年代的对象存活率较高，而且没有额外空间做担保</strong>，所以老年代主要用的算法为：</p>
 <ul>
-<li>标记-清理算法</li>
-<li>标记-整理算法</li>
+<li>标记-清理算法（<strong>致命缺点是会产生内存碎片</strong>）</li>
+<li>标记-整理算法（把老年代里的存活对象标记出来，移动到一起，存活对象压缩到一片内存空间里去，剩余的空间都是垃圾对象，把它们全部清理掉，剩余的都是连续的可用的内存空间，解决了内存碎片的问题）</li>
 </ul>
+<p>其中，老年代用到的更多的是<font color=#FF0000><strong>标记-整理算法</strong></font></p>
 <p>之前已经详细介绍过这两种算法，这里就不再介绍了。</p>
-<h3 id="12-G1垃圾回收器与CMS的区别有哪些？"><a href="#12-G1垃圾回收器与CMS的区别有哪些？" class="headerlink" title="12.G1垃圾回收器与CMS的区别有哪些？"></a>12.G1垃圾回收器与CMS的区别有哪些？</h3><p>1.9之后已经将G1设置为默认的垃圾回收器</p>
-<h3 id="13-什么情况下会触发FullGC"><a href="#13-什么情况下会触发FullGC" class="headerlink" title="13.什么情况下会触发FullGC?"></a>13.什么情况下会触发FullGC?</h3><p>当触发老年代的垃圾回收的时候，往往也会伴随对新生代堆内存的回收，即对整个堆进行垃圾回收，也就是所谓的Full GC，或者叫做Major GC。Major GC和Full GC是等价的，即收集所有的GC堆。</p>
+<h3 id="14-常见的垃圾回收器有哪些？"><a href="#14-常见的垃圾回收器有哪些？" class="headerlink" title="14.常见的垃圾回收器有哪些？"></a>14.常见的垃圾回收器有哪些？</h3><h4 id="垃圾收集器之间的联系"><a href="#垃圾收集器之间的联系" class="headerlink" title="垃圾收集器之间的联系"></a>垃圾收集器之间的联系</h4><p>垃圾收集器不存在哪个好那个坏的问题，而是涉及到适合哪个具体的JVM。不同的厂商，不同版本的JVM，提供的选择也不同，这也是HotSpot实现这么多收集器的原因。</p>
+<p>一些常见的垃圾收集器、它们之间的关系和它们的适用范围，如图所示：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3b1jC8.png" alt="垃圾收集器之间的联系"></p>
+<p>如果两个收集器之间有连线，说明它们可以搭配使用。</p>
+<p>我们只需要大致熟悉每一个垃圾收集器的作用即可。</p>
+<p>下面分别介绍：</p>
+<hr>
+<h4 id="年轻代收集器"><a href="#年轻代收集器" class="headerlink" title="年轻代收集器"></a>年轻代收集器</h4><h5 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h5><p>可以在程序启动的时候通过<code>-XX:+UseSerialGC</code>设置使用此收集器。使用<strong>复制算法</strong>。</p>
+<p>在JDK1.3之前，是Java虚拟机年轻代收集器的唯一选择。</p>
+<p>Java中历史最悠久的收集器。</p>
+<ul>
+<li>单线程收集，GC时必须暂停所有工作线程</li>
+<li>简单高效，Client默认用这个作为年轻代收集器</li>
+</ul>
+<p>工作过程如下图所示：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3b8lLj.png" alt="Serial收集器工作模拟图"></p>
+<p>实际中系统分配给虚拟机管理的内存不会很大，一般就几十兆到一百兆，收集这么多的年轻代的停顿时间也就几十毫秒，一百毫秒左右。只要不是太频繁，这样的停顿是可以接受的。</p>
+<h5 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h5><p>可以在程序启动的时候通过<code>-XX:+UseParNewGC</code>设置使用此收集器。使用复制算法。</p>
+<ul>
+<li>除了是多线程收集，其余的行为、特点和Serial收集器一样</li>
+<li>单核执行效率不如Serial，在多核下执行才有优势</li>
+</ul>
+<p>在单核执行的环境中，表现不会比Serial更好，因为存在键程交互开销。但是随着CPU增加，它的表现会更好。它默认开启的收集线程数和CPU数相同。在CPU数量非常多的情况下，可以使用ParGCThreds的参数来限制垃圾收集的线程数</p>
+<p><strong>ParNew是Server模式下虚拟机首选的年轻代收集器</strong>。因为除了Serial之外，目前只有它可以和CMS收集器配合工作。</p>
+<p>ParNew工作过程如下图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3bG5gU.png" alt="ParNew"></p>
+<h5 id="Parallel-Scavenge收集器"><a href="#Parallel-Scavenge收集器" class="headerlink" title="Parallel Scavenge收集器"></a>Parallel Scavenge收集器</h5><p>可以在程序启动的时候通过<code>-XX:+UseParallelGC</code>设置使用此收集器。使用复制算法。</p>
+<p>这个收集器和系统吞吐量有关。</p>
+<p>什么是系统的吞吐量？</p>
+<blockquote>
+<p>吞吐量=运行用户代码时间/(运行用户代码时间+垃圾收集时间)</p>
+</blockquote>
+<p>也就是运行用户代码时间/CPU消耗总时间。比如虚拟机一共运行了100分钟，垃圾收集用了2分钟，吞吐量就是98%</p>
+<p>Parallel Scavenge收集器有些类似ParaNew收集器，也是多线程，但是与ParNew相比也有不同：</p>
+<ul>
+<li>相比ParNew，Parallel Scavenge对系统吞吐量的重视程度大于对用户线程停顿的时间的重视程度。虽然停顿时间短比较适合与用户相互的程序，因为响应速度更快可以提升用户体验；但高吞吐量可以高效率利用CPU时间，尽可能快地完成运算任务，比较适合在后台运算而不用和用户交互的任务。</li>
+<li>在多核下执行才有优势，Server模式下默认的年轻代收集器</li>
+</ul>
+<p>Parallel Scavenge和ParNew工作过程基本相同，如下图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3bG5gU.png" alt="ParNew"></p>
+<p>值得一提的是，如果程序员本身对垃圾收集器不太了解，在程序优化过程中遇到了困难的时候，可以这样解决：在启动的时候加上参数<code>-XX:+UseAdaptiveSizePolicy</code>，使用Parallel Scavenge的自适应调节策略，这样就可以把内存管理的调优任务交给虚拟机自己去完成。</p>
+<hr>
+<h4 id="老年代收集器"><a href="#老年代收集器" class="headerlink" title="老年代收集器"></a>老年代收集器</h4><h5 id="Serial-Old收集器-MSC"><a href="#Serial-Old收集器-MSC" class="headerlink" title="Serial Old收集器(MSC)"></a>Serial Old收集器(MSC)</h5><p>可以在程序启动的时候通过<code>-XX:+UseSerialOldGC</code>设置使用此收集器。使用标记-整理算法。</p>
+<p>Serial模式的老年版</p>
+<ul>
+<li>单线程收集，进行垃圾收集时，必须暂停所有工作线程</li>
+<li>简单高效，Client模式下默认的老年代收集器</li>
+</ul>
+<p>工作流程如图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3bYz0H.png" alt="Serial Old"></p>
+<h5 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h5><p>可以在程序启动的时候通过<code>-XX:+UseParallelOldGC</code>设置使用此收集器。使用标记-整理算法。</p>
+<p>这个收集器在JDK6之后才开始提供的。在此之前新生代的Parallel Scavenge收集器一直处在一个比较尴尬的位置，因为如果新生代选了它，老年代就只能选Serial Old收集器了。</p>
+<p>Parallel Old收集器的出现就是为了解决这个问题。</p>
+<p>直到Parallel Old出现之后，吞吐量优先收集器才有了名副其实的组合。</p>
+<ul>
+<li>多线程，吞吐量优先</li>
+</ul>
+<p>在注重吞吐量以及CPU资源敏感的场合，都可以优先考虑Parallel Scavenge + Parallel Old收集器的组合。</p>
+<p>工作流程如图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3bczkV.png" alt="Parallel Old收集器"></p>
+<h4 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h4><p>CMS在JDK1.7之前可以说是最主流的垃圾回收算法。CMS使用<strong>标记-清除算法</strong>，<font color=#FF0000>优点是并发收集，停顿小</font>。</p>
+<p>可以在程序启动的时候通过<code>-XX:+UseConcMarkSweepGC</code>设置使用此收集器。使用标记-清除算法。</p>
+<p>实际上，CMS收集器几乎占据着JVM老年代收集器的半壁江山。它的划时代的意义就是垃圾回收线程几乎能与用户线程做到同时工作——说是”几乎”，是因为它不能完全做到不”Stop-the-World”，它只是能尽可能地缩短停顿时间。需要注意如果你的程序对停顿比较敏感，并且在应用程序运行的时候可以提供更大的内存和更多的CPU，那么用CMS是好的选择。</p>
+<p>此外，如果在JVM中有相对较多而且存活时间较长的对象，也更适合使用CMS。</p>
+<p>CMS的算法在整个垃圾回收过程可以分为下面六步：</p>
+<ol>
+<li><font color=#FF0000>初始标记</font>：这个过程会stop-the-world(简称STW)，JVM停顿正在执行的任务，从垃圾回收的根对象开始，只扫描和根对象直接关联的对象，时间短。最后标记的对象只是从root集最直接可达的对象；</li>
+<li>并发标记：并发追溯标记，程序不停顿。这个阶段中GC线程和应用线程并发执行，主要标记可达的对象。用户不会感受到停顿；</li>
+<li>并发预清理：查找执行并发标记时晋升老年代的对象。可能有一些对象从新生代晋升到老年代，或者有些对象直接被分配到老年代，通过重新扫描，减少下一个阶段重新标记的工作(因为下一阶段会重新stop-the-world)。这个过程不停顿</li>
+<li><font color=#FF0000>重新标记</font>：过程会STW，暂停虚拟机，扫描CMS堆中剩余对象，扫描从根对象开始向下追溯，并处理对象单元。这一步相对较慢</li>
+<li>并发清理：清理垃圾对象，程序不停顿</li>
+<li>并发重置：重置CMS收集器的数据结构，等待下一次垃圾回收</li>
+</ol>
+<p>上述过程中，<strong>初始标记和重新标记需要短暂的stop-the-world</strong></p>
+<p>工作流程如下图：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3bvBJU.png" alt="CMS垃圾收集器"></p>
+<p>并发标记的过程实际上是和用户线程同时工作的，也就是一边丢垃圾，一边打扫。但这也可能产生一个问题，就是某个垃圾如果在打扫之后产生的，那么这个垃圾就只能等到下次垃圾回收才能被收掉，也就是说垃圾打扫完一次后没有完全打扫干净。</p>
+<p>但是CMS收集器因为用的是”标记-清除算法”而不是”标记-整理算法”，就不可避免导致了垃圾碎片化的问题。如果此时需要分配较大的对象，那就只能触发一次GC了。</p>
+<p><font color=#FF0000>优点</font>：并发，停顿低</p>
+<h4 id="年轻代和老年代都可：G1收集器"><a href="#年轻代和老年代都可：G1收集器" class="headerlink" title="年轻代和老年代都可：G1收集器"></a>年轻代和老年代都可：G1收集器</h4><p>G1在JDK1.9之后是JVM默认的垃圾回收算法，G1的<strong>特点是保持高回收率的同时，减少停顿</strong>。</p>
+<p>G1算法对JVM中堆结构进行了改变，取消了年轻代和老年代的物理划分，<strong>但它仍然属于分代收集器</strong>。G1算法将堆划分为若干个区域，称作 Region，如下图中的小方格所示：</p>
+<p><img src="https://s2.ax1x.com/2020/03/06/3qSkGT.png" alt="G1堆内存分配"></p>
+<p><font color=#FF0000>一部分区域用作年轻代，一部分用作老年代，另外还有一种专门用来存储巨型对象的分区</font>。</p>
+<p>G1 也和 CMS 一样会遍历全部的对象，然后标记对象引用情况，在清除对象后会对区域进行复制移动整合碎片空间。</p>
+<p>G1的回收过程如下：</p>
+<ol>
+<li><p>G1的年轻代回收，采用<strong>复制算法</strong>，并行收集，过程会SWT</p>
+</li>
+<li><p>G1的老年代回收时会对年轻代进行回收。主要分为四个阶段：</p>
+<p>a. 依然是<strong>初始标记</strong>阶段完成对象的标记，这个过程是STW的；</p>
+<p>b. <strong>并发标记</strong>阶段，这个阶段是和用户线程并行执行的；</p>
+<p>c. <strong>最终标记</strong>阶段，完成三色标记周期；</p>
+<p>d. <strong>复制/清除</strong>阶段，这个阶段会优先对可回收空间较大的Region进行回收，即garbage first，这也是G1名称的由来。</p>
+</li>
+</ol>
+<p>G1采用每次只清理一部分而不是全部Region的增量式清理，由此来包保证每次GC停顿时间不会过长。</p>
+<p>可以在程序启动的时候通过<code>-XX:+UseG1GC</code>设置使用此收集器。使用多种算法，即”<strong>复制算法 + 标记-整理算法</strong>“。</p>
+<p>G1收集器既用于年轻代，也用于老年代。全称：<font color=#FF0000>Garbage First收集器</font>。</p>
+<p>实际上，<strong>HotSpot最终的目的是让G1收集器最后能替换掉JDK5发布的CMS收集器</strong>。</p>
+<p>Garbage First收集器的特点：</p>
+<ol>
+<li>并行和并发——使用多个CPU来缩短stop-the-world的停顿时间，与用户线程并发执行</li>
+<li>分代收集——独立管理整个堆，但是能够采用不同的方式去处理新创建的对象和已经熬过多次GC的旧对象以获得更好的收集效果</li>
+<li>空间整合——基于”标记-整理算法”，解决了内存碎片的问题</li>
+<li>可预测停顿——能建立可预测的停顿时间模型，设置用户在某个地方的停顿时长不能超过m毫秒，类似这样</li>
+</ol>
+<p>在Garbage First垃圾收集器之前的收集器，都是只针对年轻代或者老年代的。而Garbage First可以同时针对年轻代和老年代。</p>
+<p>在使用Garbage First收集器的时候，Java堆的布局和使用其他垃圾收集器时有很大不同：</p>
+<ul>
+<li>将整个Java堆内存划分成多个大小相等的Region——虽然还保留新生代和老年代的概念，但是新生代和老年代不再是物理隔离的了。<strong>这个Region大小可以通过JVM参数设置，范围是1~32MB</strong></li>
+<li>年轻代和老年代不再物理隔离——它们可以是不连续的Region的集合。这也使得分配内存空间的时候可以不是连续的</li>
+</ul>
+<p>也就是说此时在JVM启动的时候不需要决定哪些Region属于老年代，哪些Region属于年轻代。因为随着时间推移，年轻代的Region被回收以后，就会变为可用状态，此时也可以把它分配成老年代。</p>
+<p>和其他的HotSpot一样，当一个年轻代GC发生时，整个年轻代会被回收，G1的老年代收集器有所不同，它在老年代不需要整个老年代进行回收，只有一部分Region被调用。</p>
+<p>G1的年轻代由Eden Region和Survivor Region组成。当一个JVM分配Eden Region失败后，会触发一个年轻代回收，意味着Eden区满了。之后GC开始释放空间，第一个年轻代收集器会移动所有的存储对象，从Eden Region到Survivor Region,这就是copy to survivor的过程。</p>
+<p>JDK11还有研发Epsilon GC和ZGC，这里暂时先不介绍。</p>
+<h4 id="回顾一个问题"><a href="#回顾一个问题" class="headerlink" title="回顾一个问题"></a>回顾一个问题</h4><p><img src="https://s2.ax1x.com/2020/03/06/3b1jC8.png" alt="垃圾收集器之间的联系"></p>
+<p>如上图，为什么CMS不能和Parallel Scavenge一起工作呢？两者为什么不兼容呢？</p>
+<p>CMS是HotSpot在JDK5的时候推出的第一款整整意义上的并发收集器，第一次实现了让垃圾收集线程与用户线程同时工作。</p>
+<p>CMS作为老年代收集器不能和Parallel Scavenge一起工作主要是因为Parallel Scavenge和CMS代码框架不同。</p>
+<h4 id="常用的垃圾回收器组合"><a href="#常用的垃圾回收器组合" class="headerlink" title="常用的垃圾回收器组合"></a>常用的垃圾回收器组合</h4><ul>
+<li>ParNew + CMS组合（以后会被淘汰）</li>
+</ul>
+<p>这个是JDK8以及JDK8之前非常常用的组合。</p>
+<p>ParNew回收的过程是多线程进行回收，过程是先把存活的对象标记出来，把这些存活对象复制到一块S区，然后清除。</p>
+<p>CMS执行的过程就比ParNew复杂多了，而且老年代的回收很多时候会比年轻代慢10倍以上。具体内容参考上面的介绍。</p>
+<ul>
+<li>G1直接回收（JDK1.9及之后的11默认，最后其实希望G1代替ParNew与CMS组合）</li>
+</ul>
+<h3 id="15-G1垃圾回收器与CMS的区别有哪些？"><a href="#15-G1垃圾回收器与CMS的区别有哪些？" class="headerlink" title="15.G1垃圾回收器与CMS的区别有哪些？"></a>15.G1垃圾回收器与CMS的区别有哪些？</h3><p>参考文章：</p>
+<p><a href="https://www.cnblogs.com/heyonggang/p/11718170.html" target="_blank" rel="noopener">弄明白CMS和G1，就靠这一篇了</a></p>
+<p><a href="https://www.cnblogs.com/rgever/p/9534857.html" target="_blank" rel="noopener">CMS和G1的区别</a></p>
+<p>正如上面所说，1.9之后已经将G1设置为默认的垃圾回收器。两者区别整理如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">特征</th>
+<th align="center">G1</th>
+<th align="center">CMS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">并发和分代</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">最大化释放堆内存</td>
+<td align="center">是</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center">低延时</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">吞吐量</td>
+<td align="center">高</td>
+<td align="center">低</td>
+</tr>
+<tr>
+<td align="center">压实</td>
+<td align="center">是</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center">可预测性</td>
+<td align="center">强</td>
+<td align="center">弱</td>
+</tr>
+<tr>
+<td align="center">新生代和老年代的物理隔离</td>
+<td align="center">否</td>
+<td align="center">是</td>
+</tr>
+</tbody></table>
+<hr>
+<p><strong>CMS收集器特点汇总</strong>：</p>
+<p>CMS收集器<strong>优点</strong>：并发收集、低停顿。</p>
+<p>CMS收集器缺点：</p>
+<ul>
+<li>CMS收集器对CPU资源非常敏感</li>
+<li>CMS收集器无法处理浮动垃圾(Floating Garbage)</li>
+<li>CMS收集器是基于标记-清除算法，该算法的缺点都有</li>
+</ul>
+<p>CMS收集器之所以能够做到并发，根本原因在于<strong>采用基于“标记-清除”的算法并对算法过程进行了细粒度的分解</strong>。</p>
+<hr>
+<p><strong>G1收集器特点汇总</strong>：</p>
+<ul>
+<li><strong>并行与并发</strong>：G1能充分利用多CPU、多核环境下的硬件优势，使用多个CPU来缩短Stop-the-world停顿的时间，部分其他收集器原来需要停顿Java线程执行的GC操作，G1收集器仍然可以通过<strong>并发</strong>的方式让Java程序继续运行。</li>
+<li>分代收集</li>
+<li>空间整合：与CMS的标记-清除算法不同，G1从整体来看是基于<strong>标记-整理算法</strong>实现的收集器，从局部（两个Region之间）上来看是基于“<strong>复制</strong>”算法实现的。但无论如何，这两种算法都意味着G1运作期间不会产生内存空间碎片，收集后能提供规整的可用内存。<strong>这种特性有利于程序长时间运行，分配大对象时不会因为无法找到连续内存空间而提前触发下一次GC</strong>。</li>
+<li>可预测的停顿：这是G1相对于CMS的一个优势，降低停顿时间是G1和CMS共同的关注点。</li>
+</ul>
+<h3 id="16-什么情况下会触发FullGC"><a href="#16-什么情况下会触发FullGC" class="headerlink" title="16.什么情况下会触发FullGC?"></a>16.什么情况下会触发FullGC?</h3><p>当触发老年代的垃圾回收的时候，往往也会伴随对新生代堆内存的回收，即对整个堆进行垃圾回收，也就是所谓的Full GC，或者叫做Major GC。Major GC和Full GC是等价的，即收集所有的GC堆。</p>
 <p>主要是因为HotSpot VM发展了很多年，外界对很多名词的解读都已经混乱了，当有人说到了”Major GC”的时候，一定要问清楚，他说的到底是针对所有代的Full GC，还是只是针对老年代的GC。</p>
 <p>Full GC比Minor GC慢(慢十倍)，但因为老年代里面元素本身就不容易被淘汰，所以执行频率也会更低。</p>
 <h4 id="触发Full-GC的条件"><a href="#触发Full-GC的条件" class="headerlink" title="触发Full GC的条件"></a>触发Full GC的条件</h4><ul>
@@ -2652,7 +2911,7 @@
 <p>1.promotion failed是在进行Minor GC的时候Survivor放不下了，对象只能放入老年代，而此时恰好老年代也放不下，这时候就会造成promotion failed。</p>
 <p>2.concurrent mode failure是在执行CMS GC的过程中同时有对象要放入老年代中，而此时老年代空间不足，就会造成这个failure。</p>
 <p>而对于Minor GC晋升的这第四点，是比较复杂的触发情况。HotSpot为了避免由于新生代对象晋升到老年代而导致老年代空间不足的现象，在进行Minor GC的时候做了一个判断：如果之前统计所得到的Minor GC晋升到老年代的平均大小大于老年代的剩余空间，就直接触发Full GC。例如，程序第一次触发GC后有6M的对象晋升到老年代，当下一次Minor GC发生的时候，首先先检查老年代的剩余空间是否大于6M，如果小于6M，则执行Full GC。</p>
-<h3 id="14-介绍一下JDK11新推出的ZGC算法？"><a href="#14-介绍一下JDK11新推出的ZGC算法？" class="headerlink" title="14.介绍一下JDK11新推出的ZGC算法？"></a>14.介绍一下JDK11新推出的ZGC算法？</h3><p>JDK11提供的最激动人心的就是ZGC这个新的垃圾回收器，ZGC专门为大内存堆设计，有很强悍的性能，能够实现10ms一下的GC暂停时间。</p>
+<h3 id="17-介绍一下JDK11新推出的ZGC算法？"><a href="#17-介绍一下JDK11新推出的ZGC算法？" class="headerlink" title="17.介绍一下JDK11新推出的ZGC算法？"></a>17.介绍一下JDK11新推出的ZGC算法？</h3><p>JDK11提供的最激动人心的就是ZGC这个新的垃圾回收器，ZGC专门为大内存堆设计，有很强悍的性能，能够实现10ms一下的GC暂停时间。</p>
 <h2 id="Java内存模型与synchronized和volatile的面试二连击"><a href="#Java内存模型与synchronized和volatile的面试二连击" class="headerlink" title="Java内存模型与synchronized和volatile的面试二连击"></a>Java内存模型与synchronized和volatile的面试二连击</h2><h3 id="1-Java内存模型-JMM"><a href="#1-Java内存模型-JMM" class="headerlink" title="1.Java内存模型(JMM)"></a>1.Java内存模型(JMM)</h3><p>这里简要概括上面写过的Java内存模型的内容。</p>
 <p>Java内存模型JMM和JVM是两回事，JVM内存模型主要针对<strong>运行时数据区</strong>而言，而JMM是指Java程序中<strong>变量的访问规则</strong>，两者是完全不同的两个概念。</p>
 <p>在 JDK1.2 之前，Java的内存模型(JMM)实现总是从<font color=#FF0000><strong>主存</strong>（即共享内存）读取变量</font>，是不需要进行特别的注意的。而在当前 的 Java 内存模型下，线程可以把变量保存<font color=#FF0000><strong>本地内存</strong></font>（比如机器的寄存器）中，而不是直接在主存中进行读写。这就 可能造成一个线程在主存中修改了一个变量的值，而另外一个线程还继续使用它在寄存器中的变量值的拷贝，造成<font color=#FF0000><strong>数据的不一致</strong></font>。</p>
@@ -2870,7 +3129,7 @@
 <p><img src="https://i.loli.net/2020/03/25/YNAar5mMChU2Dzc.png" alt="SpringIOC初始化过程.png"></p>
 <h2 id="Spring实现IOC的三种方式"><a href="#Spring实现IOC的三种方式" class="headerlink" title="Spring实现IOC的三种方式"></a>Spring实现IOC的三种方式</h2><h3 id="属性注入"><a href="#属性注入" class="headerlink" title="属性注入"></a>属性注入</h3><p>通过setXXX()方法注入Bean的属性值或者依赖对象，最常用。</p>
 <ul>
-<li>Spring首先会调用bean的默认构造函数实例化bean对象，然后再通过反射的方法来调用set方法来注入属性值。</li>
+<li>Spring首先会调用bean的默认构造函数实例化bean对象，然后再通过<strong>反射</strong>的方法来调用set方法来注入属性值。</li>
 <li>属性注入要求bean提供一个默认的构造函数,并且得为需要注入的属性提供set方法</li>
 </ul>
 <h3 id="构造函数注入-构造器依赖注入"><a href="#构造函数注入-构造器依赖注入" class="headerlink" title="构造函数注入(构造器依赖注入)"></a>构造函数注入(构造器依赖注入)</h3><p>使用构造函数注入的前提是：bean必须提供带参的构造函数。</p>
@@ -3149,7 +3408,7 @@
 <p>一般出现在你要对一些类的方法切入一些增强的代码，此时会创建一些动态代理的对象(比如称作B)，让你对那些目标对象(比如称作A)的访问，A先经过动态代理对象B，让动态代理的对象B先做一些增强的代码，然后再调用你的目标对象A，这样A的行为就在原有基础上有了变化或者叫增强。</p>
 <p>在设计模式里，就是一个代理模式的体现和运用，让动态代理的对象，去代理了你的目标对象，在这个过程中做一些增强的访问，你可以把面试突击的内容作为一个抛砖引玉的作用，去更加深入的学习一些技术</p>
 <h2 id="用一张图说说Spring-Web-MVC的核心架构"><a href="#用一张图说说Spring-Web-MVC的核心架构" class="headerlink" title="用一张图说说Spring Web MVC的核心架构"></a>用一张图说说Spring Web MVC的核心架构</h2><p>首先，这张图可以很生动地展现整个过程：</p>
-<p><img src="https://i.loli.net/2020/04/08/CtXPN8OsauEKGF6.png" alt="SpringWebMVC架构.png"></p>
+<p><img src="https://i.loli.net/2020/04/12/IEZxvXmzLVPCgBT.png" alt="SpringWebMVC架构.png"></p>
 <p>客户端发送请求-&gt; 前端控制器 DispatcherServlet 接受客户端请求 -&gt; 找到处理器映射 HandlerMapping 解析请求对应的 Handler-&gt; HandlerAdapter 会根据 Handler 来调用真正的处理器开处理请求，并处理相应的业务逻辑 -&gt; 处理器返回一个模型视图 ModelAndView -&gt; 视图解析器进行解析 -&gt; 返回一个视图对象-&gt;前端控制器 DispatcherServlet 渲染数据（Model）-&gt;将得到视图对象返回给用户 。</p>
 <p>另外一种流程解析：</p>
 <p>（1）tomcat的工作线程将请求转交给spring mvc框架的DispatcherServlet</p>
@@ -6072,11 +6331,11 @@ Double d = Double.parseDouble( s );
 <hr>
 <p>解：题目名字是”多数元素”，实际上，就是众数。</p>
 <p>思路一：如果你头脑足够灵活，数学感觉足够好，那么实际上抓住一个点就可以：题目问的多数元素，其实不算真正的众数。这里的多数元素出现的次数必须大于 <code>n/2</code> ，所以，如果一个数组中一定有众数，那么这个数组排好序之后，下标为 <code>nums.length/2</code> 的那个元素，就是众数。利用排序，排好序之后返回下标为 <code>nums.length/2</code>的元素，就是这道题需要的结果。</p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> majorityElement(<span class="built_in">int</span>[] nums) &#123;</span><br><span class="line">        Arrays.sort(nums);</span><br><span class="line">        <span class="keyword">return</span> nums[nums.length/<span class="number">2</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">majorityElement</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        Arrays.sort(nums);</span><br><span class="line">        <span class="keyword">return</span> nums[nums.length/<span class="number">2</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>因为用到了系统自带的排序方法，所以这种方法的时间复杂度是O(NlogN)。</p>
 <p>方法二：开两个变量，result为最后返回的结果，count用于统计，因为按照题目定义，众数出现次数一定大于 n/2 ，所以count只要回到了0，说明当前result不可能是最后的众数。</p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> majorityElement(<span class="built_in">int</span>[] nums) &#123;</span><br><span class="line">        <span class="built_in">int</span> result = <span class="number">0</span>, count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> num : nums) &#123;</span><br><span class="line">            <span class="keyword">if</span>(count == <span class="number">0</span>) </span><br><span class="line">                result = num;</span><br><span class="line">            <span class="keyword">if</span>(result != num) </span><br><span class="line">                count --;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                count ++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">majorityElement</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="number">0</span>, count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            <span class="keyword">if</span>(count == <span class="number">0</span>) </span><br><span class="line">                result = num;</span><br><span class="line">            <span class="keyword">if</span>(result != num) </span><br><span class="line">                count --;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                count ++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>时间复杂度：O(n)</li>
@@ -6165,7 +6424,7 @@ Double d = Double.parseDouble( s );
 <hr>
 <p>解：需要注意题目说的是，评分高的children分到的candy是比他的<strong>neighbors</strong>多，而不是比其他所有评分比他低的小孩多</p>
 <p>一个比较巧妙的方法是，可以从左往右和从右往左两次遍历，改变当前结果数组candy需要遵循这个公式：<code>candy[i] = Math.max(candy[i],candy[i+1]+1)</code></p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> candy(<span class="built_in">int</span>[] ratings) &#123;</span><br><span class="line">        <span class="keyword">if</span>(ratings == <span class="literal">null</span> || ratings.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">int</span> len = ratings.length;</span><br><span class="line">        <span class="comment">// 最后的结果数组</span></span><br><span class="line">        <span class="built_in">int</span>[] result = new <span class="built_in">int</span>[len];</span><br><span class="line">        <span class="comment">// 初始化每个小孩至少有一个糖果</span></span><br><span class="line">        Arrays.fill(result, <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// 然后开始遍历，一次从前往后，一次从后往前</span></span><br><span class="line">        <span class="comment">// 两次遍历的过程中第一个都不用管，因为在下一次遍历中会遍历到的</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 从左往右,从第2个小孩开始直到最后一个</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="comment">// 如果当前小孩评分比他右边的小孩高，他分到的糖果数</span></span><br><span class="line">            <span class="comment">// 就比他右边的小孩多1个</span></span><br><span class="line">            <span class="keyword">if</span>(ratings[i] &gt; ratings[i - <span class="number">1</span>]) &#123;</span><br><span class="line">                result[i] = result[i - <span class="number">1</span>] + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 从右往左，从倒数第二个小孩开始直到第一个</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = len - <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="comment">// 如果当前小孩评分比他左边小孩低，他左边小孩分到的</span></span><br><span class="line">            <span class="comment">// 糖果数是其本身存储的值和当前右边小孩糖果数+1的最大值</span></span><br><span class="line">            <span class="keyword">if</span>(ratings[i] &gt; ratings[i+<span class="number">1</span>]) &#123;</span><br><span class="line">                result[i] = Math.max(result[i], result[i + <span class="number">1</span>] + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> temp : result) sum += temp;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">candy</span><span class="params">(<span class="keyword">int</span>[] ratings)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(ratings == <span class="keyword">null</span> || ratings.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> len = ratings.length;</span><br><span class="line">        <span class="comment">// 最后的结果数组</span></span><br><span class="line">        <span class="keyword">int</span>[] result = <span class="keyword">new</span> <span class="keyword">int</span>[len];</span><br><span class="line">        <span class="comment">// 初始化每个小孩至少有一个糖果</span></span><br><span class="line">        Arrays.fill(result, <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// 然后开始遍历，一次从前往后，一次从后往前</span></span><br><span class="line">        <span class="comment">// 两次遍历的过程中第一个都不用管，因为在下一次遍历中会遍历到的</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 从左往右,从第2个小孩开始直到最后一个</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="comment">// 如果当前小孩评分比他右边的小孩高，他分到的糖果数</span></span><br><span class="line">            <span class="comment">// 就比他右边的小孩多1个</span></span><br><span class="line">            <span class="keyword">if</span>(ratings[i] &gt; ratings[i - <span class="number">1</span>]) &#123;</span><br><span class="line">                result[i] = result[i - <span class="number">1</span>] + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 从右往左，从倒数第二个小孩开始直到第一个</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = len - <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="comment">// 如果当前小孩评分比他左边小孩低，他左边小孩分到的</span></span><br><span class="line">            <span class="comment">// 糖果数是其本身存储的值和当前右边小孩糖果数+1的最大值</span></span><br><span class="line">            <span class="keyword">if</span>(ratings[i] &gt; ratings[i+<span class="number">1</span>]) &#123;</span><br><span class="line">                result[i] = Math.max(result[i], result[i + <span class="number">1</span>] + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> temp : result) sum += temp;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="剑指offer-面试题03-数组中重复的数字-Easy"><a href="#剑指offer-面试题03-数组中重复的数字-Easy" class="headerlink" title="剑指offer 面试题03 数组中重复的数字(Easy)"></a><a href="https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof/" target="_blank" rel="noopener">剑指offer 面试题03 数组中重复的数字(Easy)</a></h2><p>找出数组中重复的数字。</p>
 <p>在一个长度为 n 的数组 nums 里的所有数字都在 0～n-1 的范围内。数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字。</p>
@@ -6632,6 +6891,54 @@ Double d = Double.parseDouble( s );
 <li>基数排序(Radix Sort)</li>
 </ul>
 <p>按照低位先排序，然后收集；再按照高位排序，然后再收集；依次类推，直到最高位。有时候有些属性是有优先级顺序的，先按低优先级排序，再按高优先级排序。<font color=#FF0000>先按照个位进行排序，也就是放到0,1,2…9的位置，把低位先排好序。然后再排十位，再按照0-9的值排上去。然后百位，以此类推。这样一来，排序的数组只需要存储0-9的数字，这是比较巧妙的地方。但是基数排序也是有一个短板，就是只能存储整数，不能存储小数的值。<br></font></p>
+<h2 id="215-Kth-Largest-Element-in-an-Array-数组中的第K个最大元素-Mid"><a href="#215-Kth-Largest-Element-in-an-Array-数组中的第K个最大元素-Mid" class="headerlink" title="215. Kth Largest Element in an Array(数组中的第K个最大元素)(Mid)"></a><a href="https://leetcode-cn.com/problems/kth-largest-element-in-an-array/" target="_blank" rel="noopener">215. Kth Largest Element in an Array(数组中的第K个最大元素)(Mid)</a></h2><p>Find the <strong>k</strong>th largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">Input: [<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">4</span>] <span class="keyword">and</span> k = <span class="number">2</span></span><br><span class="line">Output: <span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">Input: [<span class="number">3</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">5</span>,<span class="number">6</span>] <span class="keyword">and</span> k = <span class="number">4</span></span><br><span class="line">Output: <span class="number">4</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong><br>You may assume k is always valid, 1 ≤ k ≤ array’s length.</p>
+<hr>
+<p>解：</p>
+<p>方法一：暴力，直接先排序再找到第k大的元素</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findKthLargest</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//sort后默认从小到大</span></span><br><span class="line">        Arrays.sort(nums);</span><br><span class="line">        <span class="keyword">return</span> nums[nums.length - k];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：O(nlogn)</li>
+<li>空间复杂度：O(1)</li>
+</ul>
+<p>但是这个时间复杂度不能让人满意。</p>
+<p>方法二：用堆来辅助，可以用一个大顶堆，然后poll() k次，就能找到数组中第k大的了</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findKthLargest</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//默认小顶堆</span></span><br><span class="line">        <span class="comment">// PriorityQueue&lt;Integer&gt; heap = new PriorityQueue&lt;Integer&gt;(</span></span><br><span class="line">        <span class="comment">//     (a,b) -&gt;(a - b) //这个其实不用写，因为默认就是小根堆</span></span><br><span class="line">        <span class="comment">// );</span></span><br><span class="line">        PriorityQueue&lt;Integer&gt; heap = <span class="keyword">new</span> PriorityQueue&lt;Integer&gt;(); <span class="comment">//直接一行搞定即可</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            heap.add(num);</span><br><span class="line">            <span class="keyword">if</span>(heap.size() &gt; k) &#123;</span><br><span class="line">                heap.poll();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> heap.poll();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：O(Nlogk)，比直接用排序好一些</li>
+<li>空间复杂度：O(k)，大小为k的堆，用于存储数据</li>
+</ul>
+<p>方法三：<strong>快速选择法</strong>——借助快速排序的思想</p>
+<p>但是，这道题是Mid，Mid如果能用这两个时间复杂度为O(nlogn)的方法能解决，那就不是Mid的难度啦！这里想考察的其实和面试中经常会问到Top K问题中常用的解法之一：基于快排的Partition法，或者叫做<strong>快速选择法</strong>。</p>
+<p>有关Top K问题可以参考这篇文章：<a href="https://mp.weixin.qq.com/s/bMDy8_Kwr1MKpL6-NrSYFQ" target="_blank" rel="noopener">如何在10亿数中找出前1000大的数</a></p>
+<p>首先，我们选择一个枢轴(pivot)，并在线性时间内定义其在排序数组中的位置。这可以通过 <em>划分算法</em> 的帮助来完成。</p>
+<blockquote>
+<p>为了实现划分，沿着数组移动，将每个元素与枢轴进行比较，并将小于枢轴的所有元素移动到枢轴的左侧。</p>
+</blockquote>
+<p>这样，在输出的数组中，枢轴达到其合适位置。所有小于枢轴的元素都在其左侧，所有大于或等于的元素都在其右侧。</p>
+<p>这样，数组就被分成了两部分。如果是快速排序算法，会在这里递归地对两部分进行快速排序，时间复杂度为 O(N logN)。</p>
+<p>而在这里，由于知道要找的第 N - k 小的元素在哪部分中，我们不需要对两部分都做处理，这样就将平均时间复杂度下降到 O(N)。</p>
+<p>最终的算法十分直接了当 :</p>
+<p>随机选择一个枢轴。</p>
+<p>使用划分算法将枢轴放在数组中的合适位置 pos。将小于枢轴的元素移到左边，大于等于枢轴的元素移到右边。</p>
+<p>比较 pos 和 N - k 以决定在哪边继续递归处理。</p>
+<blockquote>
+<p>! 注意，本算法也适用于有重复的数组</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findKthLargest</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> size = nums.length;</span><br><span class="line">        <span class="comment">//Kth number is (N-K)th smallest</span></span><br><span class="line">        <span class="comment">// 就是把题目的第k大变成了第k小，k从1开始，若为第1大，则最后返回的是选择之后最后一个与元素</span></span><br><span class="line">        <span class="comment">//比如有9个元素，则第6大就是选择之后第4小的元素，即(size-k)为选择后的第k小</span></span><br><span class="line">        <span class="keyword">return</span> quickSelect(nums, <span class="number">0</span>, size - <span class="number">1</span>, size - k);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">quickSelect</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> left, <span class="keyword">int</span> right, <span class="keyword">int</span> k_smallest)</span> </span>&#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        / returns the k-th smallest of nums within left...right</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        <span class="comment">//递归结束条件，left和right重合了</span></span><br><span class="line">        <span class="keyword">if</span>(left == right) <span class="comment">//If the list contains only one element,</span></span><br><span class="line">            <span class="keyword">return</span> nums[left]; <span class="comment">//return that element</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//select a random pivot_index</span></span><br><span class="line">        <span class="comment">// 随机产生一个数轴进行快速选择操作</span></span><br><span class="line">        Random random_num = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">int</span> pivot_index = left + random_num.nextInt(right - left);</span><br><span class="line">        </span><br><span class="line">        pivot_index = partition(nums, left, right, pivot_index);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//the pivot is on (N-k)th smallest position</span></span><br><span class="line">        <span class="keyword">if</span>(k_smallest == pivot_index)</span><br><span class="line">            <span class="keyword">return</span> nums[k_smallest];</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(k_smallest &lt; pivot_index)</span><br><span class="line">            <span class="comment">//这里还是用了快排的分治思想</span></span><br><span class="line">            <span class="keyword">return</span> quickSelect(nums, left, pivot_index - <span class="number">1</span>,k_smallest);</span><br><span class="line">        <span class="comment">//go right side</span></span><br><span class="line">        <span class="keyword">return</span> quickSelect(nums,pivot_index + <span class="number">1</span>, right, k_smallest);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] nums,<span class="keyword">int</span> left,<span class="keyword">int</span> right,<span class="keyword">int</span> pivot_index)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> pivot = nums[pivot_index];</span><br><span class="line">        <span class="comment">//1. move pivot to end</span></span><br><span class="line">        swap(nums, pivot_index, right);</span><br><span class="line">        <span class="keyword">int</span> store_index = left;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 2.move all smaller elements to the left</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = left; i &lt;= right; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i] &lt; pivot) &#123;</span><br><span class="line">                swap(nums, store_index, i);</span><br><span class="line">                store_index++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//3.move pivot to its final place</span></span><br><span class="line">        swap(nums, store_index,right);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> store_index;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> temp = nums[a];</span><br><span class="line">        nums[a] = nums[b];</span><br><span class="line">        nums[b] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：平均情况O（N），最坏情况O(N^2)</li>
+<li>空间复杂度：O(1)</li>
+</ul>
 ]]></content>
       <categories>
         <category>Algorithms Note</category>
@@ -6792,7 +7099,7 @@ Double d = Double.parseDouble( s );
 <li>当b=2时，返回3^n*2即可</li>
 </ol>
 <p>代码如下：</p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> <span class="built_in">int</span>egerBreak(<span class="built_in">int</span> n) &#123;</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">3</span>) <span class="keyword">return</span> n<span class="number">-1</span>;</span><br><span class="line">        <span class="built_in">int</span> a = n / <span class="number">3</span>, b = n % <span class="number">3</span>;</span><br><span class="line">        <span class="keyword">if</span>(b == <span class="number">0</span>) <span class="keyword">return</span> (<span class="built_in">int</span>)Math.pow(<span class="number">3</span>,a);</span><br><span class="line">        <span class="keyword">if</span>(b == <span class="number">1</span>) <span class="keyword">return</span> (<span class="built_in">int</span>)Math.pow(<span class="number">3</span>, a<span class="number">-1</span>) * <span class="number">4</span>;</span><br><span class="line">        <span class="keyword">return</span> (<span class="built_in">int</span>)Math.pow(<span class="number">3</span>,a) * <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">integerBreak</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">3</span>) <span class="keyword">return</span> n-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> a = n / <span class="number">3</span>, b = n % <span class="number">3</span>;</span><br><span class="line">        <span class="keyword">if</span>(b == <span class="number">0</span>) <span class="keyword">return</span> (<span class="keyword">int</span>)Math.pow(<span class="number">3</span>,a);</span><br><span class="line">        <span class="keyword">if</span>(b == <span class="number">1</span>) <span class="keyword">return</span> (<span class="keyword">int</span>)Math.pow(<span class="number">3</span>, a-<span class="number">1</span>) * <span class="number">4</span>;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>)Math.pow(<span class="number">3</span>,a) * <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>时间复杂度为O(1)，仅有求整、取余、次方计算操作</li>
@@ -6808,7 +7115,7 @@ Double d = Double.parseDouble( s );
 <p>发现规律：申请一个dp[][][]二维数组，通过找规律和观察，可以发现，如果某个位置的值为1，那么这个位置上的值取决于它的<font color=#FF0000>上面、左上角、左边</font>三个值的最小值加1.</p>
 <p>然后每次都检查当前存储的值是否可以替换掉之前的maxSquare值即可。</p>
 <p>因为最后求的是area，所以直接返回<code>maxSquare*maxSquare</code>即可。</p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> maximalSquare(char[][] matrix) &#123;</span><br><span class="line">        <span class="keyword">if</span>(matrix == <span class="literal">null</span> || matrix.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 注意rows和cols的值，别弄反了</span></span><br><span class="line">        <span class="built_in">int</span> rows = matrix.length, cols = matrix[<span class="number">0</span>].length;</span><br><span class="line">        <span class="comment">// 最大边长</span></span><br><span class="line">        <span class="built_in">int</span> maxSquare = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 申请dp数组，大小比行和列都多1，这样可以防止处理的时候越界</span></span><br><span class="line">        <span class="comment">// 申请的时候多申请1，这道题可以不用考虑边界情况，直接把</span></span><br><span class="line">        <span class="comment">// 原本的数组重新"填"到dp数组里，值是当前能组成的最大Square</span></span><br><span class="line">        <span class="built_in">int</span>[][] dp = new <span class="built_in">int</span>[rows + <span class="number">1</span>][cols + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">1</span>; i &lt;= rows; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">int</span> j = <span class="number">1</span>; j &lt;= cols; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(matrix[i - <span class="number">1</span>][j - <span class="number">1</span>] == <span class="string">'1'</span>) &#123;</span><br><span class="line">                    <span class="comment">// 取当前左、上、左上三个方向的最小值，再加1</span></span><br><span class="line">                    <span class="comment">// Math.min函数一次最多只能有两个参数，要注意</span></span><br><span class="line">                    dp[i][j] = Math.min(dp[i - <span class="number">1</span>][j - <span class="number">1</span>],Math.min(dp[i][j - <span class="number">1</span>],dp[i - <span class="number">1</span>][j])) + <span class="number">1</span>;</span><br><span class="line">                    maxSquare = Math.max(maxSquare, dp[i][j]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxSquare * maxSquare;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maximalSquare</span><span class="params">(<span class="keyword">char</span>[][] matrix)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(matrix == <span class="keyword">null</span> || matrix.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 注意rows和cols的值，别弄反了</span></span><br><span class="line">        <span class="keyword">int</span> rows = matrix.length, cols = matrix[<span class="number">0</span>].length;</span><br><span class="line">        <span class="comment">// 最大边长</span></span><br><span class="line">        <span class="keyword">int</span> maxSquare = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 申请dp数组，大小比行和列都多1，这样可以防止处理的时候越界</span></span><br><span class="line">        <span class="comment">// 申请的时候多申请1，这道题可以不用考虑边界情况，直接把</span></span><br><span class="line">        <span class="comment">// 原本的数组重新"填"到dp数组里，值是当前能组成的最大Square</span></span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[rows + <span class="number">1</span>][cols + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= rows; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= cols; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(matrix[i - <span class="number">1</span>][j - <span class="number">1</span>] == <span class="string">'1'</span>) &#123;</span><br><span class="line">                    <span class="comment">// 取当前左、上、左上三个方向的最小值，再加1</span></span><br><span class="line">                    <span class="comment">// Math.min函数一次最多只能有两个参数，要注意</span></span><br><span class="line">                    dp[i][j] = Math.min(dp[i - <span class="number">1</span>][j - <span class="number">1</span>],Math.min(dp[i][j - <span class="number">1</span>],dp[i - <span class="number">1</span>][j])) + <span class="number">1</span>;</span><br><span class="line">                    maxSquare = Math.max(maxSquare, dp[i][j]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxSquare * maxSquare;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="303-Range-Sum-Query-Immutable-区域和检索-数组不可变-Easy"><a href="#303-Range-Sum-Query-Immutable-区域和检索-数组不可变-Easy" class="headerlink" title="303.Range Sum Query-Immutable(区域和检索-数组不可变)(Easy)"></a><a href="https://leetcode-cn.com/problems/range-sum-query-immutable/" target="_blank" rel="noopener">303.Range Sum Query-Immutable(区域和检索-数组不可变)(Easy)</a></h2><p>Given an integer array <em>nums</em>, find the sum of the elements between indices i and j (<em>i</em> ≤ <em>j</em>), inclusive.</p>
 <p><strong>Example:</strong></p>
@@ -6821,7 +7128,7 @@ Double d = Double.parseDouble( s );
 </ol>
 <hr>
 <p>解：动态规划的思路解决，预先将所有的相加可能的结果计算出来并存储起来，然后调用它来找到即可。注意下标问题。</p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">NumArray</span> &#123;</span><br><span class="line">    <span class="built_in">int</span> sums[];</span><br><span class="line">    <span class="keyword">public</span> NumArray(<span class="built_in">int</span>[] nums) &#123;</span><br><span class="line">        sums = new <span class="built_in">int</span>[nums.length + <span class="number">1</span>];</span><br><span class="line">        sums[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>;i &lt; nums.length; i++) &#123;</span><br><span class="line">            sums[i+<span class="number">1</span>]  = sums[i] + nums[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> sumRange(<span class="built_in">int</span> i, <span class="built_in">int</span> j) &#123;</span><br><span class="line">        <span class="keyword">return</span> sums[j+<span class="number">1</span>] - sums[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your NumArray object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * NumArray obj = new NumArray(nums);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj.sumRange(i,j);</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NumArray</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sums[];</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NumArray</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        sums = <span class="keyword">new</span> <span class="keyword">int</span>[nums.length + <span class="number">1</span>];</span><br><span class="line">        sums[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; nums.length; i++) &#123;</span><br><span class="line">            sums[i+<span class="number">1</span>]  = sums[i] + nums[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">sumRange</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sums[j+<span class="number">1</span>] - sums[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your NumArray object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * NumArray obj = new NumArray(nums);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj.sumRange(i,j);</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
 
 <p>注意，先把所有计算结果保存起来，每次访问的话只需要O(1)，否则每次访问再计算，会导致时间复杂度太高。</p>
 <h2 id="53-Maximum-Subarray-最大子序和"><a href="#53-Maximum-Subarray-最大子序和" class="headerlink" title="53.Maximum Subarray(最大子序和)"></a>53.<a href="https://leetcode-cn.com/problems/maximum-subarray/" target="_blank" rel="noopener">Maximum Subarray(最大子序和)</a></h2><p>Given an integer array <code>nums</code>, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.</p>
@@ -6834,6 +7141,54 @@ Double d = Double.parseDouble( s );
 <p>解：动态规划，定义数组dp[n.length]，其中dp[i]表示当前第i个元素可以得到的最大和，递推公式关键在于dp[i]为nums[i]与dp[i]+nums[i]之间的最大值，因为每次两种选择，直接加入nums[i]，或者从之前dp[i]和都小于0，需要重新从nums[i]开始算起。而在过程中需要记录当前能得到的最大的子序和max，最后返回max即可。</p>
 <p>为什么要有一个max记录最大值？状态都放在dp[i]不就行了？——不可以，答案很可能是子序和，所以要有一个单独的变量保存结果。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len = nums.length;</span><br><span class="line">        <span class="comment">// dp[i]表示第i位置到上一个计算起点的最大子序和的值</span></span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[len];</span><br><span class="line">        <span class="keyword">int</span> result = nums[<span class="number">0</span>];</span><br><span class="line">        dp[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="comment">// 比较巧妙，如果dp[i-1]&lt;0，那么肯定丢弃dp[i-1]能让dp[i]更大</span></span><br><span class="line">            <span class="comment">// 反之同理，如果dp[i-1] &gt; 0，那么加上dp[i-1]能让dp[i]更大</span></span><br><span class="line">            dp[i] = nums[i] + (dp[i-<span class="number">1</span>] &gt; <span class="number">0</span> ? dp[i-<span class="number">1</span>] : <span class="number">0</span>);</span><br><span class="line">            result = Math.max(dp[i], result);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>300.<a href="https://leetcode-cn.com/problems/longest-increasing-subsequence/" target="_blank" rel="noopener">Longest Increasing Subsequence(最长上升子序列)</a></p>
+<p>Given an unsorted array of integers, find the length of longest increasing subsequence.</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">Input: [<span class="number">10</span>,<span class="number">9</span>,<span class="number">2</span>,<span class="number">5</span>,<span class="number">3</span>,<span class="number">7</span>,<span class="number">101</span>,<span class="number">18</span>]</span><br><span class="line">Output: <span class="number">4</span> </span><br><span class="line">Explanation: The longest increasing subsequence <span class="keyword">is</span> [<span class="number">2</span>,<span class="number">3</span>,<span class="number">7</span>,<span class="number">101</span>], therefore the length <span class="keyword">is</span> <span class="number">4.</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong></p>
+<ul>
+<li>There may be more than one LIS combination, it is only necessary for you to return the length.</li>
+<li>Your algorithm should run in O(n^ 2) complexity.</li>
+</ul>
+<p><strong>Follow up:</strong> Could you improve it to O(<em>n</em> log <em>n</em>) time complexity?</p>
+<hr>
+<p>解：这道题非常重要，如果面试中出现了，现场想基本是想不到的。</p>
+<p>方法一：暴力，时间是指数级别O(2^n)，因为要以每个数为中心，然后右边只要碰到比它大的就要继续往后探索。比如当前为2，碰到5要继续让5往后分叉，到7,7还要继续往后，等等。</p>
+<p><strong>方法二</strong>：动态规划，记录dp[i]的结果，自底向上思考，定义dp[i]为以当前第i位数字为结尾能够组成的LIS，则最后返回的结果是<code>max(k=1,2...n)dp[k]</code>。</p>
+<p>一开始我们把dp数组所有元素填上1，因为每个元素一定能用自己组成一个结果。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lengthOfLIS</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// base case</span></span><br><span class="line">        <span class="keyword">if</span>(nums.length &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> nums.length;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[nums.length];</span><br><span class="line">        Arrays.fill(dp,<span class="number">1</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> result = <span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; i ;j++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[i] &gt; nums[j]) &#123;</span><br><span class="line">                    <span class="comment">//dp[i]每次的选择有两个：用dp[j]或者不用。</span></span><br><span class="line">                    <span class="comment">//如果用dp[j]里面的值，则在dp[j]基础上加1</span></span><br><span class="line">                    <span class="comment">//如果不用，说明用nums[i]组成的子序列更长，直接用dp[i]即可</span></span><br><span class="line">                    dp[i] = Math.max(dp[i], dp[j]+<span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//每次以i为轴，记录每轮最大的结果，保存到result中</span></span><br><span class="line">                result = Math.max(result,dp[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>时间复杂度：O(n^2)</p>
+<p>空间复杂度：O(n)</p>
+<p>但是实际上，单纯用动态规划的时间复杂度太高了，面试的时候面试官不会满意的。</p>
+<p><strong>方法三</strong>：最优解，用binary search，二分查找来解决，时间复杂度可以到O(NlogN)</p>
+<p>之前用dp的时候是自底向上的思路，那么如果我们正向来思考呢？</p>
+<p>我们从左往右遍历，自己构建出来这个目标结果数组。每遍历到一个数，我们就判断这个数应该在我们最长上升子序列的哪个部分，然后更新这个部分。每次构造的数字实际上只能有三种情况：<strong>放到结果数组的第一位、插入到第中间、放到最后</strong>——只有放在最后，长度才+1。而如果放在中间，则只有新来的数比之前中间的小，才能让整体上升序列更长。</p>
+<p>所以总结来说，可以观察到，<strong>如果出现新的最大值，整个数组长度会+1，如果遇到新的最大值比当前最大值小，那么就会更新dp的最大值因为后面出现的最大值一定可以被加到之前的连续上升subsequence当中，因为最后一个元素能更小的话这个边界肯定是最优的</strong>。所以这样我们最后得到的dp数据可能不对，但是长度肯定没错。</p>
+<p><strong>具体解法</strong>：</p>
+<p>首先我们可以用Java的Arrays类中的binarySearch()方法进行二分搜索。该方法返回要搜索元素的索引值。</p>
+<p>介绍一下binarySearch()方法：</p>
+<p><code>binarySearch(Object[] a,int fromIndex, int toIndex, Object key)</code></p>
+<p>a:要搜索的数组</p>
+<p>fromIndex：指定范围的开始处索引(包含)</p>
+<p>toIndex：指定范围的结束处索引(不包含)</p>
+<p>key：要搜索的值</p>
+<p>Note:Arrays.binarySearch() method returns index of the search key, if it is contained in the array, else it returns (-(insertion point) - 1). The insertion point is the point at which the key would be inserted into the array; the index of the first element greater than the key, or a.length if all elements in the array are less than the specified key.</p>
+<p>如果要搜索的元素key在指定的范围内，则返回搜索值的索引；否则返回<strong>-1</strong>或<strong>“-“(插入点)</strong>，所谓插入点的值就是第一个比关键字大的元素在数组中的位置索引，<font color=#FF0000>而且这个位置索引从1开始</font>，或者如果整个数组所有元素都比这个key小，那么返回的是-(a.length+1)。返回-1的情况是一开始查找的数组中也没有元素(即数组长度为0)的边界情况。</p>
+<p><a href="https://www.cnblogs.com/qingergege/p/5658292.html" target="_blank" rel="noopener">有关binarySearch()的介绍可以参考这篇文章</a></p>
+<p><a href="https://www.youtube.com/watch?v=nNPy623huVU" target="_blank" rel="noopener">这道题解法讲解可以参考这个视频</a></p>
+<p>注意这个函数是被重载的，在这里只介绍这种参数形式。</p>
+<p>用binarySearch()优化之后的dp方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lengthOfLIS</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;            </span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[nums.length];</span><br><span class="line">        <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            <span class="comment">//范围是0~len，每次查找的元素是x</span></span><br><span class="line">            <span class="keyword">int</span> index = Arrays.binarySearch(dp, <span class="number">0</span>, len, num);</span><br><span class="line">            <span class="keyword">if</span>(index &lt; <span class="number">0</span>) &#123; <span class="comment">//没有重复元素。之后会直接返回插入点，若没找到，</span></span><br><span class="line">                <span class="comment">//插入点是从1开始最后又加上负号的值，所以i要先加1再取负才是新元素应该在</span></span><br><span class="line">                <span class="comment">//dp数组中的具体位置</span></span><br><span class="line">                index = -(index + <span class="number">1</span>);<span class="comment">//一开始插入的时候，实际坐标其实是-(-1+1)=0</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 找到插入点后将元素x插入递增数组dp对应位置</span></span><br><span class="line">            dp[index] = num;</span><br><span class="line">            <span class="keyword">if</span>(index == len) <span class="comment">//若插入的位置在最后，len++，这也是唯一会让len增加的情况</span></span><br><span class="line">                len++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> len;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：O(NlogN)</li>
+<li>空间复杂度：O(n)</li>
+</ul>
+<p>但是如果面试中面试官不允许使用Arrays.binarySearch，则可以我们自己手写一个二分查找的代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lengthOfLIS</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] tails = <span class="keyword">new</span> <span class="keyword">int</span>[nums.length];</span><br><span class="line">        <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            <span class="keyword">int</span> left = <span class="number">0</span>, right = len;</span><br><span class="line">            <span class="comment">//手写二分查找算法，找到插入的位置left</span></span><br><span class="line">            <span class="keyword">while</span>(left != right) &#123;</span><br><span class="line">                <span class="keyword">int</span> mid = (left + right) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">if</span>(tails[mid] &lt; num)</span><br><span class="line">                    left = mid + <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">else</span> </span><br><span class="line">                    right = mid;</span><br><span class="line">            &#125;</span><br><span class="line">            tails[left] = num;</span><br><span class="line">            <span class="keyword">if</span>(left == len) </span><br><span class="line">                len++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> len;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -8360,7 +8715,7 @@ Double d = Double.parseDouble( s );
 <p><a href="https://leetcode-cn.com/problems/merge-two-sorted-lists/solution/hua-jie-suan-fa-21-he-bing-liang-ge-you-xu-lian-bi/" target="_blank" rel="noopener">可以画图分析，具体分析可以参考这篇题解</a></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * public class ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) &#123; val = x; &#125;</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 使用recursion，代码虽然简洁，但是可能导致Stack OverFlow</span></span><br><span class="line">        <span class="keyword">if</span>(l1 == <span class="keyword">null</span>) <span class="keyword">return</span> l2;</span><br><span class="line">        <span class="keyword">if</span>(l2 == <span class="keyword">null</span>) <span class="keyword">return</span> l1;</span><br><span class="line">        <span class="keyword">if</span>(l1.val &lt; l2.val) &#123;</span><br><span class="line">            l1.next = mergeTwoLists(l1.next,l2);</span><br><span class="line">            <span class="keyword">return</span> l1;</span><br><span class="line">        &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">            l2.next = mergeTwoLists(l1,l2.next);</span><br><span class="line">            <span class="keyword">return</span> l2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id=""><a href="#" class="headerlink" title="["></a>[</h2><h2 id="88-Merge-Sorted-Array-合并两个有序数组-Easy-https-leetcode-cn-com-problems-merge-sorted-array"><a href="#88-Merge-Sorted-Array-合并两个有序数组-Easy-https-leetcode-cn-com-problems-merge-sorted-array" class="headerlink" title="88. Merge Sorted Array(合并两个有序数组)(Easy)](https://leetcode-cn.com/problems/merge-sorted-array/)"></a>88. Merge Sorted Array(合并两个有序数组)(Easy)](<a href="https://leetcode-cn.com/problems/merge-sorted-array/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/merge-sorted-array/</a>)</h2><p>Given two sorted integer arrays <em>nums1</em> and <em>nums2</em>, merge <em>nums2</em> into <em>nums1</em> as one sorted array.</p>
+<h2 id="88-Merge-Sorted-Array-合并两个有序数组-Easy-https-leetcode-cn-com-problems-merge-sorted-array"><a href="#88-Merge-Sorted-Array-合并两个有序数组-Easy-https-leetcode-cn-com-problems-merge-sorted-array" class="headerlink" title="88. Merge Sorted Array(合并两个有序数组)(Easy)](https://leetcode-cn.com/problems/merge-sorted-array/)"></a>88. Merge Sorted Array(合并两个有序数组)(Easy)](<a href="https://leetcode-cn.com/problems/merge-sorted-array/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/merge-sorted-array/</a>)</h2><p>Given two sorted integer arrays <em>nums1</em> and <em>nums2</em>, merge <em>nums2</em> into <em>nums1</em> as one sorted array.</p>
 <p><strong>Note:</strong></p>
 <ul>
 <li><p>The number of elements initialized in <em>nums1</em> and <em>nums2</em> are m and n respectively.</p>
