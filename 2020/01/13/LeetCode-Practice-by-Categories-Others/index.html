@@ -59,7 +59,7 @@
 <meta property="og:image" content="https://pic.leetcode-cn.com/815038bb44b7f15f1f32f31d40e75c250cec3c5c42b95175ec012c00a0243833-146-1.png">
 <meta property="og:image" content="https://pic.leetcode-cn.com/48292c190e50537087ea8c60ed44062675d55a73d1a59035d26e277a36b7b8e2-146-2.png">
 <meta property="article:published_time" content="2020-01-13T04:51:23.000Z">
-<meta property="article:modified_time" content="2020-04-17T02:30:17.787Z">
+<meta property="article:modified_time" content="2020-04-17T02:39:38.426Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -223,7 +223,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-17 10:30:17" itemprop="dateModified" datetime="2020-04-17T10:30:17+08:00">2020-04-17</time>
+                <time title="Modified: 2020-04-17 10:39:38" itemprop="dateModified" datetime="2020-04-17T10:39:38+08:00">2020-04-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -473,12 +473,12 @@
 <p>方法二：也是用两个指针，但是一快一慢。快的在前，找到奇数就和慢指针指向的元素交换。</p>
 <p>操作流程：</p>
 <ul>
-<li>定义快慢双指针 fastfast 和 lowlow ，fastfast 在前， lowlow 在后 .</li>
-<li>fastfast 的作用是向前搜索奇数位置，lowlow 的作用是指向下一个奇数应当存放的位置</li>
-<li>fastfast 向前移动，当它搜索到奇数时，将它和 nums[low]nums[low] 交换，此时 lowlow 向前移动一个位置 .</li>
-<li>重复上述操作，直到 fastfast 指向数组末尾 .</li>
+<li>定义快慢双指针 fast 和 low ，fast 在前， low 在后 .</li>
+<li>fast 的作用是向前搜索奇数位置，low 的作用是指向下一个奇数应当存放的位置</li>
+<li>fast 向前移动，当它搜索到奇数时，将它和 nums[low] 交换，此时 low 向前移动一个位置 .</li>
+<li>重复上述操作，直到 fast 指向数组末尾 .</li>
 </ul>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="symbol">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span>[] exchange(<span class="built_in">int</span>[] nums) &#123;</span><br><span class="line">        <span class="keyword">if</span>(nums == <span class="literal">null</span> || nums.length == <span class="number">0</span>) <span class="keyword">return</span> nums;</span><br><span class="line">        <span class="built_in">int</span> slow = <span class="number">0</span>, fast = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(fast &lt; nums.length) &#123;</span><br><span class="line">            <span class="keyword">if</span>((nums[fast] &amp; <span class="number">1</span>) != <span class="number">0</span>) &#123;</span><br><span class="line">                swap(nums, slow, fast);</span><br><span class="line">                slow++;</span><br><span class="line">            &#125;</span><br><span class="line">            fast++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> nums;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">void</span> swap(<span class="built_in">int</span>[] arr, <span class="built_in">int</span> i, <span class="built_in">int</span> j) &#123;</span><br><span class="line">        <span class="built_in">int</span> temp = arr[i];</span><br><span class="line">        arr[i] = arr[j];</span><br><span class="line">        arr[j] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] exchange(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="keyword">if</span>(nums == <span class="keyword">null</span> || nums.length == <span class="number">0</span>) <span class="keyword">return</span> nums;</span><br><span class="line">        <span class="keyword">int</span> slow = <span class="number">0</span>, fast = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(fast &lt; nums.length) &#123;</span><br><span class="line">            <span class="keyword">if</span>((nums[fast] &amp; <span class="number">1</span>) != <span class="number">0</span>) &#123;</span><br><span class="line">                swap(nums, slow, fast);</span><br><span class="line">                slow++;</span><br><span class="line">            &#125;</span><br><span class="line">            fast++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> nums;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> temp = arr[i];</span><br><span class="line">        arr[i] = arr[j];</span><br><span class="line">        arr[j] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
     </div>
@@ -656,7 +656,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">497k</span>
+    <span title="Symbols count total">502k</span>
 </div>
 
 
@@ -673,7 +673,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共266.2k字</span>
+  <span class="post-count">博客全站共267.8k字</span>
 </div>
 
         

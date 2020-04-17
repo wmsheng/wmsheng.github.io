@@ -57,7 +57,7 @@
 <meta property="og:description" content="合理安排时间，等于节约时间。——培根  LeetCode哈希表、相关题目，其解决思路和具体代码。以及有关java语言哈希表的解析。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-01-13T04:45:26.000Z">
-<meta property="article:modified_time" content="2020-04-17T02:30:15.311Z">
+<meta property="article:modified_time" content="2020-04-17T02:56:37.542Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -220,7 +220,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-17 10:30:15" itemprop="dateModified" datetime="2020-04-17T10:30:15+08:00">2020-04-17</time>
+                <time title="Modified: 2020-04-17 10:56:37" itemprop="dateModified" datetime="2020-04-17T10:56:37+08:00">2020-04-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,7 +248,7 @@
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>3.5k</span>
+              <span>5.9k</span>
             </span>
 
         </div>
@@ -315,6 +315,37 @@
 <li>虽然看起来 <code>map.put(nums[i], i)</code> 这句放在循环体里的前面和后面都可以，但是其实是不能放在前面的，否则如果某个元素的值是target的二分之一，先把它添加进map之后再比较，会直接比较到它自己。换句话说，必须先比较，再put进map。</li>
 </ol>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] twoSum(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span>[] result = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">        Map&lt;Integer, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(map.containsKey(target - nums[i])) &#123;</span><br><span class="line">                result[<span class="number">0</span>] = i;</span><br><span class="line">                result[<span class="number">1</span>] = map.get(target - nums[i]);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 注意这里put不能放在判断前面，必须先比较再放入。否则如果某个元素是target的一半，先添加再比较的话，会比较到它自己。</span></span><br><span class="line">            map.put(nums[i],i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="347-Top-K-Frequent-Elements-前K个高频元素-Mid"><a href="#347-Top-K-Frequent-Elements-前K个高频元素-Mid" class="headerlink" title="347. Top K Frequent Elements (前K个高频元素)(Mid)"></a><a href="https://leetcode-cn.com/problems/top-k-frequent-elements/" target="_blank" rel="noopener">347. Top K Frequent Elements (前K个高频元素)(Mid)</a></h2><p>Given a non-empty array of integers, return the <strong><em>k\</em></strong> most frequent elements.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: nums = [<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>], k = <span class="number">2</span></span><br><span class="line">Output: [<span class="number">1</span>,<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: nums = [<span class="number">1</span>], k = <span class="number">1</span></span><br><span class="line">Output: [<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong></p>
+<ul>
+<li>You may assume <em>k</em> is always valid, 1 ≤ <em>k</em> ≤ number of unique elements.</li>
+<li>Your algorithm’s time complexity <strong>must be</strong> better than O(<em>n</em> log <em>n</em>), where <em>n</em> is the array’s size.</li>
+</ul>
+<hr>
+<p>解：<a href="https://leetcode-cn.com/problems/top-k-frequent-elements/solution/leetcode-di-347-hao-wen-ti-qian-k-ge-gao-pin-yuan-/" target="_blank" rel="noopener">具体解法可以参考这篇文章</a></p>
+<p>这里有好用的两种方法，都用到了HashMap。</p>
+<p>方法一**：堆排序</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">topKFrequent</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        List&lt;Integer&gt; result = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span>(nums.length == <span class="number">0</span> || nums == <span class="keyword">null</span> || k == <span class="number">0</span>) <span class="keyword">return</span> result;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 第一个Integer为元素值，第二个为对应的频次</span></span><br><span class="line">        Map&lt;Integer, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> num:nums) &#123;</span><br><span class="line">            <span class="keyword">if</span>(map.containsKey(num))</span><br><span class="line">                map.put(num, map.get(num)+<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                map.put(num, <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 构建小顶堆</span></span><br><span class="line">        PriorityQueue&lt;Integer&gt; heap = <span class="keyword">new</span> PriorityQueue&lt;&gt;(</span><br><span class="line">            (a,b) -&gt; map.get(a)-map.get(b)</span><br><span class="line">        );</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> key : map.keySet()) &#123;</span><br><span class="line">            <span class="comment">// 起步阶段，还没有存满k个元素</span></span><br><span class="line">            <span class="keyword">if</span>(heap.size() &lt; k)</span><br><span class="line">                heap.add(key);</span><br><span class="line">            <span class="comment">// 如果新遍历的元素的频次大于优先队列中频次最小的元素，则要把</span></span><br><span class="line">            <span class="comment">//最小的元素进行替换</span></span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span>(map.get(key) &gt; map.get(heap.peek())) &#123;</span><br><span class="line">                    heap.poll();</span><br><span class="line">                    heap.add(key);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(!heap.isEmpty())</span><br><span class="line">            result.add(heap.poll());</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：O(nlogk)，注意不是O(nlogn)，n是数组长度，首先过一遍数组并且统计，这个操作时间复杂度为O(n)，然后遍历用于存储元素频率的map，如果元素的频率大于最小堆中顶部的元素，则将顶部的元素删除并将该元素加入堆中，这里维护堆的数目是 kk，所以这一系列操作的时间复杂度是 O(nlogk) 的；因此，总的时间复杂度是 O(nlog⁡k)。</li>
+<li>空间复杂度：O(n)，最坏情况下（每个元素都不同），map 需要存储 <em>n</em> 个键值对，优先队列需要存储 k 个元素，因此，空间复杂度是 O(n)。</li>
+</ul>
+<p><strong>方法二</strong>：桶排序</p>
+<p>首先依旧使用哈希表统计频率，统计完成后，创建一个数组，将频率作为数组下标，对于出现频率不同的数字集合，存入对应的数组下标即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//基于桶排序求解「前 K 个高频元素」</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">topKFrequent</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        List&lt;Integer&gt; res = <span class="keyword">new</span> ArrayList();</span><br><span class="line">        <span class="comment">// 使用字典，统计每个元素出现的次数，元素为键，元素出现的次数为值</span></span><br><span class="line">        HashMap&lt;Integer,Integer&gt; map = <span class="keyword">new</span> HashMap();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> num : nums)&#123;</span><br><span class="line">            <span class="keyword">if</span> (map.containsKey(num)) &#123;</span><br><span class="line">               map.put(num, map.get(num) + <span class="number">1</span>);</span><br><span class="line">             &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                map.put(num, <span class="number">1</span>);</span><br><span class="line">             &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//桶排序</span></span><br><span class="line">        <span class="comment">//将频率作为数组下标，对于出现频率不同的数字集合，存入对应的数组下标</span></span><br><span class="line">        List&lt;Integer&gt;[] list = <span class="keyword">new</span> List[nums.length+<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> key : map.keySet())&#123;</span><br><span class="line">            <span class="comment">// 获取出现的次数作为下标</span></span><br><span class="line">            <span class="keyword">int</span> i = map.get(key);</span><br><span class="line">            <span class="keyword">if</span>(list[i] == <span class="keyword">null</span>)&#123;</span><br><span class="line">               list[i] = <span class="keyword">new</span> ArrayList();</span><br><span class="line">            &#125; </span><br><span class="line">            list[i].add(key);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 倒序遍历数组获取出现顺序从大到小的排列</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = list.length - <span class="number">1</span>;i &gt;= <span class="number">0</span> &amp;&amp; res.size() &lt; k;i--)&#123;</span><br><span class="line">            <span class="keyword">if</span>(list[i] == <span class="keyword">null</span>) <span class="keyword">continue</span>;</span><br><span class="line">            res.addAll(list[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>时间复杂度：O(n)，n 表示数组的长度。首先，遍历一遍数组统计元素的频率，这一系列操作的时间复杂度是 O(n)；桶的数量为 n + 1，所以桶排序的时间复杂度为 O(n)O(n)；因此，总的时间复杂度是 O(n)。</li>
+<li>空间复杂度：O(n)</li>
+</ul>
 
     </div>
 
@@ -406,7 +437,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#242-Valid-Anagram-有效的字母异位词-Easy"><span class="nav-text">242. Valid Anagram(有效的字母异位词)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#49-Group-Anagram-字母异位词分组-Mid"><span class="nav-text">49. Group Anagram(字母异位词分组)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Two-Sum-两数之和-Easy"><span class="nav-text">1. Two Sum(两数之和)(Easy)</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#242-Valid-Anagram-有效的字母异位词-Easy"><span class="nav-text">242. Valid Anagram(有效的字母异位词)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#49-Group-Anagram-字母异位词分组-Mid"><span class="nav-text">49. Group Anagram(字母异位词分组)(Mid)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Two-Sum-两数之和-Easy"><span class="nav-text">1. Two Sum(两数之和)(Easy)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#347-Top-K-Frequent-Elements-前K个高频元素-Mid"><span class="nav-text">347. Top K Frequent Elements (前K个高频元素)(Mid)</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -491,7 +522,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">497k</span>
+    <span title="Symbols count total">502k</span>
 </div>
 
 
@@ -508,7 +539,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共266.2k字</span>
+  <span class="post-count">博客全站共267.8k字</span>
 </div>
 
         
