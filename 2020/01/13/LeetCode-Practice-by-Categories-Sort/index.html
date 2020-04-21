@@ -59,7 +59,7 @@
 <meta property="og:image" content="https://s2.ax1x.com/2020/02/13/1O9RkF.png">
 <meta property="og:image" content="https://s2.ax1x.com/2020/02/14/1jSh4g.png">
 <meta property="article:published_time" content="2020-01-13T04:49:17.000Z">
-<meta property="article:modified_time" content="2020-04-17T03:35:04.606Z">
+<meta property="article:modified_time" content="2020-04-18T07:08:39.207Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -223,7 +223,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-17 11:35:04" itemprop="dateModified" datetime="2020-04-17T11:35:04+08:00">2020-04-17</time>
+                <time title="Modified: 2020-04-18 15:08:39" itemprop="dateModified" datetime="2020-04-18T15:08:39+08:00">2020-04-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -376,6 +376,9 @@
 <hr>
 <h3 id="给出一个时间复杂度为O-n-的排序算法？"><a href="#给出一个时间复杂度为O-n-的排序算法？" class="headerlink" title="给出一个时间复杂度为O(n)的排序算法？"></a>给出一个时间复杂度为O(n)的排序算法？</h3><p>理论上是不太合理的，但是如果这么问，那么我们一定要多问问题，问清楚O(n)排序算法的环境和背景。比如要给一个公司的几万名员工按照年龄进行排序，那么，首先，年龄的范围可以定位18-99，这是个有限大小的范围，我们可以申请这么大的数组(但是空间复杂度为O(1)，因为是确定的。)然后遍历一遍所有员工，每次在年龄对应的下标上加1，即可完成按照年龄的排序了。</p>
 <h3 id="为什么要考虑排序算法是否稳定？"><a href="#为什么要考虑排序算法是否稳定？" class="headerlink" title="为什么要考虑排序算法是否稳定？"></a>为什么要考虑排序算法是否稳定？</h3><p>实际上，如果只是考虑简单地对数字进行排序，那么稳定性是毫无意义的。一个例子是在促销活动中，经过降价的产品应该排在没降价产品的前面，因为降价产品本身价格是比没降价产品价格高的，所以这样的排序才有意义。</p>
+<p>再举个例子，一次考试之后，分数不同的同学按照分数进行排序，分数相同的同学，按照上次考试的分数排序。</p>
+<p>再举个例子，一个班的同学，已经按照学号排好序了。现在要按照身高排序。如果是稳定排序排好之后，身高相同的同学，还是按照学号顺序的。</p>
+<p>总之，其实就是<strong>有两个排序关键字的时候，稳定排序可以让第一个关键字排序的结果服务于第二个关键字排序中数值相等的那些数</strong>。</p>
 <h2 id="小总结"><a href="#小总结" class="headerlink" title="小总结"></a>小总结</h2><p>归并 和 快排 具有相似性，但步骤顺序相反。</p>
 <ul>
 <li>归并：线排序左右子数组，然后合并两个有序子数组。</li>
@@ -683,7 +686,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">502k</span>
+    <span title="Symbols count total">522k</span>
 </div>
 
 
@@ -700,7 +703,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共267.8k字</span>
+  <span class="post-count">博客全站共281.9k字</span>
 </div>
 
         

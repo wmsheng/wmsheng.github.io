@@ -1351,6 +1351,11 @@
 <p>404 Note Found：请求资源不存在，eg.输入了错误的URL</p>
 <p>500 Internal Server Error：服务器发生不可预期的错误</p>
 <p>503 Server Unabaliable：服务器当前不能处理客户端的请求，一段时间后可能恢复正常</p>
+<h3 id="什么是HTTP的长连接和短连接？"><a href="#什么是HTTP的长连接和短连接？" class="headerlink" title="什么是HTTP的长连接和短连接？"></a>什么是HTTP的长连接和短连接？</h3><p><strong>短连接(HTTP/1.0中默认使用短连接)</strong>：客户端和服务器每进行一次HTTP操作，就建立一次连接，任务结束就中 断连接。当客户端浏览器访问的某个HTML或其他类型的Web页中包含有其他的Web资源（如JavaScript文件、图像 文件、CSS文件等），每遇到这样一个Web资源，浏览器就会重新建立一个HTTP会话。 </p>
+<p>从<strong>HTTP/1.1起，默认使用长连接，用以保持连接特性</strong>。使用长连接的HTTP协议，会在响应头加入这行代码：</p>
+<p><code>Connection:keep-alive</code></p>
+<p>在使用长连接的情况下，当一个网页打开完成后，客户端和服务器之间用于传输HTTP数据的TCP连接不会关闭，客 户端再次访问这个服务器时，会继续使用这一条已经建立的连接。Keep-Alive不会永久保持连接，它有一个保持时 间，可以在不同的服务器软件（如Apache）中设定这个时间。实现长连接需要客户端和服务端都支持长连接。</p>
+<p>实际上，<strong>HTTP协议的长连接和短连接，实质上是TCP协议的长连接和短连接</strong>。</p>
 <h3 id="一些可能有用的与HTTP有关的协议"><a href="#一些可能有用的与HTTP有关的协议" class="headerlink" title="一些可能有用的与HTTP有关的协议"></a>一些可能有用的与HTTP有关的协议</h3><p>在互联网中，任何协议都不会单独的完成信息交换，HTTP 也一样。虽然 HTTP 属于应用层的协议，但是它仍然需要其他层次协议的配合完成信息的交换，那么在完成一次 HTTP 请求和响应的过程中，需要哪些协议的配合呢？一起来看一下</p>
 <h4 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h4><p>CDN的全称是<code>Content Delivery Network</code>，即<code>内容分发网络</code>，它应用了 HTTP 协议里的缓存和代理技术，代替源站响应客户端的请求。CDN 是构建在现有网络基础之上的网络，它依靠部署在各地的边缘服务器，通过中心平台的负载均衡、内容分发、调度等功能模块，使用户就近获取所需内容，降低网络拥塞，提高用户访问响应速度和命中率。CDN的关键技术主要有<code>内容存储</code>和<code>分发技术</code>。</p>
 <p>打比方说你要去亚马逊上买书，之前你只能通过购物网站购买后从美国发货过海关等重重关卡送到你的家里，现在在中国建立一个亚马逊分基地，你就不用通过美国进行邮寄，从中国就能把书尽快给你送到。</p>
@@ -1490,7 +1495,8 @@
 <p>为什么这样呢？大家可以想一个问题，假如第一次握手可以携带数据的话，如果有人要恶意攻击服务器，那他每次都在第一次握手中的 SYN 报文中放入大量的数据，因为攻击者根本就不理服务器的接收、发送能力是否正常，然后疯狂着重复发 SYN 报文的话，这会让服务器花费很多时间、内存空间来接收这些报文。也就是说，第一次握手可以放数据的话，其中一个简单的原因就是会让服务器更加容易受到攻击了。</p>
 <p>而对于第三次的话，此时客户端已经处于 established 状态，也就是说，对于客户端来说，他已经建立起连接了，并且也已经知道服务器的接收、发送能力是正常的了，所以能携带数据页没啥毛病。</p>
 <p>此外，三次握手还会涉及https加密过程。</p>
-<h5 id="5-第一次握手时可能会出现SYN超时的问题——针对SYN-Flood的防护措施"><a href="#5-第一次握手时可能会出现SYN超时的问题——针对SYN-Flood的防护措施" class="headerlink" title="5.第一次握手时可能会出现SYN超时的问题——针对SYN Flood的防护措施"></a>5.第一次握手时可能会出现SYN超时的问题——针对SYN Flood的防护措施</h5><p>面试回答建连的问题时，可以提到 SYN 洪水攻击发生的原因，就是 Server 端收到 Client 端的 SYN 请求后，发送了 ACK 和 SYN，但是 Client 端不进行回复，导致 Server 端大量的链接处在 SYN_RCVD 状态，进而影响其他正常请求的建连。可以设置 tcp_synack_retries = 0 加快半链接的回收速度，或者调大 tcp_max_syn_backlog 来应对少量的 SYN 洪水攻击。因为是Server端接收到了Client端的SYN包之后的回复的时候出现的问题，所以可以认为是首次握手时候产生的隐患。</p>
+<h5 id="5-第一次握手时可能会出现SYN超时的问题——针对SYN-Flood的防护措施"><a href="#5-第一次握手时可能会出现SYN超时的问题——针对SYN-Flood的防护措施" class="headerlink" title="5.第一次握手时可能会出现SYN超时的问题——针对SYN Flood的防护措施"></a>5.第一次握手时可能会出现SYN超时的问题——针对SYN Flood的防护措施</h5><p><font color=#FF0000>面试回答建连的问题时，可以提到 SYN 洪水攻击发生的原因，就是 Server 端收到 Client 端的 SYN 请求后，发送了 ACK 和 SYN，但是 Client 端不进行回复，导致 Server 端大量的链接处在 SYN_RCVD 状态，进而影响其他正常请求的建连。可以设置 tcp_synack_retries = 0 加快半链接的回收速度，或者调大 tcp_max_syn_backlog 来应对少量的 SYN 洪水攻击。因为是Server端接收到了Client端的SYN包之后的回复的时候出现的问题，所以可以认为是首次握手时候产生的隐患。</font></p>
+<h5 id="6-建立连接后，client出现问题了怎么办？"><a href="#6-建立连接后，client出现问题了怎么办？" class="headerlink" title="6.建立连接后，client出现问题了怎么办？"></a>6.建立连接后，client出现问题了怎么办？</h5><p>——保活机制：1.相对方发送保活探测报文，如果未接收到相应则继续发送。2.尝试次数达到了设定的保活探测次数但是仍未收到响应的话，则中断连接。</p>
 <h3 id="TCP四次挥手"><a href="#TCP四次挥手" class="headerlink" title="TCP四次挥手"></a>TCP四次挥手</h3><p>四次挥手也一样，千万不要对方一个 FIN 报文，我方一个 ACK 报文，再我方一个 FIN 报文，我方一个 ACK 报文。然后结束，最好是说的详细一点，例如想下面这样就差不多了，要把每个阶段的状态记好。</p>
 <p><img src="https://i.loli.net/2020/03/12/P76skMIGWAO3Ntv.jpg" alt="四次挥手过程"></p>
 <p>刚开始双方都处于 establised 状态，客户端先发起关闭请求，则：</p>
@@ -1545,6 +1551,16 @@
 <blockquote>
 <p>CLOSED - 没有任何连接状态；</p>
 </blockquote>
+<h3 id="TCP三次握手和四次挥手的对比总结"><a href="#TCP三次握手和四次挥手的对比总结" class="headerlink" title="TCP三次握手和四次挥手的对比总结"></a>TCP三次握手和四次挥手的对比总结</h3><p>无论是建连还是断连，都是需要在两个方向上进行，只不过建连时，Server 端的 SYN 和 ACK 合并为一次发送，而断链时，<strong>两个方向上数据发送停止的时间可能不同，所以不能合并发送 FIN 和 ACK</strong>。</p>
+<h3 id="TCP要三次握手的原因"><a href="#TCP要三次握手的原因" class="headerlink" title="TCP要三次握手的原因"></a>TCP要三次握手的原因</h3><p>TCP的握手为什么要三次呢？最后一次不要了，改为两次握手，可以么？</p>
+<p>假如现在客户端想向服务端进行握手，它发送了第一个连接的请求报文，但是由于网络信号差或者服务器负载过多，这个请求没有立即到达服务端，而是在某个网络节点中长时间的滞留了，以至于滞留到客户端连接释放以后的某个时间点才到达服务端，那么这就是一个失效的报文，但是服务端接收到这个失效的请求报文后，就误认为客户端又发了一次连接请求，服务端就会想向客户端发出确认的报文，表示同意建立连接。</p>
+<p>假如不采用三次握手，那么只要服务端发出确认，表示新的建立就连接了。但是现在客户端并没有发出建立连接的请求，其实这个请求是失效的请求，一切都是服务端在自相情愿，因此客户端是不会理睬服务端的确认信息，也不会向服务端发送确认的请求，但是服务器却认为新的连接已经建立起来了，并一直等待客户端发来数据，这样的情况下，服务端的很多资源就没白白浪费掉了。</p>
+<p>采用三次握手的办法就是为了防止上述这种情况的发生，比如就在刚才的情况下，客户端不会向服务端发出确认的请求，服务端会因为收不到确认的报文，就知道客户端并没有要建立连接，那么服务端也就不会去建立连接，这就是三次握手的作用。</p>
+<p>NOTE:<font color=#FF0000>用更专业的内容可以说，之前发送过程中滞留的包，是”<strong>已失效的连接请求报文段</strong>“</font></p>
+<h3 id="TCP要四次挥手的原因"><a href="#TCP要四次挥手的原因" class="headerlink" title="TCP要四次挥手的原因"></a>TCP要四次挥手的原因</h3><p>TCP协议是一种面向连接的、可靠的、基于字节流的运输层通信协议。TCP是全双工 模式，这就意味着，在客户端想要断开连接时，客户端向服务端发送<code>FIN</code>报文，只是表示客户端已经没有数据要发送了，但是这个时候客户端还是可以接收来自服务端的数据。</p>
+<p>当服务端接收到<code>FIN</code>报文，并返回<code>ACK</code>报文，表示服务端已经知道了客户端要断开连接，客户端已经没有数据要发送了，但是这个时候服务端可能依然有数据要传输给客户端。</p>
+<p>当服务端的数据传输完之后，服务端会发送<code>FIN</code>报文给客户端，表示服务端也没有数据要传输了，服务端同意关闭连接，之后，客户端收到<code>FIN</code>报文，立即发送给客户端一个<code>ACK</code>报文，确定关闭连接。在之后，客户端和服务端彼此就愉快的断开了这次的<code>TCP</code>连接。</p>
+<p>或许会有疑问，为什么服务端的<code>ACK</code>报文和<code>FIN</code>报文都是分开发送的，但是在三次握手的时候却是<code>ACK</code>报文和<code>SYN</code>报文是一起发送的，因为在三次握手的过程中，当服务端收到客户端的SYN连接请求报文后，可以直接发送<code>SYN</code>+<code>ACK</code>报文。其中<code>ACK</code>报文是用来应答的，<code>SYN</code>报文是用来同步的。但是在关闭连接时，当服务端接收到<code>FIN</code>报文时，很可能并不会立即关闭SOCKET，所以只能先回复一个<code>ACK</code>报文，告诉客户端，你发的<code>FIN</code>报文我收到了，只有等到服务端所有的数据都发送完了，才能发送<code>FIN</code>报文，<strong>因此<code>ACK</code>报文和<code>FIN</code>报文不能一起发送。所以断开连接的时候才需要四次挥手来完成</strong>。</p>
 <h2 id="1-2-cookie和session的区别"><a href="#1-2-cookie和session的区别" class="headerlink" title="1.2 cookie和session的区别"></a>1.2 cookie和session的区别</h2><p>参考<a href="https://www.jianshu.com/p/2f7031a69f43" target="_blank" rel="noopener">这篇文章</a></p>
 <ol>
 <li>存储位置不同</li>
@@ -1671,12 +1687,9 @@
 <p>b.进程使用独立的数据空间，而线程共享进程的数据空间</p>
 <p>更深入一点：</p>
 <ul>
-<li><p>共享内存方面。因为进程间不能共享内存，所以我们会用一些进程间相互交互的方案，比较常见的就是通过TCP/IP的端口来实现。也有其他方案，但是TCP/IP是最通用的，其他方案可能和某个特定操作系统的相关性要更大一些。</p>
-</li>
-<li><p>进程与线程通信方面。进程通信比较难，线程间通信就很简单了，只要两个线程的指针指向同一块内存，它们之间就可以通信。</p>
-</li>
-<li><p>In terms of 开销，进程的开销当然比较大，因为我们要给它分配很多内存，而线程我们只是给它分配一个栈，分配一个PC指针(program counter)就可以了。此外，进程之间切换的开销会大于线程之间切换的开销。</p>
-</li>
+<li>共享内存方面。因为进程间不能共享内存，所以我们会用一些进程间相互交互的方案，比较常见的就是通过TCP/IP的端口来实现。也有其他方案，但是TCP/IP是最通用的，其他方案可能和某个特定操作系统的相关性要更大一些。</li>
+<li>进程与线程通信方面。进程通信比较难，线程间通信就很简单了，只要两个线程的指针指向同一块内存，它们之间就可以通信。</li>
+<li>In terms of 开销，进程的开销当然比较大，因为我们要给它分配很多内存，而线程我们只是给它分配一个栈，分配一个PC指针(program counter)就可以了。此外，进程之间切换的开销会大于线程之间切换的开销。</li>
 </ul>
 <h2 id="进程间通信方式-IPC-Inter-Process-Communication"><a href="#进程间通信方式-IPC-Inter-Process-Communication" class="headerlink" title="进程间通信方式(IPC, Inter Process Communication)"></a>进程间通信方式(IPC, Inter Process Communication)</h2><p>总共七种方法：</p>
 <ol>
@@ -1704,6 +1717,32 @@
 <p>可以在机器上开一个端口，作为一个服务器，让用户连接。这种通信包含了网络上的服务端和服务器的这种结构。</p>
 <p>用浏览器去访问一个网站，这时浏览器的进程和远端服务器的进程要进行通信。</p>
 <p>Socket可以作为不同机器之间进程的通信——通过客户端，服务器的方法。这里面走的一般是TCP的协议或者UDP的协议。</p>
+<h2 id="死锁发生的四个条件和预防方式？"><a href="#死锁发生的四个条件和预防方式？" class="headerlink" title="死锁发生的四个条件和预防方式？"></a>死锁发生的四个条件和预防方式？</h2><p>什么是死锁？——死锁是指两个或两个以上的进程在执行过程中，由于竞争资源或者由于彼此通信而造成的一种进程间相互阻塞的现象，若无外力作用，它们都将无法推进下去。此时称系统处于死锁状态或系统产生了死锁，这些永远在互相等待的进程称为<strong>死锁进程</strong>。</p>
+<h3 id="产生死锁的四个条件"><a href="#产生死锁的四个条件" class="headerlink" title="产生死锁的四个条件"></a>产生死锁的四个条件</h3><ol>
+<li><strong>互斥条件</strong>：一个资源每次只能被一个进程使用，即在一段时间内某 资源仅为一个进程所占有。此时若有其他进程请求该资源，则请求进程只能等待。</li>
+<li><strong>请求与保持条件</strong>：进程已经保持了至少一个资源，但又提出了新的资源请求，而该资源 已被其他进程占有，此时请求进程被阻塞，但对自己已获得的资源保持不放。</li>
+<li><strong>不可剥夺条件</strong>：进程所获得的资源在未使用完毕之前，不能被其他进程强行夺走，即只能 由获得该资源的进程自己来释放（只能是主动释放)。</li>
+<li><strong>循环等待条件</strong>：若干进程间形成首尾相接循环等待资源的关系</li>
+</ol>
+<p>这四个条件是死锁的必要条件，只要系统发生死锁，这些条件必然成立，而只要上述条件之一不满足，就不会发生死锁。</p>
+<h3 id="避免死锁的方法"><a href="#避免死锁的方法" class="headerlink" title="避免死锁的方法"></a>避免死锁的方法</h3><p>系统对进程发出的每一个系统能够满足的资源申请进行动态检查，并根据检查结果决定是否分配资源，如果分配后系统可能发生死锁，则不予分配，否则予以分配，这是一种保证系统不进入死锁状态的动态策略。 如果操作系统能保证所有进程在有限时间内得到需要的全部资源，则系统处于安全状态否则系统是不安全的。</p>
+<h4 id="有序资源分配法"><a href="#有序资源分配法" class="headerlink" title="有序资源分配法"></a>有序资源分配法</h4><p>这种算法资源按某种规则系统中的所有资源统一编号（例如打印机为1、磁带机为2、磁盘为3、等等），申请时必须以上升的次序。系统要求申请进程：</p>
+<p>1、对它所必须使用的而且属于同一类的所有资源，必须一次申请完；</p>
+<p>2、在申请不同类资源时，必须按各类设备的编号依次申请。例如：进程PA，使用资源的顺序是R1，R2； 进程PB，使用资源的顺序是R2，R1；若采用动态分配有可能形成环路条件，造成死锁。</p>
+<p>采用有序资源分配法：R1的编号为1，R2的编号为2；</p>
+<p>PA：申请次序应是：1，2</p>
+<p>PB：申请次序应是：1，2</p>
+<p>这样就破坏了环路条件，避免了死锁的发生</p>
+<h4 id="银行家算法"><a href="#银行家算法" class="headerlink" title="银行家算法"></a>银行家算法</h4><p>避免死锁算法中最有代表性的算法是Dijkstra E.W 于1968年提出的<a href="https://baike.baidu.com/item/银行家算法" target="_blank" rel="noopener">银行家算法</a>：</p>
+<p>　　银行家算法是避免死锁的一种重要方法，防止死锁的机构只能确保上述四个条件之一不出现，则系统就不会发生死锁。通过这个算法可以用来解决生活中的实际问题，如银行贷款等。</p>
+<p>　　程序实现思路银行家算法顾名思义是来源于银行的借贷业务，一定数量的本金要应多个客户的借贷周转，为了防止银行家资金无法周转而倒闭，对每一笔贷款，必须考察其是否能限期归还。在操作系统中研究资源分配策略时也有类似问题，系统中有限的资源要供多个进程使用，必须保证得到的资源的进程能在有限的时间内归还资源，以供其他进程使用资源。如果资源分配不当就会发生进程循环等待资源，严重则导致进程都无法继续执行下去的死锁现象。 </p>
+<p>　　把一个进程需要和已占有资源的情况记录在进程控制中，假定进程控制块PCB其中“状态”有就绪态、等待态和完成态。当进程在处于等待态时，表示系统不能满足该进程当前的资源申请。“资源需求总量”表示进程在整个执行过程中总共要申请的资源量。显然，每个进程的资源需求总量不能超过系统拥有的资源总数， 银行算法进行资源分配可以避免死锁。</p>
+<h2 id="死锁的检测和解除"><a href="#死锁的检测和解除" class="headerlink" title="死锁的检测和解除"></a>死锁的检测和解除</h2><p>检测死锁：这种方法并不须事先采取任何限制性措施，也不必检查系统是否已经进入不安全区，此方法允许系统在运行过程中发生死锁。但可通过系统所设置的检测机构，及时地检测出死锁的发生，并精确地确定与死锁有关的进程和资源。检测方法包括定时检测、效率低时检测、进程等待时检测等。</p>
+<p>解除死锁：采取适当措施，在系统中将已发生的死锁解除。这是与检测死锁相配套的一种措施。当检测到系统中已发生死锁时，须将进程从死锁状态中解除。常用的实施方法是撤销或挂起一些进程，以便回收一些资源，再将这些资源分配给已处于阻塞状态的进程，使之转为就绪状态，以继续运行。死锁的检测和解除措施，有可能使系统获得较好的资源利用率和吞吐量，但在实现上难度也最大。</p>
+<p>解除死锁的具体方法有：</p>
+<h3 id="资源剥夺法"><a href="#资源剥夺法" class="headerlink" title="资源剥夺法"></a>资源剥夺法</h3><p>挂起某些死锁进程，并抢占它的资源，将这些资源分配给其他的死锁进程。但应防止被挂起的进程长时间得不到资源，而处于资源匮乏的状态。</p>
+<h3 id="撤销进程法"><a href="#撤销进程法" class="headerlink" title="撤销进程法"></a>撤销进程法</h3><p>强制撤销部分、甚至全部死锁进程并剥夺这些进程的资源。撤销的原则可以按进程优先级和撤销进程代价的高低进行。</p>
+<h3 id="进程回退法"><a href="#进程回退法" class="headerlink" title="进程回退法"></a>进程回退法</h3><p>让一个或多个进程回退到足以回避死锁的地步，进程回退时自愿释放资源而不是被剥夺。要求系统保持进程的历史信息，设置还原点。</p>
 <h2 id="经典进程调度算法"><a href="#经典进程调度算法" class="headerlink" title="经典进程调度算法"></a>经典进程调度算法</h2><h3 id="1-批处理时代"><a href="#1-批处理时代" class="headerlink" title="1.批处理时代"></a>1.批处理时代</h3><h4 id="1-FCFS-先来先服务"><a href="#1-FCFS-先来先服务" class="headerlink" title="1.FCFS(先来先服务)"></a>1.FCFS(先来先服务)</h4><p>每个进程按进入内存的时间先后排成一队。每当 CPU 上的进程运行完毕或者阻塞，我就会选择队伍最前面的进程，带着他前往 CPU 执行。</p>
 <p>这一算法听起来简单又公平，然而好景不长，我收到了一个短进程的抱怨：”上次我前面排了一个长进程，等了足足 200 秒他才运行完。我只用 1 秒就运行结束了，就因为等他，我多花了这么长时间，太不值得了。”</p>
 <p>我仔细一想， FCFS 算法确实有这个缺陷——短进程的响应时间太长了，用户交互体验会变差。</p>
@@ -1841,7 +1880,20 @@
 </li>
 </ol>
 <p><a href="https://mp.weixin.qq.com/s?__biz=Mzg2NzA4MTkxNQ==&mid=2247485874&idx=1&sn=0edacadb71654e7642832b81d86b6c60&scene=21#wechat_redirect" target="_blank" rel="noopener">也可以参考这篇文章</a></p>
-<h1 id="5-数据库"><a href="#5-数据库" class="headerlink" title="5.数据库"></a>5.数据库</h1><h2 id="一条SQL语句执行得很慢的原因有哪些？"><a href="#一条SQL语句执行得很慢的原因有哪些？" class="headerlink" title="一条SQL语句执行得很慢的原因有哪些？"></a>一条SQL语句执行得很慢的原因有哪些？</h2><p>首先说一下总的答案：</p>
+<h1 id="5-数据库"><a href="#5-数据库" class="headerlink" title="5.数据库"></a>5.数据库</h1><h2 id="数据库各种join语句的区别-left、inner、right"><a href="#数据库各种join语句的区别-left、inner、right" class="headerlink" title="数据库各种join语句的区别(left、inner、right)"></a>数据库各种join语句的区别(left、inner、right)</h2><p><a href="https://www.cnblogs.com/coder-programming/p/10668123.html" target="_blank" rel="noopener">带你了解数据库中JOIN的用法</a></p>
+<p>在mysql数据库中经常会用到”join”，其中比较常用的是<code>left join</code>、<code>right join</code>、<code>inner join</code>。前三者实际上属于<code>outer join</code>，也就是其本质是<code>left outer join</code>、<code>right outer  join</code>，但是其关键字<code>outer</code>可以省略不写。</p>
+<p>内连接用于返回满足连接条件的记录；而外连接则是内连接的扩展，它不仅会满足连接条件的记录，而且还会返回不满足连接条件的记录。</p>
+<p>首先，当我们在进行多表联合查询的时候，会默认进行<strong>笛卡尔积</strong>运算。比如我们现在有两张表，一张Student表有5个项，一张Class表有3个项，则用<code>select * from Student,Class</code>查找的时候，会默认返回15个项（详见链接例子）</p>
+<p>但是这是我们一般不用的方法。</p>
+<ul>
+<li><p><strong>内连接</strong>(inner join)：如用inner join，则返回满足条件的所有记录，默认情况下为内连接(inner join)</p>
+</li>
+<li><p><strong>左外连接</strong>(left join)：左外连接查询，不仅返回满足条件的所有记录，而且还会返回不满足连接条件的连接操作符左边表的其他行。即<font color=#FF0000>用left join查询的结果，左表为主表，右表连接可以为NULL</font>。比如我们在Student表中插入了一个新的学生，他没有ID，但是在查询过程中如果用了left join，就能够查出来他，但是ID对应的会是NULL。比如：<code>slelect stu.StudentName,cl.ClassName from Student stu **left join** Class cl on stu.StudentClassID=cl.ClassID</code>; </p>
+</li>
+<li><p><strong>右外连接</strong>(right join)：右外连接查询不仅返回满足条件的所有记录，而且还会返回不满足连接条件的连接操作符右边的其他行。即<font color=#FF0000>用right join查询的结果，右表为主表，左表连接可以为NULL</font>。还是和上面类似，如果我们在班级Class表中新增班级，但是没有针对这个班级新增学生，则当查询的时候，ClassName会有显示，但是StudentName会是NULL。查询语句样例：<code>select stu.StudentName,cl.ClassName from Student stu right join Class cl on stu.StudentClassID=cl.ClassID;</code></p>
+</li>
+</ul>
+<h2 id="一条SQL语句执行得很慢的原因有哪些？"><a href="#一条SQL语句执行得很慢的原因有哪些？" class="headerlink" title="一条SQL语句执行得很慢的原因有哪些？"></a>一条SQL语句执行得很慢的原因有哪些？</h2><p>首先说一下总的答案：</p>
 <p>一个 SQL 执行的很慢，我们要分两种情况讨论：</p>
 <ol>
 <li>大多数情况下很正常，偶尔很慢，则有如下原因</li>
@@ -1854,15 +1906,77 @@
 <p>(1)、没有用上索引：例如该字段没有索引；由于对字段进行运算、函数操作导致无法用索引。</p>
 <p>(2)、数据库选错了索引(数据库自己预测不使用你的索引能够更快)。主要由于统计失误，导致系统没有走索引，而是走了全表扫描，从而导致某条SQL执行很慢。</p>
 <p>数据库在执行语句之前会做采样，如果采样之后发现走索引不比不走索引快，那么可能不走索引了，那么你定义的索引可能有问题，比如对表的覆盖程度不够。</p>
-<h2 id="什么是数据库的脏读、不可重复读和幻读"><a href="#什么是数据库的脏读、不可重复读和幻读" class="headerlink" title="什么是数据库的脏读、不可重复读和幻读"></a>什么是数据库的脏读、不可重复读和幻读</h2><p>事务的隔离性上，从低到高可能产生的读现象分别是：脏读、不可重复读、幻读。</p>
-<p>脏读指读到了未提交的数据。</p>
-<p>不可重复读指一次事务内的多次相同查询，读取到了不同的结果。</p>
-<p>幻读是不可重复读的特殊场景。一次事务内的多次范围查询得到了不同的结果。</p>
+<h2 id="数据库事务的四大特性是什么？"><a href="#数据库事务的四大特性是什么？" class="headerlink" title="数据库事务的四大特性是什么？"></a>数据库事务的四大特性是什么？</h2><p><a href="https://www.cnblogs.com/lyr2015/p/5780698.html" target="_blank" rel="noopener">可以参考这篇文章</a></p>
+<p><strong>ACID</strong></p>
+<ul>
+<li>Atomicity：<strong>原子性</strong>，一个事务要么全部完成，要么全部失败。通俗的另一种说法是：要么都做，要么都不做。比如银行取钱，我这边还没取完，你就不能操作我的账户。比较相似的是，如果一个用户正在操作他的账户，而且他的账户里面的钱的金额很大，可能出现的情况就是他点确认了，但是数据要处理几秒，那么这段时间这个账户也是不能被操作的。</li>
+</ul>
+<p><strong>原子性的核心是</strong>：利用一个undo日志来记录事务可以回滚的各个数据版本。即当目前执行的事务发生故障时，需要回滚，可以根据undo日志中的记录来知道事务回滚到哪一步停止。这样来保证事务由当下状态回滚到开始执行前的状态。</p>
+<p><font color=#FF0000>不要把原子性和一致性、隔离性混淆。</font>原子性并不能保证看不到数据的中间状态，而一致性和隔离性才可以保障用户看不到数据的中间状态。</p>
+<ul>
+<li>Consistency，<strong>一致性</strong>，就是从<strong>一个状态转变到另一个状态，没有数据的中间状态</strong>。比如用户进行取钱操作，我们建立三个”视点”，在事务变化的过程中可以通过切换视点来读取事务在不同时刻的状态值。比如要解决一致性问题，我们可以用两种思路：将视点上移读取到旧数据、或者将视点下移读取到更新后的数据。总之，保持一致性就是保证不读取中间状态的数据。</li>
+</ul>
+<p>比如，视点1是读取事务开始前的旧数据，视点2代表读取事务结束后的新数据，视点3是读取事务执行中的中间状态的数据。如下图：</p>
+<p><img src="https://i.loli.net/2020/04/18/ZfiVuADToB8StCQ.png" alt="一致性.png"></p>
+<p>在处理一致性问题时，有两种方法：上移视点3到视点1，读取事务开始前的旧数据；下移视点3到视点2，读取更新后的新数据。可见保证一致性就是保证不读取中间状态的数据。</p>
+<ul>
+<li>Isolation，<strong>隔离性</strong>，<font color=#FF0000>隔离性实际上是以提高性能为目的，对一致性地破坏。</font>事务之间是互相独立的。一个事务的执行不能影响其他事务。</li>
+<li>Durability，<strong>持久性</strong>，事务需要是持久的，比如介质受损了，比如断电之后，数据也还能保存。</li>
+</ul>
+<p>其中，Isolation，隔离性，是最关键的一个属性。</p>
+<p>事务隔离级别有四个。事务会先begin transaction，然后开始做。</p>
+<ul>
+<li>Read uncommitted，<strong>读未提交</strong>，<strong>对所有事务只加写锁，不加读锁</strong>。即<strong>只有写写不可以并行</strong>。但是这回导致读事务读到一些中间状态的数据，即脏读。事务的隔离级别非常低，别的事务完成到了一半还没committ的时候，就能够被我读出来。（不能避免脏读）</li>
+<li>Read Committed，<strong>读已提交</strong>，允许读后写并行。读到的任何数据都是提交的数据，避免读到中间的未提交的数据。但是无法避免不可重复读。因为读事务第一次读取数据之后，另一个写事务可能会修改此事务，导致读事务第二次读取数据和第一次所读到的不一样。但是这种场景并不是经常出现，系统的一致性可以接受，因此多数数据库的默认级别是读已提交。(可以避免脏读)</li>
+<li>Repeatable Reads,<strong>可重复度</strong>，利用共享锁和排写锁实现。读读并行，禁止任何写事务并行。这个针对上一个，这种读法始终只能读取到我自己begin transaction时候的值。</li>
+<li>Serializable，<strong>可序列化</strong>，事务隔离级别最高，并发性最差，利用排它锁实现。 针对同一资源，将所有的请求事务进行排序，一个一个顺序执行。最高限度的保证了数据的一致性。两个事务同时发生的时候，一定只会读取到其中一个的结果。</li>
+</ul>
+<h2 id="什么是MVCC？——不可重复读隔离方式的实现之一"><a href="#什么是MVCC？——不可重复读隔离方式的实现之一" class="headerlink" title="什么是MVCC？——不可重复读隔离方式的实现之一"></a>什么是MVCC？——不可重复读隔离方式的实现之一</h2><p><a href="https://www.cnblogs.com/lyr2015/p/5780698.html" target="_blank" rel="noopener">可以参考这篇文章</a></p>
+<p><a href="https://blog.csdn.net/u013007900/article/details/78641913" target="_blank" rel="noopener">更详细的MVCC原理及实现，可以参考这篇文章</a></p>
+<p>MVCC全称是：Multi-Version Concurrency Control,是一种<font color=#FF0000>不利用锁机制实现的隔离级别</font>，主要实现了在保证数据的一致性的前提下<strong>实现读写并行</strong>。</p>
+<p>MVCC原理是给每一个数据的更新都添加一个<strong>版本号</strong>。当写事务正在进行时，此时过来一个读事务，读事务会首先生成一个版本号，即该事务想读取哪一个版本的数据。然后，写事务更新数据，读事务读取之前相应版本的数据，而保证了不出现不可重复读和脏读的情况。</p>
+<p>之前提到，保证数据一致性有两种方式，要么<strong>将读事务读取视点1的数据</strong>，要么<strong>读取视点2的数据</strong>。在mvcc中保证数据一致性的方法选择的是，<font color=#FF0000>读取视点1的数据，即读取的是写事务开始之前的旧版本数据</font>。</p>
+<p>实际上，<font color=#FF0000>MVCC是不可重复读隔离机制的实现方法之一</font>。mysql为了实现线程不阻塞，采用了mvvc机制，使用版本号进行事务的隔离，其采用的方式有点类似java的cas机制，最大好处就是不加锁，但是只有在Innodb的引擎下存在，其实就是实现行锁的一种方式，可以理解为乐观锁实现行锁，对于其他引擎主要是悲观锁实现行锁。</p>
+<h2 id="并发事务执行的时候会有什么问题"><a href="#并发事务执行的时候会有什么问题" class="headerlink" title="并发事务执行的时候会有什么问题"></a>并发事务执行的时候会有什么问题</h2><p>在典型的应用程序中，多个事务并发运行，经常会操作相同的数据来完成各自的任务（多个用户对统一数据进行操 作）。并发虽然是必须的，但可能会导致以下的问题。</p>
+<ul>
+<li><p><strong>更新丢失</strong>（Lost to modify）: 指在一个事务读取一个数据时，另外一个事务也访问了该数据，那么在第一个事 务中修改了这个数据后，第二个事务也修改了这个数据。这样第一个事务内的修改结果就被丢失，因此称为丢失修改。 例如：事务1读取某表中的数据A=20，事务2也读取A=20，事务1修改A=A-1，事务2也修改A=A-1， 终结果A=19，事务1的修改被丢失。 （这个问题mysql所有事务隔离级别在数据库层面上都能避免，因为所有事务最低会在写的时候加锁，读的时候不加锁，但是写的时候加了写锁，就已经能够保证更新丢失这个问题了。）</p>
+</li>
+<li><p><strong>脏读</strong>（Dirty read）: 当一个事务正在访问数据并且对数据进行了修改，而这种修改还没有提交到数据库中，这 时另外一个事务也访问了这个数据，然后使用了这个数据。因为这个数据是还没有提交的数据，那么另外一个 事务读到的这个数据是“脏数据”，依据“脏数据”所做的操作可能是不正确的。 </p>
+</li>
+<li><p><strong>不可重复读</strong>（Unrepeatableread）: 指在一个事务内多次读同一数据。在这个事务还没有结束时，另一个事务 也访问该数据。那么，在第一个事务中的两次读数据之间，由于第二个事务的修改导致第一个事务两次读取的 数据可能不太一样。这就发生了在一个事务内两次读到的数据是不一样的情况，因此称为不可重复读。 </p>
+</li>
+<li><p><strong>幻读</strong>（Phantom read）: 幻读与不可重复读类似。它发生在一个事务（T1）读取了几行数据，接着另一个并发 事务（T2）插入了一些数据时。在随后的查询中，第一个事务（T1）就会发现多了一些原本不存在的记录，就 好像发生了幻觉一样，所以称为幻读</p>
+</li>
+</ul>
+<p><strong>解决方法</strong>：加上事务隔离级别</p>
+<ul>
+<li>更新丢失——Mysql所有事务隔离级别在数据库层面上均可避免。</li>
+<li>脏读——READ-COMMITTED事务隔离级别以上可以避免</li>
+<li>不可重复读——REPEATABLE-READ事务隔离级别以上可以避免</li>
+<li>幻读——SERIALIZABLE事务隔离级别可避免</li>
+</ul>
+<p><strong>不可重复度和幻读区别</strong>：</p>
+<p><strong>不可重复读的重点是修改，幻读的重点在于新增或者删除</strong>。</p>
+<p>例1（同样的条件, 你读取过的数据, 再次读取出来发现值不一样了 ）：事务1中的A先生读取自己的工资为 1000的操 作还没完成，事务2中的B先生就修改了A的工资为2000，导 致A再读自己的工资时工资变为 2000；这就是不可重复 读。</p>
+<p>例2（同样的条件, 第1次和第2次读出来的记录数不一样 ）：假某工资单表中工资大于3000的有4人，事务1读取了所 有工资大于3000的人，共查到4条记录，这时事务2 又插入了一条工资大于3000的记录，事务1再次读取时查到的记 录就变为了5条，这样就导致了幻读。 </p>
 <p>通过在写的时候加锁，可以解决脏读。</p>
 <p>通过在读的时候加锁，可以解决不可重复读。</p>
 <p>通过串行化，可以解决幻读。</p>
 <p>以上这几种解决方案其实是数据库的几种隔离级别。</p>
-<h2 id="什么是最左前缀原则？"><a href="#什么是最左前缀原则？" class="headerlink" title="什么是最左前缀原则？"></a>什么是最左前缀原则？</h2><blockquote>
+<h2 id="讲一下数据库的隔离级别？"><a href="#讲一下数据库的隔离级别？" class="headerlink" title="讲一下数据库的隔离级别？"></a>讲一下数据库的隔离级别？</h2><p>SQL 标准定义了四个隔离级别： </p>
+<ul>
+<li><strong>READ-UNCOMMITTED</strong>(读取未提交)： 低的隔离级别，允许读取尚未提交的数据变更，可能会导致脏读、幻读或不可重复读 </li>
+<li><strong>READ-COMMITTED</strong>(读取已提交): 允许读取并发事务已经提交的数据，可以阻止脏读，但是幻读或不可重复读 仍有可能发生 </li>
+<li><strong>REPEATABLE-READ</strong>（可重复读）: 对同一字段的多次读取结果都是一致的，除非数据是被本身事务自己所修 改，可以阻止脏读和不可重复读，但幻读仍有可能发生。 </li>
+<li><strong>SERIALIZABLE</strong>(可串行化): 高的隔离级别，完全服从ACID的隔离级别。所有的事务依次逐个执行，这样事务 之间就完全不可能产生干扰，也就是说，该级别可以防止脏读、不可重复读以及幻读。</li>
+</ul>
+<p>总结上面这几种情况如下图所示：</p>
+<p><img src="https://s2.ax1x.com/2020/02/23/33EMr9.png" alt="33EMr9.png"></p>
+<p>MySQL InnoDB 存储引擎的默认支持的隔离级别是 <strong>REPEATABLE-READ</strong>（可重读）。我们可以通过 SELECT @@tx_isolation;命令来查看。</p>
+<p>这里需要注意的是：与 SQL 标准不同的地方在于InnoDB 存储引擎在 <strong>REPEATABLE-READ</strong>（可重读）事务隔离级别 下使用的是Next-Key Lock 锁算法，因此可以避免幻读的产生，这与其他数据库系统(如 SQL Server)是不同的。所以 说InnoDB 存储引擎的默认支持的隔离级别是 <strong>REPEATABLE-READ</strong>（可重读） 已经可以完全保证事务的隔离性要 求，即达到了 SQL标准的<strong>SERIALIZABLE</strong>(可串行化)隔离级别。 </p>
+<p>因为隔离级别越低，事务请求的锁越少，所以大部分数据库系统的隔离级别都是<strong>READ-COMMITTED</strong>(读取提交内容):，但是你要知道的是InnoDB 存储引擎默认使用 <strong>REPEATABLE-READ</strong>（可重读）并不会有任何性能损失。</p>
+<p>InnoDB 存储引擎在 <strong>分布式事务</strong> 的情况下一般会用到<strong>SERIALIZABLE</strong>(可串行化)隔离级别。 </p>
+<h2 id="什么是联合索引的最左匹配原则？"><a href="#什么是联合索引的最左匹配原则？" class="headerlink" title="什么是联合索引的最左匹配原则？"></a>什么是联合索引的最左匹配原则？</h2><blockquote>
 <p>以下回答全部是基于MySQL的InnoDB引擎</p>
 </blockquote>
 <p>给出一张表作为例子：</p>
@@ -1873,13 +1987,79 @@
 <p><code>select ID from table where name like &#39;张%&#39;</code></p>
 <p>由于在B+树结构的索引中，索引项是按照索引定义里面出现的字段顺序排序的，索引在查找的时候，可以快速定位到 ID 为 100的张一，然后直接向右遍历所有张开头的人，直到条件不满足为止。</p>
 <p>也就是说，我们找到第一个满足条件的人之后，直接向右遍历就可以了，由于索引是有序的，所有满足条件的人都会聚集在一起。</p>
-<p>而这种定位到最左边，然后向右遍历寻找，就是我们所说的<strong>最左前缀原则</strong>。</p>
+<p>但是，假设我们已经创建了联合索引(a,b,c)，那么系统默认会生成索引：(a)、(a,b)、(a,b,c)。</p>
+<p>当b+树的数据项是复合的数据结构，比如(name,age,sex)的时候，b+数是按照从左到右的顺序来建立搜索树的，比如当(张三,20,F)这样的数据来检索的时候，b+树会优先比较name来确定下一步的所搜方向，如果name相同再依次比较age和sex，最后得到检索的数据；但当(20,F)这样的没有name的数据来的时候，b+树就不知道下一步该查哪个节点，因为建立搜索树的时候name就是第一个比较因子，必须要先根据name来搜索才能知道下一步去哪里查询。比如当(张三,F)这样的数据来检索时，b+树可以用name来指定搜索方向，但下一个字段age的缺失，所以只能把名字等于张三的数据都找到，然后再匹配性别是F的数据了， 这个是非常重要的性质，即索引的<strong>最左匹配特性</strong>。</p>
+<p>而这种定位到最左边，然后向右遍历寻找，就是我们所说的<strong>联合索引最左匹配原则</strong>。</p>
+<h2 id="什么是聚簇索引和非聚簇索引？"><a href="#什么是聚簇索引和非聚簇索引？" class="headerlink" title="什么是聚簇索引和非聚簇索引？"></a>什么是聚簇索引和非聚簇索引？</h2><p>参考这篇文章：<a href="https://my.oschina.net/xiaoyoung/blog/3046779" target="_blank" rel="noopener">浅谈聚簇索引和非聚簇索引的区别</a></p>
+<p>首先区别：</p>
+<ul>
+<li><strong>聚簇索引</strong>：将数据存储与索引放到了一块，找到索引也就找到了数据。(索引结构的叶子节点保存了行数据)</li>
+<li><strong>非聚簇索引</strong>：将数据与索引分开存储，索引结构的叶子节点指向了数据对应的位置</li>
+</ul>
+<h3 id="聚簇索引具有唯一性"><a href="#聚簇索引具有唯一性" class="headerlink" title="聚簇索引具有唯一性"></a>聚簇索引具有唯一性</h3><p>由于聚簇索引是将数据索引结构放到一块，所以一个表仅有一个聚簇索引。</p>
+<h3 id="一个误区：把主键自动设为聚簇索引"><a href="#一个误区：把主键自动设为聚簇索引" class="headerlink" title="一个误区：把主键自动设为聚簇索引"></a>一个误区：把主键自动设为聚簇索引</h3><p><strong>聚簇索引默认是主键</strong>，如果表中没有定义主键，InnoDB 会选择一个<strong>唯一的非空索引</strong>代替。如果没有这样的索引，InnoDB 会<strong>隐式定义一个主键</strong>来作为聚簇索引。InnoDB 只聚集在同一个页面中的记录。包含相邻健值的页面可能相距甚远。</p>
+<p><strong>如果你已经设置了主键为聚簇索引，必须先删除主键，然后添加我们想要的聚簇索引，最后恢复设置主键即可</strong>。</p>
+<p>此时其他索引只能被定义为非聚簇索引。这个是最大的误区。有的主键还是无意义的自动增量字段，那样的话Clustered index对效率的帮助，完全被浪费了。</p>
+<p>刚才说到了，聚簇索引性能最好而且具有唯一性，所以非常珍贵，必须慎重设置。<strong>一般要根据这个表最常用的SQL查询方式来进行选择，某个字段作为聚簇索引，或组合聚簇索引</strong>，这个要看实际情况。</p>
+<p>记住我们的<strong>最终目的</strong>就是<strong>在相同结果集情况下，尽可能减少逻辑IO</strong>。</p>
+<h3 id="InnoDB和MyISAM数据库的聚簇索引"><a href="#InnoDB和MyISAM数据库的聚簇索引" class="headerlink" title="InnoDB和MyISAM数据库的聚簇索引"></a>InnoDB和MyISAM数据库的聚簇索引</h3><p><img src="https://i.loli.net/2020/04/18/zQ8EkeM7bUOLcYF.png" alt="聚簇索引和非聚簇索引例子.png"></p>
+<ol>
+<li>InnoDB使用的是聚簇索引，将<strong>主键组织到一棵B+树</strong>中，而<strong>行数据就储存在叶子节点</strong>上，若使用”where id = 14”这样的条件查找主键，则<strong>按照B+树的检索算法即可查找到对应的叶节点，之后获得行数据</strong>。</li>
+<li>若<strong>对Name列进行条件搜索，则需要两个步骤</strong>：<strong>第一步在辅助索引B+树中检索Name，到达其叶子节点获取对应的主键</strong>。第二步<strong>使用主键在主索引B+树种再执行一次B+树检索操作，最终到达叶子节点即可获取整行数据</strong>。（<strong>重点在于通过其他键需要建立辅助索引</strong>）</li>
+</ol>
+<p>MyISM使用的是非聚簇索引，<strong>非聚簇索引的两棵B+树看上去没什么不同</strong>，节点的结构完全一致只是存储的内容不同而已，主键索引B+树的节点存储了主键，辅助键索引B+树存储了辅助键。表数据存储在独立的地方，这两颗B+树的叶子节点都使用一个地址指向真正的表数据，对于表数据来说，这两个键没有任何差别。由于<strong>索引树是独立的，通过辅助键检索无需访问主键的索引树</strong>。</p>
+<h3 id="聚簇索引的优势"><a href="#聚簇索引的优势" class="headerlink" title="聚簇索引的优势"></a>聚簇索引的优势</h3><p>看上去聚簇索引的效率明显要低于非聚簇索引，因为<strong>每次使用辅助索引检索都要经过两次B+树查找</strong>，这不是多此一举吗？聚簇索引的优势在哪？</p>
+<ol>
+<li>由于<strong>行数据和叶子节点存储在一起，同一页中会有多条行数据，访问同一数据页不同行记录时，已经把页加载到了Buffer中，再次访问的时候，会在内存中完成访问</strong>，不必访问磁盘。这样<strong>主键和行数据是一起被载入内存的，找到叶子节点就可以立刻将行数据返回</strong>了，<strong>如果按照主键Id来组织数据，获得数据更快</strong>。</li>
+<li><strong>辅助索引使用主键作为”指针”而不是使用地址值作为指针的好处</strong>是，<strong>减少了当出现行移动或者数据页分裂时辅助索引的维护工作</strong>，<strong>使用主键值当作指针会让辅助索引占用更多的空间，换来的好处是InnoDB在移动行时无须更新辅助索引中的这个”指针”</strong>。<strong>也就是说行的位置（实现中通过16K的Page来定位）会随着数据库里数据的修改而发生变化（前面的B+树节点分裂以及Page的分裂），使用聚簇索引就可以保证不管这个主键B+树的节点如何变化，辅助索引树都不受影响</strong>。</li>
+<li>聚簇索引适合用在排序的场合，非聚簇索引不适合</li>
+<li>取出一定范围数据的时候，使用用聚簇索引</li>
+<li>二级索引需要两次索引查找，而不是一次才能取到数据，因为存储引擎第一次需要通过二级索引找到索引的叶子节点，从而找到数据的主键，然后在聚簇索引中用主键再次查找索引，再找到数据</li>
+<li>可以把<strong>相关数据保存在一起</strong>。例如实现电子邮箱时，可以根据用户 ID 来聚集数据，这样只需要从磁盘读取少数的数据页就能获取某个用户的全部邮件。如果没有使用聚簇索引，则每封邮件都可能导致一次磁盘 I/O。</li>
+</ol>
+<h3 id="聚簇索引的劣势"><a href="#聚簇索引的劣势" class="headerlink" title="聚簇索引的劣势"></a>聚簇索引的劣势</h3><ol>
+<li><p><strong>维护索引很昂贵，特别是插入新行或者主键被更新导至要分页(page split)的时候</strong>。建议在大量插入新行后，选在负载较低的时间段，通过OPTIMIZE TABLE优化表，因为必须被移动的行数据可能造成碎片。使用独享表空间可以弱化碎片</p>
+</li>
+<li><p>表因为使用UUId（随机ID）作为主键，使数据存储稀疏，这就会出现聚簇索引有可能有比全表扫面更慢，所以建议使用int的auto_increment作为主键。主键的值是顺序的，所以 InnoDB 把每一条记录都存储在上一条记录的后面。当达到页的最大填充因子时（InnoDB 默认的最大填充因子是页大小的 15/16，留出部分空间用于以后修改），下一条记录就会写入新的页中。一旦数据按照这种顺序的方式加载，主键页就会近似于被顺序的记录填满（二级索引页可能是不一样的）</p>
+</li>
+<li><p>如果主键比较大的话，那辅助索引将会变的更大，因为<strong>辅助索引的叶子存储的是主键值；过长的主键值，会导致非叶子节点占用占用更多的物理空间</strong></p>
+</li>
+</ol>
 <h2 id="为什么用-B-树做索引而不用哈希表做索引"><a href="#为什么用-B-树做索引而不用哈希表做索引" class="headerlink" title="为什么用 B+ 树做索引而不用哈希表做索引?"></a>为什么用 B+ 树做索引而不用哈希表做索引?</h2><p>哈希表查找效率是O(1)，二叉树查找效率是O(logn)，那为什么用二叉树不用哈希表呢？</p>
 <p>这和业务场景有关。如果只查询一个元素，确实hash表更快，但是数据库经常要选择多条，这时候由于B+树有序，所有value又都保存在叶子节点(操作比B树方便)，而且所有叶子节点都有链表连接，所以效率更高。</p>
 <p>1、哈希表是把索引字段映射成对应的哈希码然后再存放在对应的位置，这样的话，如果我们要进行模糊查找的话，显然哈希表这种结构是不支持的，只能遍历这个表。而B+树则可以通过最左前缀原则快速找到对应的数据。</p>
 <p>2、如果我们要进行范围查找，例如查找ID为100 ~ 400的人，哈希表同样不支持，只能遍历全表。</p>
 <p>3、索引字段通过哈希映射成哈希码，如果很多字段都刚好映射到相同值的哈希码的话，那么形成的索引结构将会是一条很长的链表，这样的话，查找的时间就会大大增加。</p>
 <p>4、考虑到磁盘操作，磁盘内存有限，很难保证用哈希表可以一口气全读进去，而B+树支持分批处理，同时树的高度比较低，可以提高查重效率。</p>
+<h2 id="数据库中文件查找的过程是怎样的？-B树"><a href="#数据库中文件查找的过程是怎样的？-B树" class="headerlink" title="数据库中文件查找的过程是怎样的？(B树)"></a>数据库中文件查找的过程是怎样的？(B树)</h2><p>B树一般用于文件系统的索引，用于查找文件。</p>
+<p>文件系统选择用B树而不用红黑树或有序数组，为什么呢？</p>
+<p>首先，文件系统和数据库的索引都是存在硬盘上的，并且如果数据量大的话，不一定能一次性加载到内存中。但是比如用B树，每次只要加载节点上的一两个数就可以了。</p>
+<p>所以，数组肯定不能存下，就算红黑树，也要存储大量节点才能找到，所以B树用于文件查找更多。实际上，在内存中，红黑树比B树效率更高。但是如果涉及到磁盘操作，比如读写有限，B树则更优。</p>
+<p>B树结构如下：</p>
+<p>B-树又称作”多路平衡查找树”</p>
+<p><img src="https://s2.ax1x.com/2020/02/19/3VXkEF.png" alt="3VXkEF.png"></p>
+<p>定义：</p>
+<ul>
+<li>根节点至少包括两个孩子</li>
+<li>树中每个结点最多含有m个孩子(m&gt;=2)</li>
+<li>除根节点和叶节点外，其他每个节点至少有ceil(m/2)个孩子(ceil为取上限，举例，1.2和1.5，都是取2)</li>
+<li>所有叶子节点都位于同一层(即叶子节点高度都相同)</li>
+</ul>
+<h2 id="为什么用B-树做索引而不用B树"><a href="#为什么用B-树做索引而不用B树" class="headerlink" title="为什么用B+树做索引而不用B树"></a>为什么用B+树做索引而不用B树</h2><p>首先回顾一下B+树的结构：</p>
+<p><img src="https://s2.ax1x.com/2020/02/19/3Vvr1s.png" alt="3Vvr1s.png"></p>
+<p>B+树实际上是B树的变体，其定义和B树不同的地方为：</p>
+<ul>
+<li>非叶子节点的子树指针与关键字个数相同</li>
+<li>非叶子节点的子树指针P[i]，指向关键字值[K[i],K[i+1])<font color=#FFF0000>(左闭右开，即可以大于等于K[i]，但必须大于K[i+1]  )</font>的子树</li>
+<li>非叶子节点仅用来索引，数据都保存在叶子节点中。<font color=#FFF0000>所有的数据实际都存储在叶子节点上，所以每一次遍历都必须遍历到叶子节点上。</font>这也使得B+树的层级可以更少，树可以更矮。</li>
+<li>所有叶子节点均有一个链指针指向下一个叶子节点。<font color=#FFF0000>搜索的实际是上图中粉色的块的部分。</font>这个链指针主要服务于<strong>范围统计</strong>，定位到了某个叶指针之后，可以快速横向地去做统计。比如要统计索引&gt;10的，找到了第二个Q之后，直接统计后面所有的Q内容即可。</li>
+</ul>
+<p>结论：B+树相比B树更适合用来做存储索引</p>
+<ul>
+<li>B+树的磁盘读写代价更低。B+树内部只存储索引(或者说叶子节点的指针)，如果查询多条的时候，B树需要做局部的中序遍历，可能需要不断在父节点和叶子节点之间来回移动，所以B+树的磁盘读写代价更低。</li>
+<li>B+树查询效率更加稳定。因为所有实质内容都存储在根节点上，所以几乎所有数据的查询的时间都是稳定的：O(n)</li>
+<li>B+树更有利于对数据库的扫描。B+树只需要遍历叶子节点就可以实现全部关键字信息的扫描。比如之前提到的，数据库中频繁使用的范围查询，使用B+树查询能够大大增加效率。</li>
+</ul>
 <h2 id="主键索引和非主键索引有什么区别？"><a href="#主键索引和非主键索引有什么区别？" class="headerlink" title="主键索引和非主键索引有什么区别？"></a>主键索引和非主键索引有什么区别？</h2><p>例如对于下面这个表(其实就是上面的表中增加了一个k字段),且ID是主键。</p>
 <p><img src="https://i.loli.net/2020/03/19/ELdCNXhp75QSmis.png" alt="加了个非主键索引.png"></p>
 <p>主键索引和非主键索引的示意图如下：</p>
@@ -1893,12 +2073,42 @@
 <li><p>如果查询语句是 select * from table where k = 1，即非主键的查询方式，则先搜索k索引树，得到ID=100,再到ID索引树搜索一次，这个过程也被称为回表。</p>
 </li>
 </ol>
-<h2 id="为什么建议使用主键自增的索引？"><a href="#为什么建议使用主键自增的索引？" class="headerlink" title="为什么建议使用主键自增的索引？"></a>为什么建议使用主键自增的索引？</h2><p>对于这颗主键索引的树</p>
+<h2 id="为什么建议使用主键自增的索引？比如自增id"><a href="#为什么建议使用主键自增的索引？比如自增id" class="headerlink" title="为什么建议使用主键自增的索引？比如自增id"></a>为什么建议使用主键自增的索引？比如自增id</h2><p><strong>聚簇索引的数据的物理存放顺序与索引顺序是一致的</strong>，即：<strong>只要索引是相邻的，那么对应的数据一定也是相邻地存放在磁盘上的</strong>。如果主键不是自增id，那么可以想 象，它会干些什么，不断地调整数据的物理地址、分页，当然也有其他一些措施来减少这些操作，但却无法彻底避免。但，如果是自增的，那就简单了，它只需要一 页一页地写，索引结构相对紧凑，磁盘碎片少，效率也高。</p>
+<p>因为<strong>MyISAM的主索引并非聚簇索引，那么他的数据的物理地址必然是凌乱的，拿到这些物理地址，按照合适的算法进行I/O读取，于是开始不停的寻道不停的旋转</strong>。<strong>聚簇索引则只需一次I/O</strong>。（强烈的对比）</p>
+<p>不过，如果<strong>涉及到大数据量的排序、全表扫描、count之类的操作的话，还是MyISAM占优势些，因为索引所占空间小，这些操作是需要在内存中完成的</strong>。</p>
+<p>举个例子，对于这颗主键索引的树</p>
 <p><img src="https://i.loli.net/2020/03/19/4AOKQ8fG3ipCJZz.png" alt="主键的索引树.png"></p>
 <p>如果我们插入 ID = 650 的一行数据，那么直接在最右边插入就可以了</p>
 <p><img src="https://i.loli.net/2020/03/19/KIRLVOkxsPr58gz.png" alt="主键的索引树插入数据.png"></p>
 <p>但是如果插入的是 ID = 350 的一行数据，由于 B+ 树是有序的，那么需要将下面的叶子节点进行移动，腾出位置来插入 ID = 350 的数据，这样就会比较消耗时间，如果刚好 R4 所在的数据页已经满了，需要进行页分裂操作，这样会更加糟糕。</p>
 <p>但是，如果我们的主键是自增的，每次插入的 ID 都会比前面的大，那么我们每次只需要在后面插入就行， 不需要移动位置、分裂等操作，这样可以提高性能。也就是为什么建议使用主键自增的索引。</p>
+<h2 id="什么是共享锁-S-和排它锁-X"><a href="#什么是共享锁-S-和排它锁-X" class="headerlink" title="什么是共享锁(S)和排它锁(X)"></a>什么是共享锁(S)和排它锁(X)</h2><p> 基本的封锁类型有两种:<strong>排它锁</strong>(X锁)和<strong>共享锁</strong>(S锁).</p>
+<p><strong>排它锁</strong>又称为<font color=#FF0000>写锁</font>。若事务T对数据对象A加上X锁，则只允许T读取和修改A，其它任何事务都不能再对A加任何类型的锁，直到T释放A上的锁。这就保证了其它事务在T释放A上的锁之前不能再读取和修改A。 </p>
+<p><strong>共享锁</strong>又称为<font color=#FF0000>读锁</font>。若事务T对数据对象A加上S锁，则其它事务只能再对A加S锁，而不能加X锁，直到T释放A上的S锁。这就保证了其它事务可以读A，但在T释放A上的S锁之前不能对A做任何修改。 </p>
+<p>所谓S锁,是事务T对数据A加上S锁时,其他事务只能再对数据A加S锁,而不能加X锁,直到T释放A上的S锁。</p>
+<p>若事务T对数据对象A加了S锁,则T就可以对A进行读取,但不能进行更新(S锁因此又称为读锁),在T释放A上的S锁以前,其他事务可以再对A加S锁,但不能加X锁,从而可以读取A,但不能更新A.</p>
+<h2 id="什么是数据库的三重加锁协议-三级加锁协议-？"><a href="#什么是数据库的三重加锁协议-三级加锁协议-？" class="headerlink" title="什么是数据库的三重加锁协议(三级加锁协议)？"></a>什么是数据库的三重加锁协议(三级加锁协议)？</h2><ul>
+<li>1 级封锁协议是：<strong>事务T在修改数据R之前必须先对其加X锁，直到事务结束才释放</strong>。事务结束包括正常结束（COMMIT）和非正常结束（ROLLBACK）。 1级封锁协议可防止丢失修改，并保证事务T是可恢复的。在1级封锁协议中，如果仅仅是读数据不对其进行修改，是不需要加锁的，所以它不能保证可重复读和不 读”脏”数据。 </li>
+<li>2级封锁协议是：<strong>1级封锁协议加上事务T在读取数据R之前必须先对其加S锁，读完后即可释放S锁。</strong>2级封锁协议除防止了丢失修改，还可进一步防止读”脏”数据。 </li>
+<li>3级封锁协议是：<strong>1级封锁协议加上事务T在读取数据R之前必须先对其加S锁，直到事务结束才释放</strong>。3级封锁协议除防止了丢失修改和不读’脏’数据外，还进一步防止了不可重复读。</li>
+</ul>
+<p>执行了封锁协议之后，就可以克服数据库操作中的数据不一致所引起的问题。</p>
+<h3 id="三段锁协议的应用"><a href="#三段锁协议的应用" class="headerlink" title="三段锁协议的应用"></a>三段锁协议的应用</h3><ul>
+<li><p><strong>共享锁（S锁）</strong>：共享 (S) 用于不更改或不更新数据的操作（只读操作），如 SELECT 语句。<br>如果事务T对数据A加上共享锁后，则其他事务只能对A再加共享锁，不能加排他锁。获准共享锁的事务只能读数据，不能修改数据。</p>
+</li>
+<li><p><strong>排他锁（X锁）</strong>：用于数据修改操作，例如 INSERT、UPDATE 或 DELETE。确保不会同时同一资源进行多重更新。<br>如果事务T对数据A加上排他锁后，则其他事务不能再对A加任任何类型的封锁。获准排他锁的事务既能读数据，又能修改数据。</p>
+</li>
+</ul>
+<h3 id="具体解释如何用三段锁协议来解决数据不一致的三种情况："><a href="#具体解释如何用三段锁协议来解决数据不一致的三种情况：" class="headerlink" title="具体解释如何用三段锁协议来解决数据不一致的三种情况："></a>具体解释如何用三段锁协议来解决数据不一致的三种情况：</h3><ol>
+<li><p>一级封锁协议解决更新丢失<br><strong>当事务在更新数据的时候给数据加上排他锁</strong><br>原理：加上排他锁之后，其他事务不能对该数据加上任意锁，在当前事务没有释放锁时其他事务不能进行对该数据的读写操作，只有当前事务释放排他锁之后，才能对该数据进行操作</p>
+</li>
+<li><p>二级封锁协议解决读脏数据<br>在一级封锁协议的基础上，当事务在<strong>读取数据的时候加共享锁,读取完成后释放锁</strong><br>原理：加入共享锁之后，不能对该数据加排他锁，即其他事务不能进行修改数据。所以此时读取的数据一定是与数据库一致的</p>
+</li>
+<li><p>三级封锁线协议不可重复读<br>在一级封锁协议的基础上，<strong>当事务在读取数据的时候加共享锁，事务结束后释放</strong><br>原理：加入共享锁之后，不能对该数据加排他锁，即其他事务不能进行修改数据。如果读取完成后就释放，那么其他事务此时可以修改该数据。当延迟到事务结束后释放，其他事务就无法修改该数据了</p>
+</li>
+</ol>
+<p>这三个协议都不能解决幻读，只有串行才能解决幻读。</p>
+<p>事务的封锁级别不是越高就越好，随着封锁粒度的增加会影响执行效率。</p>
 <h2 id="MyISAM与InnoDB的区别"><a href="#MyISAM与InnoDB的区别" class="headerlink" title="MyISAM与InnoDB的区别"></a>MyISAM与InnoDB的区别</h2><h3 id="1-两者对比"><a href="#1-两者对比" class="headerlink" title="1.两者对比"></a>1.两者对比</h3><ol>
 <li><p><strong>count运算上的区别</strong>： 因为MyISAM缓存有表meta-data（行数等），因此在做COUNT(*)时对于一个结构很好 的查询是不需要消耗多少资源的。而对于InnoDB来说，则没有这种缓存 </p>
 </li>
@@ -1909,7 +2119,67 @@
 </ol>
 <h3 id="2-两者总结"><a href="#2-两者总结" class="headerlink" title="2.两者总结"></a>2.两者总结</h3><p>MyISAM更适合读密集的表，而InnoDB更适合写密集的的表。 在数据库做主从分离的情况下，经常选择MyISAM作 为主库的存储引擎。</p>
 <p>一般来说，如果需要事务支持，并且有较高的并发读取频率(MyISAM的表锁的粒度太大，所以当该表写并发量较高 时，要等待的查询就会很多了)，InnoDB是不错的选择。如果你的数据量很大（MyISAM支持压缩特性可以减少磁盘 的空间占用），而且不需要支持事务时，MyISAM是好的选择。 </p>
-<h1 id="6-Java相关"><a href="#6-Java相关" class="headerlink" title="6.Java相关"></a>6.Java相关</h1><h2 id="Java的线程状态有哪些？它是如何工作的？-重要"><a href="#Java的线程状态有哪些？它是如何工作的？-重要" class="headerlink" title="Java的线程状态有哪些？它是如何工作的？(重要**)"></a>Java的线程状态有哪些？它是如何工作的？(重要**)</h2><p>线程(Thread)是并发编程的基础，它是程序执行的最小单元。一个进程可以包含多个线程，多线程可以共享一块内存空间和一组系统资源，因此线程之间的切换更节省资源，也因为如此，线程常被成为轻量级的进程。</p>
+<h1 id="6-Java相关"><a href="#6-Java相关" class="headerlink" title="6.Java相关"></a>6.Java相关</h1><h2 id="Java的重写-overload-和重载-override-？"><a href="#Java的重写-overload-和重载-override-？" class="headerlink" title="Java的重写(overload)和重载(override)？"></a>Java的重写(overload)和重载(override)？</h2><p>重载： 发生在同一个类中，<strong>方法名必须相同</strong>，参数类型不同、个数不同、顺序不同，方法返回值和访问修饰符可以 不同，发生在<strong>编译时</strong>。   </p>
+<p>重写： 发生在父子类中，方法名、参数列表必须相同，返回值范围小于等于父类，抛出的异常范围小于等于父类， 访问修饰符范围大于等于父类；如果父类方法访问修饰符为 private 则子类就不能重写该方法。 </p>
+<h2 id="String和StringBuffer、StringBuilder的区别是什么？String为什么是不可变的？"><a href="#String和StringBuffer、StringBuilder的区别是什么？String为什么是不可变的？" class="headerlink" title="String和StringBuffer、StringBuilder的区别是什么？String为什么是不可变的？"></a>String和StringBuffer、StringBuilder的区别是什么？String为什么是不可变的？</h2><h3 id="String-StringBuffer和StringBuilder的可见性"><a href="#String-StringBuffer和StringBuilder的可见性" class="headerlink" title="String, StringBuffer和StringBuilder的可见性"></a>String, StringBuffer和StringBuilder的可见性</h3><p>实际上String是通过了final关键字修饰的字符数组来保存字符串的，其写法实际上是：<code>private final char value[]</code>，所以String对象是不可变的。但是StringBuilder与StringBuffer都继承自AbstractStringBuilder类，在这个AbstractStringBuilder类中也是使用字符数组保存字符串 <code>char[] value</code> 但是没有用 ﬁnal 关键字修饰，所以这两种对象都是可变的。</p>
+<p>StringBuilder 与 StringBuﬀer 的构造方法都是调用父类构造方法也就是 AbstractStringBuilder 实现的，大家可以自 行查阅源码。</p>
+<p>AbstractStringBuilder.java源码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractStringBuilder</span> <span class="keyword">implements</span> <span class="title">Appendable</span>, <span class="title">CharSequence</span> </span>&#123; </span><br><span class="line">    <span class="keyword">char</span>[] value;</span><br><span class="line">    <span class="keyword">int</span> count;</span><br><span class="line">    AbstractStringBuilder() &#123;&#125;</span><br><span class="line">    AbstractStringBuilder(<span class="keyword">int</span> capacity) &#123;</span><br><span class="line">        value = <span class="keyword">new</span> <span class="keyword">char</span>[capacity];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="String-StringBuffer和StringBuilder的线程安全性"><a href="#String-StringBuffer和StringBuilder的线程安全性" class="headerlink" title="String, StringBuffer和StringBuilder的线程安全性"></a>String, StringBuffer和StringBuilder的线程安全性</h3><p>String 中的对象是不可变的，也就可以理解为常量，线程安全。AbstractStringBuilder 是 StringBuilder 与 StringBuﬀer 的公共父类，定义了一些字符串的基本操作，如 expandCapacity、append、insert、indexOf 等公共 方法。StringBuﬀer 对方法加了同步锁或者对调用的方法加了同步锁，所以是线程安全的。StringBuilder 并没有对 方法进行加同步锁，所以是非线程安全的。 </p>
+<h3 id="String-StringBuffer和StringBuilder的性能"><a href="#String-StringBuffer和StringBuilder的性能" class="headerlink" title="String, StringBuffer和StringBuilder的性能"></a>String, StringBuffer和StringBuilder的性能</h3><p>每次对 String 类型进行改变的时候，都会生成一个新的 String 对象，然后将指针指向新的 String 对象。 StringBuﬀer 每次都会对 StringBuﬀer 对象本身进行操作，而不是生成新的对象并改变对象引用。<strong>相同情况下使用 StirngBuilder 相比使用 StringBuﬀer 仅能获得 10%~15% 左右的性能提升，但却要冒多线程不安全的风险</strong>。</p>
+<h3 id="String-StringBuffer和StringBuilder的使用总结"><a href="#String-StringBuffer和StringBuilder的使用总结" class="headerlink" title="String, StringBuffer和StringBuilder的使用总结"></a>String, StringBuffer和StringBuilder的使用总结</h3><ul>
+<li><p>如果只需要操作少量字符串：用String</p>
+</li>
+<li><p>如果在单线程操作字符串缓冲区下的大量数据：用StringBuilder(<strong>性能提升10%-15%，但线程不安全</strong>)</p>
+</li>
+<li><p>如果多线程操作字符串缓冲区下的大量数据：用StringBuffer(<strong>线程安全</strong>)</p>
+</li>
+</ul>
+<h2 id="与equals"><a href="#与equals" class="headerlink" title="==与equals"></a>==与equals</h2><p>==：它的作用是<strong>判断两个对象的地址是不是相等</strong>。即，判断两个对象是不是同一个对象。(基本数据类型==比较的是 值，引用数据类型==比较的是内存地址)</p>
+<p>equals：它的作用也是<strong>判断两个对象是否相等。但它一般有两种使用情况</strong>： </p>
+<ul>
+<li>情况1：类没有覆盖 equals() 方法。则通过 equals() 比较该类的两个对象时，等价于通过“==”比较这两个对象。</li>
+<li>情况2：类覆盖了 equals() 方法。一般，我们都覆盖 equals() 方法来自定义方法来判断两个对象是否内容相等；若它们的内容相 等，则返回 true (即，认为这两个对象相等)。</li>
+</ul>
+<p>举个例子：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span> <span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		String a = <span class="keyword">new</span> String(<span class="string">"ab"</span>); <span class="comment">// a为一个引用</span></span><br><span class="line">		String b = <span class="keyword">new</span> String(<span class="string">"ab"</span>); <span class="comment">// b为另一个引用，对象的内容一样</span></span><br><span class="line">		String aa = <span class="string">"ab"</span>; <span class="comment">//放在常量池中</span></span><br><span class="line">		String bb = <span class="string">"ab"</span>; <span class="comment">//从常量池中查找</span></span><br><span class="line">		<span class="keyword">if</span>(aa == bb) <span class="comment">// 这里为true</span></span><br><span class="line">			System.out.println(<span class="string">"aa == bb"</span>);</span><br><span class="line">		<span class="keyword">if</span>(a == b) <span class="comment">// 这里为false,非同一对象</span></span><br><span class="line">			System.out.println(<span class="string">"aa == bb"</span>);</span><br><span class="line">		<span class="keyword">if</span>(a.equals(b)) <span class="comment">// 这里为true</span></span><br><span class="line">			System.out.println(<span class="string">"a equals to b"</span>);</span><br><span class="line">		<span class="keyword">if</span>(<span class="number">42</span> == <span class="number">42.0</span>) <span class="comment">// 这里为true</span></span><br><span class="line">			System.out.println(<span class="string">"true"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong></p>
+<ul>
+<li>String 中的 equals 方法是被重写过的，因为 object 的 equals 方法是比较的对象的内存地址，而 String 的 equals 方法比较的是对象的值。 </li>
+<li>当创建 String 类型的对象时，虚拟机会在常量池中查找有没有已经存在的值和要创建的值相同的对象，如果有 就把它赋给当前引用。如果没有就在常量池中重新创建一个 String 对象。</li>
+</ul>
+<h2 id="equals-和hashCode-有什么联系？"><a href="#equals-和hashCode-有什么联系？" class="headerlink" title="equals()和hashCode()有什么联系？"></a>equals()和hashCode()有什么联系？</h2><h3 id="简介hashCode"><a href="#简介hashCode" class="headerlink" title="简介hashCode()"></a>简介hashCode()</h3><p>首先，hashCode()的作用是获取哈希码，也称为散列码；它实际上是返回一个int整数。</p>
+<p>这个哈希码的作用是确定该对象在 哈希表中的索引位置。hashCode() 定义在JDK的Object.java中，这就意味着Java中的任何类都包含有hashCode() 函 数。另外需要注意的是： Object 的 hashcode 方法是本地方法，也就是用 c 语言或 c++ 实现的，<strong>该方法通常用来将对象的 内存地址 转换为整数之后返回</strong>。</p>
+<p>方法为：<code>public native int hashCode()</code></p>
+<p>散列表存储的是键值对(key-value)，它的特点是：能根据“键”快速的检索出对应的“值”。这其中就利用到了散列码！ （可以快速找到所需要的对象） </p>
+<h3 id="为什么要有hashCode"><a href="#为什么要有hashCode" class="headerlink" title="为什么要有hashCode()?"></a>为什么要有hashCode()?</h3><p>我们可以举个例子，以”HashSet如何进行重复检查”为例来说明为什么要有hashCode：</p>
+<p>当你把对象加入HashSet时，HashSet会先计算对象的hashcode值来判断对象加入的位置，同时也会与其他已经加 入的对象的hashcode值作比较，如果没有相符的hashcode，HashSet会假设对象没有重复出现。但是如果发现有相 同hashcode值的对象，这时会调用equals（）方法来检查hashcode相等的对象是否真的相同。如果两者相同， HashSet就不会让其加入操作成功。如果不同的话，就会重新散列到其他位置。（摘自Java启蒙书《Head ﬁst java》第二版）。这样我们就大大减少了equals的次数，相应就大大提高了执行速度。</p>
+<h3 id="hashCode-与equals-的相关规定"><a href="#hashCode-与equals-的相关规定" class="headerlink" title="hashCode()与equals()的相关规定"></a>hashCode()与equals()的相关规定</h3><ol>
+<li>如果两个对象相等，则它们的hashcode一定相等 </li>
+<li>两个对象相等,对两个对象分别调用equals方法都返回true </li>
+<li>两个对象的hashcode值相等，它们不一定相等</li>
+<li><font color=#FF0000>若equals()方法被覆盖过，则hashCode()方法也必须被重写覆盖</font></li>
+<li>hashCode()的默认行为是对堆上的对象产生独特值。如果没有重写hashCode()，则该class的两个对象无论如何 都不会相等（即使这两个对象指向相同的数据）</li>
+</ol>
+<h3 id="为什么两个对象有相同的hashCode值，它们却不一定是相等的？"><a href="#为什么两个对象有相同的hashCode值，它们却不一定是相等的？" class="headerlink" title="为什么两个对象有相同的hashCode值，它们却不一定是相等的？"></a>为什么两个对象有相同的hashCode值，它们却不一定是相等的？</h3><p>下面内容摘自《Head First Java》</p>
+<p>因为hashCode() 所使用的杂凑算法也许刚好会让多个对象传回相同的杂凑值。越糟糕的杂凑算法越容易碰撞，但这 也与数据值域分布的特性有关（所谓碰撞也就是指的是不同的对象得到相同的 hashCode）。</p>
+<p>我们刚刚也提到了 HashSet,如果 HashSet 在对比的时候，同样的 hashcode 有多个对象，它会使用 equals() 来判断 是否真的相同。也就是说 hashcode 只是用来缩小查找成本。 </p>
+<h2 id="简述final、finally和finalize的区别"><a href="#简述final、finally和finalize的区别" class="headerlink" title="简述final、finally和finalize的区别"></a>简述final、finally和finalize的区别</h2><p>final关键字主要用在三个地方：变量、方法、类。详细描述一下的话有三点：</p>
+<ol>
+<li>对于一个ﬁnal变量，如果是基本数据类型的变量，则其数值一旦在初始化之后便不能更改；如果是引用类型的 变量，则在对其初始化之后便不能再让其指向另一个对象。 </li>
+<li>当用ﬁnal修饰一个类时，表明这个类不能被继承。ﬁnal类中的所有成员方法都会被隐式地指定为ﬁnal方法。 </li>
+<li>使用ﬁnal方法的原因有两个。<strong>第一个原因是把方法锁定</strong>，以防任何继承类修改它的含义；<strong>第二个原因是效率</strong>。 在早期的Java实现版本中，会将ﬁnal方法转为内嵌调用。但是如果方法过于庞大，可能看不到内嵌调用带来的 任何性能提升（现在的Java版本已经不需要使用ﬁnal方法进行这些优化了）。类中所有的private方法都隐式地 指定为ﬁanl。 </li>
+</ol>
+<p>finally用于try-catch代码块中，无论是否发生异常最后都将执行，作用是释放资源。</p>
+<p>finalize是Object类的方法，在对象垃圾回收之前将调用一次，一般用于资源的释放。</p>
+<h2 id="Java的Object类中有哪些常见方法？分别有什么作用？"><a href="#Java的Object类中有哪些常见方法？分别有什么作用？" class="headerlink" title="Java的Object类中有哪些常见方法？分别有什么作用？"></a>Java的Object类中有哪些常见方法？分别有什么作用？</h2><p>Object类是一个特殊的类，其是所有类的父类。在类加载的双亲委派机制下，如果程序员自己定义重写了一个Object中的方法，JVM会加载Object中的类而不是加载程序员自己写的，这防止了核心API被篡改。</p>
+<p>具体来说Object类有11个方法：getClass()、hasCode()、equals(Object obj)、clone()、toString()、notify()、notifyAll、wait(long timeout)、wait(long timeout, int nanos)、wait()、finalize()</p>
+<p>具体内容如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> Class&lt;?&gt; getClass()<span class="comment">//native方法，用于返回当前运行时对象的Class对象，使用了 final关键字修饰，故不允许子类重写。</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> <span class="comment">//native方法，用于返回对象的哈希码，主要使用在哈希表中，比如JDK中的 HashMap。 </span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span><span class="comment">//用于比较2个对象的内存地址是否相等，String类对该方法进行了重写用户 比较字符串的值是否相等。</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">native</span> Object <span class="title">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException<span class="comment">//naitive方法，用于创建并返回 当前对象的一份拷贝。一般情况下，对于任何对象 x，表达式 x.clone() != x 为true，x.clone().getClass() == x.getClass() 为true。Object本身没有实现Cloneable接口，所以不重写clone方法并且进行调用的话会发生 CloneNotSupportedException异常。</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span><span class="comment">//返回类的名字@实例的哈希码的16进制的字符串。建议Object所有的子类都重写这个方 法。</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notify</span><span class="params">()</span><span class="comment">//native方法，并且不能重写。唤醒一个在此对象监视器上等待的线程(监视 器相当于就是锁的概念)。如果有多个线程在等待只会任意唤醒一个。</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notifyAll</span><span class="params">()</span><span class="comment">//native方法，并且不能重写。跟notify一样，唯一的区别就是会唤醒 在此对象监视器上等待的所有线程，而不是一个线程。</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">(<span class="keyword">long</span> timeout)</span> <span class="keyword">throws</span> InterruptedException<span class="comment">//native方法，并且不能 重写。暂停线程的执行。注意：sleep方法没有释放锁，而wait方法释放了锁 。timeout是等待时间。</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">(<span class="keyword">long</span> timeout, <span class="keyword">int</span> nanos)</span> <span class="keyword">throws</span> InterruptedException<span class="comment">//多了nanos参数， 这个参数表示额外时间（以毫微秒为单位，范围是 0-999999）。 所以超时的时间还需要加上nanos毫秒。</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException<span class="comment">//跟之前的2个wait方法一样，只不过该方法一直等 待，没有超时时间这个概念</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">finalize</span><span class="params">()</span> <span class="keyword">throws</span> Throwable </span>&#123; &#125;<span class="comment">//实例被垃圾回收器回收的时候触发的操作</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Java的异常处理"><a href="#Java的异常处理" class="headerlink" title="Java的异常处理"></a>Java的异常处理</h2><h2 id="Java的线程状态有哪些？它是如何工作的？-重要"><a href="#Java的线程状态有哪些？它是如何工作的？-重要" class="headerlink" title="Java的线程状态有哪些？它是如何工作的？(重要**)"></a>Java的线程状态有哪些？它是如何工作的？(重要**)</h2><p>线程(Thread)是并发编程的基础，它是程序执行的最小单元。一个进程可以包含多个线程，多线程可以共享一块内存空间和一组系统资源，因此线程之间的切换更节省资源，也因为如此，线程常被成为轻量级的进程。</p>
 <p>对线程的掌握，可以有效地提高程序整体运行效率。</p>
 <h3 id="Java线程状态在JDK1-5后一共有六个"><a href="#Java线程状态在JDK1-5后一共有六个" class="headerlink" title="Java线程状态在JDK1.5后一共有六个"></a>Java线程状态在JDK1.5后一共有六个</h3><p>Java线程状态在JDK1.5后以枚举的方式定义在Thread的源码中，一共有六个状态</p>
 <ul>
@@ -2142,7 +2412,7 @@
 <h3 id="synchronized和ReentrantLock共同点与区别"><a href="#synchronized和ReentrantLock共同点与区别" class="headerlink" title="synchronized和ReentrantLock共同点与区别"></a>synchronized和ReentrantLock共同点与区别</h3><h4 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h4><p><strong>两者都是可重入锁</strong></p>
 <p>两者都是可重入锁。“可重入锁”概念是：自己可以再次获取自己的内部锁。比如一个线程获得了某个对象的锁，此时 这个对象锁还没有释放，当其再次想要获取这个对象的锁的时候还是可以获取的，如果不可锁重入的话，就会造成死锁。同一个线程每次获取锁，锁的计数器都自增1，所以要等到锁的计数器下降为0时才能释放锁。</p>
 <p><strong>两者都是悲观锁，都属于独占锁的实现</strong></p>
-<p>Lock 只是一个顶层抽象接口，并没有实现，也没有规定是乐观锁还是悲观锁实现规则。而 ReentrantLock 作为 Lock 的一种实现，是<strong>悲观锁</strong>，ReentrantReadWriteLock 的提供了一种乐观锁的实现。</p>
+<p>Lock 只是一个顶层抽象接口，并没有实现，也没有规定是乐观锁还是悲观锁实现规则。而 ReentrantLock 作为 Lock 的一种实现，是<strong>悲观锁</strong>。(注：ReentrantReadWriteLock 的提供了一种乐观锁的实现，但是<strong>这个不太熟的话建议面试别说</strong>)</p>
 <p><a href="https://blog.csdn.net/qq_35688140/article/details/101223701" target="_blank" rel="noopener">参考文章1</a></p>
 <p><a href="https://ask.csdn.net/questions/774015" target="_blank" rel="noopener">参考文章2</a></p>
 <h4 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h4><p>① synchronized 依赖于 JVM 而 ReenTrantLock 依赖于 API</p>
@@ -2290,7 +2560,7 @@
 </ul>
 <p><a href="https://www.cnblogs.com/yuxiang1/p/9183671.html" target="_blank" rel="noopener">有关同步锁和互斥锁可以参考这篇文章</a></p>
 <p><a href="https://www.oschina.net/code/piece_full?code=11175" target="_blank" rel="noopener">有关互斥锁的样例可以参考这篇文章</a></p>
-<h2 id="Java-内存模型详解-JVM-JMM"><a href="#Java-内存模型详解-JVM-JMM" class="headerlink" title="Java 内存模型详解(JVM+JMM)"></a>Java 内存模型详解(JVM+JMM)</h2><p>java内存模型(Java Memory Model，JMM)是java虚拟机规范定义的，用来屏蔽掉java程序在各种不同的硬件和操作系统对内存的访问的差异，这样就可以实现java程序在各种不同的平台上都能达到内存访问的一致性。可以避免像c++等直接使用物理硬件和操作系统的内存模型在不同操作系统和硬件平台下表现不同，比如有些c/c++程序可能在windows平台运行正常，而在linux平台却运行有问题。</p>
+<h2 id="Java-内存模型详解-JVM-JMM-包含类加载器"><a href="#Java-内存模型详解-JVM-JMM-包含类加载器" class="headerlink" title="Java 内存模型详解(JVM+JMM)(包含类加载器)"></a>Java 内存模型详解(JVM+JMM)(包含类加载器)</h2><p>java内存模型(Java Memory Model，JMM)是java虚拟机规范定义的，用来屏蔽掉java程序在各种不同的硬件和操作系统对内存的访问的差异，这样就可以实现java程序在各种不同的平台上都能达到内存访问的一致性。可以避免像c++等直接使用物理硬件和操作系统的内存模型在不同操作系统和硬件平台下表现不同，比如有些c/c++程序可能在windows平台运行正常，而在linux平台却运行有问题。</p>
 <h3 id="1-说一下JVM的内存模型？-由浅入深"><a href="#1-说一下JVM的内存模型？-由浅入深" class="headerlink" title="1.说一下JVM的内存模型？(由浅入深)"></a>1.说一下JVM的内存模型？(由浅入深)</h3><p>先简单回答这个问题，要答出两个要点：一个是各部分的功能，另一个是哪些线程共享，哪些线程独占。</p>
 <p><strong>JVM内存模型主要指<font color=#FF0000>运行时的数据区</font></strong>，包括5个部分。如下图：</p>
 <p><img src="https://i.loli.net/2020/03/16/CcQiorLdHl4w9EK.png" alt="Java内存模型.png"></p>
@@ -2452,12 +2722,20 @@
 <p>启动类加载器会加载<code>JAVA_HOME</code>中lib目录下的类，扩展加载器会负责加载ext目录下的类。而应用加载起会加载classpath指定目录下的类，自定义加载器是最下层的子类加载器，即Custom ClassLoader。</p>
 <h3 id="5-双亲委派机制的加载流程是怎样的，有什么好处？"><a href="#5-双亲委派机制的加载流程是怎样的，有什么好处？" class="headerlink" title="5.双亲委派机制的加载流程是怎样的，有什么好处？"></a>5.双亲委派机制的加载流程是怎样的，有什么好处？</h3><p>双亲委派的加载流程就如下图所示(再展现一次)：</p>
 <p><img src="https://i.loli.net/2020/04/10/zVTRHPiSYKGM56g.png" alt="类加载器_双亲委派机制.png"></p>
+<p>这四个类加载器详解：</p>
+<ul>
+<li>BootStrap ClassLoader：<strong>引导类加载器</strong>。最顶层的类加载器，负责加载JDK中的核心类库，比如rt.jar, resources.jar, charsets.jar等。其位置都在”JAVA_HOME/jre/lib”下</li>
+<li>ExtClassLoader：<strong>扩展类加载器</strong>。主要负责加载Java的扩展类库，默认加载”JAVA_HOME/jre/lib/ext/“目录下的所有jar包或者由java.ext.dirs系统属性指定的jar包。放入这个目录下的jar包对AppClassLoader加载器都是可见的。(因为ExtClassLoader是AppClassLoader的父加载器，并且Java类的类加载器采用双亲委派机制)。</li>
+<li>AppClassLoader：<strong>应用类加载器</strong>，又称为系统类加载器。负责在JVM启动时，加载来自命令中的classpath或者java.class.path系统属性或者CLASSPATH操作系统属性所指定的jar类包和类路径。</li>
+</ul>
 <p>其中在上面的是父类加载器，在下面的是子类加载器。Java在整个类加载过程都是通过双亲委派机制来实现的，即<strong>一个类加载器在加载类时，先把这个请求委托给自己的父类加载器去执行，如果父类加载器还存在父类加载器，就继续向上委托，直到顶层的启动类加载器，如上图中黑色向上的箭头。如果父类加载器能够完成类加载，就成功返回；如果父类加载器无法完成加载，则子类加载器才会尝试自己去加载</strong>，即图中的蓝色向下的箭头。</p>
 <p>双亲委派机制的好处主要是两个：</p>
 <ol>
 <li>避免类的重复加载，节省资源</li>
-<li>避免了Java核心API被篡改</li>
+<li>避免了Java核心API被篡改，因为一个类只会被加载一次。如果用户重写了Object类，那么不能用用户写的。</li>
 </ol>
+<p>一个经常被补充问到的问题：<font color=#FF0000>如何保证双亲委派的类是同一个？</font></p>
+<p>方法是根据<strong>全类名</strong>和<strong>类加载器</strong>是否都一样来判断。</p>
 <h3 id="6-JDK8之后对内存分代做了什么改进？为什么用Metaspace替换掉PermGen-Metaspace保存在哪里？"><a href="#6-JDK8之后对内存分代做了什么改进？为什么用Metaspace替换掉PermGen-Metaspace保存在哪里？" class="headerlink" title="6.JDK8之后对内存分代做了什么改进？为什么用Metaspace替换掉PermGen?Metaspace保存在哪里？"></a>6.JDK8之后对内存分代做了什么改进？为什么用Metaspace替换掉PermGen?Metaspace保存在哪里？</h3><p>JDK8之前，永久代里放了一些<strong>常量池+类信息</strong>。java 8以后进行了<strong>内存分代</strong>的改进，变成了：<strong>常量池放到堆里面，类信息放到了 metaspace（元区域）</strong>。</p>
 <p>实际上，JDK1.8版本中对方法区进行了调整，使用Metaspace替换掉了PermGen的永久代。<strong>Metaspace与PermGen之间最大的区别在于</strong>：<font color=#FF0000>Metaspace并不在虚拟机中，而是使用本地内存</font>。替换的目的主要有两个：</p>
 <ol>
@@ -5619,7 +5897,8 @@ Double d = Double.parseDouble( s );
 <h2 id="13-说一下乐观锁和悲观锁？"><a href="#13-说一下乐观锁和悲观锁？" class="headerlink" title="13.说一下乐观锁和悲观锁？"></a>13.说一下乐观锁和悲观锁？</h2><p>• 乐观锁：每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在提交更新的时候会判断一下在此期间别人有没有去更新这个数据。<br>• 悲观锁：每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会阻止，直到这个锁被释放。</p>
 <p>数据库的乐观锁需要自己实现，在表里面添加一个 version 字段，每次修改成功值加 1，这样每次修改的时候先对比一下，自己拥有的 version 和数据库现在的 version 是否一致，如果不一致就不修改，这样就实现了乐观锁。 </p>
 <h2 id="14-mysql问题排查都有哪些手段？"><a href="#14-mysql问题排查都有哪些手段？" class="headerlink" title="14.mysql问题排查都有哪些手段？"></a>14.mysql问题排查都有哪些手段？</h2><p>• 使用 show processlist 命令查看当前所有连接信息。<br>• 使用 explain 命令查询 SQL 语句执行计划。<br>• 开启慢查询日志，查看慢查询的 SQL。</p>
-<h2 id="15-如何做mysql的性能优化？"><a href="#15-如何做mysql的性能优化？" class="headerlink" title="15.如何做mysql的性能优化？"></a>15.如何做mysql的性能优化？</h2><p>• 为搜索字段创建索引。<br>• 避免使用 select *，列出需要查询的字段。<br>• 垂直分割分表。<br>选择正确的存储引擎。</p>
+<h2 id="15-如何做mysql的性能优化？"><a href="#15-如何做mysql的性能优化？" class="headerlink" title="15.如何做mysql的性能优化？"></a>15.如何做mysql的性能优化？</h2><p>• 为搜索字段创建索引。<br>• 避免使用 select *，列出需要查询的字段。<br>• 垂直分割分表</p>
+<p>选择正确的存储引擎。</p>
 ]]></content>
       <categories>
         <category>Interview Note</category>
@@ -6885,6 +7164,9 @@ Double d = Double.parseDouble( s );
 <hr>
 <h3 id="给出一个时间复杂度为O-n-的排序算法？"><a href="#给出一个时间复杂度为O-n-的排序算法？" class="headerlink" title="给出一个时间复杂度为O(n)的排序算法？"></a>给出一个时间复杂度为O(n)的排序算法？</h3><p>理论上是不太合理的，但是如果这么问，那么我们一定要多问问题，问清楚O(n)排序算法的环境和背景。比如要给一个公司的几万名员工按照年龄进行排序，那么，首先，年龄的范围可以定位18-99，这是个有限大小的范围，我们可以申请这么大的数组(但是空间复杂度为O(1)，因为是确定的。)然后遍历一遍所有员工，每次在年龄对应的下标上加1，即可完成按照年龄的排序了。</p>
 <h3 id="为什么要考虑排序算法是否稳定？"><a href="#为什么要考虑排序算法是否稳定？" class="headerlink" title="为什么要考虑排序算法是否稳定？"></a>为什么要考虑排序算法是否稳定？</h3><p>实际上，如果只是考虑简单地对数字进行排序，那么稳定性是毫无意义的。一个例子是在促销活动中，经过降价的产品应该排在没降价产品的前面，因为降价产品本身价格是比没降价产品价格高的，所以这样的排序才有意义。</p>
+<p>再举个例子，一次考试之后，分数不同的同学按照分数进行排序，分数相同的同学，按照上次考试的分数排序。</p>
+<p>再举个例子，一个班的同学，已经按照学号排好序了。现在要按照身高排序。如果是稳定排序排好之后，身高相同的同学，还是按照学号顺序的。</p>
+<p>总之，其实就是<strong>有两个排序关键字的时候，稳定排序可以让第一个关键字排序的结果服务于第二个关键字排序中数值相等的那些数</strong>。</p>
 <h2 id="小总结"><a href="#小总结" class="headerlink" title="小总结"></a>小总结</h2><p>归并 和 快排 具有相似性，但步骤顺序相反。</p>
 <ul>
 <li>归并：线排序左右子数组，然后合并两个有序子数组。</li>
@@ -7215,7 +7497,7 @@ Double d = Double.parseDouble( s );
 <p><strong>Follow up:</strong></p>
 <p>If you have figured out the O(<em>n</em>) solution, try coding another solution using the divide and conquer approach, which is more subtle.</p>
 <hr>
-<p>解：动态规划，定义数组dp[n.length]，其中dp[i]表示当前第i个元素可以得到的最大和，递推公式关键在于dp[i]为nums[i]与dp[i]+nums[i]之间的最大值，因为每次两种选择，直接加入nums[i]，或者从之前dp[i]和都小于0，需要重新从nums[i]开始算起。而在过程中需要记录当前能得到的最大的子序和max，最后返回max即可。</p>
+<p>解：动态规划，定义数组dp[n.length]，其中dp[i]表示当前第i个元素可以得到的最大和，递推公式关键在于dp[i]为nums[i]与dp[i-1]+nums[i]之间的最大值，因为每次两种选择，直接加入nums[i]，或者从之前dp[i]和都小于0，需要重新从nums[i]开始算起。而在过程中需要记录当前能得到的最大的子序和max，最后返回max即可。</p>
 <p>为什么要有一个max记录最大值？状态都放在dp[i]不就行了？——不可以，答案很可能是子序和，所以要有一个单独的变量保存结果。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len = nums.length;</span><br><span class="line">        <span class="comment">// dp[i]表示第i位置到上一个计算起点的最大子序和的值</span></span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[len];</span><br><span class="line">        <span class="keyword">int</span> result = nums[<span class="number">0</span>];</span><br><span class="line">        dp[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="comment">// 比较巧妙，如果dp[i-1]&lt;0，那么肯定丢弃dp[i-1]能让dp[i]更大</span></span><br><span class="line">            <span class="comment">// 反之同理，如果dp[i-1] &gt; 0，那么加上dp[i-1]能让dp[i]更大</span></span><br><span class="line">            dp[i] = nums[i] + (dp[i-<span class="number">1</span>] &gt; <span class="number">0</span> ? dp[i-<span class="number">1</span>] : <span class="number">0</span>);</span><br><span class="line">            result = Math.max(dp[i], result);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
