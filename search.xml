@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>leetcode-SQL</title>
+    <url>/2020/04/26/leetcode-SQL/</url>
+    <content><![CDATA[<blockquote>
+<p>天才是长期劳动的结果。 —— 牛顿</p>
+</blockquote>
+<p>包含LeetCode上数据库相关题目。</p>
+<a id="more"></a>
+
+<h2 id="175-Combine-Two-Tables-组合两个表-Easy"><a href="#175-Combine-Two-Tables-组合两个表-Easy" class="headerlink" title="175.Combine Two Tables(组合两个表)(Easy)"></a><a href="https://leetcode-cn.com/problems/combine-two-tables/" target="_blank" rel="noopener">175.Combine Two Tables(组合两个表)(Easy)</a></h2><p>SQL Schema：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> Person (PersonId <span class="built_in">int</span>, FirstName <span class="built_in">varchar</span>(<span class="number">255</span>), LastName <span class="built_in">varchar</span>(<span class="number">255</span>))</span><br><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> Address (AddressId <span class="built_in">int</span>, PersonId <span class="built_in">int</span>, City <span class="built_in">varchar</span>(<span class="number">255</span>), State <span class="built_in">varchar</span>(<span class="number">255</span>))</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Person</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Person (PersonId, LastName, FirstName) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'Wang'</span>, <span class="string">'Allen'</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Address</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Address (AddressId, PersonId, City, State) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'2'</span>, <span class="string">'New York City'</span>, <span class="string">'New York'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>表1: <code>Person</code></p>
+<figure class="highlight asciidoc"><table><tr><td class="code"><pre><span class="line"><span class="code">+-------------+</span>---------+</span><br><span class="line">| 列名         | 类型     |</span><br><span class="line"><span class="code">+-------------+</span>---------+</span><br><span class="line">| PersonId    | int     |</span><br><span class="line">| FirstName   | varchar |</span><br><span class="line">| LastName    | varchar |</span><br><span class="line"><span class="code">+-------------+</span>---------+</span><br><span class="line">PersonId 是上表主键</span><br></pre></td></tr></table></figure>
+
+<p>表2: <code>Address</code></p>
+<figure class="highlight asciidoc"><table><tr><td class="code"><pre><span class="line"><span class="code">+-------------+</span>---------+</span><br><span class="line">| 列名         | 类型    |</span><br><span class="line"><span class="code">+-------------+</span>---------+</span><br><span class="line">| AddressId   | int     |</span><br><span class="line">| PersonId    | int     |</span><br><span class="line">| City        | varchar |</span><br><span class="line">| State       | varchar |</span><br><span class="line"><span class="code">+-------------+</span>---------+</span><br><span class="line">AddressId 是上表主键</span><br></pre></td></tr></table></figure>
+
+<p>Write a SQL query for a report that provides the following information for each person in the Person table, regardless if there is an address for each of those people:</p>
+<figure class="highlight autohotkey"><table><tr><td class="code"><pre><span class="line"><span class="built_in">FirstName,</span> LastName, City, State</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>解：题意为，编写一个 SQL 查询，满足条件：无论 person 是否有地址信息，都需要基于上述两表提供 person 的以下信息：</p>
+<figure class="highlight autohotkey"><table><tr><td class="code"><pre><span class="line"><span class="built_in">FirstName,</span> LastName, City, State</span><br></pre></td></tr></table></figure>
+
+<p>这道题考查的是SQL连接查询，非常经典的查询过程可以浓缩成这张图，非常利于记忆：</p>
+<p><img src="https://i.loli.net/2020/04/26/SigLJWzUyx1XuIj.png" alt="数据库多表查询连接记忆图.png"></p>
+<p>这道题实际上是想通过PersonId来将Person表和Address进行连接查询，而且结果要展示Person所有的信息和Address表中的部分信息。</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">SELECT FirstName,LastName,City,State</span><br><span class="line"><span class="keyword">FROM</span> Person as P</span><br><span class="line">left join<span class="built_in"> Address </span>as Addr</span><br><span class="line">on P.PersonId = Addr.PersonId;</span><br></pre></td></tr></table></figure>
+
+<p>总的来说，这道题还是很简单的。</p>
+]]></content>
+      <categories>
+        <category>Algorithms Note</category>
+      </categories>
+      <tags>
+        <tag>LeetCode</tag>
+        <tag>Algorithms</tag>
+        <tag>SQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>K8s Basic I</title>
     <url>/2020/04/07/Docker-K8s-Basic-I/</url>
     <content><![CDATA[<blockquote>
@@ -1838,6 +1879,76 @@
 <p>互斥锁(重量级锁)也称为阻塞同步、悲观锁</p>
 </blockquote>
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>按照对方法加锁的量级，按照synchronized加锁的顺序，从轻到重，依次是：偏向锁-&gt;轻量级锁-&gt;重量级锁</p>
+<h2 id="分页、分段、段页式是什么？"><a href="#分页、分段、段页式是什么？" class="headerlink" title="分页、分段、段页式是什么？"></a>分页、分段、段页式是什么？</h2><p>段页式的存储管理主要是从<strong>进程的存储空间</strong>来看的。</p>
+<h3 id="页式存储管理"><a href="#页式存储管理" class="headerlink" title="页式存储管理"></a>页式存储管理</h3><p>页式存储管理主要做<strong>三件事</strong>（面试的时候这三点可以言简意赅，重要！）：</p>
+<ol>
+<li>将进程逻辑空间分成若干个大小相同的页面(<strong>等分</strong>)</li>
+<li>相应的把物理内存空间分成页面大小的物理块</li>
+<li>以页面为单位把进程空间装进物理内存中分散的物理块</li>
+</ol>
+<h4 id="页面"><a href="#页面" class="headerlink" title="页面"></a>页面</h4><p>首先，需要清楚<strong>页面</strong>的概念。</p>
+<p>这个页面，就牵扯到了计算机组成原理的字和字块，其实这两者没有本质关联，但是字块和页面可以进行对比。</p>
+<ul>
+<li><font color=#FF0000>字块</font>是相对<strong>物理设备</strong>的定义</li>
+<li><font color=#FF0000>页面</font>则是相对<strong>逻辑空间</strong>的定义</li>
+</ul>
+<p>实际上，在理解页式存储管理的时候，一般都会和内存碎片联系起来记忆学习。</p>
+<p>如下图：</p>
+<p><img src="https://i.loli.net/2020/04/26/8TGdotLS2Xicm9D.png" alt="页面空间分配示意图.png"></p>
+<p>上图中，不同的节点用来存储页面，可以看到，图中示意的页面大小其实不太合适，因为这样的页面大小会导致节点二和节点三存不下，导致内存碎片地产生。</p>
+<p>所以，我们在分配页面大小的时候需要注意两点：</p>
+<ol>
+<li>页面大小应当适中，过大会难以分配，过小内存碎片会过多</li>
+<li>页面大小通常是512B(字节)~8K</li>
+</ol>
+<h4 id="页表"><a href="#页表" class="headerlink" title="页表"></a>页表</h4><p><font color=#FF0000>页表</font>记录进程逻辑空间与物理空间的映射。</p>
+<p>如下图所示：</p>
+<p><img src="https://i.loli.net/2020/04/26/gLTXpwbkv3u6nqY.png" alt="页表示意图.png"></p>
+<p>页表负责记录不同页面对应哪一个字块。</p>
+<h4 id="页式存储管理的问题和改进"><a href="#页式存储管理的问题和改进" class="headerlink" title="页式存储管理的问题和改进"></a>页式存储管理的问题和改进</h4><p>问题：现代计算机系统可以支持非常大的逻辑地址空间(2^32~2^64)，这样的话页表会变得非常大，需要占用非常多的存储空间.比如32位操作系统的寻址空间为4G，很占用空间。</p>
+<p>为了解决这个问题，我们定义了多级页表。</p>
+<p>多级页表如图：</p>
+<p><img src="https://i.loli.net/2020/04/26/9mgez5UfqQuvxKb.png" alt="多级页表.png"></p>
+<p>多级页表中首先有一个根页表，根页表的每一个字块都指向其他的页表。这样使用的时候内存中只需要加载根页表，后面再使用的时候直接根据根页表去找其指向的实际存储内容的页表。</p>
+<p>页式存储管理的最大问题：<font color=#FF0000>若有一段连续的逻辑分布在多个页面中，将大大降低执行效率</font>，因为系统需要不断从内存中读取和访问不同的页面。</p>
+<h3 id="段式存储管理"><a href="#段式存储管理" class="headerlink" title="段式存储管理"></a>段式存储管理</h3><p>段式存储主要做这么几件事：</p>
+<ol>
+<li>将进程逻辑空间划分成若干<font color=#FF0000>大小不相等</font>的块</li>
+<li>根据<strong>连续的逻辑</strong>来对<strong>段的长度</strong>进行划分</li>
+<li>使用主函数MAIN、子程序段X、子函数Y等进行空间分配</li>
+</ol>
+<p>同样我们需要用一个表来保存逻辑空间到物理空间的映射。使用的是<strong>段表</strong>。</p>
+<p>一个段表的例子如下图：</p>
+<p><img src="https://i.loli.net/2020/04/27/inHWrqzvbAswYja.png" alt="段表.png"></p>
+<p>段表相比于页表，需要多一个<strong>段长</strong>的属性，因为段式存储管理是不等长的。</p>
+<h3 id="段式存储管理和页式存储管理的对比"><a href="#段式存储管理和页式存储管理的对比" class="headerlink" title="段式存储管理和页式存储管理的对比"></a>段式存储管理和页式存储管理的对比</h3><p><strong>相同点</strong>：</p>
+<p>段式存储和页式存储都离散地管理了进程的逻辑空间</p>
+<p><strong>不同点</strong>：</p>
+<ul>
+<li>页是<strong>物理单位</strong>，段是是<strong>逻辑单位</strong></li>
+<li>分也是为了合理利用空间，分段是满足用户要求</li>
+<li>页大小由<strong>硬件固定</strong>，段长度可<strong>动态变化</strong></li>
+<li>页表信息是<strong>一维</strong>的，段表信息是<strong>二维</strong>的</li>
+</ul>
+<h3 id="段页式存储管理"><a href="#段页式存储管理" class="headerlink" title="段页式存储管理"></a>段页式存储管理</h3><p>段页式的存储管理，旨在集中段式管理和页式管理的优点。</p>
+<ul>
+<li><p><strong>页式存储管理的优点</strong>：<strong>可以有效提高内存利用率</strong>(虽然存在内存碎片)；</p>
+</li>
+<li><p><strong>段式存储管理优点</strong>：<strong>分段可以更好满足用户需求</strong>(逻辑是用户定义的)</p>
+</li>
+</ul>
+<p>所以我们在这里争取将两者优势结合，形成<strong>段页式存储管理</strong>。</p>
+<p>段页式存储管理的核心原理：</p>
+<ul>
+<li>先将逻辑空间按段式管理分成若干段</li>
+<li>再把段内空间按页式管理分成若干页</li>
+</ul>
+<p>段页式的逻辑图：</p>
+<p><img src="https://i.loli.net/2020/04/27/iRpWt8VyL9roK6g.png" alt="段页式地址.png"></p>
+<p>段页地址中，段号指进程逻辑空间具体哪一段、段内页号指段里面具体的某一页、页内地址为页里面具体的内容。</p>
+<p>段式内存管理、页式内存管理和段页式内存管理的详细图示如下：</p>
+<p><img src="https://i.loli.net/2020/04/27/iP2FN4tdET6zOrm.png" alt="段页式存储管理详细图.png"></p>
+<p>需要明确，不论是这三种管理方式的哪一种，都是针对<strong>进程的存储空间</strong>进行管理，即都是为了将进程的存储空间映射到物理的内存空间中。</p>
 <h1 id="3-计算机组成原理"><a href="#3-计算机组成原理" class="headerlink" title="3.计算机组成原理"></a>3.计算机组成原理</h1><h2 id="为什么寄存器比内存快？"><a href="#为什么寄存器比内存快？" class="headerlink" title="为什么寄存器比内存快？"></a>为什么寄存器比内存快？</h2><p>计算机的存储层次（memory hierarchy）之中，寄存器（register）最快，内存其次，最慢的是硬盘。</p>
 <p>同样都是晶体管存储设备，为什么寄存器比内存快呢？</p>
 <p><strong>原因一：距离不同</strong></p>
@@ -2234,6 +2345,14 @@
 <p>②通过对象<code>.getClass()</code></p>
 <p>③通过<code>Class.forName(类的全限名);</code></p>
 <p>④可以通过Class对象获取类的成员变量，方法或构造器。带declared的获取方法可以获取到类的一个或全部成员变量，方法，构造器，不带declared的方法只能获取到类的public修饰的成员变量、方法或构造器，包括父类public修饰的成员变量、方法或构造器。</p>
+<h2 id="接口和抽象类的区别是什么"><a href="#接口和抽象类的区别是什么" class="headerlink" title="接口和抽象类的区别是什么"></a>接口和抽象类的区别是什么</h2><ol>
+<li><strong>接口</strong>的方法默认是public, 所有方法在接口中不能有实现(Java 8 开始接口方法可以有默认实现），<strong>抽象类</strong>可以有非抽象的方法</li>
+<li><strong>接口</strong>中的实例变量默认是 ﬁnal 类型的，而<strong>抽象类</strong>中则不一定</li>
+<li>一个类可以实现多个<strong>接口</strong>，但多只能实现一个<strong>抽象类</strong></li>
+<li>一个类实现<strong>接口</strong>的话要实现接口的所有方法，而<strong>抽象类</strong>不一定 </li>
+<li><strong>接口</strong>不能用 new 实例化，但可以声明，但是必须引用一个实现该接口的对象 从设计层面来说，<strong>抽象类</strong>是对类的抽 象，是一种模板设计，接口是行为的抽象，是一种行为的规范。</li>
+</ol>
+<p>备注：在JDK8中，接口也可以定义静态方法，可以直接用接口名调用。实现类和实现是不可以调用的。如果同时实现 两个接口，接口中定义了一样的默认方法，必须重写，不然会报错。(详见 issue:<a href="https://github.com/Snailclimb/JavaGuide/issues/146" target="_blank" rel="noopener">https://github.com/Snailclimb/JavaGuide/issues/146</a>) </p>
 <h2 id="什么是Java的泛型？泛型擦除？泛型标记规范？泛型的限定是什么？写一个简单的泛型程序？-泛型程序记住泛型的泛类标志的位置即可"><a href="#什么是Java的泛型？泛型擦除？泛型标记规范？泛型的限定是什么？写一个简单的泛型程序？-泛型程序记住泛型的泛类标志的位置即可" class="headerlink" title="什么是Java的泛型？泛型擦除？泛型标记规范？泛型的限定是什么？写一个简单的泛型程序？(泛型程序记住泛型的泛类标志的位置即可)"></a>什么是Java的泛型？泛型擦除？泛型标记规范？泛型的限定是什么？写一个简单的泛型程序？(泛型程序记住泛型的泛类标志的位置即可)</h2><p>一个一个来回答。</p>
 <p><strong>什么是泛型？</strong></p>
 <p>答：泛型的本质是参数化类型，泛型提供了编译时类型的安全检测机制，该机制允许程序在编译时检测非法的类型。</p>
@@ -3978,7 +4097,7 @@
 <li>HashMap 是非线程安全的，我们可以自己在外部加锁，或者通过 Collections#synchronizedMap 来实现线程安全，Collections#synchronizedMap 的实现是在每个方法上加上了 synchronized 锁；</li>
 <li>在迭代过程中，如果 HashMap 的结构被修改，会快速失败。</li>
 </ul>
-<h3 id="1-2-常见的属性"><a href="#1-2-常见的属性" class="headerlink" title="1.2 常见的属性"></a>1.2 常见的属性</h3><figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="comment">//初始容量为 16</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//最大容量</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAXIMUM_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//负载因子默认值</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75</span>f;</span><br><span class="line"></span><br><span class="line"><span class="comment">//桶上的链表长度大于等于8时，链表转化成红黑树</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TREEIFY_THRESHOLD = <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//桶上的红黑树大小小于等于6时，红黑树转化成链表</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> UNTREEIFY_THRESHOLD = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//当数组容量大于 64 时，链表才会转化成红黑树</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MIN_TREEIFY_CAPACITY = <span class="number">64</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//记录迭代过程中 HashMap 结构是否发生变化，如果有变化，迭代时会 fail-fast</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> modCount;</span><br><span class="line"></span><br><span class="line"><span class="comment">//HashMap 的实际大小，可能不准(因为当你拿到这个值的时候，可能又发生了变化)</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> size;</span><br><span class="line"></span><br><span class="line"><span class="comment">//存放数据的数组</span></span><br><span class="line"><span class="keyword">transient</span> Node&lt;K,V&gt;[] table;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 扩容的门槛，有两种情况</span></span><br><span class="line"><span class="comment">// 如果初始化时，给定数组大小的话，通过 tableSizeFor 方法计算，数组大小永远接近于 2 的幂次方，比如你给定初始化大小 19，实际上初始化大小为 32，为 2 的 5 次方。</span></span><br><span class="line"><span class="comment">// 如果是通过 resize 方法进行扩容，大小 = 数组容量 * 0.75</span></span><br><span class="line"><span class="keyword">int</span> threshold;</span><br><span class="line"></span><br><span class="line"><span class="comment">//链表的节点</span></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; &#123;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//红黑树的节点</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">LinkedHashMap</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; &#123;</span></span><br></pre></td></tr></table></figure>
+<h3 id="1-2-常见的属性"><a href="#1-2-常见的属性" class="headerlink" title="1.2 常见的属性"></a>1.2 常见的属性</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//初始容量为 16</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//最大容量</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAXIMUM_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//负载因子默认值</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75f</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//桶上的链表长度大于等于8时，链表转化成红黑树</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TREEIFY_THRESHOLD = <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//桶上的红黑树大小小于等于6时，红黑树转化成链表</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> UNTREEIFY_THRESHOLD = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//当数组容量大于 64 时，链表才会转化成红黑树</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MIN_TREEIFY_CAPACITY = <span class="number">64</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//记录迭代过程中 HashMap 结构是否发生变化，如果有变化，迭代时会 fail-fast</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> modCount;</span><br><span class="line"></span><br><span class="line"><span class="comment">//HashMap 的实际大小，可能不准(因为当你拿到这个值的时候，可能又发生了变化)</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> size;</span><br><span class="line"></span><br><span class="line"><span class="comment">//存放数据的数组</span></span><br><span class="line"><span class="keyword">transient</span> Node&lt;K,V&gt;[] table;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 扩容的门槛，有两种情况</span></span><br><span class="line"><span class="comment">// 如果初始化时，给定数组大小的话，通过 tableSizeFor 方法计算，数组大小永远接近于 2 的幂次方，比如你给定初始化大小 19，实际上初始化大小为 32，为 2 的 5 次方。</span></span><br><span class="line"><span class="comment">// 如果是通过 resize 方法进行扩容，大小 = 数组容量 * 0.75</span></span><br><span class="line"><span class="keyword">int</span> threshold;</span><br><span class="line"></span><br><span class="line"><span class="comment">//链表的节点</span></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">//红黑树的节点</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">LinkedHashMap</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br></pre></td></tr></table></figure>
 
 <h2 id="2-新增节点"><a href="#2-新增节点" class="headerlink" title="2.新增节点"></a>2.新增节点</h2><p>新增 key，value 大概的步骤如下：</p>
 <ol>
@@ -4342,6 +4461,18 @@
 </ol>
 <p>扩容方法还是很有意思的，通过在原数组上设置转移节点，put 时碰到转移节点时会等待扩容成功之后才能 put 的策略，来保证了整个扩容过程中肯定是线程安全的，因为数组的槽点一旦被设置成转移节点，在没有扩容完成之前，是无法进行操作的。</p>
 <h2 id="4-get"><a href="#4-get" class="headerlink" title="4.get"></a>4.get</h2><p>ConcurrentHashMap 读的话，就比较简单，先获取数组的下标，然后通过判断数组下标的 key 是否和我们的 key 相等，相等的话直接返回，如果下标的槽点是链表或红黑树的话，分别调用相应的查找数据的方法，整体思路和 HashMap 很像。</p>
+<h2 id="5-ConcurrentHashMap线程安全的具体实现方式-底层实现"><a href="#5-ConcurrentHashMap线程安全的具体实现方式-底层实现" class="headerlink" title="5.ConcurrentHashMap线程安全的具体实现方式/底层实现"></a>5.ConcurrentHashMap线程安全的具体实现方式/底层实现</h2><p>如下图：</p>
+<h3 id="JDK1-7之前："><a href="#JDK1-7之前：" class="headerlink" title="JDK1.7之前："></a>JDK1.7之前：</h3><p><img src="https://i.loli.net/2020/04/27/5pKPNkChbBG8QHO.png" alt="JDK7及之前的ConcurrentHashMap.png"></p>
+<p>具体实现：</p>
+<p>首先将数据分为一段一段的存储，然后给每一段数据配一把锁，当一个线程占用锁访问其中一个段数据时，其他段的 数据也能被其他线程访问。</p>
+<p><strong>ConcurrentHashMap 是由 Segment 数组结构和 HashEntry 数组结构组成</strong>。 </p>
+<p>Segment 实现了 ReentrantLock,所以 Segment 是一种可重入锁，扮演锁的角色。HashEntry 用于存储键值对数据。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Segment</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">ReentrantLock</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个 ConcurrentHashMap 里包含一个 Segment 数组。Segment 的结构和HashMap类似，是一种数组和链表结构，一个 Segment 包含一个 HashEntry 数组，每个 HashEntry 是一个链表结构的元素，每个 Segment 守护着一个 HashEntry数组里的元素，当对 HashEntry 数组的数据进行修改时，必须首先获得对应的 Segment的锁。 </p>
+<h3 id="JDK1-8的ConcurrentHashMap"><a href="#JDK1-8的ConcurrentHashMap" class="headerlink" title="JDK1.8的ConcurrentHashMap:"></a>JDK1.8的ConcurrentHashMap:</h3><p><img src="https://i.loli.net/2020/04/27/Nz8IYqKcWwyPoGE.png" alt="JDK8的ConcurrentHashMap.png"></p>
+<p>ConcurrentHashMap取消了Segment分段锁，采用CAS和synchronized来保证并发安全。数据结构跟HashMap1.8 的结构类似，数组+链表/红黑二叉树。 </p>
+<p>synchronized只锁定当前链表或红黑二叉树的首节点，这样只要hash不冲突，就不会产生并发，效率又提升N倍。</p>
 ]]></content>
       <categories>
         <category>Study Note</category>
