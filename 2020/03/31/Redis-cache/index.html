@@ -89,7 +89,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/04/04/rSHfxikv3PhmpuR.png">
 <meta property="og:image" content="https://i.loli.net/2020/04/05/ewkUGrfdPb5hxJ6.png">
 <meta property="article:published_time" content="2020-03-31T00:04:49.000Z">
-<meta property="article:modified_time" content="2020-04-08T09:34:05.960Z">
+<meta property="article:modified_time" content="2020-04-27T11:17:06.598Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="Interview">
 <meta property="article:tag" content="Redis">
@@ -185,7 +185,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">34</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">35</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -195,7 +195,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">38</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">39</span></a>
 
   </li>
   </ul>
@@ -255,7 +255,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-08 17:34:05" itemprop="dateModified" datetime="2020-04-08T17:34:05+08:00">2020-04-08</time>
+                <time title="Modified: 2020-04-27 19:17:06" itemprop="dateModified" datetime="2020-04-27T19:17:06+08:00">2020-04-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -514,10 +514,10 @@
 <h2 id="Redis保证高可用的重要组件——哨兵"><a href="#Redis保证高可用的重要组件——哨兵" class="headerlink" title="Redis保证高可用的重要组件——哨兵"></a>Redis保证高可用的重要组件——哨兵</h2><h3 id="哨兵基本概念"><a href="#哨兵基本概念" class="headerlink" title="哨兵基本概念"></a>哨兵基本概念</h3><p>sentinal，即哨兵。</p>
 <p>哨兵是redis集群架构中非常重要的一个组件，主要功能如下</p>
 <ol>
-<li>集群监控，负责监控redis master和slave进程是否正常工作</li>
-<li>消息通知，如果某个redis实例有故障，那么哨兵负责发送消息作为报警通知给管理员</li>
-<li>故障转移，如果master node挂掉了，会自动转移到slave node上</li>
-<li>配置中心，如果故障转移发生了，通知client客户端新的master地址</li>
+<li><strong>集群监控</strong>，负责监控redis master和slave进程是否正常工作</li>
+<li><strong>消息通知</strong>，如果某个redis实例有故障，那么哨兵负责发送消息作为报警通知给管理员</li>
+<li><strong>故障转移</strong>，如果master node挂掉了，会自动转移到slave node上</li>
+<li><strong>配置中心</strong>，如果故障转移发生了，通知client客户端新的master地址</li>
 </ol>
 <p>哨兵本身也是分布式的，作为<strong>一个哨兵集群</strong>去运行，互相协同工作</p>
 <ol>
@@ -1020,7 +1020,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1033,7 +1033,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1089,7 +1089,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">551k</span>
+    <span title="Symbols count total">585k</span>
 </div>
 
 
@@ -1106,7 +1106,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共296.2k字</span>
+  <span class="post-count">博客全站共307.4k字</span>
 </div>
 
         

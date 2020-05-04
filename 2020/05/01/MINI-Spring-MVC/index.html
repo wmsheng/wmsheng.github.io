@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/siyecao.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/siyecao.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false,"b2t":true,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="在乎的是，自己以及他所在乎的人，能不能够秉持着自己的心意与信念，在人生中大部分时间里都能自在、快乐">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MINI-Spring-MVC">
+<meta property="og:url" content="http://yoursite.com/2020/05/01/MINI-Spring-MVC/index.html">
+<meta property="og:site_name" content="Hi, This is Bennett">
+<meta property="og:description" content="在乎的是，自己以及他所在乎的人，能不能够秉持着自己的心意与信念，在人生中大部分时间里都能自在、快乐">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/zOtfjiuqSY2KVpw.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/XIAgkvUjuBapqDt.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/iayHjgFVd8I6CUw.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/02/O1fd8kQI2UEZjC6.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/02/9cbQ6J7PCXl4aSO.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/02/e5AT24oBkEC8s1O.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/02/7mpViCo4DBIkFad.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/04/VY5RcKdmFnyxLUg.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/04/a6LQ2MhzrZiyqHF.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/04/ReXNvMfG7J24ci6.png">
+<meta property="article:published_time" content="2020-05-01T04:24:53.000Z">
+<meta property="article:modified_time" content="2020-05-04T23:14:56.612Z">
+<meta property="article:author" content="Wang Mingsheng">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="SpringMVC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/01/zOtfjiuqSY2KVpw.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/05/01/MINI-Spring-MVC/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>MINI-Spring-MVC | Hi, This is Bennett</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hi, This is Bennett</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">35</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">39</span></a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/01/MINI-Spring-MVC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/faceimage.jpg">
+      <meta itemprop="name" content="Wang Mingsheng">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hi, This is Bennett">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MINI-Spring-MVC
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-05-01 12:24:53" itemprop="dateCreated datePublished" datetime="2020-05-01T12:24:53+08:00">2020-05-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-05-05 07:14:56" itemprop="dateModified" datetime="2020-05-05T07:14:56+08:00">2020-05-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Study-Note/" itemprop="url" rel="index">
+                    <span itemprop="name">Study Note</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              
+              <span>24k</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>在乎的是，自己以及他所在乎的人，能不能够秉持着自己的心意与信念，在人生中大部分时间里都能自在、快乐</p>
+</blockquote>
+<a id="more"></a>
+
+<p>项目github地址：<a href="https://github.com/wmsheng/MINI-SpringMVC" target="_blank" rel="noopener">https://github.com/wmsheng/MINI-SpringMVC</a></p>
+<h1 id="项目框架搭建"><a href="#项目框架搭建" class="headerlink" title="项目框架搭建"></a>项目框架搭建</h1><h2 id="搭建基于Gradle的项目"><a href="#搭建基于Gradle的项目" class="headerlink" title="搭建基于Gradle的项目"></a>搭建基于Gradle的项目</h2><p>首先进行项目的”骨架”的搭建。</p>
+<p>使用Gradle作为依赖创建项目，相比Maven，Gradle的优势在于：</p>
+<ul>
+<li>发扬Maven的约定大于配置的思想(为了迁移方便，其可以直接使用Maven的配置)</li>
+<li>使用DSL语言 提供函数支持</li>
+<li>方便性上：Json格式，而且免安装</li>
+</ul>
+<p>先创建Gradle项目，然后创建子的<code>Module</code>模块.</p>
+<p>子模块需要创建多个。这里创建这么几个：framework框架模块、test测试模块，创建好后如下图：</p>
+<p><img src="https://i.loli.net/2020/05/01/zOtfjiuqSY2KVpw.png" alt="创建项目1.png"></p>
+<p>因为我们不需要在项目的父模块中写代码，只需要在子模块中写，所以可以删除父模块层中的src包。</p>
+<p><img src="https://i.loli.net/2020/05/01/XIAgkvUjuBapqDt.png" alt="删除src包.png"></p>
+<p>可以看到，右侧中有配置文件，默认使用了很多配置项。Maven中一行就能完成的配置，在Gradle中一行就可以完成。</p>
+<p>在配置subprojects的时候，其中的所有配置项都会被子模块继承。但是可以注意，当子模块中有父模块中重复的配置项时，会以范围更近的子模块为主，会覆盖父模块的配置。</p>
+<p>在配置好之后，可以进行打包，命令是</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gradle build</span></span><br></pre></td></tr></table></figure>
+
+<p>在打包成功后，各个子模块中都会多出一个build文件夹，而在libs文件夹下就是jar包文件。如下图：</p>
+<p><img src="https://i.loli.net/2020/05/01/iayHjgFVd8I6CUw.png" alt="gradle_build之后.png"></p>
+<h2 id="仿Spring搭建项目结构"><a href="#仿Spring搭建项目结构" class="headerlink" title="仿Spring搭建项目结构"></a>仿Spring搭建项目结构</h2><p>我们已经创建好了framework和test这两个模块，分别对应<code>框架模块</code>和<code>应用模块</code>。应用模块主要用来测试，框架可以支撑应用模块，而应用模块可以反馈框架。</p>
+<p>重点在于框架模块。Spring包的模块划分主要可以分为两层。一层是核心层(Core)，它是Spring框架的基石。其包括：</p>
+<ul>
+<li>Beans包：负责Spring的Bean的维护和管理</li>
+<li>Core包：Spring中经常用到的工具包</li>
+<li>Context包：提供Spring根据不同产品的需求所完成的接口，是进入Spring的入口</li>
+<li>SpEL：Spring的R式语言包，可以提供查询、操作数据的功能</li>
+</ul>
+<p>再往上，一个是数据层，Data。这里主要用于对数据的增删改查。其中有JDBC、ORM的针对数据操作的模型。</p>
+<p>还有一个是对外的Web应用包，其中有MVC模型和对Servlet的封装。</p>
+<p>如下图：</p>
+<p><img src="https://i.loli.net/2020/05/02/O1fd8kQI2UEZjC6.png" alt="Spring包结构.png"></p>
+<p>我们这个项目主要是MINI，所以目的是实现SpringMVC的一部分重要模块。</p>
+<ul>
+<li>实现Core模块，包括core、beans、context包</li>
+<li>实现Web，集成web和webmvc</li>
+<li>添加starter，实现类spring-boot的启动方式</li>
+</ul>
+<p>开发中，我们将test模块和frameword模块进行了关联，重点是在test模块的gradle配置文件中进行配置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">plugins &#123;</span><br><span class="line">    id <span class="string">'java'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">group <span class="string">'wms.mooc.com'</span></span><br><span class="line">version <span class="string">'1.0-SNAPSHOT'</span></span><br><span class="line"></span><br><span class="line">sourceCompatibility = <span class="number">1.8</span></span><br><span class="line"></span><br><span class="line">repositories &#123;</span><br><span class="line">    mavenCentral()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    testCompile group: <span class="string">'junit'</span>, name: <span class="string">'junit'</span>, version: <span class="string">'4.12'</span></span><br><span class="line">    compile(project(<span class="string">':framework'</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">subprojects &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">jar&#123;</span><br><span class="line">    manifest&#123;</span><br><span class="line">        attributes <span class="string">"Main-Class"</span>:<span class="string">"com.mooc.wms.Application"</span></span><br><span class="line">    &#125;</span><br><span class="line">    from&#123;</span><br><span class="line">        configurations.compile.collect&#123;</span><br><span class="line">            it.isDirectory() ? it : zipTree(it)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>dependencies中配置了编译过程中要关联的其他子模块的名字，注意写法。这里关联的是framework模块。</p>
+<h1 id="集成服务器"><a href="#集成服务器" class="headerlink" title="集成服务器"></a>集成服务器</h1><p>接下来进行服务器Web服务器和Servelet的集成，可以被称作是项目的载体。</p>
+<p>首先回顾一下JavaWeb模型。我们的程序想要对外提供服务，必须借助Web服务器。常见的web服务器有Tomcat、Netty、Nginx等。</p>
+<ul>
+<li>监听一个TCP端口(本地启动一般监听localhost,80,8080)</li>
+<li>负责转发请求，回收相应(Nginx转发给PHP程序、Tomcat转发给Java程序)</li>
+<li>本身没有业务逻辑，只负责<strong>连接操作系统和应用程序代码</strong></li>
+</ul>
+<h2 id="系统Web服务模型"><a href="#系统Web服务模型" class="headerlink" title="系统Web服务模型"></a>系统Web服务模型</h2><p>首先，客户端会向web服务器发送一个请求，通过网络到达web服务器所在的操作系统。</p>
+<p>但是从网络传输过去的信息只能是一些bit流，我们无法直接读取其中的信息。这些bit流通过网卡到达了操作系统。然后操作系统的TCP/IP栈专门负责解析这些bit流，再之后操作系统会把这些信息(端口、IP、字节流)都发送给Web服务器来进行处理。</p>
+<p>到达Web服务器之后，Web服务器会连接到应用程序，由应用程序处理其中的逻辑和进行操作。</p>
+<p>处理完之后，会把结果原路返回，再相应回客户端。</p>
+<p>具体流程如下图所示：</p>
+<p><img src="https://i.loli.net/2020/05/02/9cbQ6J7PCXl4aSO.png" alt="系统web服务模型.png"></p>
+<h2 id="请求分发流程"><a href="#请求分发流程" class="headerlink" title="请求分发流程"></a>请求分发流程</h2><p><img src="https://i.loli.net/2020/05/02/e5AT24oBkEC8s1O.png" alt="请求分发流程.png"></p>
+<p>上图是一个抽象的比喻，发信人和收信人的关系。</p>
+<p>邮局就好像是TCP端口，不论有没有信件往来，它都在那里等着。一旦有信件往来，它就把这个信件交给一个快递员，也就是web服务器。这个web服务器每天守着一个TCP端口，如果有消息派发给他，他就赶快把消息送出，再把回复收回，再把回复发到给发信人。</p>
+<p>就好像快递员不能拆开快递一样，服务器只能充当操作系统和应用程序的连接着，他们不能负责具体业务，只负责高效而准确地发送任务。</p>
+<p>那么，web服务器是怎么分发请求的呢？——这就不得不介绍Servlet</p>
+<p>实际上，Servlet是一种复合的含义。</p>
+<ul>
+<li>Servlet是一种规范：它约束了Java服务器与业务类的通信方式。试想不同的服务器有不同的通信方式，那么你每一台服务器都要单独写一套逻辑，那么学习成本高，迁移也会非常困难</li>
+<li>Servlet是一个接口：javax.servlet.Servlet，这个是用代码来表达Servlet这种规范的方法</li>
+<li>Servlet是一种Java类：实现了Servlet接口的应用程序类。每一个实现了Servlet应用接口的类都可以成为是一个Servlet。大型服务一般需要多个Servlet共同合作来完成。</li>
+</ul>
+<p>到这里，可以再补充一下系统Web服务模型，里面的Servlet实际上可以更细化：</p>
+<p><img src="https://i.loli.net/2020/05/02/7mpViCo4DBIkFad.png" alt="系统web服务模型细化Servlet.png"></p>
+<p>实际上，SpringBoot中通过向框架中集成Web服务器来实现的。我们这里使用Tomcat来进行集成。</p>
+<p>使用Tomcat服务器有以下一些特点：</p>
+<ul>
+<li>Java原生，运行在JVM上</li>
+<li>多种并发模型，高性能</li>
+<li>支持嵌入式应用程序</li>
+</ul>
+<p>具体流程很简单，我们只需要在项目中：</p>
+<ol>
+<li>引入Tomcat包</li>
+<li>实例化一个Tomcat类</li>
+<li>调用Tomcat的start方法</li>
+</ol>
+<p>走这三步，就可以启动Tomcat服务器。</p>
+<h2 id="集成Tomcat服务器"><a href="#集成Tomcat服务器" class="headerlink" title="集成Tomcat服务器"></a>集成Tomcat服务器</h2><p>首先，我们为tomcat引入一个tomcat包，写在gradle的配置文件中。</p>
+<p>在Maven官网查找Tomcat Embed Core, <a href="https://mvnrepository.com/search?q=tomcat。选一个版本，这里选8.5.23，配置`framework`的gradle中。" target="_blank" rel="noopener">https://mvnrepository.com/search?q=tomcat。选一个版本，这里选8.5.23，配置`framework`的gradle中。</a></p>
+<p>导入成功后，在framework的web包下创建server包，然后完成相应逻辑任务。</p>
+<p>TomcatServer.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.web.server;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.catalina.LifecycleException;</span><br><span class="line"><span class="keyword">import</span> org.apache.catalina.startup.Tomcat;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Bennett_Wang on 2020/5/2</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TomcatServer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> Tomcat tomcat;</span><br><span class="line">    <span class="keyword">public</span> String[] args;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TomcatServer</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.args = args;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startServer</span><span class="params">()</span> <span class="keyword">throws</span> LifecycleException </span>&#123;</span><br><span class="line">        tomcat = <span class="keyword">new</span> Tomcat();</span><br><span class="line">        tomcat.setPort(<span class="number">6699</span>);</span><br><span class="line">        tomcat.start();</span><br><span class="line"></span><br><span class="line">        Thread awaitThread = <span class="keyword">new</span> Thread(<span class="string">"tomcat_await_thread"</span>) &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                TomcatServer.<span class="keyword">this</span>.tomcat.getServer().await();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        awaitThread.setDaemon(<span class="keyword">false</span>);</span><br><span class="line">        awaitThread.run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>TestServlet.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.web.servlet;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.*;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Bennett_Wang on 2020/5/2</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestServlet</span> <span class="keyword">implements</span> <span class="title">Servlet</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ServletConfig config)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ServletConfig <span class="title">getServletConfig</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(ServletRequest req, ServletResponse res)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        res.getWriter().println(<span class="string">"test"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getServletInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在Tomcat容器内，Servlet容器并不是直接依附在Tomcat容器里的，而是会分成四个级别，Tomcat用这四个级别进行容器的解耦。这四个级别分别是：</p>
+<ol>
+<li>Engine容器：最顶级容器，可以理解为Tomcat的总控中心</li>
+<li>Host容器：管理主机信息和他们的子容器</li>
+<li>Context：最接近Servlet的容器，可以通过它设置资源属性和管理骨架</li>
+<li>Wrapper：负责Servlet的加载、初始化、执行、销毁</li>
+</ol>
+<p>我们这里只往Context容器内注册一个Servlet即可。</p>
+<p>为了建立Tomcat和Servlet的关联，我们需要在TomcatServer.java类中加入如下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化Context容器</span></span><br><span class="line">Context context = <span class="keyword">new</span> StandardContext();</span><br><span class="line">context.setPath(<span class="string">""</span>);</span><br><span class="line">context.addLifecycleListener(<span class="keyword">new</span> Tomcat.FixContextListener());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建TestServlet实例</span></span><br><span class="line">TestServlet servlet = <span class="keyword">new</span> TestServlet();</span><br><span class="line"><span class="comment">//使用Tomcat的静态方法addServlet</span></span><br><span class="line">Tomcat.addServlet(context,<span class="string">"testServlet"</span>,servlet)</span><br><span class="line">        .setAsyncSupported(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//将Context容器和"testServlet"实例关联起来</span></span><br><span class="line">context.addServletMappingDecoded(<span class="string">"/test.json"</span>,<span class="string">"testServlet"</span>);</span><br><span class="line">tomcat.getHost().addChild(context);</span><br></pre></td></tr></table></figure>
+
+<p>此时，启动之后，可以用<code>localhost:6699/test.json</code>访问到页面，当然，结果只有一个输出的”test”，即为<code>TestServlet.java</code>中的service函数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(ServletRequest req, ServletResponse res)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">    res.getWriter().println(<span class="string">"test"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="集成服务器总结"><a href="#集成服务器总结" class="headerlink" title="集成服务器总结"></a>集成服务器总结</h2><p>总而言之，这里使用了Web服务模型，其中最重要的是使用了Servlet标准，<strong>它规定了Web服务器和应用程序之间的通信方式</strong>。</p>
+<p>最后，要把这个流程真正运行起来，要一个Web服务器。这里我们仿照Spring Boot，往框架里嵌入了一个Tomcat的Web服务器，实现了Servlet接口，往Tomcat中注册了一个Servlet实例，实现了真正的请求响应。即上面往<code>TomcatServer.java</code>中加入的代码。</p>
+<h1 id="控制器Controller的实现"><a href="#控制器Controller的实现" class="headerlink" title="控制器Controller的实现"></a>控制器Controller的实现</h1><p>Controller可以看做是项目的入口了。</p>
+<h2 id="传统项目的实现"><a href="#传统项目的实现" class="headerlink" title="传统项目的实现"></a>传统项目的实现</h2><p>传统项目中，为了解决请求分发，需要配置Servlet，因为Servlet经常会有很多，所以经常需要配置大量内容到web.xml中(在classpath下的web.xml中配置URI到Servlet的映射,Tomcat会在启动时自动加载这个文件)，每个业务都需要添加一个Servlet，而每个Servlet都对应一个URI。</p>
+<p>这样在小型项目中可能没太多不妥。但是随着项目发展，这样传统的配置方式的问题会逐渐暴露：</p>
+<ul>
+<li>配置集中，大而杂，不易管理(特别是Servlet的职责没有明确界限时，很容易把URI配置错)</li>
+<li>需要多次实现Servlet接口，不必要(Servlet接口有五个方法，虽然我们一般只需要实现service方法，但是实现了接口，其他方法哪怕是空的，也要写上啊)</li>
+</ul>
+<h2 id="Spring框架"><a href="#Spring框架" class="headerlink" title="Spring框架"></a>Spring框架</h2><p>Spring框架解决这个问题的方式，就是引入了<code>DispatcherServlet</code>作为”总管”，它直接在Tomcat中配置了根目录路径符，表示所有的请求都由它来受理。</p>
+<p>当然，我们不能把所有业务都写在<code>DispatcherServlet</code>中。Spring做的另一件事，是把所有的Servlet都简化成了一个一个的”Mapping Handler”。在代码中，就是Controller类中的一个方法。<strong>一般用<code>requestMapping</code>来注解</strong>。所以实际中会有请求打到<code>DispatcherServlet</code>上，然后通过<code>DispatcherServlet</code>发送到Mapping Handler上，再由Mapping Handler处理，之后返回。</p>
+<p>总结起来，用Spring框架进行调度的优势：</p>
+<ol>
+<li>用注解，实现简单，按需实现(需要用哪个方法，就用哪个注解即可)</li>
+<li>配置分散，不杂乱(可以通过多个Controller把业务逻辑的界限定义的很清晰)</li>
+<li>容器内实现，易控制(真正的分发变成了框架处理，不再受web服务器的控制，修改和拓展更方便)</li>
+</ol>
+<h2 id="实战添加web组件"><a href="#实战添加web组件" class="headerlink" title="实战添加web组件"></a>实战添加web组件</h2><p>首先将之前定义的TestServlet该名字，改成DispatcherServlet。</p>
+<p>然后修改Tomcat和Servlet联系的方式，名字都改成dispatcherServlet。并且修改MappingDecoded的路径，改成”/“，表示根目录符，表示根目录下所有的URI。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建TestServlet实例</span></span><br><span class="line">        DispatcherServlet servlet = <span class="keyword">new</span> DispatcherServlet();</span><br><span class="line">        <span class="comment">//使用Tomcat的静态方法addServlet</span></span><br><span class="line">        Tomcat.addServlet(context,<span class="string">"dispatcherServlet"</span>,servlet)</span><br><span class="line">                .setAsyncSupported(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//将Context容器和"testServlet"实例关联起来</span></span><br><span class="line">        context.addServletMappingDecoded(<span class="string">"/"</span>,<span class="string">"dispatcherServlet"</span>);</span><br><span class="line">        tomcat.getHost().addChild(context);</span><br></pre></td></tr></table></figure>
+
+<p>接下来再在web包下面添加MVC包。MVC包中添加Controller、RequestMapping和RequestParam这三个我们常用的注解。</p>
+<p>@Controller</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.web.mvc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="comment">//生命周期为运行期</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="comment">//作用目标是：类</span></span><br><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Controller &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>@RequestMapping</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.web.mvc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="comment">//目标：Controller中的方法</span></span><br><span class="line"><span class="meta">@Target</span>(ElementType.METHOD)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> RequestMapping &#123;</span><br><span class="line">    <span class="comment">//需要添加属性用来保存映射的URI</span></span><br><span class="line">    <span class="function">String <span class="title">value</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>@RequestParam</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.web.mvc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="comment">//这个注解目标是Controller注解的参数</span></span><br><span class="line"><span class="meta">@Target</span>(ElementType.PARAMETER)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> RequestParam &#123;</span><br><span class="line">    <span class="comment">//需要添加一个参数用来表示他要接收的param String中的key</span></span><br><span class="line">    <span class="function">String <span class="title">value</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后，在测试类中创建一个controllers包，里面创建一个<code>SalaryController</code>类，对上面的注解进行使用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.controllers;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.mooc.wms.web.mvc.Controller;</span><br><span class="line"><span class="keyword">import</span> com.mooc.wms.web.mvc.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> com.mooc.wms.web.mvc.RequestParam;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Bennett_Wang on 2020/5/3</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SalaryController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/get_salary.json"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getSalary</span><span class="params">(@RequestParam(<span class="string">"name"</span>)</span> String name,</span></span><br><span class="line"><span class="function">                             @<span class="title">RequestParam</span><span class="params">(<span class="string">"experience"</span>)</span> String experience) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">10000</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是如果此时将程序运行起来，访问<code>localhost:6699/get_salary.json</code>，还是只会显示”test”。也就是说，这些Controller并没有生效。</p>
+<p>为什么？因为现在框架并不知道我们添加了哪些controller。想要让框架知道我们定义了哪些controller，这时候就需要使用Java的类加载器了。</p>
+<p>类加载器，即ClassLoader。<strong>ClassLoader的作用</strong>：</p>
+<ul>
+<li>通过<strong>类全限定名</strong>获取类的二进制字节流(全限定名是包括了包路径的类名)</li>
+<li>解析二进制字节流，获取Class类实例——实际上，所有的.java文件在被编译成.class二进制文件后，都已经成为了二进制的字节码。得到类的二进制字节码后，类加载器通过虚拟机来解析这些二进制字节码，把它初始化成类，然后就可以获取到这个类的class实例了。</li>
+<li>加载classpath下的静态资源——这个特性是我们获取类全限定名的关键，虽然我们可以使用类加载器来获取需要的类，但我们不知道项目下所有的类的全限定名。想要获取到这些全限定名，还需要从类文件入手，因为我们不可能自己定义一个类名列表，每次有新的类文件添加都往列表中添加。</li>
+</ul>
+<p>需要指出，我们能够通过Java的类文件来获取到类的全限定名，这要归功于Java类文件规范。</p>
+<ul>
+<li>统一的Resource抽象——H5页面、类等等，都是资源</li>
+<li>每个Java类文件和类名对应——类名末尾加上.class后缀，就是文件名，这个规范也很巧妙</li>
+<li>类包名和文件夹路径对应</li>
+</ul>
+<h2 id="手写类扫描获取类定义"><a href="#手写类扫描获取类定义" class="headerlink" title="手写类扫描获取类定义"></a>手写类扫描获取类定义</h2><p>在core包中添加类扫描器——ClassScanner</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.core;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.net.JarURLConnection;</span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Enumeration;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.jar.JarEntry;</span><br><span class="line"><span class="keyword">import</span> java.util.jar.JarFile;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Bennett_Wang on 2020/5/3</span></span><br><span class="line"><span class="comment"> * 类扫描器</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassScanner</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;Class&lt;?&gt;&gt; scanClasses(String packageName) <span class="keyword">throws</span> IOException, ClassNotFoundException &#123;</span><br><span class="line">        <span class="comment">//存储扫描包的类</span></span><br><span class="line">        List&lt;Class&lt;?&gt;&gt; classList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="comment">//把包名转换为文件路径，即把包名中的"."换成"/"就可以了</span></span><br><span class="line">        String path = packageName.replace(<span class="string">"."</span>,<span class="string">"/"</span>);</span><br><span class="line">        <span class="comment">//使用类加载器，通过路径加载文件</span></span><br><span class="line">        <span class="comment">//获取默认类加载器</span></span><br><span class="line">        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();</span><br><span class="line">        <span class="comment">//调用getResource()方法，其返回的是可遍历的URL资源</span></span><br><span class="line">        Enumeration&lt;URL&gt; resources = classLoader.getResources(path);</span><br><span class="line">        <span class="keyword">while</span>(resources.hasMoreElements()) &#123;</span><br><span class="line">            <span class="comment">//获取资源</span></span><br><span class="line">            URL resource = resources.nextElement();</span><br><span class="line">            <span class="comment">//获取资源后，要判断资源的类型，可以用protocol属性获取到</span></span><br><span class="line">            <span class="comment">//因为这个项目最后会打包成jar包，所以我们设置资源类型为jar包，当资源类型为jar包的时候</span></span><br><span class="line">            <span class="comment">//进行处理</span></span><br><span class="line">            <span class="keyword">if</span>(resource.getProtocol().contains(<span class="string">"jar"</span>)) &#123;</span><br><span class="line">                <span class="comment">//如果是jar包，则尝试获取jar包路径，jar包路径可以通过jarURLConnection获取</span></span><br><span class="line">                JarURLConnection jarURLConnection = (JarURLConnection) resource.openConnection();</span><br><span class="line">                <span class="comment">//可以用这个jarURLConnection获取到jar包的路径名</span></span><br><span class="line">                String jarFilePath = jarURLConnection.getJarFile().getName();</span><br><span class="line">                classList.addAll(getClassesFromJar(jarFilePath,path));</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// todo</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> classList;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 此方法通过jar包的路径来获取到jar包所有的类</span></span><br><span class="line"><span class="comment">     * String jarFilePath为jar包的路径</span></span><br><span class="line"><span class="comment">     * String path——一个jar包可能有多个类文件，可以用path指定哪些类文件是我们需要的，path为类的相对路径</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;Class&lt;?&gt;&gt; getClassesFromJar(String jarFilePath,String path) <span class="keyword">throws</span> IOException, ClassNotFoundException &#123;</span><br><span class="line">        List&lt;Class&lt;?&gt;&gt; classes = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        JarFile jarFile = <span class="keyword">new</span> JarFile(jarFilePath);</span><br><span class="line">        Enumeration&lt;JarEntry&gt; jarEntries = jarFile.entries();</span><br><span class="line">        <span class="keyword">while</span>(jarEntries.hasMoreElements()) &#123;</span><br><span class="line">            JarEntry jarEntry = jarEntries.nextElement();</span><br><span class="line">            String entryName = jarEntry.getName();<span class="comment">// com/mooc/wms/test/Test.class</span></span><br><span class="line">            <span class="keyword">if</span>(entryName.startsWith(path) &amp;&amp; entryName.endsWith(<span class="string">".class"</span>)) &#123;</span><br><span class="line">                String classFullName = entryName.replace(<span class="string">"/"</span>,<span class="string">"."</span>).substring(<span class="number">0</span>,entryName.length() - <span class="number">6</span>);</span><br><span class="line">                classes.add(Class.forName(classFullName));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> classes;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>试用一下这个类扫描器，在框架的入口类<code>MiniApplication</code>中尝试获取所有的class</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MiniApplication</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(Class&lt;?&gt; cls, String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello mini-spring!"</span>);</span><br><span class="line">        TomcatServer tomcatServer = <span class="keyword">new</span> TomcatServer(args);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            tomcatServer.startServer();</span><br><span class="line">            List&lt;Class&lt;?&gt;&gt; classList = ClassScanner.scanClasses(cls.getPackage().getName());</span><br><span class="line">            classList.forEach(it -&gt; System.out.println(it.getName()));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行时可以发现控制台会输出各个以我们包路径开头的类。</p>
+<h2 id="控制器的初始化"><a href="#控制器的初始化" class="headerlink" title="控制器的初始化"></a>控制器的初始化</h2><p>上一节获取了所有controller类，但是这些类并不能真正响应我们的服务，我们还需要把Controller中定义的Mapping Handler提取出来才能使用。提取的方式可以使用反射。</p>
+<blockquote>
+<p>反射：Java中的高级特性，框架实现的关键，经常用于框架中的动态设计。</p>
+<p>反射的特点：</p>
+<ul>
+<li>活跃于运行时(Runtime)——普通程序在编译前就已经确定了代码该使用哪个属性，调用哪个方法等等。但是反射在运行时可以动态地获取类的属性和方法实例。</li>
+<li>获取属性和方法实例——上面已经提到，反射可以在运行时动态地获取属性和方法实例</li>
+<li>动态实例化类——不用new关键字了。可以用反射保存Controller里面的Mapping Handler了，有请求到来时再次调用</li>
+</ul>
+</blockquote>
+<p>具体实现：先定义Mapping Handler的数据结构，在框架的web包中再添加一个handler子包。在子包下定义一个MappingHandler，每个MappingHandler都是一个请求映射器。在它的属性里保存它要处理的URI、对应的Controller方法等等。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.web.handler;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Bennett_Wang on 2020/5/3</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MappingHandler</span> </span>&#123;</span><br><span class="line">    <span class="comment">//要处理的URI</span></span><br><span class="line">    <span class="keyword">private</span> String uri;</span><br><span class="line">    <span class="comment">//对应的controller方法</span></span><br><span class="line">    <span class="keyword">private</span> Method method;</span><br><span class="line">    <span class="comment">//对应的controller类</span></span><br><span class="line">    <span class="keyword">private</span> Class&lt;?&gt; controller;</span><br><span class="line">    <span class="comment">//调用方法需要的参数</span></span><br><span class="line">    <span class="keyword">private</span> String[] args;</span><br><span class="line"></span><br><span class="line">    MappingHandler(String uri, Method method,Class&lt;?&gt; cls,String[] args) &#123;</span><br><span class="line">        <span class="keyword">this</span>.uri = uri;</span><br><span class="line">        <span class="keyword">this</span>.method = method;</span><br><span class="line">        <span class="keyword">this</span>.controller = cls;</span><br><span class="line">        <span class="keyword">this</span>.args = args;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来，添加一些管理器来管理这些handler。取名为HandlerManager</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.web.handler;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.mooc.wms.web.mvc.Controller;</span><br><span class="line"><span class="keyword">import</span> com.mooc.wms.web.mvc.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> com.mooc.wms.web.mvc.RequestParam;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Parameter;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Bennett_Wang on 2020/5/3</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HandlerManager</span> </span>&#123;</span><br><span class="line">    <span class="comment">//静态属性，用于保存多个mappingHandler</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;MappingHandler&gt; mappingHandlerList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//一个方法，把controller中的类挑选出来，然后初始化mappingHandler方法初始化成mappingHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">resolveMappingHandler</span><span class="params">(List&lt;Class&lt;?&gt;&gt; classList)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(Class&lt;?&gt; cls : classList) &#123;</span><br><span class="line">            <span class="keyword">if</span>(cls.isAnnotationPresent(Controller<span class="class">.<span class="keyword">class</span>)) </span>&#123;</span><br><span class="line">                <span class="comment">//如果Controller注解存在，我们解析这个controller类</span></span><br><span class="line">                parseHandlerFromController(cls);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//完善子方法</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">parseHandlerFromController</span><span class="params">(Class&lt;?&gt; cls)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//先用反射获取到这个类的所有方法</span></span><br><span class="line">        Method[] methods = cls.getDeclaredMethods();</span><br><span class="line">        <span class="comment">//遍历所有方法，找到对应的requestMapping注解的方法</span></span><br><span class="line">        <span class="keyword">for</span>(Method method : methods) &#123;</span><br><span class="line">            <span class="keyword">if</span>(!method.isAnnotationPresent(RequestMapping<span class="class">.<span class="keyword">class</span>)) </span>&#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//找到这个方法后，从这个方法的属性中获取所有构成MappingHandler的属性</span></span><br><span class="line">            <span class="comment">//首先是uri，可以直接从注解的属性中获取到</span></span><br><span class="line">            String uri = method.getDeclaredAnnotation(RequestMapping<span class="class">.<span class="keyword">class</span>).<span class="title">value</span>()</span>;</span><br><span class="line">            <span class="comment">//之后的所需要的参数，我们初始化一个容器来暂时存储一下</span></span><br><span class="line">            List&lt;String&gt; paramNameList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">            <span class="comment">//遍历方法所有的参数，依次判断并找到被requestParam注解的参数</span></span><br><span class="line">            <span class="keyword">for</span>(Parameter parameter : method.getParameters()) &#123;</span><br><span class="line">                <span class="keyword">if</span>(parameter.isAnnotationPresent(RequestParam<span class="class">.<span class="keyword">class</span>)) </span>&#123;</span><br><span class="line">                    paramNameList.add(parameter.getDeclaredAnnotation(RequestParam<span class="class">.<span class="keyword">class</span>).<span class="title">value</span>())</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            String[] params = paramNameList.toArray(<span class="keyword">new</span> String[paramNameList.size()]);</span><br><span class="line">            <span class="comment">//方法和类都是已知的，下面来构造MappingHandler</span></span><br><span class="line">            MappingHandler mappingHandler = <span class="keyword">new</span> MappingHandler(uri,method,cls,params);</span><br><span class="line">            <span class="comment">//最后把构造好的handler放到管理器的静态属性里</span></span><br><span class="line">            HandlerManager.mappingHandlerList.add(mappingHandler);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来，在DispatcherHandler类里面使用这个handler。在service()方法中进行定义，当一个请求发送过来之后，我们依次判断这些handler能不能处理这些请求，如果能处理，就响应结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(ServletRequest req, ServletResponse res)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(MappingHandler mappingHandler : HandlerManager.mappingHandlerList) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span>(mappingHandler.handle(req,res)) &#123;</span><br><span class="line">                    <span class="keyword">return</span> ;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InstantiationException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InvocationTargetException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>完善一下MappingHandler中的方法，添加handle方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MappingHandler</span> </span>&#123;</span><br><span class="line">    <span class="comment">//要处理的URI</span></span><br><span class="line">    <span class="keyword">private</span> String uri;</span><br><span class="line">    <span class="comment">//对应的controller方法</span></span><br><span class="line">    <span class="keyword">private</span> Method method;</span><br><span class="line">    <span class="comment">//对应的controller类</span></span><br><span class="line">    <span class="keyword">private</span> Class&lt;?&gt; controller;</span><br><span class="line">    <span class="comment">//调用方法需要的参数</span></span><br><span class="line">    <span class="keyword">private</span> String[] args;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">handle</span><span class="params">(ServletRequest req, ServletResponse res)</span> <span class="keyword">throws</span> IllegalAccessException, InstantiationException, InvocationTargetException, IOException </span>&#123;</span><br><span class="line">        String requestUri = ((HttpServletRequest) req).getRequestURI();</span><br><span class="line">        <span class="comment">//判断handler中的uri和请求的uri是否相等</span></span><br><span class="line">        <span class="keyword">if</span>(!uri.equals(requestUri)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//如果uri相等，那么我们需要调用handler里的method方法</span></span><br><span class="line">        <span class="comment">//首先我们准备一下参数</span></span><br><span class="line">        Object[] parameters = <span class="keyword">new</span> Object[args.length];</span><br><span class="line">        <span class="comment">//通过参数名依次从ServletRequest里面获取到这个参数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; args.length; i++) &#123;</span><br><span class="line">            parameters[i] = req.getParameter(args[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//实例化controller，将异常抛出去上层</span></span><br><span class="line">        Object ctl = controller.newInstance();</span><br><span class="line">        <span class="comment">//由于controller可能会返回多种类型，我们用object来存储结果</span></span><br><span class="line">        Object response = method.invoke(ctl,parameters);</span><br><span class="line">        <span class="comment">//把方法返回的结果放入到ServletResponse里面去</span></span><br><span class="line">        res.getWriter().println(response.toString());</span><br><span class="line">        <span class="comment">//处理成功后返回true</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    MappingHandler(String uri, Method method,Class&lt;?&gt; cls,String[] args) &#123;</span><br><span class="line">        <span class="keyword">this</span>.uri = uri;</span><br><span class="line">        <span class="keyword">this</span>.method = method;</span><br><span class="line">        <span class="keyword">this</span>.controller = cls;</span><br><span class="line">        <span class="keyword">this</span>.args = args;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后别忘了在入口的MiniApplication中调用HandlerManager来初始化所有的MappingHandler</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MiniApplication</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(Class&lt;?&gt; cls, String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello mini-spring!"</span>);</span><br><span class="line">        TomcatServer tomcatServer = <span class="keyword">new</span> TomcatServer(args);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            tomcatServer.startServer();</span><br><span class="line">            List&lt;Class&lt;?&gt;&gt; classList = ClassScanner.scanClasses(cls.getPackage().getName());</span><br><span class="line"></span><br><span class="line">            <span class="comment">//在框架入口类中调用HandlerManager来初始化所有的MappingHandler</span></span><br><span class="line">            HandlerManager.resolveMappingHandler(classList);</span><br><span class="line"></span><br><span class="line">            classList.forEach(it -&gt; System.out.println(it.getName()));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="控制器实现章节的重点"><a href="#控制器实现章节的重点" class="headerlink" title="控制器实现章节的重点"></a>控制器实现章节的重点</h2><p>当servlet太多时，使用web服务器配置来维护servlet是很困难的，由此提出了DispatcherServlet。</p>
+<ul>
+<li>DispatcherServlet有很重要的意义</li>
+<li>通过类加载机制实现类的扫描，并且从中挑选出了controller</li>
+<li>通过反射实现mappingHandler，真正实现了Spring中的DispatcherServlet</li>
+</ul>
+<h1 id="Bean管理-IOC-amp-DI"><a href="#Bean管理-IOC-amp-DI" class="headerlink" title="Bean管理(IOC&amp;DI)"></a>Bean管理(IOC&amp;DI)</h1><p>Bean的管理，当然是Spring框架能够运行的基石。</p>
+<h2 id="bean管理"><a href="#bean管理" class="headerlink" title="bean管理"></a>bean管理</h2><p>之前已经实现了对controller的解析，可以使用框架来添加controller来搭建web服务了。但仅有一个controller是不够的，要实现MVC，还需要将项目复杂的逻辑抽离到Module里。在Spring中一般用Service来表示。而当service较多的时候，每个请求重复创建会有较大的性能损耗，<strong>所以Spring抽象出了Bean这么一个概念</strong>。</p>
+<h3 id="什么是bean"><a href="#什么是bean" class="headerlink" title="什么是bean?"></a>什么是bean?</h3><p>bean本质也是一种对象，但是比较特殊：</p>
+<ul>
+<li>生命周期较长——从JVM启动，服务的初始化开始，在服务结束，JVM初始化结束的时候结束。</li>
+<li>可见性较大——普通对象只是在创建的代码块中可见，但bean在整个虚拟机中都是可见的</li>
+<li>维护成本高，默认是单例模式</li>
+</ul>
+<h3 id="bean的优势"><a href="#bean的优势" class="headerlink" title="bean的优势"></a>bean的优势</h3><ul>
+<li>运行期效率高——使用bean之前不需要再初始化，而且不需要每次都是用service对象生成，可以让代码更干净</li>
+<li>统一维护，便于管理和扩展——让一些比如添加类代理等的操作变得更加简单</li>
+<li>单例模式可以让每次使用bean的时候不需要做各种setProperty，也不用处理各种链式依赖</li>
+</ul>
+<h3 id="普通类创建方式和bean的对比"><a href="#普通类创建方式和bean的对比" class="headerlink" title="普通类创建方式和bean的对比"></a>普通类创建方式和bean的对比</h3><p><img src="https://i.loli.net/2020/05/04/VY5RcKdmFnyxLUg.png" alt="传统方式创建对象.png"></p>
+<p>如图所示，A和B类都含有一个Z属性，当我们实例化A和B的时候，会自动实例化Z；情况更复杂一些的话，有一个类C，里面有属性B，那么实例化C的时候也会实例化B，并且初始化了属性Z。</p>
+<p>当我们实例化完A、B、C三个对象之后，整个虚拟机中就有了三个Z对象，造成极大的性能浪费。</p>
+<h3 id="Spring的实现方式"><a href="#Spring的实现方式" class="headerlink" title="Spring的实现方式"></a>Spring的实现方式</h3><ul>
+<li>包扫描并自动装配(反射)，不使用显示的”new”来创建对象</li>
+<li>bean在虚拟机中会通过beanFactory统一管理维护，beanFactory是接口，可以通过类型、名字获取到bean</li>
+<li>依赖注入</li>
+</ul>
+<h2 id="控制反转-依赖注入"><a href="#控制反转-依赖注入" class="headerlink" title="控制反转/依赖注入"></a>控制反转/依赖注入</h2><p>依赖注入和控制反转是有区别的。</p>
+<ul>
+<li>IOC(Inversion Of Control)：一种思想，用来降低代码之间的耦合度</li>
+<li>DI(Dependency Injection)：实现IOC的方式，类A中定义对象B，初始化A的时候B也会被定义好</li>
+</ul>
+<p>用控制反转创建对象如下图所示：</p>
+<p><img src="https://i.loli.net/2020/05/04/a6LQ2MhzrZiyqHF.png" alt="控制反转创建Bean.png"></p>
+<p>每创建一个对象，就把该对象放入到BeanFactory中，下次再需要这个对象的时候可以直接去BeanFactory中去找。这样每个对象都只有一个，节约了大量内存空间。</p>
+<h3 id="实现依赖注入的方式"><a href="#实现依赖注入的方式" class="headerlink" title="实现依赖注入的方式"></a>实现依赖注入的方式</h3><p>具体步骤为：</p>
+<ol>
+<li>扫描包，获得类定义(已完成)</li>
+<li>初始化Bean，并实现依赖注入</li>
+<li>解决Bean初始化顺序问题</li>
+</ol>
+<p>流程示意图：</p>
+<p><img src="https://i.loli.net/2020/05/04/ReXNvMfG7J24ci6.png" alt="依赖注入实现顺序.png"></p>
+<h3 id="具体代码实现"><a href="#具体代码实现" class="headerlink" title="具体代码实现"></a>具体代码实现</h3><p>创建两个Annotation注解类：@Bean和@Autowired</p>
+<p>@Bean:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.beans;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Bean &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>@Autowired:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.beans;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(ElementType.FIELD)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Autowired &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建一个BeanFactory用来实现Bean工厂</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.beans;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.mooc.wms.web.mvc.Controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ConcurrentHashMap;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Bennett_Wang on 2020/5/4</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BeanFactory</span> </span>&#123;</span><br><span class="line">    <span class="comment">//映射在后期可能需要并发处理，故用ConcurrentHashMap</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;Class&lt;?&gt;, Object&gt; classToBean = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//定义一个方法用来从映射里获取Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getBean</span><span class="params">(Class&lt;?&gt; cls)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> classToBean.get(cls);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//完善Bean初始化的方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initBean</span><span class="params">(List&lt;Class&lt;?&gt;&gt; classList)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        List&lt;Class&lt;?&gt;&gt; toCreate = <span class="keyword">new</span> ArrayList&lt;&gt;(classList);</span><br><span class="line">        <span class="keyword">while</span>(toCreate.size() != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> remainSize = toCreate.size();</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; toCreate.size(); i++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(finishCreate(toCreate.get(i))) &#123;</span><br><span class="line">                    toCreate.remove(i);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(toCreate.size() == remainSize) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"cycle dependency!"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">finishCreate</span><span class="params">(Class&lt;?&gt; cls)</span> <span class="keyword">throws</span> IllegalAccessException, InstantiationException </span>&#123;</span><br><span class="line">        <span class="comment">//首先判断其是否需要初始化为Bean。如果其不需要被初始化为Bean，</span></span><br><span class="line">        <span class="comment">//则直接返回true,然后把它从初始化列表中删除</span></span><br><span class="line">        <span class="keyword">if</span>(!cls.isAnnotationPresent(Bean<span class="class">.<span class="keyword">class</span>) &amp;&amp; !<span class="title">cls</span>.<span class="title">isAnnotationPresent</span>(<span class="title">Controller</span>.<span class="title">class</span>)) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Object bean = cls.newInstance();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(Field field : cls.getDeclaredFields()) &#123;</span><br><span class="line">            <span class="keyword">if</span>(field.isAnnotationPresent(Autowired<span class="class">.<span class="keyword">class</span>)) </span>&#123;</span><br><span class="line">                Class&lt;?&gt; fieldType = field.getType();</span><br><span class="line">                Object reliantBean = BeanFactory.getBean(fieldType);</span><br><span class="line">                <span class="keyword">if</span>(reliantBean == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                field.set(bean,reliantBean);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        classToBean.put(cls,bean);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在启动类MiniApplication入口中初始化Bean工厂，初始化Bean</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MiniApplication</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(Class&lt;?&gt; cls, String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello mini-spring!"</span>);</span><br><span class="line">        TomcatServer tomcatServer = <span class="keyword">new</span> TomcatServer(args);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            tomcatServer.startServer();</span><br><span class="line">            List&lt;Class&lt;?&gt;&gt; classList = ClassScanner.scanClasses(cls.getPackage().getName());</span><br><span class="line"></span><br><span class="line">            <span class="comment">//使用Bean工厂初始化Bean</span></span><br><span class="line">            BeanFactory.initBean(classList);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//在框架入口类中调用HandlerManager来初始化所有的MappingHandler</span></span><br><span class="line">            HandlerManager.resolveMappingHandler(classList);</span><br><span class="line"></span><br><span class="line">            classList.forEach(it -&gt; System.out.println(it.getName()));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在MappingHandler中使用Bean工厂来利用controller来初始化Bean</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BeanFactory</span> </span>&#123;</span><br><span class="line">    <span class="comment">//映射在后期可能需要并发处理，故用ConcurrentHashMap</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;Class&lt;?&gt;, Object&gt; classToBean = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//定义一个方法用来从映射里获取Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getBean</span><span class="params">(Class&lt;?&gt; cls)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> classToBean.get(cls);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//完善Bean初始化的方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initBean</span><span class="params">(List&lt;Class&lt;?&gt;&gt; classList)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        List&lt;Class&lt;?&gt;&gt; toCreate = <span class="keyword">new</span> ArrayList&lt;&gt;(classList);</span><br><span class="line">        <span class="comment">//写一个循环来初始化Bean</span></span><br><span class="line">        <span class="keyword">while</span>(toCreate.size() != <span class="number">0</span>) &#123; <span class="comment">//当容器中还有类定义时，我们不断遍历，看类定义能否初始化为Bean</span></span><br><span class="line">            <span class="comment">//每初始化一个Bean,就把它从容器中删掉</span></span><br><span class="line">            <span class="keyword">int</span> remainSize = toCreate.size();</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; toCreate.size(); i++) &#123;</span><br><span class="line">                <span class="comment">//如果完成了创建，就把它从容器中删除</span></span><br><span class="line">                <span class="keyword">if</span>(finishCreate(toCreate.get(i))) &#123;</span><br><span class="line">                    toCreate.remove(i);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//如果每次遍历之后容器大小没有变化，那么就是陷入了死循环，我们要抛出异常</span></span><br><span class="line">            <span class="keyword">if</span>(toCreate.size() == remainSize) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"cycle dependency!"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建完成则返回true</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">finishCreate</span><span class="params">(Class&lt;?&gt; cls)</span> <span class="keyword">throws</span> IllegalAccessException, InstantiationException </span>&#123;</span><br><span class="line">        <span class="comment">//首先判断其是否需要初始化为Bean。如果其不需要被初始化为Bean，</span></span><br><span class="line">        <span class="comment">//则直接返回true,然后把它从初始化列表中删除</span></span><br><span class="line">        <span class="keyword">if</span>(!cls.isAnnotationPresent(Bean<span class="class">.<span class="keyword">class</span>) &amp;&amp; !<span class="title">cls</span>.<span class="title">isAnnotationPresent</span>(<span class="title">Controller</span>.<span class="title">class</span>)) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//bean的初始化</span></span><br><span class="line">        Object bean = cls.newInstance();</span><br><span class="line">        <span class="comment">//遍历属性，看它有没有需要解决的依赖</span></span><br><span class="line">        <span class="keyword">for</span>(Field field : cls.getDeclaredFields()) &#123;</span><br><span class="line">            <span class="comment">//如果这个属性被Autowired注解了，表示它需要使用依赖注入来解决这个依赖</span></span><br><span class="line">            <span class="keyword">if</span>(field.isAnnotationPresent(Autowired<span class="class">.<span class="keyword">class</span>)) </span>&#123;</span><br><span class="line">                <span class="comment">//此时需要从Bean工厂中获取被依赖的Bean</span></span><br><span class="line">                <span class="comment">//先拿到属性的类型</span></span><br><span class="line">                Class&lt;?&gt; fieldType = field.getType();</span><br><span class="line">                <span class="comment">//通过类型从Bean工厂内获取Bean</span></span><br><span class="line">                Object reliantBean = BeanFactory.getBean(fieldType);</span><br><span class="line">                <span class="keyword">if</span>(reliantBean == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                field.set(bean,reliantBean);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        classToBean.put(cls,bean);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此，框架部分就完成了。</p>
+<h2 id="测试模块"><a href="#测试模块" class="headerlink" title="测试模块"></a>测试模块</h2><p>测试部分是很重要的。</p>
+<p>在测试模块中，我们再添加一个service包，在这个包中添加SalaryService类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.mooc.wms.beans.Bean;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Bennett_Wang on 2020/5/4</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SalaryService</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">calSalary</span><span class="params">(Integer experience)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> experience * <span class="number">5000</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来在controller中使用这个service</p>
+<p>使用流程：首先在SalaryController中声明SalaryService的依赖，也就是让两者有组合的关系，添加Autowired注解。</p>
+<p>然后再SalaryController中使用SalaryService的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mooc.wms.controllers;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.mooc.wms.beans.Autowired;</span><br><span class="line"><span class="keyword">import</span> com.mooc.wms.service.SalaryService;</span><br><span class="line"><span class="keyword">import</span> com.mooc.wms.web.mvc.Controller;</span><br><span class="line"><span class="keyword">import</span> com.mooc.wms.web.mvc.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> com.mooc.wms.web.mvc.RequestParam;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Bennett_Wang on 2020/5/3</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SalaryController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> SalaryService salaryService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/get_salary.json"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getSalary</span><span class="params">(@RequestParam(<span class="string">"name"</span>)</span> String name,</span></span><br><span class="line"><span class="function">                             @<span class="title">RequestParam</span><span class="params">(<span class="string">"experience"</span>)</span> String experience) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> salaryService.calSalary(Integer.parseInt(experience));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之后gradle build项目，再访问<a href="http://localhost:6699/get_salary.json?experience=3&amp;name=listl，可以得到结果。" target="_blank" rel="noopener">http://localhost:6699/get_salary.json?experience=3&amp;name=listl，可以得到结果。</a></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>Bean的介绍</li>
+<li>依赖注入和控制反转</li>
+<li>解决依赖顺序的简单策略</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>搭建了框架，主要使用gradle进行，和Spring各个包的功能等</li>
+<li>嵌入集成服务器Servlet</li>
+<li>使用类加载器进行资源扫描，获取项目下的类定义，以及controller的解析以及请求映射器的初始化</li>
+<li>Bean管理，Bean的使用和控制反转，是Spring框架的核心</li>
+</ol>
+
+    </div>
+
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Spring/" rel="tag"><i class="fa fa-tag"></i># Spring</a>
+              <a href="/tags/SpringMVC/" rel="tag"><i class="fa fa-tag"></i># SpringMVC</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/26/leetcode-SQL/" rel="prev" title="leetcode-SQL">
+      <i class="fa fa-chevron-left"></i> leetcode-SQL
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODAxMC8yNDUwNw=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#项目框架搭建"><span class="nav-text">项目框架搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建基于Gradle的项目"><span class="nav-text">搭建基于Gradle的项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#仿Spring搭建项目结构"><span class="nav-text">仿Spring搭建项目结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集成服务器"><span class="nav-text">集成服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#系统Web服务模型"><span class="nav-text">系统Web服务模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求分发流程"><span class="nav-text">请求分发流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集成Tomcat服务器"><span class="nav-text">集成Tomcat服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集成服务器总结"><span class="nav-text">集成服务器总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#控制器Controller的实现"><span class="nav-text">控制器Controller的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#传统项目的实现"><span class="nav-text">传统项目的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring框架"><span class="nav-text">Spring框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实战添加web组件"><span class="nav-text">实战添加web组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手写类扫描获取类定义"><span class="nav-text">手写类扫描获取类定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#控制器的初始化"><span class="nav-text">控制器的初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#控制器实现章节的重点"><span class="nav-text">控制器实现章节的重点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bean管理-IOC-amp-DI"><span class="nav-text">Bean管理(IOC&amp;DI)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#bean管理"><span class="nav-text">bean管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是bean"><span class="nav-text">什么是bean?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bean的优势"><span class="nav-text">bean的优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#普通类创建方式和bean的对比"><span class="nav-text">普通类创建方式和bean的对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring的实现方式"><span class="nav-text">Spring的实现方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#控制反转-依赖注入"><span class="nav-text">控制反转&#x2F;依赖注入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实现依赖注入的方式"><span class="nav-text">实现依赖注入的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体代码实现"><span class="nav-text">具体代码实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试模块"><span class="nav-text">测试模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wang Mingsheng"
+      src="/images/faceimage.jpg">
+  <p class="site-author-name" itemprop="name">Wang Mingsheng</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wmsheng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wmsheng" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wangmingshenghku@163.com" title="E-Mail → mailto:wangmingshenghku@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/my/m/music/playlist?id=372605964" title="Music → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;my&#x2F;m&#x2F;music&#x2F;playlist?id&#x3D;372605964" rel="noopener" target="_blank"><i class="fa fa-fw fa-youtube"></i>Music</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+
+    </div>
+    
+    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=3314336&auto=1&height=66">
+    </iframe>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wang Mingsheng</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">585k</span>
+</div>
+
+
+<div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_uv">
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="post-meta-divider">|</span>
+  <span id="busuanzi_container_site_pv">
+    本站访问量<span id="busuanzi_value_site_pv"></span>
+  </span>
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共307.4k字</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>

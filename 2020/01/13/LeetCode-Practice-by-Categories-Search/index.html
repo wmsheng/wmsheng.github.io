@@ -62,7 +62,7 @@
 <meta property="og:image" content="https://s2.ax1x.com/2020/02/17/3iuZt0.png">
 <meta property="og:image" content="https://i.loli.net/2020/04/24/2KalmBA3N8TLZbg.png">
 <meta property="article:published_time" content="2020-01-13T04:46:07.000Z">
-<meta property="article:modified_time" content="2020-04-24T23:36:42.734Z">
+<meta property="article:modified_time" content="2020-04-27T05:24:20.315Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="Algorithms">
@@ -156,7 +156,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">34</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags<span class="badge">35</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -166,7 +166,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">38</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives<span class="badge">39</span></a>
 
   </li>
   </ul>
@@ -226,7 +226,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-25 07:36:42" itemprop="dateModified" datetime="2020-04-25T07:36:42+08:00">2020-04-25</time>
+                <time title="Modified: 2020-04-27 13:24:20" itemprop="dateModified" datetime="2020-04-27T13:24:20+08:00">2020-04-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -561,8 +561,8 @@
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: nums = [<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>], target = <span class="number">3</span></span><br><span class="line">Output: <span class="number">-1</span></span><br></pre></td></tr></table></figure>
 
 <hr>
-<p>解：二分查找进行旋转</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 暴力：还原O(logN) -&gt; 升序 -&gt; 二分:O(logN) (写、总结)，概括就是要用二分查找去找到数组汇总被某个元素劈断的位置</span></span><br><span class="line"><span class="comment">// 2. 正解：二分查找</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">search</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(nums==<span class="keyword">null</span>||nums.length==<span class="number">0</span>) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> low = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> high = nums.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(low&lt;high)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> mid = low + (high-low)/<span class="number">2</span>;</span><br><span class="line">        <span class="comment">//target and mid are on the same side</span></span><br><span class="line">        <span class="keyword">if</span>((nums[mid]-nums[nums.length-<span class="number">1</span>])*(target-nums[nums.length-<span class="number">1</span>])&gt;<span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[mid]&lt;target)</span><br><span class="line">                low = mid + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                high = mid;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(target&gt;nums[nums.length-<span class="number">1</span>])</span><br><span class="line">            high = mid; <span class="comment">// target on the left side</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            low = mid + <span class="number">1</span>; <span class="comment">// target on the right side</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// now hi == lo</span></span><br><span class="line">    <span class="keyword">if</span>(nums[low]==target) </span><br><span class="line">        <span class="keyword">return</span> low;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>解：二分查找进行旋转。利用”整个数组是部分有序”的这么一个特质。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 暴力：还原O(logN) -&gt; 升序 -&gt; 二分:O(logN) (写、总结)，概括就是要用二分查找去找到数组汇总被某个元素劈断的位置</span></span><br><span class="line"><span class="comment">// 2. 正解：二分查找</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">search</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(nums.length == <span class="number">0</span>) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> low = <span class="number">0</span>, high = nums.length - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> mid;</span><br><span class="line">        <span class="keyword">while</span>(low &lt;= high) &#123;</span><br><span class="line">            mid = (low + high) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span>(nums[mid] == target) &#123; <span class="comment">//找到了</span></span><br><span class="line">                <span class="keyword">return</span> mid;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//前半部分有序,注意此处用小于等于</span></span><br><span class="line">            <span class="keyword">if</span>(nums[low] &lt;= nums[mid]) &#123;</span><br><span class="line">                <span class="comment">//target在前半部分</span></span><br><span class="line">                <span class="keyword">if</span>(target &gt;= nums[low] &amp;&amp; target &lt; nums[mid]) &#123;</span><br><span class="line">                    high = mid - <span class="number">1</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    low = mid + <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123; <span class="comment">//mid的前半部分无序</span></span><br><span class="line">                <span class="keyword">if</span>(target &lt;= nums[high] &amp;&amp; target &gt; nums[mid]) &#123;</span><br><span class="line">                    low = mid + <span class="number">1</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    high = mid - <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="4-Median-of-Two-Sorted-Arrays-寻找两个有序数组的中位数-Hard"><a href="#4-Median-of-Two-Sorted-Arrays-寻找两个有序数组的中位数-Hard" class="headerlink" title="4.Median of Two Sorted Arrays(寻找两个有序数组的中位数)(Hard)"></a><a href="https://leetcode-cn.com/problems/median-of-two-sorted-arrays" target="_blank" rel="noopener">4.Median of Two Sorted Arrays(寻找两个有序数组的中位数)(Hard)</a></h2><p>There are two sorted arrays <strong>nums1</strong> and <strong>nums2</strong> of size m and n respectively.</p>
 <p>Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).</p>
@@ -729,7 +729,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -742,7 +742,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -798,7 +798,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">551k</span>
+    <span title="Symbols count total">585k</span>
 </div>
 
 
@@ -815,7 +815,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共296.2k字</span>
+  <span class="post-count">博客全站共307.4k字</span>
 </div>
 
         
