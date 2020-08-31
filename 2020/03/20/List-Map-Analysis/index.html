@@ -69,7 +69,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/04/27/5pKPNkChbBG8QHO.png">
 <meta property="og:image" content="https://i.loli.net/2020/04/27/Nz8IYqKcWwyPoGE.png">
 <meta property="article:published_time" content="2020-03-20T04:36:04.000Z">
-<meta property="article:modified_time" content="2020-04-27T01:49:17.377Z">
+<meta property="article:modified_time" content="2020-08-29T08:10:42.154Z">
 <meta property="article:author" content="Wang Mingsheng">
 <meta property="article:tag" content="List">
 <meta property="article:tag" content="Map">
@@ -233,7 +233,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-27 09:49:17" itemprop="dateModified" datetime="2020-04-27T09:49:17+08:00">2020-04-27</time>
+                <time title="Modified: 2020-08-29 16:10:42" itemprop="dateModified" datetime="2020-08-29T16:10:42+08:00">2020-08-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -506,7 +506,7 @@
 <h1 id="Map接口常问问题"><a href="#Map接口常问问题" class="headerlink" title="Map接口常问问题"></a>Map接口常问问题</h1><h2 id="1-Map整体数据结构问题"><a href="#1-Map整体数据结构问题" class="headerlink" title="1. Map整体数据结构问题"></a>1. Map整体数据结构问题</h2><h3 id="1-1-HashMap的底层数据结构"><a href="#1-1-HashMap的底层数据结构" class="headerlink" title="1.1 HashMap的底层数据结构"></a>1.1 HashMap的底层数据结构</h3><p>答：HashMap 底层是数组 + 链表 + 红黑树的数据结构，数组的主要作用是方便快速查找，时间复杂度是 O(1)，默认大小是 16，数组的下标索引是通过 key 的 hashcode 计算出来的，数组元素叫做 Node，当多个 key 的 hashcode 一致，但 key 值不同时，单个 Node 就会转化成链表，链表的查询复杂度是 O(n)，当链表的长度大于等于 8 并且数组的大小超过 64 时，链表就会转化成红黑树，红黑树的查询复杂度是 O(log(n))，简单来说，最坏的查询次数相当于红黑树的最大深度。</p>
 <p>具体来说，数组中的每个元素都是一个<strong><font color=#FF000>哈希桶</font></strong>，每个哈希桶里面包含四个字段：hash、key、value、next。其中next表示链表的下一个节点。</p>
 <p>JDK 1.8 之所以添加红黑树是因为一旦链表过长，会严重影响 HashMap 的性能，而红黑树具有快速增删改查的特点，这样就可以有效的解决链表过长时操作比较慢的问题。</p>
-<p><font color=#FF000>数据结构总结</font>：jdk1.6 1.7 采用 数组+链表，把key 进行取模获取 小标，到对应的链表 进行put/get操作 jdk1.8 采用 数组+链表+红黑树（当链表超过8 而且总长度大于64时，转红黑树【1.符合二叉树结果 2.不是黑色 就红色 3.叶子节点都是黑色 或者nil 4.左右子树 高度差小于 1 】）</p>
+<p><font color=#FF000>数据结构总结</font>：jdk1.6 1.7 采用 数组+链表，把key 进行取模获取 下标，到对应的链表 进行put/get操作 jdk1.8 采用 数组+链表+红黑树（当链表超过8 而且总长度大于64时，转红黑树【1.符合二叉树结果 2.不是黑色 就红色 3.叶子节点都是黑色 或者nil 4.左右子树 高度差小于 1 】）</p>
 <h3 id="1-2-HashMap、TreeMap、LinkedHashMap-三者有啥相同点，有啥不同点？"><a href="#1-2-HashMap、TreeMap、LinkedHashMap-三者有啥相同点，有啥不同点？" class="headerlink" title="1.2 HashMap、TreeMap、LinkedHashMap 三者有啥相同点，有啥不同点？"></a>1.2 HashMap、TreeMap、LinkedHashMap 三者有啥相同点，有啥不同点？</h3><p>答：相同点：</p>
 <ol>
 <li>三者在特定的情况下，都会使用红黑树；</li>
@@ -954,7 +954,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">649k</span>
+    <span title="Symbols count total">655k</span>
 </div>
 
 
@@ -971,7 +971,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共332.6k字</span>
+  <span class="post-count">博客全站共336.9k字</span>
 </div>
 
         
