@@ -3323,7 +3323,8 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractStringBuilder</span> <span class="keyword">implements</span> <span class="title">Appendable</span>, <span class="title">CharSequence</span> </span>&#123; </span><br><span class="line">    <span class="keyword">char</span>[] value;</span><br><span class="line">    <span class="keyword">int</span> count;</span><br><span class="line">    AbstractStringBuilder() &#123;&#125;</span><br><span class="line">    AbstractStringBuilder(<span class="keyword">int</span> capacity) &#123;</span><br><span class="line">        value = <span class="keyword">new</span> <span class="keyword">char</span>[capacity];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="String-StringBuffer和StringBuilder的线程安全性"><a href="#String-StringBuffer和StringBuilder的线程安全性" class="headerlink" title="String, StringBuffer和StringBuilder的线程安全性"></a>String, StringBuffer和StringBuilder的线程安全性</h3><p>String 中的对象是不可变的，也就可以理解为常量，线程安全。AbstractStringBuilder 是 StringBuilder 与 StringBuﬀer 的公共父类，定义了一些字符串的基本操作，如 expandCapacity、append、insert、indexOf 等公共 方法。StringBuﬀer 对方法加了同步锁或者对调用的方法加了同步锁，所以是线程安全的。StringBuilder 并没有对 方法进行加同步锁，所以是非线程安全的。 </p>
-<h3 id="String-StringBuffer和StringBuilder的性能"><a href="#String-StringBuffer和StringBuilder的性能" class="headerlink" title="String, StringBuffer和StringBuilder的性能"></a>String, StringBuffer和StringBuilder的性能</h3><p>每次对 String 类型进行改变的时候，都会生成一个新的 String 对象，然后将指针指向新的 String 对象。 StringBuﬀer 每次都会对 StringBuﬀer 对象本身进行操作，而不是生成新的对象并改变对象引用。<strong>相同情况下使用 StirngBuilder 相比使用 StringBuﬀer 仅能获得 10%~15% 左右的性能提升，但却要冒多线程不安全的风险</strong>。</p>
+<h3 id="String-StringBuffer和StringBuilder的性能"><a href="#String-StringBuffer和StringBuilder的性能" class="headerlink" title="String, StringBuffer和StringBuilder的性能"></a>String, StringBuffer和StringBuilder的性能</h3><p>每次对 String 类型进行改变的时候，都会生成一个新的 String 对象，然后将指针指向新的 String 对象。 StringBuﬀer 每次都会对 StringBuﬀer 对象本身进行操作，而不是</p>
+<p>生成新的对象并改变对象引用。<strong>相同情况下使用 StirngBuilder 相比使用 StringBuﬀer 仅能获得 10%~15% 左右的性能提升，但却要冒多线程不安全的风险</strong>。</p>
 <h3 id="String-StringBuffer和StringBuilder的使用总结"><a href="#String-StringBuffer和StringBuilder的使用总结" class="headerlink" title="String, StringBuffer和StringBuilder的使用总结"></a>String, StringBuffer和StringBuilder的使用总结</h3><ul>
 <li><p>如果只需要操作少量字符串：用String</p>
 </li>
@@ -3436,6 +3437,15 @@
 <li><strong>接口</strong>不能用 new 实例化，但可以声明，但是必须引用一个实现该接口的对象 从设计层面来说，<strong>抽象类</strong>是对类的抽 象，是一种模板设计，接口是行为的抽象，是一种行为的规范。</li>
 </ol>
 <p>备注：在JDK8中，接口也可以定义静态方法，可以直接用接口名调用。实现类和实现是不可以调用的。如果同时实现 两个接口，接口中定义了一样的默认方法，必须重写，不然会报错。(详见 issue:<a href="https://github.com/Snailclimb/JavaGuide/issues/146" target="_blank" rel="noopener">https://github.com/Snailclimb/JavaGuide/issues/146</a>) </p>
+<h2 id="Java中ThreadLocal是什么？谈谈对它的理解？"><a href="#Java中ThreadLocal是什么？谈谈对它的理解？" class="headerlink" title="Java中ThreadLocal是什么？谈谈对它的理解？"></a>Java中ThreadLocal是什么？谈谈对它的理解？</h2><p>关于ThreadLocal的用法，可以变换出现的问题是：<strong>在多线程环境下，如何防止自己的变量被其它线程篡改</strong>？</p>
+<p>所以，看出来了吧，ThreadLocal的作用就是<strong>在多线程环境下防止自己的变量被其他线程篡改</strong>，在多线程环境下去保证成员变量的安全。</p>
+<p>ThreadLocal从数据结构上来讲有点像HashMap，它可以保存”key:value”键值对，但是一个ThreadLocal只能保存一个，而且各个线程的数据互相之间不干扰。</p>
+<ul>
+<li>set需要首先获得当前线程对象Thread，<strong>然后取出当前线程对象的成员变量ThreadLocalMap；</strong></li>
+</ul>
+<p><strong>如果ThreadLocalMap存在，那么进行KEY/VALUE设置，KEY就是ThreadLocal；</strong></p>
+<p><strong>如果ThreadLocalMap没有，那么创建一个；</strong></p>
+<p><strong>说白了，当前线程中存在一个Map变量，KEY是ThreadLocal，VALUE是你设置的值。</strong></p>
 <h2 id="Java的线程状态有哪些？它是如何工作的？-重要"><a href="#Java的线程状态有哪些？它是如何工作的？-重要" class="headerlink" title="Java的线程状态有哪些？它是如何工作的？(重要**)"></a>Java的线程状态有哪些？它是如何工作的？(重要**)</h2><p>线程(Thread)是并发编程的基础，它是程序执行的最小单元。一个进程可以包含多个线程，多线程可以共享一块内存空间和一组系统资源，因此线程之间的切换更节省资源，也因为如此，线程常被成为轻量级的进程。</p>
 <p>对线程的掌握，可以有效地提高程序整体运行效率。</p>
 <h3 id="Java线程状态在JDK1-5后一共有六个"><a href="#Java线程状态在JDK1-5后一共有六个" class="headerlink" title="Java线程状态在JDK1.5后一共有六个"></a>Java线程状态在JDK1.5后一共有六个</h3><p>Java线程状态在JDK1.5后以枚举的方式定义在Thread的源码中，一共有六个状态</p>
